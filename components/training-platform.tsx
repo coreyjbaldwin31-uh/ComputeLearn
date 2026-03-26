@@ -1,14 +1,20 @@
 "use client";
 
 import type { Curriculum, Exercise, Lesson } from "@/data/curriculum";
+import type { ArtifactRecord } from "@/lib/artifact-engine";
 import {
-  type ArtifactRecord,
   type AttemptRecord,
   buildArtifactRecord,
   buildAttemptRecord,
   createId,
   formatCompletionContent,
 } from "@/lib/artifact-engine";
+import {
+  advanceHintLevel,
+  getHintButtonLabel,
+  getHintText,
+  isHintExhausted,
+} from "@/lib/hint-engine";
 import {
   calculateActivityStreak,
   calculateCompetencyLevels,
@@ -535,7 +541,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     const key = `${selectedLesson?.id ?? ""}:${exerciseId}`;
     setHintLevels((prev) => ({
       ...prev,
-      [key]: Math.min(2, (prev[key] ?? 0) + 1),
+      [key]: advanceHintLevel(prev[key] ?? 0),
     }));
   }
 
@@ -932,15 +938,12 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                       type="button"
                       className="ghost-button"
                       disabled={
-                        isCorrect || (currentHintLevels[exercise.id] ?? 0) >= 2
+                        isCorrect ||
+                        isHintExhausted(currentHintLevels[exercise.id] ?? 0)
                       }
                       onClick={() => advanceHint(exercise.id)}
                     >
-                      {(currentHintLevels[exercise.id] ?? 0) === 0
-                        ? "Need a hint?"
-                        : (currentHintLevels[exercise.id] ?? 0) === 1
-                          ? "More help"
-                          : "Hint shown"}
+                      {getHintButtonLabel(currentHintLevels[exercise.id] ?? 0)}
                     </button>
                     <span
                       className={`status-pill ${
@@ -957,11 +960,15 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                       {exerciseFeedback}
                     </div>
                   ) : null}
-                  {(currentHintLevels[exercise.id] ?? 0) >= 1 ? (
+                  {getHintText(
+                    currentHintLevels[exercise.id] ?? 0,
+                    exercise.hint,
+                  ) !== null ? (
                     <div className="hint-layer">
-                      {(currentHintLevels[exercise.id] ?? 0) === 1
-                        ? "Take a closer look at the question. Think about the core concept being tested, then try again."
-                        : exercise.hint}
+                      {getHintText(
+                        currentHintLevels[exercise.id] ?? 0,
+                        exercise.hint,
+                      )}
                     </div>
                   ) : null}
                 </article>
