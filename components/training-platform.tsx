@@ -16,6 +16,7 @@ import {
   getHintText,
   isHintExhausted,
 } from "@/lib/hint-engine";
+import { getReinforcementQueue } from "@/lib/reinforcement-engine";
 import {
   calculateActivityStreak,
   calculateCompetencyLevels,
@@ -263,22 +264,23 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     [curriculum, progress],
   );
 
-  const weakCompetencyTracks = useMemo(
-    () => {
-      const levelStrings: Record<string, string> = Object.fromEntries(
-        Object.entries(competencyLevels).map(([track, count]) => [
-          track,
-          getMasteryLevel(count),
-        ]),
-      );
-      return getWeakCompetencyTracks(levelStrings, "Functional");
-    },
-    [competencyLevels],
-  );
+  const weakCompetencyTracks = useMemo(() => {
+    const levelStrings: Record<string, string> = Object.fromEntries(
+      Object.entries(competencyLevels).map(([track, count]) => [
+        track,
+        getMasteryLevel(count),
+      ]),
+    );
+    return getWeakCompetencyTracks(levelStrings, "Functional");
+  }, [competencyLevels]);
 
   const reviewQueue = useMemo(() => {
     return getDueReviewQueue(allLessonsFlat, reviews);
   }, [allLessonsFlat, reviews]);
+
+  const reinforcementQueue = useMemo(() => {
+    return getReinforcementQueue(allLessonsFlat, reviews, weakCompetencyTracks);
+  }, [allLessonsFlat, reviews, weakCompetencyTracks]);
 
   const phaseProgressSnapshot = useMemo(
     () =>
@@ -1293,6 +1295,36 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
               ))}
             </ul>
           </section>
+
+          {reinforcementQueue.length > 0 ? (
+            <section className="panel">
+              <div className="panel-header">
+                <div>
+                  <h3>Reinforcement focus</h3>
+                  <p>Due reviews prioritized by weak competency overlap.</p>
+                </div>
+                <span className="tag due-count">{reinforcementQueue.length}</span>
+              </div>
+              <ul className="review-queue-list">
+                {reinforcementQueue.map((item) => (
+                  <li key={item.entry.lesson.id}>
+                    <button
+                      type="button"
+                      className="review-queue-item"
+                      onClick={() => navigateToEntry(item.entry)}
+                    >
+                      <span className="review-course">{item.entry.course.title}</span>
+                      <span className="review-lesson">{item.entry.lesson.title}</span>
+                      <span className="microcopy">
+                        Focus: {item.weakTracks.map(formatTrackName).join(", ")} ·{" "}
+                        {item.dueSinceDays} day{item.dueSinceDays === 1 ? "" : "s"} overdue
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
 
           {reviewQueue.length > 0 ? (
             <section className="panel">

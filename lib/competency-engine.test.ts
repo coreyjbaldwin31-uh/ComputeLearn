@@ -31,6 +31,11 @@ describe("getMasteryRank", () => {
     expect(getMasteryRank("Expert")).toBe(-1);
     expect(getMasteryRank("")).toBe(-1);
   });
+
+  it("accepts lowercase mastery levels from progression-engine", () => {
+    expect(getMasteryRank("unstarted")).toBe(getMasteryRank("Unstarted"));
+    expect(getMasteryRank("functional")).toBe(getMasteryRank("Functional"));
+  });
 });
 
 describe("isMasteryPassing", () => {
@@ -60,6 +65,17 @@ describe("getWeakCompetencyTracks", () => {
     expect(weak).toContain("ApiIntegration");
     expect(weak).not.toContain("VersionControl");
     expect(weak).not.toContain("ProgrammingLogic");
+  });
+
+  it("supports lowercase level values", () => {
+    const lowercaseLevels: Record<string, string> = {
+      VersionControl: "functional",
+      Debugging: "assisted",
+    };
+
+    expect(getWeakCompetencyTracks(lowercaseLevels, "Functional")).toEqual([
+      "Debugging",
+    ]);
   });
 
   it("returns an empty array when all tracks meet the threshold", () => {

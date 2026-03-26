@@ -23,13 +23,19 @@ export const MASTERY_LEVEL_ORDER = [
   "Independent",
 ] as const;
 
+function normalizeMasteryLevel(level: string) {
+  const normalized = level.trim().toLowerCase();
+  if (!normalized) return "";
+  return normalized[0].toUpperCase() + normalized.slice(1);
+}
+
 /**
  * Returns the numeric rank of a mastery level (higher is better).
  * Returns -1 if the level is unrecognised.
  */
 export function getMasteryRank(level: string): number {
   return MASTERY_LEVEL_ORDER.indexOf(
-    level as (typeof MASTERY_LEVEL_ORDER)[number],
+    normalizeMasteryLevel(level) as (typeof MASTERY_LEVEL_ORDER)[number],
   );
 }
 
