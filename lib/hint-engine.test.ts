@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
-  GENERIC_HINT_TEXT,
-  MAX_HINT_LEVEL,
-  advanceHintLevel,
-  getHintButtonLabel,
-  getHintText,
-  isHintExhausted,
+    GENERIC_HINT_TEXT,
+    MAX_HINT_LEVEL,
+    advanceHintLevel,
+    getHintButtonLabel,
+    getHintText,
+    isHintExhausted,
 } from "./hint-engine";
 
 describe("MAX_HINT_LEVEL", () => {

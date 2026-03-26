@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
-  MASTERY_LEVEL_ORDER,
-  buildCompetencyRecord,
-  getMasteryRank,
-  getWeakCompetencyTracks,
-  isMasteryPassing,
-  toSortedCompetencyRecords,
+    MASTERY_LEVEL_ORDER,
+    buildCompetencyRecord,
+    getMasteryRank,
+    getWeakCompetencyTracks,
+    isMasteryPassing,
+    toSortedCompetencyRecords,
 } from "./competency-engine";
 
 describe("MASTERY_LEVEL_ORDER", () => {

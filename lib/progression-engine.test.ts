@@ -543,3 +543,121 @@ describe("progression-engine", () => {
     expect(snapshot.transferEvidence).toBe(1);
   });
 });
+
+describe("progression-engine edge cases", () => {
+  it("calculateActivityStreak returns 0 with no reviews", () => {
+    expect(calculateActivityStreak({})).toBe(0);
+  });
+
+  it("calculateActivityStreak counts reviews on a single day as 1", () => {
+    const reviews = {
+      l1: {
+        completedAt: "2026-04-10T08:00:00.000Z",
+        lastReviewedAt: "2026-04-10T09:00:00.000Z",
+        reviewCount: 1,
+      },
+      l2: {
+        completedAt: "2026-04-10T10:00:00.000Z",
+        lastReviewedAt: null,
+        reviewCount: 0,
+      },
+    };
+    const streak = calculateActivityStreak(
+      reviews,
+      new Date("2026-04-10T20:00:00.000Z"),
+    );
+    expect(streak).toBe(1);
+  });
+
+  it("getDueReviewQueue returns empty array when no reviews exist", () => {
+    const entries = [
+      {
+        phase: { id: "p1", title: "P1", strapline: "", purpose: "", level: "", duration: "", environment: "", tools: [], guardrails: [], milestones: [], projects: [], courses: [] },
+        course: { id: "c1", title: "C1", focus: "", outcome: "", lessons: [] },
+        lesson: { id: "l1", title: "L1", summary: "", duration: "", difficulty: "", objective: "", explanation: [], demonstration: [], exerciseSteps: [], validationChecks: [], retention: [], tools: [], notesPrompt: "", exercises: [] },
+      },
+    ];
+    const queue = getDueReviewQueue(entries, {});
+    expect(queue).toHaveLength(0);
+  });
+
+  it("getDueReviewQueue excludes lessons reviewed recently", () => {
+    const entries = [
+      {
+        phase: { id: "p1", title: "P1", strapline: "", purpose: "", level: "", duration: "", environment: "", tools: [], guardrails: [], milestones: [], projects: [], courses: [] },
+        course: { id: "c1", title: "C1", focus: "", outcome: "", lessons: [] },
+        lesson: { id: "l1", title: "L1", summary: "", duration: "", difficulty: "", objective: "", explanation: [], demonstration: [], exerciseSteps: [], validationChecks: [], retention: [], tools: [], notesPrompt: "", exercises: [] },
+      },
+    ];
+    const queue = getDueReviewQueue(
+      entries,
+      {
+        l1: {
+          completedAt: "2026-04-01T00:00:00.000Z",
+          lastReviewedAt: null,
+          reviewCount: 0,
+        },
+      },
+      Date.parse("2026-04-01T12:00:00.000Z"),
+    );
+    expect(queue).toHaveLength(0);
+  });
+
+  it("getMasteryLevel returns 'aware' at exact lower boundary (2)", () => {
+    expect(getMasteryLevel(2)).toBe("aware");
+  });
+
+  it("getMasteryLevel returns 'independent' for very high count", () => {
+    expect(getMasteryLevel(100)).toBe("independent");
+  });
+
+  it("isDueForReview uses lastReviewedAt when present", () => {
+    const record = {
+      completedAt: "2026-01-01T00:00:00.000Z",
+      lastReviewedAt: "2026-04-10T00:00:00.000Z",
+      reviewCount: 3,
+    };
+    // 3 reviews => next due in 14 days => due at 2026-04-24
+    expect(
+      isDueForReview(record, Date.parse("2026-04-23T23:59:59.000Z")),
+    ).toBe(false);
+    expect(
+      isDueForReview(record, Date.parse("2026-04-24T00:00:01.000Z")),
+    ).toBe(true);
+  });
+
+  it("calculatePercentComplete returns 0 with no completed lessons", () => {
+    const curriculum = {
+      productTitle: "T",
+      productVision: "v",
+      promise: "p",
+      phases: [
+        {
+          id: "p1",
+          title: "P1",
+          strapline: "",
+          purpose: "",
+          level: "",
+          duration: "",
+          environment: "",
+          tools: [],
+          guardrails: [],
+          milestones: [],
+          projects: [],
+          courses: [
+            {
+              id: "c1",
+              title: "C1",
+              focus: "",
+              outcome: "",
+              lessons: [
+                { id: "l1", title: "", summary: "", duration: "", difficulty: "", objective: "", explanation: [], demonstration: [], exerciseSteps: [], validationChecks: [], retention: [], tools: [], notesPrompt: "", exercises: [] },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+    expect(calculatePercentComplete(curriculum, {})).toBe(0);
+  });
+});

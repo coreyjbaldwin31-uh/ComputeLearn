@@ -9,6 +9,7 @@ import {
   createId,
   formatCompletionContent,
 } from "@/lib/artifact-engine";
+import { getWeakCompetencyTracks } from "@/lib/competency-engine";
 import {
   advanceHintLevel,
   getHintButtonLabel,
@@ -260,6 +261,19 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const competencyLevels = useMemo(
     () => calculateCompetencyLevels(curriculum, progress),
     [curriculum, progress],
+  );
+
+  const weakCompetencyTracks = useMemo(
+    () => {
+      const levelStrings: Record<string, string> = Object.fromEntries(
+        Object.entries(competencyLevels).map(([track, count]) => [
+          track,
+          getMasteryLevel(count),
+        ]),
+      );
+      return getWeakCompetencyTracks(levelStrings, "Functional");
+    },
+    [competencyLevels],
   );
 
   const reviewQueue = useMemo(() => {
@@ -1369,8 +1383,12 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                 {selectedPhase.competencyFocus.map((track) => {
                   const count = competencyLevels[track] ?? 0;
                   const level = getMasteryLevel(count);
+                  const isWeak = weakCompetencyTracks.includes(track);
                   return (
-                    <div className="competency-item" key={track}>
+                    <div
+                      className={`competency-item${isWeak ? " competency-weak" : ""}`}
+                      key={track}
+                    >
                       <div className="competency-row">
                         <span className="competency-track">
                           {formatTrackName(track)}
@@ -1378,6 +1396,14 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                         <span className={`mastery-badge mastery-${level}`}>
                           {level}
                         </span>
+                        {isWeak ? (
+                          <span
+                            className="weak-indicator"
+                            title="Needs reinforcement"
+                          >
+                            ↺
+                          </span>
+                        ) : null}
                       </div>
                       <progress
                         className="mastery-bar"
