@@ -3,7 +3,7 @@
  * All functions are stateless and side-effect free — suitable for unit testing.
  */
 
-export type ArtifactType = "note" | "completion" | "transfer";
+export type ArtifactType = "note" | "completion" | "transfer" | "reflection";
 
 export type ArtifactRecord = {
   id: string;

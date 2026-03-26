@@ -16,7 +16,10 @@ import {
   getHintText,
   isHintExhausted,
 } from "@/lib/hint-engine";
-import { getReinforcementQueue } from "@/lib/reinforcement-engine";
+import {
+  buildReflectionPrompts,
+  formatReflectionArtifactContent,
+} from "@/lib/reflection-engine";
 import {
   calculateActivityStreak,
   calculateCompetencyLevels,
@@ -30,6 +33,10 @@ import {
   getPhaseProgressSnapshot,
   isDueForReview,
 } from "@/lib/progression-engine";
+import {
+  getReinforcementQueue,
+  getWeakTrackHits,
+} from "@/lib/reinforcement-engine";
 import {
   evaluateExerciseAnswer,
   evaluateLessonEvidenceGate,
@@ -48,6 +55,7 @@ import { TerminalSimulator } from "./terminal-simulator";
 type ProgressState = Record<string, true>;
 type NotesState = Record<string, string>;
 type AnswerState = Record<string, string>;
+type ReflectionState = Record<string, string>;
 
 type ReviewRecord = {
   completedAt: string;
@@ -70,6 +78,7 @@ type TrainingPlatformProps = {
 
 const progressStorageKey = "computelearn-progress";
 const notesStorageKey = "computelearn-notes";
+const reflectionsStorageKey = "computelearn-reflections";
 const reviewsStorageKey = "computelearn-reviews";
 const learnerProfileStorageKey = "computelearn-learner-profile";
 const attemptsStorageKey = "computelearn-attempts";
@@ -78,6 +87,7 @@ const transferStorageKey = "computelearn-transfer";
 
 const emptyProgress: ProgressState = {};
 const emptyNotes: NotesState = {};
+const emptyReflections: ReflectionState = {};
 const emptyReviews: ReviewState = {};
 const emptyTransfer: TransferState = {};
 const emptyProfile: LearnerProfile = {
@@ -169,6 +179,10 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const [notes, setNotes] = useLocalStorageState<NotesState>(
     notesStorageKey,
     emptyNotes,
+  );
+  const [reflections, setReflections] = useLocalStorageState<ReflectionState>(
+    reflectionsStorageKey,
+    emptyReflections,
   );
   const [answers, setAnswers] = useState<AnswerState>({});
   const [feedback, setFeedback] = useState<Record<string, string>>({});
@@ -308,6 +322,23 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       .filter((artifact) => artifact.lessonId === selectedLesson.id)
       .slice(0, 4);
   }, [artifacts, selectedLesson]);
+
+  const selectedLessonWeakTracks = useMemo(() => {
+    if (!selectedLesson) return [];
+    return getWeakTrackHits(selectedLesson, weakCompetencyTracks);
+  }, [selectedLesson, weakCompetencyTracks]);
+
+  const reflectionPrompts = useMemo(() => {
+    if (!selectedLesson) return [];
+    const reviewRecord = reviews[selectedLesson.id];
+    return buildReflectionPrompts({
+      lesson: selectedLesson,
+      weakTracks: selectedLessonWeakTracks,
+      isDueForReview:
+        reviewRecord != null ? isDueForReview(reviewRecord) : false,
+      reviewCount: reviewRecord?.reviewCount ?? 0,
+    });
+  }, [reviews, selectedLesson, selectedLessonWeakTracks]);
 
   function addArtifact(
     type: ArtifactRecord["type"],
@@ -472,6 +503,10 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     setNotes((current) => ({ ...current, [lessonId]: value }));
   }
 
+  function updateReflection(lessonId: string, value: string) {
+    setReflections((current) => ({ ...current, [lessonId]: value }));
+  }
+
   function updateAnswer(exerciseId: string, value: string) {
     setAnswers((current) => ({ ...current, [exerciseId]: value }));
   }
@@ -551,6 +586,18 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   function saveNoteArtifact(lessonId: string) {
     const note = notes[lessonId] ?? "";
     addArtifact("note", "Lesson note", note, lessonId);
+  }
+
+  function saveReflectionArtifact(lessonId: string) {
+    if (!selectedLesson || selectedLesson.id !== lessonId) return;
+    const reflection = reflections[lessonId] ?? "";
+    const content = formatReflectionArtifactContent(
+      selectedLesson.title,
+      reflectionPrompts,
+      reflection,
+      selectedLessonWeakTracks,
+    );
+    addArtifact("reflection", "Reflection checkpoint", content, lessonId);
   }
 
   function advanceHint(exerciseId: string) {
@@ -1124,6 +1171,41 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                 ))}
               </ul>
             </article>
+
+            <article className="note-card">
+              <h4>Reflection checkpoint</h4>
+              <p className="microcopy">
+                Capture what changed, what still feels weak, and what signal you
+                will reuse next time.
+              </p>
+              <ul className="retention-list">
+                {reflectionPrompts.map((prompt) => (
+                  <li key={prompt}>{prompt}</li>
+                ))}
+              </ul>
+              <textarea
+                aria-label="Lesson reflection"
+                value={reflections[selectedLesson.id] ?? ""}
+                onChange={(event) =>
+                  updateReflection(selectedLesson.id, event.target.value)
+                }
+                placeholder="Write a short reflection: what you verified, what was weak, and what you will do differently next time."
+              />
+              <div className="notes-review-row">
+                <span className="review-meta">
+                  {selectedLessonWeakTracks.length > 0
+                    ? `Weak focus: ${selectedLessonWeakTracks.map(formatTrackName).join(", ")}`
+                    : "No weak competency flags for this lesson yet"}
+                </span>
+                <button
+                  type="button"
+                  className="ghost-button"
+                  onClick={() => saveReflectionArtifact(selectedLesson.id)}
+                >
+                  Save reflection artifact
+                </button>
+              </div>
+            </article>
           </section>
 
           {showTerminal ? (
@@ -1303,7 +1385,9 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                   <h3>Reinforcement focus</h3>
                   <p>Due reviews prioritized by weak competency overlap.</p>
                 </div>
-                <span className="tag due-count">{reinforcementQueue.length}</span>
+                <span className="tag due-count">
+                  {reinforcementQueue.length}
+                </span>
               </div>
               <ul className="review-queue-list">
                 {reinforcementQueue.map((item) => (
@@ -1313,11 +1397,16 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                       className="review-queue-item"
                       onClick={() => navigateToEntry(item.entry)}
                     >
-                      <span className="review-course">{item.entry.course.title}</span>
-                      <span className="review-lesson">{item.entry.lesson.title}</span>
+                      <span className="review-course">
+                        {item.entry.course.title}
+                      </span>
+                      <span className="review-lesson">
+                        {item.entry.lesson.title}
+                      </span>
                       <span className="microcopy">
-                        Focus: {item.weakTracks.map(formatTrackName).join(", ")} ·{" "}
-                        {item.dueSinceDays} day{item.dueSinceDays === 1 ? "" : "s"} overdue
+                        Focus: {item.weakTracks.map(formatTrackName).join(", ")}{" "}
+                        · {item.dueSinceDays} day
+                        {item.dueSinceDays === 1 ? "" : "s"} overdue
                       </span>
                     </button>
                   </li>

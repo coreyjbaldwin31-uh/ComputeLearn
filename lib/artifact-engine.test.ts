@@ -52,7 +52,7 @@ describe("buildArtifactRecord", () => {
     expect(artifact.createdAt).toBe("2024-01-01T00:00:00.000Z");
   });
 
-  it("supports note and transfer artifact types", () => {
+  it("supports note, reflection, and transfer artifact types", () => {
     const note = buildArtifactRecord({
       id: "n1",
       lessonId: "lesson-debugging",
@@ -62,6 +62,16 @@ describe("buildArtifactRecord", () => {
       createdAt: "2024-06-01T00:00:00.000Z",
     });
     expect(note.type).toBe("note");
+
+    const reflection = buildArtifactRecord({
+      id: "r1",
+      lessonId: "lesson-debugging",
+      type: "reflection",
+      title: "Reflection checkpoint",
+      content: "I will verify before editing.",
+      createdAt: "2024-06-01T00:00:00.000Z",
+    });
+    expect(reflection.type).toBe("reflection");
 
     const transfer = buildArtifactRecord({
       id: "t1",

@@ -1,9 +1,9 @@
 import type { Lesson } from "@/data/curriculum";
 import {
-  getNextReviewDays,
-  isDueForReview,
-  type LessonEntry,
-  type ReviewRecord,
+    getNextReviewDays,
+    isDueForReview,
+    type LessonEntry,
+    type ReviewRecord,
 } from "./progression-engine";
 
 export type ReinforcementRecommendation = {

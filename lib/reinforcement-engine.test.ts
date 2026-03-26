@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { getReinforcementQueue, getWeakTrackHits } from "./reinforcement-engine";
 import { flattenLessonEntries } from "./progression-engine";
+import { getReinforcementQueue, getWeakTrackHits } from "./reinforcement-engine";
 
 describe("getWeakTrackHits", () => {
   it("returns overlapping competency tracks", () => {
