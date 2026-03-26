@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
-  buildReflectionPrompts,
-  formatReflectionArtifactContent,
+    buildReflectionPrompts,
+    formatReflectionArtifactContent,
 } from "./reflection-engine";
 
 const lesson = {

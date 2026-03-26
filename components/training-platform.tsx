@@ -17,10 +17,6 @@ import {
   isHintExhausted,
 } from "@/lib/hint-engine";
 import {
-  buildReflectionPrompts,
-  formatReflectionArtifactContent,
-} from "@/lib/reflection-engine";
-import {
   calculateActivityStreak,
   calculateCompetencyLevels,
   calculatePercentComplete,
@@ -33,6 +29,11 @@ import {
   getPhaseProgressSnapshot,
   isDueForReview,
 } from "@/lib/progression-engine";
+import {
+  buildReflectionPrompts,
+  formatReflectionArtifactContent,
+} from "@/lib/reflection-engine";
+import { evaluatePhaseMilestoneStatus } from "@/lib/milestone-engine";
 import {
   getReinforcementQueue,
   getWeakTrackHits,
@@ -292,9 +293,22 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     return getDueReviewQueue(allLessonsFlat, reviews);
   }, [allLessonsFlat, reviews]);
 
+  const selectedPhaseEntries = useMemo(
+    () => allLessonsFlat.filter((entry) => entry.phase.id === selectedPhase?.id),
+    [allLessonsFlat, selectedPhase?.id],
+  );
+
   const reinforcementQueue = useMemo(() => {
     return getReinforcementQueue(allLessonsFlat, reviews, weakCompetencyTracks);
   }, [allLessonsFlat, reviews, weakCompetencyTracks]);
+
+  const phaseReinforcementQueue = useMemo(() => {
+    return getReinforcementQueue(
+      selectedPhaseEntries,
+      reviews,
+      weakCompetencyTracks,
+    );
+  }, [reviews, selectedPhaseEntries, weakCompetencyTracks]);
 
   const phaseProgressSnapshot = useMemo(
     () =>
@@ -655,6 +669,10 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     competencyLevels,
     transferEvidenceWithinPhase,
     transferLessonsCount,
+  );
+  const phaseMilestoneStatus = evaluatePhaseMilestoneStatus(
+    phaseExitStatus,
+    phaseReinforcementQueue.length,
   );
   const selectedLessonTransferPassed = Boolean(
     transferProgress[selectedLesson.id],
@@ -1575,9 +1593,41 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                       </span>
                     </span>
                   </li>
+                  <li
+                    className={`gate-item ${phaseMilestoneStatus?.reinforcementGatePassed ? "gate-passed" : "gate-pending"}`}
+                  >
+                    <span className="gate-icon" aria-hidden="true">
+                      {phaseMilestoneStatus?.reinforcementGatePassed ? "✓" : "○"}
+                    </span>
+                    <span className="gate-description">
+                      Clear overdue reinforcement work for weak competencies
+                      <span className="gate-level">
+                        {phaseReinforcementQueue.length === 0
+                          ? "No overdue reinforcement"
+                          : `${phaseReinforcementQueue.length} still due`}
+                      </span>
+                    </span>
+                  </li>
                 </ul>
               </section>
-              {phaseExitStatus.allPassed && phaseExitStatus.nextPhase ? (
+              {!phaseMilestoneStatus?.allPassed ? (
+                <section className="panel">
+                  <h3>Before you advance</h3>
+                  <p className="panel-subtext">
+                    Advancement now depends on competency, transfer, and reinforcement readiness together.
+                  </p>
+                  <ul className="review-queue-list">
+                    {phaseMilestoneStatus?.blockedReasons.map((reason) => (
+                      <li key={reason}>
+                        <div className="review-queue-item static-item">
+                          <span className="review-lesson">{reason}</span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ) : null}
+              {phaseMilestoneStatus?.allPassed && phaseExitStatus.nextPhase ? (
                 <section className="panel phase-advance-panel">
                   <div className="phase-advance-content">
                     <span className="phase-advance-icon" aria-hidden="true">
@@ -1586,7 +1636,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                     <div>
                       <h3>Phase complete!</h3>
                       <p>
-                        All exit gates cleared. You are ready to advance to{" "}
+                        All milestone gates cleared. You are ready to advance to{" "}
                         <strong>{phaseExitStatus.nextPhase.title}</strong>.
                       </p>
                       <button
