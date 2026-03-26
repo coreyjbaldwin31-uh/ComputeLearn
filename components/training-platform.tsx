@@ -2,6 +2,14 @@
 
 import type { Curriculum, Exercise, Lesson } from "@/data/curriculum";
 import {
+  type ArtifactRecord,
+  type AttemptRecord,
+  buildArtifactRecord,
+  buildAttemptRecord,
+  createId,
+  formatCompletionContent,
+} from "@/lib/artifact-engine";
+import {
   calculateActivityStreak,
   calculateCompetencyLevels,
   calculatePercentComplete,
@@ -46,25 +54,6 @@ type LearnerProfile = {
   goal: string;
   weeklyHours: number;
   createdAt: string | null;
-};
-
-type AttemptRecord = {
-  id: string;
-  lessonId: string;
-  exerciseId: string;
-  assessmentType: string;
-  answer: string;
-  passed: boolean;
-  attemptedAt: string;
-};
-
-type ArtifactRecord = {
-  id: string;
-  lessonId: string;
-  type: "note" | "completion" | "transfer";
-  title: string;
-  content: string;
-  createdAt: string;
 };
 
 type TrainingPlatformProps = {
@@ -298,25 +287,22 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       .slice(0, 4);
   }, [artifacts, selectedLesson]);
 
-  function createId(prefix: string) {
-    return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-  }
-
   function addArtifact(
     type: ArtifactRecord["type"],
     title: string,
     content: string,
     lessonId: string,
   ) {
-    if (!content.trim()) return;
-    const nextArtifact: ArtifactRecord = {
+    const trimmed = content.trim();
+    if (!trimmed) return;
+    const nextArtifact = buildArtifactRecord({
       id: createId("artifact"),
       lessonId,
       type,
       title,
-      content: content.trim(),
+      content: trimmed,
       createdAt: new Date().toISOString(),
-    };
+    });
     setArtifacts((current) => [nextArtifact, ...current].slice(0, 250));
   }
 
@@ -408,11 +394,11 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       addArtifact(
         "completion",
         "Lesson completion snapshot",
-        `${lesson?.title ?? lessonId}: completed with ${
-          lesson?.exercises.length ?? 0
-        } validation checks and transfer evidence ${
-          transferProgress[lessonId] ? "passed" : "not required"
-        }.`,
+        formatCompletionContent(
+          lesson?.title ?? lessonId,
+          lesson?.exercises.length ?? 0,
+          Boolean(transferProgress[lessonId]),
+        ),
         lessonId,
       );
     }
@@ -484,7 +470,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
 
     setLessonGateFeedback(null);
 
-    const record: AttemptRecord = {
+    const record = buildAttemptRecord({
       id: createId("attempt"),
       lessonId: selectedLesson.id,
       exerciseId: exercise.id,
@@ -492,7 +478,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       answer,
       passed,
       attemptedAt: new Date().toISOString(),
-    };
+    });
     setAttempts((current) => [record, ...current].slice(0, 500));
   }
 
@@ -515,7 +501,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
 
     setLessonGateFeedback(null);
 
-    const record: AttemptRecord = {
+    const record = buildAttemptRecord({
       id: createId("attempt"),
       lessonId: selectedLesson.id,
       exerciseId: selectedLesson.transferTask.id,
@@ -523,7 +509,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       answer,
       passed,
       attemptedAt: new Date().toISOString(),
-    };
+    });
     setAttempts((current) => [record, ...current].slice(0, 500));
 
     if (passed) {
@@ -578,7 +564,12 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     );
   }, [hintLevels, selectedLesson?.id]);
 
-  if (!selectedPhase || !selectedCourse || !selectedLesson || !phaseProgressSnapshot) {
+  if (
+    !selectedPhase ||
+    !selectedCourse ||
+    !selectedLesson ||
+    !phaseProgressSnapshot
+  ) {
     return null;
   }
 
@@ -1218,8 +1209,8 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
               <span>{recentAttempts.length} recent attempts</span>
               <span>{recentArtifacts.length} lesson artifacts</span>
               <span>
-                {transferEvidenceWithinPhase}/
-                {transferLessonsCount} transfer gates passed
+                {transferEvidenceWithinPhase}/{transferLessonsCount} transfer
+                gates passed
               </span>
             </div>
             {recentAttempts.length > 0 ? (
@@ -1425,8 +1416,8 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                     <span className="gate-description">
                       Pass at least one transfer challenge in this phase
                       <span className="gate-level">
-                        {transferEvidenceWithinPhase}/
-                        {transferLessonsCount} complete
+                        {transferEvidenceWithinPhase}/{transferLessonsCount}{" "}
+                        complete
                       </span>
                     </span>
                   </li>
