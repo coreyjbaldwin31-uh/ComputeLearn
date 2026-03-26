@@ -100,4 +100,71 @@ describe("validation-engine", () => {
 
     expect(withTransfer.passed).toBe(true);
   });
+
+  it("passes includes-mode when answer contains the accepted substring regardless of case", () => {
+    const exercise = {
+      id: "e3",
+      title: "Case insensitive",
+      prompt: "What command lists processes?",
+      placeholder: "...",
+      validationMode: "includes" as const,
+      acceptedAnswers: ["get-process"],
+      successMessage: "ok",
+      hint: "Get-Process",
+    };
+
+    const result = evaluateExerciseAnswer(exercise, "   GET-PROCESS  ");
+    expect(result.passed).toBe(true);
+  });
+
+  it("fails exact mode when answer contains extra characters", () => {
+    const exercise = {
+      id: "e4",
+      title: "Exact match",
+      prompt: "Symbol?",
+      placeholder: "|",
+      validationMode: "exact" as const,
+      acceptedAnswers: ["|"],
+      successMessage: "ok",
+      hint: "Pipe",
+    };
+
+    const result = evaluateExerciseAnswer(exercise, " | extra");
+    expect(result.passed).toBe(false);
+  });
+
+  it("passes when any one of multiple accepted answers matches", () => {
+    const exercise = {
+      id: "e5",
+      title: "Multiple accepted",
+      prompt: "List files?",
+      placeholder: "...",
+      validationMode: "includes" as const,
+      acceptedAnswers: ["get-childitem", "dir", "ls"],
+      successMessage: "ok",
+      hint: "There are several aliases",
+    };
+
+    expect(evaluateExerciseAnswer(exercise, "ls").passed).toBe(true);
+    expect(evaluateExerciseAnswer(exercise, "dir").passed).toBe(true);
+    expect(evaluateExerciseAnswer(exercise, "get-childitem").passed).toBe(true);
+    expect(evaluateExerciseAnswer(exercise, "whoami").passed).toBe(false);
+  });
+
+  it("returns a skill gap label matching the assessment type", () => {
+    const exercise = {
+      id: "e6",
+      title: "Debugging",
+      prompt: "Debug?",
+      placeholder: "...",
+      validationMode: "includes" as const,
+      acceptedAnswers: ["never-matches"],
+      successMessage: "ok",
+      hint: "hint",
+      assessmentType: "debugging" as const,
+    };
+
+    const result = evaluateExerciseAnswer(exercise, "wrong answer");
+    expect(result.probableSkillGap).toBe("Debugging accuracy");
+  });
 });
