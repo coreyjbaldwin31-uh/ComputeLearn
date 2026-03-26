@@ -1,5 +1,36 @@
 export type ValidationMode = "includes" | "exact";
 
+export type AssessmentType = "action" | "reasoning" | "debugging" | "transfer";
+
+export type ScaffoldingLevel = "step-by-step" | "goal-driven" | "ticket-style";
+
+export type CompetencyTarget = {
+  track: string;
+  targetLevel: string;
+};
+
+export type ExitStandardGate = {
+  description: string;
+  competency: string;
+  requiredLevel: string;
+};
+
+export type ExitStandard = {
+  summary: string;
+  gates: ExitStandardGate[];
+  representativeLabs: string[];
+};
+
+export type CodeExercise = {
+  id: string;
+  title: string;
+  description: string;
+  starterCode: string;
+  language: string;
+  hint: string;
+  acceptedPatterns: string[];
+};
+
 export type Exercise = {
   id: string;
   title: string;
@@ -9,6 +40,7 @@ export type Exercise = {
   acceptedAnswers: string[];
   successMessage: string;
   hint: string;
+  assessmentType?: AssessmentType;
 };
 
 export type Lesson = {
@@ -26,6 +58,10 @@ export type Lesson = {
   tools: string[];
   notesPrompt: string;
   exercises: Exercise[];
+  transferTask?: Exercise;
+  codeExercises?: CodeExercise[];
+  competencies?: CompetencyTarget[];
+  scaffoldingLevel?: ScaffoldingLevel;
 };
 
 export type Course = {
@@ -49,6 +85,8 @@ export type Phase = {
   milestones: string[];
   projects: string[];
   courses: Course[];
+  competencyFocus?: string[];
+  exitStandard?: ExitStandard;
 };
 
 export type Curriculum = {
@@ -60,16 +98,16 @@ export type Curriculum = {
 
 export const curriculum: Curriculum = {
   productTitle: "ComputeLearn",
-  productVision: "A safe, hands-on platform that takes a regular computer user from operational fluency to practical software engineering competence.",
-  promise: "Users learn by doing inside guided labs, structured projects, and reversible practice environments rather than passive lesson consumption.",
+  productVision: "ComputeLearn is a mastery-based engineering learning platform that takes learners from everyday computer use to practical software development competence through guided labs, real debugging, and project-driven progression.",
+  promise: "Rather than relying on passive lessons, learners work inside controlled, reversible environments where they practice terminal commands, filesystem operations, scripting, coding, debugging, version control, testing, and delivery workflows. Each step builds operational confidence first, programming understanding second, and disciplined engineering execution third.",
   phases: [
     {
       id: "phase-1",
-      title: "Computer Mastery",
-      strapline: "Operate with speed, confidence, and control.",
-      purpose: "Build fast, practical competence with the operating system, terminal, filesystem, automation, and modern productivity tooling.",
-      level: "Beginner to intermediate",
-      duration: "4\u20136 weeks",
+      title: "Computer and Tooling Mastery",
+      strapline: "Operate with speed, confidence, and precision.",
+      purpose: "Build operational fluency and confidence with the OS, terminal, filesystem, automation, and engineering productivity tools.",
+      level: "Beginner",
+      duration: "4–6 weeks",
       environment: "Sandboxed workspace with resettable file trees and guided terminal history",
       tools: ["Windows Terminal", "PowerShell", "PowerToys", "File Explorer", "Obsidian"],
       guardrails: [
@@ -80,12 +118,27 @@ export const curriculum: Curriculum = {
       milestones: [
         "Navigate files without getting lost",
         "Use keyboard-driven workflows to reduce friction",
-        "Automate repetitive computer tasks safely",
+        "Write safe automation scripts",
+        "Organize engineering knowledge in a vault",
       ],
       projects: [
         "Create a personal command cheat sheet with saved terminal transcripts",
         "Build a folder automation workflow for recurring tasks",
       ],
+      competencyFocus: ["SystemNavigation", "TerminalOperation", "Automation"],
+      exitStandard: {
+        summary: "The learner can inspect, navigate, create, modify, move, search, and automate within a controlled workspace without getting lost.",
+        gates: [
+          { description: "Navigate directories and files without GUI assistance", competency: "SystemNavigation", requiredLevel: "Functional" },
+          { description: "Write and run basic PowerShell scripts safely", competency: "TerminalOperation", requiredLevel: "Functional" },
+          { description: "Build a repeatable automation for a common task", competency: "Automation", requiredLevel: "Assisted" },
+        ],
+        representativeLabs: [
+          "Recover a misplaced file using search and path reasoning",
+          "Bulk rename files safely in a sandbox",
+          "Write a PowerShell script that organizes downloads by extension",
+        ],
+      },
       courses: [
         {
           id: "course-os-navigation",
@@ -126,10 +179,23 @@ export const curriculum: Curriculum = {
               tools: ["Windows Terminal", "PowerShell", "File Explorer"],
               notesPrompt: "Write the three commands you want to become muscle memory, and note one mistake this lesson helped you avoid.",
               exercises: [
-                { id: "pwd-check", title: "Context check", prompt: "Enter a PowerShell command that shows the current working directory.", placeholder: "Example: Get-...", validationMode: "includes", acceptedAnswers: ["get-location", "pwd"], successMessage: "Correct. The habit to build is checking location before acting.", hint: "In PowerShell, both the full cmdlet and a short alias are common." },
-                { id: "list-check", title: "Inspect contents", prompt: "Enter a PowerShell command that lists directory contents.", placeholder: "Example: Get-...", validationMode: "includes", acceptedAnswers: ["get-childitem", "dir", "ls"], successMessage: "Correct. Engineers inspect the terrain before making changes.", hint: "There is a full cmdlet and a couple of short aliases." },
-                { id: "cd-check", title: "Change directory", prompt: "What command moves you into a subfolder called Projects?", placeholder: "cd ...", validationMode: "includes", acceptedAnswers: ["cd projects", "set-location projects"], successMessage: "Correct. Deliberate navigation is the foundation of safe terminal use.", hint: "Use cd or Set-Location followed by the folder name." },
+                { id: "pwd-check", title: "Context check", prompt: "Enter a PowerShell command that shows the current working directory.", placeholder: "Example: Get-...", validationMode: "includes", acceptedAnswers: ["get-location", "pwd"], successMessage: "Correct. The habit to build is checking location before acting.", hint: "In PowerShell, both the full cmdlet and a short alias are common.", assessmentType: "action" },
+                { id: "list-check", title: "Inspect contents", prompt: "Enter a PowerShell command that lists directory contents.", placeholder: "Example: Get-...", validationMode: "includes", acceptedAnswers: ["get-childitem", "dir", "ls"], successMessage: "Correct. Engineers inspect the terrain before making changes.", hint: "There is a full cmdlet and a couple of short aliases.", assessmentType: "action" },
+                { id: "cd-check", title: "Change directory", prompt: "What command moves you into a subfolder called Projects?", placeholder: "cd ...", validationMode: "includes", acceptedAnswers: ["cd projects", "set-location projects"], successMessage: "Correct. Deliberate navigation is the foundation of safe terminal use.", hint: "Use cd or Set-Location followed by the folder name.", assessmentType: "action" },
               ],
+              transferTask: {
+                id: "transfer-filesystem-recovery",
+                title: "Transfer challenge: recover a misplaced file",
+                prompt: "You are in the wrong directory and need to find a misplaced file safely. Describe the command sequence you would use before moving or deleting anything.",
+                placeholder: "Describe commands and reasoning",
+                validationMode: "includes",
+                acceptedAnswers: ["get-location", "dir", "ls", "cd", "find", "where", "inspect"],
+                successMessage: "Strong transfer response. You emphasized context checks and inspection before modification.",
+                hint: "Mention at least one context check and one inspection command before any file-changing action.",
+                assessmentType: "transfer",
+              },
+              competencies: [{ track: "SystemNavigation", targetLevel: "Functional" }],
+              scaffoldingLevel: "step-by-step",
             },
             {
               id: "lesson-keyboard-shortcuts",
@@ -164,9 +230,11 @@ export const curriculum: Curriculum = {
               tools: ["Windows Terminal", "PowerShell", "File Explorer"],
               notesPrompt: "List five keyboard shortcuts you plan to use every day. Note which ones feel unnatural \u2014 those need the most practice.",
               exercises: [
-                { id: "shortcut-switch", title: "Window switching", prompt: "What keyboard shortcut switches between open windows?", placeholder: "Key combination", validationMode: "includes", acceptedAnswers: ["alt+tab", "alt tab"], successMessage: "Correct. Alt+Tab is the single most used shortcut in professional work.", hint: "It involves the Alt key and another key." },
-                { id: "shortcut-explorer", title: "Quick launch", prompt: "What shortcut opens File Explorer instantly?", placeholder: "Key combination", validationMode: "includes", acceptedAnswers: ["win+e", "windows+e"], successMessage: "Correct. Win+E bypasses the Start menu entirely.", hint: "It uses the Windows key combined with a letter." },
+                { id: "shortcut-switch", title: "Window switching", prompt: "What keyboard shortcut switches between open windows?", placeholder: "Key combination", validationMode: "includes", acceptedAnswers: ["alt+tab", "alt tab"], successMessage: "Correct. Alt+Tab is the single most used shortcut in professional work.", hint: "It involves the Alt key and another key.", assessmentType: "action" },
+                { id: "shortcut-explorer", title: "Quick launch", prompt: "What shortcut opens File Explorer instantly?", placeholder: "Key combination", validationMode: "includes", acceptedAnswers: ["win+e", "windows+e"], successMessage: "Correct. Win+E bypasses the Start menu entirely.", hint: "It uses the Windows key combined with a letter.", assessmentType: "action" },
               ],
+              competencies: [{ track: "SystemNavigation", targetLevel: "Functional" }],
+              scaffoldingLevel: "step-by-step",
             },
             {
               id: "lesson-system-inspection",
@@ -197,8 +265,10 @@ export const curriculum: Curriculum = {
               tools: ["Windows Terminal", "PowerShell", "Task Manager"],
               notesPrompt: "Write down the commands to check CPU, memory, and disk space. Note anything surprising you found about your system.",
               exercises: [
-                { id: "process-list", title: "List processes", prompt: "Enter a PowerShell command that shows running processes.", placeholder: "Get-...", validationMode: "includes", acceptedAnswers: ["get-process", "ps"], successMessage: "Correct. Knowing what is running is the first step to understanding system behavior.", hint: "The cmdlet name describes exactly what it does \u2014 it gets processes." },
+                { id: "process-list", title: "List processes", prompt: "Enter a PowerShell command that shows running processes.", placeholder: "Get-...", validationMode: "includes", acceptedAnswers: ["get-process", "ps"], successMessage: "Correct. Knowing what is running is the first step to understanding system behavior.", hint: "The cmdlet name describes exactly what it does \u2014 it gets processes.", assessmentType: "action" },
               ],
+              competencies: [{ track: "SystemNavigation", targetLevel: "Functional" }],
+              scaffoldingLevel: "step-by-step",
             },
           ],
         },
@@ -229,8 +299,10 @@ export const curriculum: Curriculum = {
               tools: ["PowerShell", "Windows Terminal", "PowerToys", "Obsidian"],
               notesPrompt: "Capture one repetitive workflow from your own computer life and describe how you would sandbox it before automating it.",
               exercises: [
-                { id: "safety-principle", title: "Safety first", prompt: "Type the principle that should come before writing automation that modifies many files.", placeholder: "Short phrase", validationMode: "includes", acceptedAnswers: ["dry run", "preview", "test in sandbox", "reversible"], successMessage: "Correct. Safe automation starts with previewing, isolating, and making rollback possible.", hint: "Think about what you should do before bulk edits hit real files." },
+                { id: "safety-principle", title: "Safety first", prompt: "Type the principle that should come before writing automation that modifies many files.", placeholder: "Short phrase", validationMode: "includes", acceptedAnswers: ["dry run", "preview", "test in sandbox", "reversible"], successMessage: "Correct. Safe automation starts with previewing, isolating, and making rollback possible.", hint: "Think about what you should do before bulk edits hit real files.", assessmentType: "action" },
               ],
+              competencies: [{ track: "Automation", targetLevel: "Functional" }],
+              scaffoldingLevel: "step-by-step",
             },
             {
               id: "lesson-piping-filtering",
@@ -253,9 +325,11 @@ export const curriculum: Curriculum = {
               tools: ["PowerShell", "Windows Terminal"],
               notesPrompt: "Write three pipe chains you found useful. Note what each stage does.",
               exercises: [
-                { id: "pipe-basics", title: "Pipe operator", prompt: "What symbol connects the output of one command to the input of the next?", placeholder: "Single character", validationMode: "exact", acceptedAnswers: ["|"], successMessage: "Correct. The pipe is the foundation of command composition.", hint: "It is a vertical bar character on your keyboard." },
-                { id: "filter-command", title: "Filter results", prompt: "What PowerShell cmdlet filters objects based on a condition?", placeholder: "Cmdlet name", validationMode: "includes", acceptedAnswers: ["where-object", "where"], successMessage: "Correct. Where-Object lets you keep only what matches your criteria.", hint: "Think about WHERE you want to look in the results." },
+                { id: "pipe-basics", title: "Pipe operator", prompt: "What symbol connects the output of one command to the input of the next?", placeholder: "Single character", validationMode: "exact", acceptedAnswers: ["|"], successMessage: "Correct. The pipe is the foundation of command composition.", hint: "It is a vertical bar character on your keyboard.", assessmentType: "action" },
+                { id: "filter-command", title: "Filter results", prompt: "What PowerShell cmdlet filters objects based on a condition?", placeholder: "Cmdlet name", validationMode: "includes", acceptedAnswers: ["where-object", "where"], successMessage: "Correct. Where-Object lets you keep only what matches your criteria.", hint: "Think about WHERE you want to look in the results.", assessmentType: "action" },
               ],
+              competencies: [{ track: "TerminalOperation", targetLevel: "Functional" }],
+              scaffoldingLevel: "step-by-step",
             },
           ],
         },
@@ -286,25 +360,58 @@ export const curriculum: Curriculum = {
               tools: ["Obsidian"],
               notesPrompt: "Design your ideal vault folder structure. List the categories that matter most for your learning.",
               exercises: [
-                { id: "vault-structure", title: "Vault categories", prompt: "Name at least three folder categories you would create in an engineering knowledge vault.", placeholder: "e.g. Commands, Concepts, ...", validationMode: "includes", acceptedAnswers: ["commands", "concepts", "projects", "logs", "notes", "debugging", "references"], successMessage: "Good structure. Organized vaults make knowledge retrieval fast.", hint: "Think about the types of information an engineer needs to record." },
+                { id: "vault-structure", title: "Vault categories", prompt: "Name at least three folder categories you would create in an engineering knowledge vault.", placeholder: "e.g. Commands, Concepts, ...", validationMode: "includes", acceptedAnswers: ["commands", "concepts", "projects", "logs", "notes", "debugging", "references"], successMessage: "Good structure. Organized vaults make knowledge retrieval fast.", hint: "Think about the types of information an engineer needs to record.", assessmentType: "action" },
               ],
+              competencies: [{ track: "Automation", targetLevel: "Assisted" }],
+              scaffoldingLevel: "step-by-step",
             },
           ],
         },
+
       ],
     },
     {
       id: "phase-2",
-      title: "Engineering Foundations",
-      strapline: "From commands to code, debugging, and version control.",
-      purpose: "Transition from computer competence into repeatable software engineering workflows with real projects and debugging loops.",
+      title: "Programming and Debugging Foundations",
+      strapline: "Build mental models for how software behaves.",
+      purpose: "Transition from using tools to understanding how software systems work. Read code, fix bugs, handle configuration, and work with APIs and small applications.",
       level: "Intermediate",
-      duration: "8\u201310 weeks",
+      duration: "8–10 weeks",
       environment: "Isolated project workspaces with seeded bugs, tests, and version history",
-      tools: ["Visual Studio Code", "Git", "GitHub", "Node.js", "package managers"],
-      guardrails: [ "Every practice repo is disposable and resettable.", "Broken states are intentional and recoverable to teach debugging.", "Validation combines command checks, code checks, and reflection." ],
-      milestones: [ "Read and change code confidently", "Debug broken behavior systematically", "Use Git without fear" ],
-      projects: [ "Repair a broken starter app using logs, breakpoints, and tests", "Ship a small API-backed feature through a structured Git workflow" ],
+      tools: ["Visual Studio Code", "Git", "GitHub", "Node.js", "npm", "Postman", "Docker"],
+      guardrails: [
+        "Every practice repo is disposable and resettable.",
+        "Broken states are intentional and recoverable to teach debugging.",
+        "Validation combines command checks, code checks, and reflection.",
+      ],
+      milestones: [
+        "Read and change code confidently",
+        "Debug broken behavior systematically",
+        "Use Git without fear",
+        "Work with APIs and HTTP",
+        "Manage dependencies and project structure",
+      ],
+      projects: [
+        "Repair a broken starter app using logs, breakpoints, and tests",
+        "Build an API-backed feature through a structured Git workflow",
+        "Complete an authenticated API workflow using Postman collections",
+      ],
+      competencyFocus: ["CodeReading", "Debugging", "VersionControl", "ApiIntegration", "ProgrammingLogic"],
+      exitStandard: {
+        summary: "The learner can read small programs, modify behavior intentionally, diagnose common failures, build working features in a guided codebase, and work with external APIs.",
+        gates: [
+          { description: "Read an unfamiliar codebase and explain its data flow", competency: "CodeReading", requiredLevel: "Functional" },
+          { description: "Identify bug cause from symptoms and verify the fix", competency: "Debugging", requiredLevel: "Functional" },
+          { description: "Use Git branches, commits, and diffs safely", competency: "VersionControl", requiredLevel: "Assisted" },
+          { description: "Make HTTP requests and handle API responses correctly", competency: "ApiIntegration", requiredLevel: "Assisted" },
+        ],
+        representativeLabs: [
+          "Fix a broken form submission",
+          "Trace an API request from UI to response",
+          "Debug a failing TypeScript function",
+          "Add validation to an existing feature",
+        ],
+      },
       courses: [
         {
           id: "course-software-engineering",
@@ -333,9 +440,11 @@ export const curriculum: Curriculum = {
               tools: ["Visual Studio Code", "terminal"],
               notesPrompt: "Describe your code reading process in three steps. Note which VS Code shortcuts helped you navigate.",
               exercises: [
-                { id: "entry-point", title: "Find the entry point", prompt: "In a Node.js project, what file typically serves as the main entry point?", placeholder: "Filename", validationMode: "includes", acceptedAnswers: ["index.js", "index.ts", "server.js", "app.js", "main.js"], successMessage: "Correct. The entry point is where execution begins \u2014 always find it first.", hint: "Look at the 'main' field in package.json or common naming conventions." },
-                { id: "goto-def", title: "Navigate code", prompt: "What VS Code shortcut jumps to the definition of a function or variable?", placeholder: "Key combination", validationMode: "includes", acceptedAnswers: ["f12"], successMessage: "Correct. F12 (Go to Definition) is essential for code navigation.", hint: "It is a single function key." },
+                { id: "entry-point", title: "Find the entry point", prompt: "In a Node.js project, what file typically serves as the main entry point?", placeholder: "Filename", validationMode: "includes", acceptedAnswers: ["index.js", "index.ts", "server.js", "app.js", "main.js"], successMessage: "Correct. The entry point is where execution begins \u2014 always find it first.", hint: "Look at the 'main' field in package.json or common naming conventions.", assessmentType: "action" },
+                { id: "goto-def", title: "Navigate code", prompt: "What VS Code shortcut jumps to the definition of a function or variable?", placeholder: "Key combination", validationMode: "includes", acceptedAnswers: ["f12"], successMessage: "Correct. F12 (Go to Definition) is essential for code navigation.", hint: "It is a single function key.", assessmentType: "action" },
               ],
+              competencies: [{ track: "CodeReading", targetLevel: "Functional" }],
+              scaffoldingLevel: "step-by-step",
             },
             {
               id: "lesson-debugging",
@@ -358,9 +467,22 @@ export const curriculum: Curriculum = {
               tools: ["Visual Studio Code", "terminal", "test runner", "Git"],
               notesPrompt: "Record one debugging habit you want to adopt immediately and one anti-pattern you want to stop using.",
               exercises: [
-                { id: "debug-loop", title: "First step", prompt: "What should you do before editing code when investigating a reported bug?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["reproduce", "observe", "confirm the bug"], successMessage: "Correct. Reproduction establishes a stable target for investigation.", hint: "Think about the first reliable move in a debugging loop." },
-                { id: "verification-loop", title: "Close the loop", prompt: "After making a fix, what must you do to know the work is complete?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["verify", "test", "re-run", "confirm"], successMessage: "Correct. Verification is what turns a code change into an engineering result.", hint: "The answer is not \u2018commit it\u2019." },
+                { id: "debug-loop", title: "First step", prompt: "What should you do before editing code when investigating a reported bug?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["reproduce", "observe", "confirm the bug"], successMessage: "Correct. Reproduction establishes a stable target for investigation.", hint: "Think about the first reliable move in a debugging loop.", assessmentType: "debugging" },
+                { id: "verification-loop", title: "Close the loop", prompt: "After making a fix, what must you do to know the work is complete?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["verify", "test", "re-run", "confirm"], successMessage: "Correct. Verification is what turns a code change into an engineering result.", hint: "The answer is not \u2018commit it\u2019.", assessmentType: "debugging" },
               ],
+              transferTask: {
+                id: "transfer-debug-triage",
+                title: "Transfer challenge: triage an unknown bug",
+                prompt: "A teammate says: 'Checkout fails for some users.' Outline the first three debugging steps you would run and what evidence each step should produce.",
+                placeholder: "Step 1..., Step 2..., Step 3...",
+                validationMode: "includes",
+                acceptedAnswers: ["reproduce", "logs", "hypothesis", "verify", "test", "evidence"],
+                successMessage: "Transfer evidence accepted. Your plan follows a reproducible debugging loop.",
+                hint: "Start with reproduction, then gather evidence, then verify the fix criteria.",
+                assessmentType: "transfer",
+              },
+              competencies: [{ track: "Debugging", targetLevel: "Functional" }],
+              scaffoldingLevel: "step-by-step",
             },
             {
               id: "lesson-project-structure",
@@ -383,8 +505,10 @@ export const curriculum: Curriculum = {
               tools: ["Visual Studio Code", "terminal", "npm"],
               notesPrompt: "List the five most important fields in package.json and what each one controls.",
               exercises: [
-                { id: "npm-install", title: "Install dependencies", prompt: "What command installs all dependencies listed in package.json?", placeholder: "npm ...", validationMode: "includes", acceptedAnswers: ["npm install", "npm i"], successMessage: "Correct. npm install reads package.json and downloads everything the project needs.", hint: "It is the most common first command when cloning a project." },
+                { id: "npm-install", title: "Install dependencies", prompt: "What command installs all dependencies listed in package.json?", placeholder: "npm ...", validationMode: "includes", acceptedAnswers: ["npm install", "npm i"], successMessage: "Correct. npm install reads package.json and downloads everything the project needs.", hint: "It is the most common first command when cloning a project.", assessmentType: "action" },
               ],
+              competencies: [{ track: "ProgrammingLogic", targetLevel: "Functional" }],
+              scaffoldingLevel: "step-by-step",
             },
           ],
         },
@@ -415,9 +539,11 @@ export const curriculum: Curriculum = {
               tools: ["Git", "GitHub", "Visual Studio Code"],
               notesPrompt: "Write your own definition of staging, then describe what a \u2018good commit\u2019 means in practical terms.",
               exercises: [
-                { id: "git-status", title: "Inspect repo state", prompt: "Enter the Git command that shows the working tree and staging status.", placeholder: "git ...", validationMode: "exact", acceptedAnswers: ["git status"], successMessage: "Correct. Inspecting state before acting is a repeated professional habit.", hint: "This is the command most engineers run constantly." },
-                { id: "git-add", title: "Stage a change", prompt: "What command stages a specific file for the next commit?", placeholder: "git ...", validationMode: "includes", acceptedAnswers: ["git add"], successMessage: "Correct. Staging lets you choose exactly what goes into each commit.", hint: "You add files to the staging area." },
+                { id: "git-status", title: "Inspect repo state", prompt: "Enter the Git command that shows the working tree and staging status.", placeholder: "git ...", validationMode: "exact", acceptedAnswers: ["git status"], successMessage: "Correct. Inspecting state before acting is a repeated professional habit.", hint: "This is the command most engineers run constantly.", assessmentType: "action" },
+                { id: "git-add", title: "Stage a change", prompt: "What command stages a specific file for the next commit?", placeholder: "git ...", validationMode: "includes", acceptedAnswers: ["git add"], successMessage: "Correct. Staging lets you choose exactly what goes into each commit.", hint: "You add files to the staging area.", assessmentType: "action" },
               ],
+              competencies: [{ track: "VersionControl", targetLevel: "Functional" }],
+              scaffoldingLevel: "step-by-step",
             },
             {
               id: "lesson-branching",
@@ -440,26 +566,14 @@ export const curriculum: Curriculum = {
               tools: ["Git", "Visual Studio Code", "terminal"],
               notesPrompt: "Write the commands for creating, switching, and merging a branch. Note common mistakes to avoid.",
               exercises: [
-                { id: "branch-create", title: "Create a branch", prompt: "What Git command creates a new branch and switches to it?", placeholder: "git ...", validationMode: "includes", acceptedAnswers: ["git checkout -b", "git switch -c"], successMessage: "Correct. This single command creates and positions you on the new branch.", hint: "There are two ways: one with checkout and one with switch." },
+                { id: "branch-create", title: "Create a branch", prompt: "What Git command creates a new branch and switches to it?", placeholder: "git ...", validationMode: "includes", acceptedAnswers: ["git checkout -b", "git switch -c"], successMessage: "Correct. This single command creates and positions you on the new branch.", hint: "There are two ways: one with checkout and one with switch.", assessmentType: "action" },
               ],
+              competencies: [{ track: "VersionControl", targetLevel: "Functional" }],
+              scaffoldingLevel: "step-by-step",
             },
           ],
         },
-      ],
-    },
-    {
-      id: "phase-3",
-      title: "APIs and Service Workflows",
-      strapline: "Build, test, and debug networked systems.",
-      purpose: "Train learners to work with APIs, HTTP, authentication, and service communication using real tools.",
-      level: "Intermediate",
-      duration: "6\u20138 weeks",
-      environment: "Local API servers in Docker with preconfigured endpoints and auth workflows",
-      tools: ["Postman", "Insomnia", "Docker", "Node.js", "REST APIs"],
-      guardrails: [ "API servers run in containers \u2014 no external network calls required.", "Auth tokens are training-only credentials.", "All data is disposable and resettable between exercises." ],
-      milestones: [ "Understand HTTP methods, status codes, and headers", "Test APIs using professional tools", "Handle authentication workflows end-to-end" ],
-      projects: [ "Build and test a REST API with CRUD operations", "Complete an authenticated API workflow using Postman collections" ],
-      courses: [
+
         {
           id: "course-api-fundamentals",
           title: "API Fundamentals",
@@ -487,9 +601,11 @@ export const curriculum: Curriculum = {
               tools: ["Postman", "terminal", "Docker"],
               notesPrompt: "Create a reference table of HTTP methods and their purposes. Add the status codes you encountered.",
               exercises: [
-                { id: "http-get", title: "Read operation", prompt: "Which HTTP method is used to retrieve a resource without modifying it?", placeholder: "Method name", validationMode: "exact", acceptedAnswers: ["get", "GET"], successMessage: "Correct. GET is for reading \u2014 it should never cause side effects.", hint: "It is the default method when you open a URL in a browser." },
-                { id: "status-404", title: "Not found", prompt: "What HTTP status code means the requested resource was not found?", placeholder: "Number", validationMode: "exact", acceptedAnswers: ["404"], successMessage: "Correct. 404 tells the client the resource does not exist at that URL.", hint: "This is probably the most famous status code on the internet." },
+                { id: "http-get", title: "Read operation", prompt: "Which HTTP method is used to retrieve a resource without modifying it?", placeholder: "Method name", validationMode: "exact", acceptedAnswers: ["get", "GET"], successMessage: "Correct. GET is for reading \u2014 it should never cause side effects.", hint: "It is the default method when you open a URL in a browser.", assessmentType: "action" },
+                { id: "status-404", title: "Not found", prompt: "What HTTP status code means the requested resource was not found?", placeholder: "Number", validationMode: "exact", acceptedAnswers: ["404"], successMessage: "Correct. 404 tells the client the resource does not exist at that URL.", hint: "This is probably the most famous status code on the internet.", assessmentType: "action" },
               ],
+              competencies: [{ track: "ApiIntegration", targetLevel: "Functional" }],
+              scaffoldingLevel: "goal-driven",
             },
             {
               id: "lesson-postman-basics",
@@ -512,25 +628,62 @@ export const curriculum: Curriculum = {
               tools: ["Postman", "Docker"],
               notesPrompt: "Document the steps to create a Postman collection from scratch. Note how variables make it flexible.",
               exercises: [
-                { id: "postman-env-var", title: "Environment variables", prompt: "In Postman, how do you reference an environment variable in a URL? Use double curly braces syntax.", placeholder: "{{...}}", validationMode: "includes", acceptedAnswers: ["{{", "}}"], successMessage: "Correct. {{variable_name}} is how Postman injects dynamic values.", hint: "Variables are wrapped in a special syntax using curly braces." },
+                { id: "postman-env-var", title: "Environment variables", prompt: "In Postman, how do you reference an environment variable in a URL? Use double curly braces syntax.", placeholder: "{{...}}", validationMode: "includes", acceptedAnswers: ["{{", "}}"], successMessage: "Correct. {{variable_name}} is how Postman injects dynamic values.", hint: "Variables are wrapped in a special syntax using curly braces.", assessmentType: "action" },
               ],
+              competencies: [{ track: "ApiIntegration", targetLevel: "Functional" }],
+              scaffoldingLevel: "goal-driven",
             },
           ],
         },
+
       ],
     },
     {
-      id: "phase-4",
-      title: "Containers and Deployment",
-      strapline: "Ship and operate software with professional tooling.",
-      purpose: "Train learners to containerize applications, understand deployment concepts, and operate development environments with Docker.",
+      id: "phase-3",
+      title: "Engineering Workflow and Delivery",
+      strapline: "Learn how engineering work is actually managed and completed.",
+      purpose: "Build disciplined project execution: Git workflows, testing strategy, refactoring, task planning, deployment concepts, security basics, observability, and AI-assisted work with verification discipline.",
       level: "Intermediate to advanced",
-      duration: "6\u20138 weeks",
-      environment: "Containerized lab environments with build pipelines and deployment simulations",
-      tools: ["Docker", "Docker Compose", "GitHub Actions", "terminal"],
-      guardrails: [ "Containers isolate all experiments from the host machine.", "Build failures are learning opportunities, not emergencies.", "Deployment simulations run locally \u2014 no cloud accounts needed." ],
-      milestones: [ "Build and run a Docker container from scratch", "Compose multi-service applications", "Understand CI/CD pipeline concepts" ],
-      projects: [ "Containerize a full-stack application with a Dockerfile and docker-compose.yml", "Set up a basic GitHub Actions workflow for automated testing" ],
+      duration: "8–10 weeks",
+      environment: "Practice repos with pre-seeded issues, broken tests, and deployment pipelines",
+      tools: ["Git", "GitHub", "Docker", "GitHub Actions", "Vitest", "Visual Studio Code", "AI coding assistant", "terminal"],
+      guardrails: [
+        "All practice repos are disposable and resettable.",
+        "Broken states are intentional and recoverable.",
+        "AI suggestions require explicit verification before acceptance.",
+        "Every delivery task ends with a verification step.",
+      ],
+      milestones: [
+        "Fix a bug on a feature branch and produce a clean commit",
+        "Write tests for a failing component",
+        "Containerize a small application",
+        "Complete a task from issue to working solution",
+        "Use AI tools with systematic verification",
+      ],
+      projects: [
+        "Fix a bug on a feature branch and produce a clean commit",
+        "Write tests for a failing component and make them pass",
+        "Refactor duplicated logic without breaking behavior",
+        "Set up a GitHub Actions workflow for automated testing",
+        "Complete a mini capstone from issue to working solution",
+      ],
+      competencyFocus: ["VersionControl", "Testing", "DeliveryWorkflow", "Debugging"],
+      exitStandard: {
+        summary: "The learner can take a scoped task, implement it in a small codebase, validate it, document it, and explain what they changed and why.",
+        gates: [
+          { description: "Execute a full Git workflow: branch, commit, diff, and pull request", competency: "VersionControl", requiredLevel: "Functional" },
+          { description: "Write and run tests for a component, interpret failures", competency: "Testing", requiredLevel: "Functional" },
+          { description: "Complete a delivery task with validation and a clean commit message", competency: "DeliveryWorkflow", requiredLevel: "Assisted" },
+          { description: "Diagnose a broken local app startup from logs", competency: "Debugging", requiredLevel: "Functional" },
+        ],
+        representativeLabs: [
+          "Fix a bug on a feature branch and produce a clean commit",
+          "Write tests for a failing component",
+          "Refactor duplicated logic without breaking behavior",
+          "Diagnose a broken local app startup",
+          "Complete a mini capstone from issue to working solution",
+        ],
+      },
       courses: [
         {
           id: "course-docker-fundamentals",
@@ -556,9 +709,11 @@ export const curriculum: Curriculum = {
               tools: ["Docker", "terminal"],
               notesPrompt: "Write the five Docker commands you consider essential. Explain what each does in one sentence.",
               exercises: [
-                { id: "docker-run", title: "Run a container", prompt: "What Docker command runs a new container from an image?", placeholder: "docker ...", validationMode: "includes", acceptedAnswers: ["docker run"], successMessage: "Correct. docker run creates and starts a container from the specified image.", hint: "The command name literally describes what it does." },
-                { id: "docker-ps", title: "List containers", prompt: "What command shows currently running Docker containers?", placeholder: "docker ...", validationMode: "includes", acceptedAnswers: ["docker ps"], successMessage: "Correct. docker ps is the first thing you check when debugging container issues.", hint: "ps stands for process status \u2014 a Linux convention." },
+                { id: "docker-run", title: "Run a container", prompt: "What Docker command runs a new container from an image?", placeholder: "docker ...", validationMode: "includes", acceptedAnswers: ["docker run"], successMessage: "Correct. docker run creates and starts a container from the specified image.", hint: "The command name literally describes what it does.", assessmentType: "action" },
+                { id: "docker-ps", title: "List containers", prompt: "What command shows currently running Docker containers?", placeholder: "docker ...", validationMode: "includes", acceptedAnswers: ["docker ps"], successMessage: "Correct. docker ps is the first thing you check when debugging container issues.", hint: "ps stands for process status \u2014 a Linux convention.", assessmentType: "action" },
               ],
+              competencies: [{ track: "DeliveryWorkflow", targetLevel: "Functional" }],
+              scaffoldingLevel: "goal-driven",
             },
             {
               id: "lesson-dockerfile",
@@ -578,26 +733,14 @@ export const curriculum: Curriculum = {
               tools: ["Docker", "Visual Studio Code", "terminal"],
               notesPrompt: "Write a Dockerfile template you can reuse. Annotate each line with its purpose.",
               exercises: [
-                { id: "dockerfile-from", title: "Base image", prompt: "What Dockerfile instruction specifies the base image?", placeholder: "Instruction name", validationMode: "exact", acceptedAnswers: ["FROM", "from"], successMessage: "Correct. FROM is always the first instruction in a Dockerfile.", hint: "Every Docker image is built FROM another image." },
+                { id: "dockerfile-from", title: "Base image", prompt: "What Dockerfile instruction specifies the base image?", placeholder: "Instruction name", validationMode: "exact", acceptedAnswers: ["FROM", "from"], successMessage: "Correct. FROM is always the first instruction in a Dockerfile.", hint: "Every Docker image is built FROM another image.", assessmentType: "action" },
               ],
+              competencies: [{ track: "DeliveryWorkflow", targetLevel: "Functional" }],
+              scaffoldingLevel: "goal-driven",
             },
           ],
         },
-      ],
-    },
-    {
-      id: "phase-5",
-      title: "AI-Assisted Engineering",
-      strapline: "Accelerate work without surrendering judgment.",
-      purpose: "Train learners to use AI as a force multiplier while maintaining accountability, verification, and system understanding.",
-      level: "Advanced",
-      duration: "4\u20136 weeks",
-      environment: "AI interaction logs with verification checkpoints and review tasks",
-      tools: ["AI coding assistants", "tests", "linters", "terminal", "editor diagnostics"],
-      guardrails: [ "AI suggestions are always paired with verification tasks.", "Learners must explain AI output before accepting it.", "Over-reliance on AI is flagged through reflection exercises." ],
-      milestones: [ "Write effective engineering prompts", "Verify AI-generated code systematically", "Know when AI helps and when it misleads" ],
-      projects: [ "Run an AI-assisted refactor with verification checkpoints and review notes", "Build a feature using AI assistance with documented decision log" ],
-      courses: [
+
         {
           id: "course-ai-engineering",
           title: "AI in Real Engineering Work",
@@ -625,8 +768,10 @@ export const curriculum: Curriculum = {
               tools: ["AI coding assistant", "Visual Studio Code"],
               notesPrompt: "Write a template for engineering prompts. Include sections for task, constraints, context, and verification.",
               exercises: [
-                { id: "prompt-improve", title: "Improve the prompt", prompt: "A developer says \u2018write a function to sort data.\u2019 Name one critical missing constraint.", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["type", "language", "order", "input", "format", "ascending", "descending", "what kind"], successMessage: "Correct. Without specifying the data type, language, or sort order, the AI is guessing.", hint: "Think about what you would need to know before writing the function yourself." },
+                { id: "prompt-improve", title: "Improve the prompt", prompt: "A developer says \u2018write a function to sort data.\u2019 Name one critical missing constraint.", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["type", "language", "order", "input", "format", "ascending", "descending", "what kind"], successMessage: "Correct. Without specifying the data type, language, or sort order, the AI is guessing.", hint: "Think about what you would need to know before writing the function yourself.", assessmentType: "reasoning" },
               ],
+              competencies: [{ track: "DeliveryWorkflow", targetLevel: "Functional" }],
+              scaffoldingLevel: "goal-driven",
             },
             {
               id: "lesson-ai-verification",
@@ -649,12 +794,349 @@ export const curriculum: Curriculum = {
               tools: ["AI coding assistant", "tests", "linters", "terminal", "editor diagnostics"],
               notesPrompt: "Write your personal AI operating rules for software engineering work. Keep them strict enough to prevent lazy trust.",
               exercises: [
-                { id: "ai-rule", title: "State the rule", prompt: "Complete this idea in your own words: AI output must always be...", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["verified", "checked", "tested", "reviewed"], successMessage: "Correct. AI is a drafting and acceleration tool, not a substitute for validation.", hint: "Think about the minimum professional standard before shipping AI-assisted work." },
-                { id: "ai-limitation", title: "Know the limits", prompt: "Name one thing AI coding assistants commonly get wrong.", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["context", "hallucinate", "outdated", "wrong", "stale", "assumptions", "dependencies", "version"], successMessage: "Correct. Awareness of limitations is what separates productive AI use from dangerous AI use.", hint: "Think about what AI does not have access to when generating code." },
+                { id: "ai-rule", title: "State the rule", prompt: "Complete this idea in your own words: AI output must always be...", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["verified", "checked", "tested", "reviewed"], successMessage: "Correct. AI is a drafting and acceleration tool, not a substitute for validation.", hint: "Think about the minimum professional standard before shipping AI-assisted work.", assessmentType: "reasoning" },
+                { id: "ai-limitation", title: "Know the limits", prompt: "Name one thing AI coding assistants commonly get wrong.", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["context", "hallucinate", "outdated", "wrong", "stale", "assumptions", "dependencies", "version"], successMessage: "Correct. Awareness of limitations is what separates productive AI use from dangerous AI use.", hint: "Think about what AI does not have access to when generating code.", assessmentType: "reasoning" },
               ],
+              competencies: [{ track: "DeliveryWorkflow", targetLevel: "Functional" }],
+              scaffoldingLevel: "goal-driven",
             },
           ],
         },
+
+        {
+          id: "course-workflow-practice",
+          title: "Engineering Workflow Practice",
+          focus: "Git workflows, testing, refactoring, code review, and task execution",
+          outcome: "Learners execute engineering tasks from scoped issue to clean, tested, committed solution.",
+          lessons: [
+            {
+              id: "lesson-git-workflow-advanced",
+              title: "Git Workflows for Real Projects",
+              summary: "Use branches, commits, diffs, and pull request thinking to manage change safely.",
+              duration: "50 min",
+              difficulty: "Core",
+              objective: "Execute a complete Git workflow: create a branch, make targeted commits, review the diff, and prepare a pull request.",
+              explanation: [
+                "Git is not just backup — it is the primary tool for managing, communicating, and reviewing change. A disciplined Git workflow makes your work reviewable, reversible, and understandable to teammates.",
+                "This lesson covers branching strategy, atomic commits, diff inspection, and the mindset behind a good pull request: a change should be understandable in isolation.",
+              ],
+              demonstration: [
+                "The demo creates a feature branch, makes two focused commits with clear messages, reviews the diff before pushing, and prepares a pull request description.",
+                "It shows the difference between a single giant commit and three atomic commits that each explain one change.",
+              ],
+              exerciseSteps: [
+                "Create a branch for a hypothetical bugfix.",
+                "Make two atomic commits with clear messages.",
+                "Review the diff and write a one-line summary of the change.",
+              ],
+              validationChecks: [
+                "User creates a branch with a descriptive name.",
+                "User commits with a message that explains why, not just what.",
+                "User can read a diff and summarize the change.",
+              ],
+              retention: [
+                "Branch early, commit often, push deliberately.",
+                "A good commit message explains intent, not mechanics.",
+                "The diff is your change review — read it before pushing.",
+              ],
+              tools: ["Git", "terminal", "Visual Studio Code"],
+              notesPrompt: "Write your personal Git workflow checklist: what you check before committing and before pushing.",
+              exercises: [
+                { id: "git-branch-naming", title: "Branch naming", prompt: "Name the Git command that creates and switches to a new branch called fix/login-error.", placeholder: "git ...", validationMode: "includes", acceptedAnswers: ["git checkout -b fix/login-error", "git switch -c fix/login-error"], successMessage: "Correct. Descriptive branch names communicate intent before anyone reads a single commit.", hint: "Use git checkout -b or git switch -c followed by the branch name.", assessmentType: "action" },
+                { id: "commit-message-quality", title: "Commit messages", prompt: "Which commit message is better: 'fix stuff' or 'fix: validate email before form submission'? Explain why.", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["validate", "specific", "why", "explain", "descriptive"], successMessage: "Correct. Commit messages are documentation — they should explain the intent of the change.", hint: "Think about what a teammate would need to understand the change six months later.", assessmentType: "reasoning" },
+              ],
+              transferTask: {
+                id: "transfer-git-ticket-flow",
+                title: "Transfer challenge: issue to PR flow",
+                prompt: "Given a bug ticket, describe your Git flow from branch creation through final review check before opening a pull request.",
+                placeholder: "Describe your flow",
+                validationMode: "includes",
+                acceptedAnswers: ["branch", "commit", "diff", "test", "status", "push", "pull request"],
+                successMessage: "Great. Your workflow demonstrates delivery discipline and review readiness.",
+                hint: "Include branch strategy, commit quality, and at least one verification command before PR.",
+                assessmentType: "transfer",
+              },
+              competencies: [{ track: "VersionControl", targetLevel: "Functional" }],
+              scaffoldingLevel: "goal-driven",
+            },
+            {
+              id: "lesson-refactoring",
+              title: "Refactor Without Breaking Things",
+              summary: "Improve code structure without changing behavior — and verify you succeeded.",
+              duration: "50 min",
+              difficulty: "Core",
+              objective: "Identify duplicated logic, extract it into reusable functions, and verify behavior is preserved with tests.",
+              explanation: [
+                "Refactoring is improving the internal structure of code without changing what it does externally. It is how codebases stay maintainable as they grow.",
+                "The key discipline is: run tests before, make the structural change, run tests after. If they still pass, the behavior is preserved.",
+              ],
+              demonstration: [
+                "The demo shows three functions with copy-pasted validation logic, extracts it into a single utility function, updates the three call sites, and re-runs the test suite to confirm no behavior changed.",
+                "It then shows how to rename a variable for clarity — a small refactor — and what makes a name good vs. misleading.",
+              ],
+              exerciseSteps: [
+                "Identify duplicated code in the practice file.",
+                "Extract the shared logic into a named function.",
+                "Verify all original behavior is preserved.",
+              ],
+              validationChecks: [
+                "User identifies the duplication correctly.",
+                "User extracts to a function with a clear name.",
+                "User runs or describes a verification step.",
+              ],
+              retention: [
+                "Refactor in small steps — one change at a time.",
+                "Tests are the safety net that make refactoring possible.",
+                "A good name is the cheapest documentation you can write.",
+              ],
+              tools: ["Visual Studio Code", "terminal", "Vitest"],
+              notesPrompt: "List three refactoring moves you know (e.g., extract function, rename variable) and when you would use each.",
+              exercises: [
+                { id: "refactor-safety", title: "Safety first", prompt: "What must be in place before refactoring to ensure you don't break behavior?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["tests", "test suite", "unit tests"], successMessage: "Correct. Tests are the safety net that make refactoring possible without fear.", hint: "Think about what would catch a regression automatically.", assessmentType: "reasoning" },
+              ],
+              codeExercises: [
+                {
+                  id: "extract-validator",
+                  title: "Extract shared validation",
+                  description: "The two functions below both validate email format with identical logic. Extract the validation into a shared isValidEmail function that both can call.",
+                  starterCode: "function registerUser(email, password) {\n  if (!email.includes('@') || !email.includes('.')) {\n    throw new Error('Invalid email');\n  }\n  // register logic...\n}\n\nfunction updateEmail(userId, email) {\n  if (!email.includes('@') || !email.includes('.')) {\n    throw new Error('Invalid email');\n  }\n  // update logic...\n}",
+                  language: "javascript",
+                  hint: "Create a function called isValidEmail(email) that returns a boolean, then call it in both places.",
+                  acceptedPatterns: ["isValidEmail", "function isValidEmail", "includes('@')"],
+                },
+              ],
+              competencies: [{ track: "CodeReading", targetLevel: "Functional" }, { track: "Debugging", targetLevel: "Assisted" }],
+              scaffoldingLevel: "goal-driven",
+            },
+          ],
+        }
+      ],
+    },
+    {
+      id: "phase-4",
+      title: "Independent Build and Portfolio",
+      strapline: "Prove what you can do.",
+      purpose: "Transition from training to independent execution. Build complete projects with reduced scaffolding, make architectural decisions, and document work for portfolio presentation.",
+      level: "Advanced",
+      duration: "6–8 weeks",
+      environment: "Open workspaces with minimal scaffolding — ticket-style briefs only",
+      tools: ["Visual Studio Code", "Git", "GitHub", "Node.js", "chosen stack tooling", "AI coding assistant"],
+      guardrails: [
+        "Scaffolding is intentionally minimal — learners should ask for help from AI or documentation, not step-by-step instructions.",
+        "All projects must include a README, setup instructions, and at least basic tests.",
+        "AI assistance is permitted but must be documented in a decision log.",
+      ],
+      milestones: [
+        "Build a working CLI utility independently",
+        "Complete a CRUD web app from requirements",
+        "Document and present a debugging case study",
+        "Deliver a capstone with README, tests, and setup instructions",
+      ],
+      projects: [
+        "Personal CLI utility with documented purpose and usage",
+        "CRUD web application with frontend and API",
+        "API-integrated dashboard",
+        "Debugging case study with root cause analysis",
+        "Documented capstone with README, setup instructions, and test coverage",
+      ],
+      competencyFocus: ["DeliveryWorkflow", "Debugging", "Testing", "ApiIntegration", "ProgrammingLogic"],
+      exitStandard: {
+        summary: "The learner can build and explain one or more complete projects that demonstrate engineering competence — inspect systems, modify code, diagnose failures, and build working solutions with discipline.",
+        gates: [
+          { description: "Build and ship a working application independently", competency: "DeliveryWorkflow", requiredLevel: "Independent" },
+          { description: "Write tests that verify core behaviors of a project", competency: "Testing", requiredLevel: "Functional" },
+          { description: "Debug and document a real failure from symptoms to fix", competency: "Debugging", requiredLevel: "Independent" },
+          { description: "Integrate at least one external API in a project", competency: "ApiIntegration", requiredLevel: "Functional" },
+        ],
+        representativeLabs: [
+          "Build a personal CLI utility",
+          "Complete a CRUD web app from a ticket brief",
+          "Debug and document a broken app startup",
+          "Deliver a capstone with README and test coverage",
+        ],
+      },
+      courses: [
+        {
+          id: "course-capstone-tracks",
+          title: "Capstone Tracks",
+          focus: "Independent project execution with minimal scaffolding",
+          outcome: "Learners complete one or more scoped projects that demonstrate end-to-end engineering competence.",
+          lessons: [
+            {
+              id: "lesson-cli-build",
+              title: "Build a CLI Utility",
+              summary: "Design and build a command-line tool that solves a real problem, documented for use by others.",
+              duration: "3–4 hours",
+              difficulty: "Advanced",
+              objective: "Design, implement, test, and document a CLI tool from scratch.",
+              explanation: [
+                "A CLI tool is one of the most direct demonstrations of engineering skill: you define the interface, implement the logic, handle edge cases, and ship something usable.",
+                "This lab is ticket-style: you receive a brief, you plan the approach, you build it, you test it, and you document it. No step-by-step instructions.",
+              ],
+              demonstration: [
+                "The brief: build a tool that accepts a directory path and outputs a summary of file types and counts.",
+                "The deliverable: a working script, a README explaining usage, and at least two tests verifying core behavior.",
+              ],
+              exerciseSteps: [
+                "Read the brief and define the CLI interface (arguments, flags, output format).",
+                "Build the tool in incremental steps with tests after each major function.",
+                "Write a README that explains what the tool does, how to install it, and how to use it.",
+              ],
+              validationChecks: [
+                "Tool runs from the command line with correct arguments.",
+                "Output matches the specified format.",
+                "README is complete and usable by someone unfamiliar with the code.",
+                "At least two tests pass.",
+              ],
+              retention: [
+                "Define the interface before writing logic.",
+                "Tests after each function, not after the whole project.",
+                "A README is the first impression of your work.",
+              ],
+              tools: ["Node.js", "terminal", "Visual Studio Code", "Git"],
+              notesPrompt: "Document the decisions you made: language choice, argument parsing approach, test strategy. Explain one tradeoff you encountered.",
+              exercises: [
+                { id: "cli-interface", title: "Define the interface", prompt: "Before writing code for a CLI tool, what should you define first?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["interface", "arguments", "flags", "input", "output", "contract"], successMessage: "Correct. Defining the interface first prevents you from building a tool that is hard to use.", hint: "Think about what a user of your tool needs to know before running it.", assessmentType: "reasoning" },
+              ],
+              transferTask: {
+                id: "transfer-cli-delivery",
+                title: "Transfer challenge: ship-ready CLI",
+                prompt: "Describe the minimum deliverables required to ship your CLI utility so another developer can install, run, and verify it independently.",
+                placeholder: "List deliverables",
+                validationMode: "includes",
+                acceptedAnswers: ["readme", "tests", "usage", "install", "example", "verification"],
+                successMessage: "Transfer challenge passed. You identified the core delivery artifacts needed for independent use.",
+                hint: "Think in terms of reproducibility: setup, usage, and proof it works.",
+                assessmentType: "transfer",
+              },
+              competencies: [{ track: "DeliveryWorkflow", targetLevel: "Independent" }, { track: "Testing", targetLevel: "Functional" }],
+              scaffoldingLevel: "ticket-style",
+            },
+            {
+              id: "lesson-crud-app",
+              title: "Build a CRUD Web Application",
+              summary: "Build a full-stack CRUD application from a requirements brief with frontend, API, and data persistence.",
+              duration: "4–6 hours",
+              difficulty: "Advanced",
+              objective: "Build a working CRUD app with a frontend UI, backend API, and persistent storage from a ticket-style brief.",
+              explanation: [
+                "CRUD (Create, Read, Update, Delete) covers the core of most web applications. Building one independently tests your ability to make architectural decisions, connect layers, and handle edge cases.",
+                "This lab provides a brief with requirements. You choose the stack, design the data model, build the API, connect the UI, and ship a working application.",
+              ],
+              demonstration: [
+                "Brief: Build a task manager where users can add, edit, complete, and delete tasks. The data must persist between page refreshes.",
+                "Deliverable: Working app, documented API, basic test coverage, README.",
+              ],
+              exerciseSteps: [
+                "Read the brief and design the data model.",
+                "Build the API endpoints with validation.",
+                "Connect the frontend to the API.",
+                "Add persistence and verify data survives a page refresh.",
+                "Write tests for at least two API endpoints.",
+              ],
+              validationChecks: [
+                "All four CRUD operations work.",
+                "Data persists between sessions.",
+                "API validates input and returns appropriate status codes.",
+                "At least two tests cover core endpoints.",
+              ],
+              retention: [
+                "Data model first — it constrains everything else.",
+                "Validate at the API boundary, not just the UI.",
+                "Test the contract, not the implementation.",
+              ],
+              tools: ["Node.js", "Visual Studio Code", "Git", "terminal", "Postman"],
+              notesPrompt: "Write up the architecture decisions you made. What would you change if you built this again?",
+              exercises: [
+                { id: "crud-model-first", title: "Data model priority", prompt: "Why should you design the data model before writing API routes for a CRUD application?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["schema", "structure", "fields", "model", "constrain", "shape"], successMessage: "Correct. The data model defines the shape of everything else — routes, validation, and UI all follow from it.", hint: "Think about what your routes and validation depend on.", assessmentType: "reasoning" },
+              ],
+              competencies: [{ track: "DeliveryWorkflow", targetLevel: "Independent" }, { track: "ApiIntegration", targetLevel: "Functional" }, { track: "Testing", targetLevel: "Functional" }],
+              scaffoldingLevel: "ticket-style",
+            },
+            {
+              id: "lesson-debugging-case-study",
+              title: "Debugging Case Study",
+              summary: "Investigate and document a real-world style broken application — from symptoms to root cause to fix.",
+              duration: "2–3 hours",
+              difficulty: "Advanced",
+              objective: "Apply systematic debugging to a broken application, document the investigation process, and produce a clean fix with a written root cause analysis.",
+              explanation: [
+                "A debugging case study proves you can think like an engineer under pressure: observe symptoms without assumptions, isolate the cause, apply a targeted fix, and explain the whole chain.",
+                "This lab gives you a deliberately broken application. Your job is to find the root cause and document the investigation as a professional bug report.",
+              ],
+              demonstration: [
+                "The broken app: an API that returns 500 errors on certain requests. Logs show an error but not the root cause.",
+                "Deliverable: a bug report covering symptom, hypothesis, investigation steps, root cause, fix, and verification.",
+              ],
+              exerciseSteps: [
+                "Reproduce the failure reliably.",
+                "Investigate logs and narrow the scope to one function.",
+                "Identify the root cause (not just the symptom).",
+                "Apply the minimal fix and verify it.",
+                "Write a short bug report.",
+              ],
+              validationChecks: [
+                "Bug is reproduced before any code is changed.",
+                "Root cause is identified, not just the symptom.",
+                "Fix is minimal and targeted.",
+                "Bug report explains cause, fix, and verification.",
+              ],
+              retention: [
+                "Reproduce first — always.",
+                "Root cause is not the line that throws. It is why that line throws.",
+                "A bug report is the artifact that makes your debugging portable knowledge.",
+              ],
+              tools: ["Visual Studio Code", "terminal", "Git", "Node.js"],
+              notesPrompt: "Write your personal debugging protocol in five steps. Note which step most engineers skip.",
+              exercises: [
+                { id: "root-cause-vs-symptom", title: "Root cause vs symptom", prompt: "A server throws a 500 error. Is the 500 error the root cause? Why or why not?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["symptom", "not the cause", "result", "what happened", "deeper"], successMessage: "Correct. The 500 error is the symptom. The root cause is the condition that triggered it — which requires investigation to find.", hint: "Think about the difference between what you observe and why it happened.", assessmentType: "debugging" },
+              ],
+              competencies: [{ track: "Debugging", targetLevel: "Independent" }, { track: "DeliveryWorkflow", targetLevel: "Functional" }],
+              scaffoldingLevel: "ticket-style",
+            },
+            {
+              id: "lesson-portfolio-capstone",
+              title: "Portfolio Capstone",
+              summary: "Deliver and document one or more projects as a coherent portfolio — with READMEs, test coverage, and a written reflection on technical decisions.",
+              duration: "4–8 hours",
+              difficulty: "Advanced",
+              objective: "Package completed projects into a presentable portfolio that demonstrates engineering competence to future collaborators, employers, or clients.",
+              explanation: [
+                "A portfolio is not a resume item — it is evidence. Anyone who reads your code, README, and decisions log should be able to understand what you built, why you made the choices you did, and how to run it themselves.",
+                "This capstone requires you to treat your completed projects as professional deliverables: comprehensive READMEs, at least basic test coverage, documented architecture decisions, and a reflection on what you would change.",
+              ],
+              demonstration: [
+                "Review three example READMEs — a weak one, a functional one, and a strong one — and identify the specific elements that make the difference.",
+                "Write a decisions log entry showing the format: what you chose, what you considered, and why you decided as you did.",
+              ],
+              exerciseSteps: [
+                "Select one or more completed projects from previous lessons.",
+                "Write a README covering: what the project does, how to install and run it, how to run the tests, and one key architectural decision.",
+                "Ensure at least two tests exist and pass on a clean install.",
+                "Write a short reflection: what worked, what you would do differently, and the single most important thing you learned.",
+              ],
+              validationChecks: [
+                "README covers purpose, setup, usage, and one decision.",
+                "Tests exist and pass independently.",
+                "Reflection is honest and specific, not generic.",
+                "Project runs from a clean clone using the documented setup steps.",
+              ],
+              retention: [
+                "A README is the front door to your work — make it work without you.",
+                "Decisions matter more than conclusions — document why, not just what.",
+                "Tests are proof that you know your code works, not just that it ran once.",
+              ],
+              tools: ["Visual Studio Code", "Git", "GitHub", "Node.js", "terminal"],
+              notesPrompt: "Write your own definition of a portfolio-ready project. What does it need that a personal practice project does not?",
+              exercises: [
+                { id: "readme-must-haves", title: "README essentials", prompt: "Name the four sections every technical README must include to be useful to a stranger.", placeholder: "Short list", validationMode: "includes", acceptedAnswers: ["setup", "install", "usage", "what it does", "purpose", "how to run", "tests"], successMessage: "Correct. A README that covers purpose, setup, usage, and testing is immediately useful to anyone who finds it.", hint: "Think about what you need to answer before someone else can use your project independently.", assessmentType: "reasoning" },
+                { id: "portfolio-evidence", title: "Evidence over claims", prompt: "Why is a link to a working project more valuable than a bullet point on a resume?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["evidence", "proof", "show", "demonstrate", "verify", "see", "working"], successMessage: "Correct. Evidence is verifiable. Claims are not. A portfolio converts self-description into demonstrable capability.", hint: "Think about the difference between saying you can do something and showing it.", assessmentType: "reasoning" },
+              ],
+              competencies: [{ track: "DeliveryWorkflow", targetLevel: "Independent" }, { track: "Debugging", targetLevel: "Functional" }],
+              scaffoldingLevel: "ticket-style",
+            },
+          ],
+        }
       ],
     },
   ],

@@ -52,3 +52,23 @@ Run linting:
 ```bash
 npm run lint
 ```
+
+Run type-checking:
+
+```bash
+npm run type-check
+```
+
+Build and run with Docker:
+
+```bash
+docker compose up --build
+```
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for branch strategy, PR policy, and required checks.
+
+Branch protection setup guidance is documented in [docs/branch-protection-setup.md](docs/branch-protection-setup.md).
+
+Repository labels guidance is documented in [docs/repository-labels.md](docs/repository-labels.md).
