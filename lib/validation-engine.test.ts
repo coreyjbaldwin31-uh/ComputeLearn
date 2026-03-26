@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
-  evaluateExerciseAnswer,
-  evaluateLessonEvidenceGate,
+    evaluateExerciseAnswer,
+    evaluateLessonEvidenceGate,
 } from "./validation-engine";
 
 describe("validation-engine", () => {

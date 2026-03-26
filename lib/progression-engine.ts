@@ -26,6 +26,13 @@ export type PhaseExitEvaluation = {
   nextPhase: Phase | null;
 };
 
+export type PhaseProgressSnapshot = {
+  completedLessons: number;
+  totalLessons: number;
+  transferLessons: number;
+  transferEvidence: number;
+};
+
 export type LessonEntry = {
   phase: Curriculum["phases"][number];
   course: Curriculum["phases"][number]["courses"][number];
@@ -197,6 +204,27 @@ export function calculatePercentComplete(
   ).length;
 
   return Math.round((completedLessons / totalLessons) * 100);
+}
+
+export function getPhaseProgressSnapshot(
+  phase: Phase,
+  progress: Record<string, true>,
+  transferProgress: Record<string, true>,
+): PhaseProgressSnapshot {
+  const lessons = phase.courses.flatMap((course) => course.lessons);
+  const completedLessons = lessons.filter((lesson) => progress[lesson.id]).length;
+  const transferLessons = lessons.filter((lesson) => lesson.transferTask != null)
+    .length;
+  const transferEvidence = lessons.filter(
+    (lesson) => lesson.transferTask != null && transferProgress[lesson.id],
+  ).length;
+
+  return {
+    completedLessons,
+    totalLessons: lessons.length,
+    transferLessons,
+    transferEvidence,
+  };
 }
 
 export function evaluatePhaseExitStatus(

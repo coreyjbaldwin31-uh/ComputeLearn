@@ -1,16 +1,17 @@
 import { describe, expect, it } from "vitest";
 import {
     calculateActivityStreak,
-  calculatePercentComplete,
     calculateCompetencyLevels,
+    calculatePercentComplete,
     evaluatePhaseExitStatus,
-  flattenLessonEntries,
+    flattenLessonEntries,
     formatTrackName,
-  getDueReviewQueue,
-  getLessonNeighbors,
+    getDueReviewQueue,
+    getLessonNeighbors,
     getLevelThreshold,
     getMasteryLevel,
     getNextReviewDays,
+    getPhaseProgressSnapshot,
     isDueForReview,
 } from "./progression-engine";
 
@@ -461,5 +462,84 @@ describe("progression-engine", () => {
 
     const percent = calculatePercentComplete(curriculum, { l1: true });
     expect(percent).toBe(50);
+  });
+
+  it("summarises phase progress and transfer counts", () => {
+    const phase = {
+      id: "phase-1",
+      title: "Phase 1",
+      strapline: "strap",
+      purpose: "purpose",
+      level: "Beginner",
+      duration: "4 weeks",
+      environment: "env",
+      tools: [],
+      guardrails: [],
+      milestones: [],
+      projects: [],
+      courses: [
+        {
+          id: "c1",
+          title: "Course 1",
+          focus: "focus",
+          outcome: "outcome",
+          lessons: [
+            {
+              id: "l1",
+              title: "Lesson 1",
+              summary: "",
+              duration: "",
+              difficulty: "",
+              objective: "",
+              explanation: [],
+              demonstration: [],
+              exerciseSteps: [],
+              validationChecks: [],
+              retention: [],
+              tools: [],
+              notesPrompt: "",
+              exercises: [],
+              transferTask: {
+                id: "tt1",
+                title: "Transfer",
+                prompt: "",
+                placeholder: "",
+                validationMode: "includes" as const,
+                acceptedAnswers: ["x"],
+                successMessage: "",
+                hint: "",
+              },
+            },
+            {
+              id: "l2",
+              title: "Lesson 2",
+              summary: "",
+              duration: "",
+              difficulty: "",
+              objective: "",
+              explanation: [],
+              demonstration: [],
+              exerciseSteps: [],
+              validationChecks: [],
+              retention: [],
+              tools: [],
+              notesPrompt: "",
+              exercises: [],
+            },
+          ],
+        },
+      ],
+    };
+
+    const snapshot = getPhaseProgressSnapshot(
+      phase,
+      { l1: true },
+      { l1: true },
+    );
+
+    expect(snapshot.totalLessons).toBe(2);
+    expect(snapshot.completedLessons).toBe(1);
+    expect(snapshot.transferLessons).toBe(1);
+    expect(snapshot.transferEvidence).toBe(1);
   });
 });

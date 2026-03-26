@@ -3,14 +3,15 @@
 import type { Curriculum, Exercise, Lesson } from "@/data/curriculum";
 import {
   calculateActivityStreak,
-  calculatePercentComplete,
   calculateCompetencyLevels,
+  calculatePercentComplete,
   evaluatePhaseExitStatus,
   flattenLessonEntries,
   formatTrackName,
   getDueReviewQueue,
   getLessonNeighbors,
   getMasteryLevel,
+  getPhaseProgressSnapshot,
   isDueForReview,
 } from "@/lib/progression-engine";
 import {
@@ -269,6 +270,14 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const reviewQueue = useMemo(() => {
     return getDueReviewQueue(allLessonsFlat, reviews);
   }, [allLessonsFlat, reviews]);
+
+  const phaseProgressSnapshot = useMemo(
+    () =>
+      selectedPhase
+        ? getPhaseProgressSnapshot(selectedPhase, progress, transferProgress)
+        : null,
+    [selectedPhase, progress, transferProgress],
+  );
 
   const activityStreak = useMemo(
     () => calculateActivityStreak(reviews),
@@ -569,28 +578,23 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     );
   }, [hintLevels, selectedLesson?.id]);
 
-  if (!selectedPhase || !selectedCourse || !selectedLesson) {
+  if (!selectedPhase || !selectedCourse || !selectedLesson || !phaseProgressSnapshot) {
     return null;
   }
 
-  const completedWithinPhase = selectedPhase.courses
-    .flatMap((course) => course.lessons)
-    .filter((lesson) => progress[lesson.id]).length;
-  const totalWithinPhase = selectedPhase.courses.flatMap(
-    (course) => course.lessons,
-  ).length;
-  const transferLessonsWithinPhase = selectedPhase.courses
-    .flatMap((course) => course.lessons)
-    .filter((lesson) => lesson.transferTask != null);
-  const transferEvidenceWithinPhase = transferLessonsWithinPhase.filter(
-    (lesson) => transferProgress[lesson.id],
-  ).length;
+  const {
+    completedLessons: completedWithinPhase,
+    totalLessons: totalWithinPhase,
+    transferLessons: transferLessonsCount,
+    transferEvidence: transferEvidenceWithinPhase,
+  } = phaseProgressSnapshot;
+
   const phaseExitStatus = evaluatePhaseExitStatus(
     curriculum,
     selectedPhase.id,
     competencyLevels,
     transferEvidenceWithinPhase,
-    transferLessonsWithinPhase.length,
+    transferLessonsCount,
   );
   const selectedLessonTransferPassed = Boolean(
     transferProgress[selectedLesson.id],
@@ -1215,7 +1219,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
               <span>{recentArtifacts.length} lesson artifacts</span>
               <span>
                 {transferEvidenceWithinPhase}/
-                {transferLessonsWithinPhase.length} transfer gates passed
+                {transferLessonsCount} transfer gates passed
               </span>
             </div>
             {recentAttempts.length > 0 ? (
@@ -1422,7 +1426,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                       Pass at least one transfer challenge in this phase
                       <span className="gate-level">
                         {transferEvidenceWithinPhase}/
-                        {transferLessonsWithinPhase.length} complete
+                        {transferLessonsCount} complete
                       </span>
                     </span>
                   </li>
