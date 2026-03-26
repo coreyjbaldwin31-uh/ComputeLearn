@@ -26,6 +26,18 @@ export type PhaseExitEvaluation = {
   nextPhase: Phase | null;
 };
 
+export type LessonEntry = {
+  phase: Curriculum["phases"][number];
+  course: Curriculum["phases"][number]["courses"][number];
+  lesson: Curriculum["phases"][number]["courses"][number]["lessons"][number];
+};
+
+export type LessonNeighbors = {
+  currentIndex: number;
+  previous: LessonEntry | null;
+  next: LessonEntry | null;
+};
+
 export function getNextReviewDays(reviewCount: number): number {
   if (reviewCount === 0) return 1;
   if (reviewCount === 1) return 3;
@@ -129,6 +141,62 @@ export function calculateCompetencyLevels(
   }
 
   return store;
+}
+
+export function flattenLessonEntries(curriculum: Curriculum): LessonEntry[] {
+  return curriculum.phases.flatMap((phase) =>
+    phase.courses.flatMap((course) =>
+      course.lessons.map((lesson) => ({ phase, course, lesson })),
+    ),
+  );
+}
+
+export function getLessonNeighbors(
+  entries: LessonEntry[],
+  selectedLessonId: string | undefined,
+): LessonNeighbors {
+  const currentIndex = entries.findIndex(
+    (entry) => entry.lesson.id === selectedLessonId,
+  );
+
+  if (currentIndex < 0) {
+    return {
+      currentIndex,
+      previous: null,
+      next: entries[0] ?? null,
+    };
+  }
+
+  return {
+    currentIndex,
+    previous: currentIndex > 0 ? entries[currentIndex - 1] : null,
+    next: currentIndex < entries.length - 1 ? entries[currentIndex + 1] : null,
+  };
+}
+
+export function getDueReviewQueue(
+  entries: LessonEntry[],
+  reviews: Record<string, ReviewRecord>,
+  nowTimestamp: number = Date.now(),
+): LessonEntry[] {
+  return entries.filter(({ lesson }) => {
+    const record = reviews[lesson.id];
+    return record != null && isDueForReview(record, nowTimestamp);
+  });
+}
+
+export function calculatePercentComplete(
+  curriculum: Curriculum,
+  progress: Record<string, true>,
+): number {
+  const totalLessons = flattenLessonEntries(curriculum).length;
+  if (totalLessons === 0) return 0;
+
+  const completedLessons = Object.keys(progress).filter(
+    (lessonId) => progress[lessonId],
+  ).length;
+
+  return Math.round((completedLessons / totalLessons) * 100);
 }
 
 export function evaluatePhaseExitStatus(

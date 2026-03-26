@@ -2,17 +2,21 @@
 
 import type { Curriculum, Exercise, Lesson } from "@/data/curriculum";
 import {
-  evaluateExerciseAnswer,
-  evaluateLessonEvidenceGate,
-} from "@/lib/validation-engine";
-import {
   calculateActivityStreak,
+  calculatePercentComplete,
   calculateCompetencyLevels,
   evaluatePhaseExitStatus,
+  flattenLessonEntries,
   formatTrackName,
+  getDueReviewQueue,
+  getLessonNeighbors,
   getMasteryLevel,
   isDueForReview,
 } from "@/lib/progression-engine";
+import {
+  evaluateExerciseAnswer,
+  evaluateLessonEvidenceGate,
+} from "@/lib/validation-engine";
 import {
   useCallback,
   useEffect,
@@ -171,9 +175,9 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const [answers, setAnswers] = useState<AnswerState>({});
   const [feedback, setFeedback] = useState<Record<string, string>>({});
   const [hintLevels, setHintLevels] = useState<Record<string, number>>({});
-  const [transferAnswers, setTransferAnswers] = useState<Record<string, string>>(
-    {},
-  );
+  const [transferAnswers, setTransferAnswers] = useState<
+    Record<string, string>
+  >({});
   const [transferFeedback, setTransferFeedback] = useState<
     Record<string, string>
   >({});
@@ -187,10 +191,11 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   );
   const [transferProgress, setTransferProgress] =
     useLocalStorageState<TransferState>(transferStorageKey, emptyTransfer);
-  const [learnerProfile, setLearnerProfile] = useLocalStorageState<LearnerProfile>(
-    learnerProfileStorageKey,
-    emptyProfile,
-  );
+  const [learnerProfile, setLearnerProfile] =
+    useLocalStorageState<LearnerProfile>(
+      learnerProfileStorageKey,
+      emptyProfile,
+    );
   const [attempts, setAttempts] = useLocalStorageState<AttemptRecord[]>(
     attemptsStorageKey,
     [],
@@ -237,48 +242,22 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     return visibleLessons[0] ?? selectedCourse?.lessons[0];
   }, [selectedCourse?.lessons, selectedLessonId, visibleLessons]);
 
-  const totalLessons = useMemo(
-    () =>
-      curriculum.phases.flatMap((phase) =>
-        phase.courses.flatMap((course) => course.lessons),
-      ).length,
-    [curriculum.phases],
+  const percentComplete = useMemo(
+    () => calculatePercentComplete(curriculum, progress),
+    [curriculum, progress],
   );
-
-  const completedLessons = useMemo(
-    () => Object.keys(progress).filter((lessonId) => progress[lessonId]).length,
-    [progress],
-  );
-
-  const percentComplete =
-    totalLessons === 0
-      ? 0
-      : Math.round((completedLessons / totalLessons) * 100);
 
   const allLessonsFlat = useMemo(
-    () =>
-      curriculum.phases.flatMap((phase) =>
-        phase.courses.flatMap((course) =>
-          course.lessons.map((lesson) => ({ phase, course, lesson })),
-        ),
-      ),
-    [curriculum.phases],
+    () => flattenLessonEntries(curriculum),
+    [curriculum],
   );
 
-  const currentLessonIndex = useMemo(
-    () =>
-      allLessonsFlat.findIndex(
-        (entry) => entry.lesson.id === selectedLesson?.id,
-      ),
+  const lessonNeighbors = useMemo(
+    () => getLessonNeighbors(allLessonsFlat, selectedLesson?.id),
     [allLessonsFlat, selectedLesson?.id],
   );
-
-  const prevEntry =
-    currentLessonIndex > 0 ? allLessonsFlat[currentLessonIndex - 1] : null;
-  const nextEntry =
-    currentLessonIndex < allLessonsFlat.length - 1
-      ? allLessonsFlat[currentLessonIndex + 1]
-      : null;
+  const prevEntry = lessonNeighbors.previous;
+  const nextEntry = lessonNeighbors.next;
 
   const showTerminal = selectedPhase?.id === "phase-1";
 
@@ -288,10 +267,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   );
 
   const reviewQueue = useMemo(() => {
-    return allLessonsFlat.filter(({ lesson }) => {
-      const record = reviews[lesson.id];
-      return record != null && isDueForReview(record);
-    });
+    return getDueReviewQueue(allLessonsFlat, reviews);
   }, [allLessonsFlat, reviews]);
 
   const activityStreak = useMemo(
@@ -375,8 +351,9 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   }
 
   function setLessonCompletion(lessonId: string, isComplete: boolean) {
-    const lesson = allLessonsFlat.find((entry) => entry.lesson.id === lessonId)
-      ?.lesson;
+    const lesson = allLessonsFlat.find(
+      (entry) => entry.lesson.id === lessonId,
+    )?.lesson;
 
     if (isComplete && lesson) {
       const completionGate = evaluateLessonEvidenceGate(
@@ -492,7 +469,8 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       ...current,
       [exercise.id]: passed
         ? exercise.successMessage
-        : validation.hint ?? "Not quite right. Check your answer and try again.",
+        : (validation.hint ??
+          "Not quite right. Check your answer and try again."),
     }));
 
     setLessonGateFeedback(null);
@@ -512,15 +490,18 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   function validateTransferTask() {
     if (!selectedLesson?.transferTask) return;
     const answer = transferAnswers[selectedLesson.id] ?? "";
-    const validation = evaluateExerciseAnswer(selectedLesson.transferTask, answer);
+    const validation = evaluateExerciseAnswer(
+      selectedLesson.transferTask,
+      answer,
+    );
     const passed = validation.passed;
 
     setTransferFeedback((current) => ({
       ...current,
       [selectedLesson.id]: passed
         ? selectedLesson.transferTask!.successMessage
-        : validation.hint ??
-          "Transfer response needs more evidence. Refine your plan and try again.",
+        : (validation.hint ??
+          "Transfer response needs more evidence. Refine your plan and try again."),
     }));
 
     setLessonGateFeedback(null);
@@ -611,7 +592,9 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     transferEvidenceWithinPhase,
     transferLessonsWithinPhase.length,
   );
-  const selectedLessonTransferPassed = Boolean(transferProgress[selectedLesson.id]);
+  const selectedLessonTransferPassed = Boolean(
+    transferProgress[selectedLesson.id],
+  );
   const selectedLessonEvidenceGate = evaluateLessonEvidenceGate(
     selectedLesson,
     answers,
@@ -1033,7 +1016,9 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                     {transferFeedback[selectedLesson.id]}
                   </div>
                 ) : null}
-                <div className="hint-layer">{selectedLesson.transferTask.hint}</div>
+                <div className="hint-layer">
+                  {selectedLesson.transferTask.hint}
+                </div>
               </article>
             </section>
           ) : null}
@@ -1238,16 +1223,21 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                 {recentAttempts.map((attempt) => (
                   <li key={attempt.id}>
                     <div className="review-queue-item static-item">
-                      <span className="review-course">{attempt.assessmentType}</span>
+                      <span className="review-course">
+                        {attempt.assessmentType}
+                      </span>
                       <span className="review-lesson">
-                        {attempt.passed ? "Passed" : "Needs work"} · {attempt.exerciseId}
+                        {attempt.passed ? "Passed" : "Needs work"} ·{" "}
+                        {attempt.exerciseId}
                       </span>
                     </div>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className="microcopy">No attempts logged for this lesson yet.</p>
+              <p className="microcopy">
+                No attempts logged for this lesson yet.
+              </p>
             )}
           </section>
 
@@ -1404,7 +1394,9 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
             <>
               <section className="panel">
                 <h3>Phase exit gates</h3>
-                <p className="panel-subtext">{selectedPhase.exitStandard.summary}</p>
+                <p className="panel-subtext">
+                  {selectedPhase.exitStandard.summary}
+                </p>
                 <ul className="gate-list">
                   {phaseExitStatus.gates.map((gate) => (
                     <li
@@ -1429,7 +1421,8 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                     <span className="gate-description">
                       Pass at least one transfer challenge in this phase
                       <span className="gate-level">
-                        {transferEvidenceWithinPhase}/{transferLessonsWithinPhase.length} complete
+                        {transferEvidenceWithinPhase}/
+                        {transferLessonsWithinPhase.length} complete
                       </span>
                     </span>
                   </li>
@@ -1450,7 +1443,9 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                       <button
                         type="button"
                         className="validate-button phase-advance-button"
-                        onClick={() => selectPhase(phaseExitStatus.nextPhase!.id)}
+                        onClick={() =>
+                          selectPhase(phaseExitStatus.nextPhase!.id)
+                        }
                       >
                         Start {phaseExitStatus.nextPhase.title} →
                       </button>

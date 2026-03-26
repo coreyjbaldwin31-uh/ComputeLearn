@@ -1,13 +1,17 @@
 import { describe, expect, it } from "vitest";
 import {
-  calculateActivityStreak,
-  calculateCompetencyLevels,
-  evaluatePhaseExitStatus,
-  formatTrackName,
-  getLevelThreshold,
-  getMasteryLevel,
-  getNextReviewDays,
-  isDueForReview,
+    calculateActivityStreak,
+  calculatePercentComplete,
+    calculateCompetencyLevels,
+    evaluatePhaseExitStatus,
+  flattenLessonEntries,
+    formatTrackName,
+  getDueReviewQueue,
+  getLessonNeighbors,
+    getLevelThreshold,
+    getMasteryLevel,
+    getNextReviewDays,
+    isDueForReview,
 } from "./progression-engine";
 
 describe("progression-engine", () => {
@@ -232,5 +236,230 @@ describe("progression-engine", () => {
 
     const evaluated = evaluatePhaseExitStatus(curriculum, "phase-1", {}, 0, 0);
     expect(evaluated).toBeNull();
+  });
+
+  it("flattens lessons and computes neighbors", () => {
+    const curriculum = {
+      productTitle: "ComputeLearn",
+      productVision: "vision",
+      promise: "promise",
+      phases: [
+        {
+          id: "phase-1",
+          title: "Phase 1",
+          strapline: "strap",
+          purpose: "purpose",
+          level: "Beginner",
+          duration: "4 weeks",
+          environment: "env",
+          tools: [],
+          guardrails: [],
+          milestones: [],
+          projects: [],
+          courses: [
+            {
+              id: "c1",
+              title: "Course 1",
+              focus: "focus",
+              outcome: "outcome",
+              lessons: [
+                {
+                  id: "l1",
+                  title: "Lesson 1",
+                  summary: "",
+                  duration: "",
+                  difficulty: "",
+                  objective: "",
+                  explanation: [],
+                  demonstration: [],
+                  exerciseSteps: [],
+                  validationChecks: [],
+                  retention: [],
+                  tools: [],
+                  notesPrompt: "",
+                  exercises: [],
+                },
+                {
+                  id: "l2",
+                  title: "Lesson 2",
+                  summary: "",
+                  duration: "",
+                  difficulty: "",
+                  objective: "",
+                  explanation: [],
+                  demonstration: [],
+                  exerciseSteps: [],
+                  validationChecks: [],
+                  retention: [],
+                  tools: [],
+                  notesPrompt: "",
+                  exercises: [],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+
+    const entries = flattenLessonEntries(curriculum);
+    expect(entries).toHaveLength(2);
+
+    const neighbors = getLessonNeighbors(entries, "l1");
+    expect(neighbors.previous).toBeNull();
+    expect(neighbors.next?.lesson.id).toBe("l2");
+  });
+
+  it("builds due review queue from lesson entries", () => {
+    const curriculum = {
+      productTitle: "ComputeLearn",
+      productVision: "vision",
+      promise: "promise",
+      phases: [
+        {
+          id: "phase-1",
+          title: "Phase 1",
+          strapline: "strap",
+          purpose: "purpose",
+          level: "Beginner",
+          duration: "4 weeks",
+          environment: "env",
+          tools: [],
+          guardrails: [],
+          milestones: [],
+          projects: [],
+          courses: [
+            {
+              id: "c1",
+              title: "Course 1",
+              focus: "focus",
+              outcome: "outcome",
+              lessons: [
+                {
+                  id: "l1",
+                  title: "Lesson 1",
+                  summary: "",
+                  duration: "",
+                  difficulty: "",
+                  objective: "",
+                  explanation: [],
+                  demonstration: [],
+                  exerciseSteps: [],
+                  validationChecks: [],
+                  retention: [],
+                  tools: [],
+                  notesPrompt: "",
+                  exercises: [],
+                },
+                {
+                  id: "l2",
+                  title: "Lesson 2",
+                  summary: "",
+                  duration: "",
+                  difficulty: "",
+                  objective: "",
+                  explanation: [],
+                  demonstration: [],
+                  exerciseSteps: [],
+                  validationChecks: [],
+                  retention: [],
+                  tools: [],
+                  notesPrompt: "",
+                  exercises: [],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+
+    const entries = flattenLessonEntries(curriculum);
+    const queue = getDueReviewQueue(
+      entries,
+      {
+        l1: {
+          completedAt: "2026-03-20T00:00:00.000Z",
+          lastReviewedAt: null,
+          reviewCount: 1,
+        },
+        l2: {
+          completedAt: "2026-03-25T00:00:00.000Z",
+          lastReviewedAt: null,
+          reviewCount: 0,
+        },
+      },
+      Date.parse("2026-03-23T00:00:01.000Z"),
+    );
+
+    expect(queue.map((entry) => entry.lesson.id)).toEqual(["l1"]);
+  });
+
+  it("calculates percent complete from progress", () => {
+    const curriculum = {
+      productTitle: "ComputeLearn",
+      productVision: "vision",
+      promise: "promise",
+      phases: [
+        {
+          id: "phase-1",
+          title: "Phase 1",
+          strapline: "strap",
+          purpose: "purpose",
+          level: "Beginner",
+          duration: "4 weeks",
+          environment: "env",
+          tools: [],
+          guardrails: [],
+          milestones: [],
+          projects: [],
+          courses: [
+            {
+              id: "c1",
+              title: "Course 1",
+              focus: "focus",
+              outcome: "outcome",
+              lessons: [
+                {
+                  id: "l1",
+                  title: "Lesson 1",
+                  summary: "",
+                  duration: "",
+                  difficulty: "",
+                  objective: "",
+                  explanation: [],
+                  demonstration: [],
+                  exerciseSteps: [],
+                  validationChecks: [],
+                  retention: [],
+                  tools: [],
+                  notesPrompt: "",
+                  exercises: [],
+                },
+                {
+                  id: "l2",
+                  title: "Lesson 2",
+                  summary: "",
+                  duration: "",
+                  difficulty: "",
+                  objective: "",
+                  explanation: [],
+                  demonstration: [],
+                  exerciseSteps: [],
+                  validationChecks: [],
+                  retention: [],
+                  tools: [],
+                  notesPrompt: "",
+                  exercises: [],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+
+    const percent = calculatePercentComplete(curriculum, { l1: true });
+    expect(percent).toBe(50);
   });
 });
