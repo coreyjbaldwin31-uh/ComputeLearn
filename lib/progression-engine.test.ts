@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   calculateActivityStreak,
   calculateCompetencyLevels,
+  evaluatePhaseExitStatus,
   formatTrackName,
   getLevelThreshold,
   getMasteryLevel,
@@ -139,5 +140,97 @@ describe("progression-engine", () => {
 
     const result = calculateCompetencyLevels(curriculum, { l1: true });
     expect(result.Debugging).toBe(2);
+  });
+
+  it("evaluates phase exit gates and advancement readiness", () => {
+    const curriculum = {
+      productTitle: "ComputeLearn",
+      productVision: "vision",
+      promise: "promise",
+      phases: [
+        {
+          id: "phase-1",
+          title: "Phase 1",
+          strapline: "strap",
+          purpose: "purpose",
+          level: "Beginner",
+          duration: "4 weeks",
+          environment: "env",
+          tools: [],
+          guardrails: [],
+          milestones: [],
+          projects: [],
+          competencyFocus: ["SystemNavigation"],
+          exitStandard: {
+            summary: "Summary",
+            representativeLabs: [],
+            gates: [
+              {
+                description: "Functional navigation",
+                competency: "SystemNavigation",
+                requiredLevel: "Functional",
+              },
+            ],
+          },
+          courses: [],
+        },
+        {
+          id: "phase-2",
+          title: "Phase 2",
+          strapline: "strap",
+          purpose: "purpose",
+          level: "Intermediate",
+          duration: "4 weeks",
+          environment: "env",
+          tools: [],
+          guardrails: [],
+          milestones: [],
+          projects: [],
+          courses: [],
+        },
+      ],
+    };
+
+    const evaluated = evaluatePhaseExitStatus(
+      curriculum,
+      "phase-1",
+      { SystemNavigation: 8 },
+      1,
+      2,
+    );
+
+    expect(evaluated).not.toBeNull();
+    expect(evaluated?.gates[0]?.passed).toBe(true);
+    expect(evaluated?.competencyGatesPassed).toBe(true);
+    expect(evaluated?.transferGatePassed).toBe(true);
+    expect(evaluated?.allPassed).toBe(true);
+    expect(evaluated?.nextPhase?.id).toBe("phase-2");
+  });
+
+  it("returns null when phase has no exit standard", () => {
+    const curriculum = {
+      productTitle: "ComputeLearn",
+      productVision: "vision",
+      promise: "promise",
+      phases: [
+        {
+          id: "phase-1",
+          title: "Phase 1",
+          strapline: "strap",
+          purpose: "purpose",
+          level: "Beginner",
+          duration: "4 weeks",
+          environment: "env",
+          tools: [],
+          guardrails: [],
+          milestones: [],
+          projects: [],
+          courses: [],
+        },
+      ],
+    };
+
+    const evaluated = evaluatePhaseExitStatus(curriculum, "phase-1", {}, 0, 0);
+    expect(evaluated).toBeNull();
   });
 });

@@ -1,4 +1,4 @@
-import type { Curriculum } from "@/data/curriculum";
+import type { Curriculum, ExitStandardGate, Phase } from "@/data/curriculum";
 
 export type ReviewRecord = {
   completedAt: string;
@@ -12,6 +12,19 @@ export type MasteryLevel =
   | "assisted"
   | "functional"
   | "independent";
+
+export type EvaluatedPhaseGate = ExitStandardGate & {
+  passed: boolean;
+  currentScore: number;
+};
+
+export type PhaseExitEvaluation = {
+  gates: EvaluatedPhaseGate[];
+  competencyGatesPassed: boolean;
+  transferGatePassed: boolean;
+  allPassed: boolean;
+  nextPhase: Phase | null;
+};
 
 export function getNextReviewDays(reviewCount: number): number {
   if (reviewCount === 0) return 1;
@@ -116,4 +129,44 @@ export function calculateCompetencyLevels(
   }
 
   return store;
+}
+
+export function evaluatePhaseExitStatus(
+  curriculum: Curriculum,
+  selectedPhaseId: string,
+  competencyLevels: Record<string, number>,
+  transferEvidenceWithinPhase: number,
+  transferLessonsWithinPhase: number,
+): PhaseExitEvaluation | null {
+  const phaseIndex = curriculum.phases.findIndex(
+    (phase) => phase.id === selectedPhaseId,
+  );
+
+  if (phaseIndex < 0) return null;
+
+  const phase = curriculum.phases[phaseIndex];
+  const gates = phase.exitStandard?.gates;
+  if (!gates) return null;
+
+  const evaluatedGates: EvaluatedPhaseGate[] = gates.map((gate) => {
+    const currentScore = competencyLevels[gate.competency] ?? 0;
+    const passed = currentScore >= getLevelThreshold(gate.requiredLevel);
+    return {
+      ...gate,
+      passed,
+      currentScore,
+    };
+  });
+
+  const competencyGatesPassed = evaluatedGates.every((gate) => gate.passed);
+  const transferGatePassed =
+    transferLessonsWithinPhase === 0 || transferEvidenceWithinPhase > 0;
+
+  return {
+    gates: evaluatedGates,
+    competencyGatesPassed,
+    transferGatePassed,
+    allPassed: competencyGatesPassed && transferGatePassed,
+    nextPhase: curriculum.phases[phaseIndex + 1] ?? null,
+  };
 }

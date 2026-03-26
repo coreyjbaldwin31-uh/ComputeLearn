@@ -8,8 +8,8 @@ import {
 import {
   calculateActivityStreak,
   calculateCompetencyLevels,
+  evaluatePhaseExitStatus,
   formatTrackName,
-  getLevelThreshold,
   getMasteryLevel,
   isDueForReview,
 } from "@/lib/progression-engine";
@@ -604,6 +604,13 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const transferEvidenceWithinPhase = transferLessonsWithinPhase.filter(
     (lesson) => transferProgress[lesson.id],
   ).length;
+  const phaseExitStatus = evaluatePhaseExitStatus(
+    curriculum,
+    selectedPhase.id,
+    competencyLevels,
+    transferEvidenceWithinPhase,
+    transferLessonsWithinPhase.length,
+  );
   const selectedLessonTransferPassed = Boolean(transferProgress[selectedLesson.id]);
   const selectedLessonEvidenceGate = evaluateLessonEvidenceGate(
     selectedLesson,
@@ -1393,98 +1400,66 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
             </section>
           ) : null}
 
-          {selectedPhase.exitStandard
-            ? (() => {
-                const gates = selectedPhase.exitStandard.gates;
-                const competencyGatesPassed = gates.every(
-                  (gate) =>
-                    (competencyLevels[gate.competency] ?? 0) >=
-                    getLevelThreshold(gate.requiredLevel),
-                );
-                const transferGatePassed =
-                  transferLessonsWithinPhase.length === 0 ||
-                  transferEvidenceWithinPhase > 0;
-                const allPassed = competencyGatesPassed && transferGatePassed;
-                const nextPhaseIndex =
-                  curriculum.phases.findIndex(
-                    (p) => p.id === selectedPhase.id,
-                  ) + 1;
-                const nextPhase = curriculum.phases[nextPhaseIndex];
-                return (
-                  <>
-                    <section className="panel">
-                      <h3>Phase exit gates</h3>
-                      <p className="panel-subtext">
-                        {selectedPhase.exitStandard.summary}
+          {selectedPhase.exitStandard && phaseExitStatus ? (
+            <>
+              <section className="panel">
+                <h3>Phase exit gates</h3>
+                <p className="panel-subtext">{selectedPhase.exitStandard.summary}</p>
+                <ul className="gate-list">
+                  {phaseExitStatus.gates.map((gate) => (
+                    <li
+                      key={`${gate.competency}-${gate.description}`}
+                      className={`gate-item ${gate.passed ? "gate-passed" : "gate-pending"}`}
+                    >
+                      <span className="gate-icon" aria-hidden="true">
+                        {gate.passed ? "✓" : "○"}
+                      </span>
+                      <span className="gate-description">
+                        {gate.description}
+                        <span className="gate-level">{gate.requiredLevel}</span>
+                      </span>
+                    </li>
+                  ))}
+                  <li
+                    className={`gate-item ${phaseExitStatus.transferGatePassed ? "gate-passed" : "gate-pending"}`}
+                  >
+                    <span className="gate-icon" aria-hidden="true">
+                      {phaseExitStatus.transferGatePassed ? "✓" : "○"}
+                    </span>
+                    <span className="gate-description">
+                      Pass at least one transfer challenge in this phase
+                      <span className="gate-level">
+                        {transferEvidenceWithinPhase}/{transferLessonsWithinPhase.length} complete
+                      </span>
+                    </span>
+                  </li>
+                </ul>
+              </section>
+              {phaseExitStatus.allPassed && phaseExitStatus.nextPhase ? (
+                <section className="panel phase-advance-panel">
+                  <div className="phase-advance-content">
+                    <span className="phase-advance-icon" aria-hidden="true">
+                      🏆
+                    </span>
+                    <div>
+                      <h3>Phase complete!</h3>
+                      <p>
+                        All exit gates cleared. You are ready to advance to{" "}
+                        <strong>{phaseExitStatus.nextPhase.title}</strong>.
                       </p>
-                      <ul className="gate-list">
-                        {gates.map((gate) => {
-                          const count = competencyLevels[gate.competency] ?? 0;
-                          const passed =
-                            count >= getLevelThreshold(gate.requiredLevel);
-                          return (
-                            <li
-                              key={`${gate.competency}-${gate.description}`}
-                              className={`gate-item ${passed ? "gate-passed" : "gate-pending"}`}
-                            >
-                              <span className="gate-icon" aria-hidden="true">
-                                {passed ? "✓" : "○"}
-                              </span>
-                              <span className="gate-description">
-                                {gate.description}
-                                <span className="gate-level">
-                                  {gate.requiredLevel}
-                                </span>
-                              </span>
-                            </li>
-                          );
-                        })}
-                        <li
-                          className={`gate-item ${transferGatePassed ? "gate-passed" : "gate-pending"}`}
-                        >
-                          <span className="gate-icon" aria-hidden="true">
-                            {transferGatePassed ? "✓" : "○"}
-                          </span>
-                          <span className="gate-description">
-                            Pass at least one transfer challenge in this phase
-                            <span className="gate-level">
-                              {transferEvidenceWithinPhase}/
-                              {transferLessonsWithinPhase.length} complete
-                            </span>
-                          </span>
-                        </li>
-                      </ul>
-                    </section>
-                    {allPassed && nextPhase ? (
-                      <section className="panel phase-advance-panel">
-                        <div className="phase-advance-content">
-                          <span
-                            className="phase-advance-icon"
-                            aria-hidden="true"
-                          >
-                            🏆
-                          </span>
-                          <div>
-                            <h3>Phase complete!</h3>
-                            <p>
-                              All exit gates cleared. You are ready to advance
-                              to <strong>{nextPhase.title}</strong>.
-                            </p>
-                            <button
-                              type="button"
-                              className="validate-button phase-advance-button"
-                              onClick={() => selectPhase(nextPhase.id)}
-                            >
-                              Start {nextPhase.title} →
-                            </button>
-                          </div>
-                        </div>
-                      </section>
-                    ) : null}
-                  </>
-                );
-              })()
-            : null}
+                      <button
+                        type="button"
+                        className="validate-button phase-advance-button"
+                        onClick={() => selectPhase(phaseExitStatus.nextPhase!.id)}
+                      >
+                        Start {phaseExitStatus.nextPhase.title} →
+                      </button>
+                    </div>
+                  </div>
+                </section>
+              ) : null}
+            </>
+          ) : null}
         </aside>
       </section>
     </main>
