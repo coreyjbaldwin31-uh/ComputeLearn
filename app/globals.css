@@ -1136,6 +1136,51 @@ select {
   border-left-color: var(--gold);
 }
 
+.inspection-panel {
+  display: grid;
+  gap: 14px;
+  margin-top: 14px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(13, 107, 87, 0.06);
+}
+
+.inspection-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+}
+
+.inspection-label {
+  color: var(--accent-strong);
+  font-weight: 700;
+}
+
+.inspection-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.inspection-grid h5,
+.inspection-panel h5 {
+  margin: 0 0 8px;
+}
+
+.inspection-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+}
+
+[data-theme="dark"] .inspection-panel {
+  background: rgba(45, 212, 168, 0.08);
+}
+
 /* ── Code exercises section ──────────────────────────────── */
 
 .code-exercises-section {

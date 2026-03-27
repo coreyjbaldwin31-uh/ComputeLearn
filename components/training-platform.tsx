@@ -1,15 +1,11 @@
 "use client";
 
 import type { Curriculum, Exercise, Lesson } from "@/data/curriculum";
-import type { ArtifactRecord } from "@/lib/artifact-engine";
 import {
   buildArtifactBrowserSummary,
   getArtifactPreview,
 } from "@/lib/artifact-browser-engine";
-import {
-  buildArtifactExportDocument,
-  buildArtifactExportFilename,
-} from "@/lib/artifact-export-engine";
+import type { ArtifactRecord } from "@/lib/artifact-engine";
 import {
   type AttemptRecord,
   buildArtifactRecord,
@@ -17,6 +13,10 @@ import {
   createId,
   formatCompletionContent,
 } from "@/lib/artifact-engine";
+import {
+  buildArtifactExportDocument,
+  buildArtifactExportFilename,
+} from "@/lib/artifact-export-engine";
 import { buildCompetencyDashboardSummary } from "@/lib/competency-dashboard-engine";
 import { getWeakCompetencyTracks } from "@/lib/competency-engine";
 import {
@@ -26,6 +26,7 @@ import {
   isHintExhausted,
 } from "@/lib/hint-engine";
 import { buildIndependentReadinessSummary } from "@/lib/independent-readiness-engine";
+import { buildExerciseInspection } from "@/lib/inspection-engine";
 import { evaluatePhaseMilestoneStatus } from "@/lib/milestone-engine";
 import { buildPhaseStatusRecords } from "@/lib/phase-status-engine";
 import {
@@ -200,6 +201,9 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const [answers, setAnswers] = useState<AnswerState>({});
   const [feedback, setFeedback] = useState<Record<string, string>>({});
   const [hintLevels, setHintLevels] = useState<Record<string, number>>({});
+  const [inspectionOpen, setInspectionOpen] = useState<Record<string, boolean>>(
+    {},
+  );
   const [transferAnswers, setTransferAnswers] = useState<
     Record<string, string>
   >({});
@@ -674,10 +678,22 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     }));
   }
 
+  function toggleInspection(exerciseId: string) {
+    const key = `${selectedLesson?.id ?? ""}:${exerciseId}`;
+    setInspectionOpen((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  }
+
   function exportArtifacts(lessonId?: string) {
-    const exportDocument = buildArtifactExportDocument(artifacts, allLessonsFlat, {
-      lessonId,
-    });
+    const exportDocument = buildArtifactExportDocument(
+      artifacts,
+      allLessonsFlat,
+      {
+        lessonId,
+      },
+    );
     const blob = new Blob([exportDocument], {
       type: "text/markdown;charset=utf-8",
     });
@@ -926,9 +942,12 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                   <li key={record.track}>
                     <div className="review-queue-item static-item">
                       <span className="review-course">{record.level}</span>
-                      <span className="review-lesson">{record.displayName}</span>
+                      <span className="review-lesson">
+                        {record.displayName}
+                      </span>
                       <span className="microcopy">
-                        {record.count} evidence point{record.count === 1 ? "" : "s"}
+                        {record.count} evidence point
+                        {record.count === 1 ? "" : "s"}
                         {record.isWeak ? " · reinforcement suggested" : ""}
                       </span>
                     </div>
@@ -936,7 +955,9 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                 ))}
               </ul>
             ) : (
-              <p className="microcopy">Complete lessons to build competency signals.</p>
+              <p className="microcopy">
+                Complete lessons to build competency signals.
+              </p>
             )}
           </section>
 
@@ -946,10 +967,13 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
               {phaseTransferAnalytics.map((record) => (
                 <li key={record.phaseId}>
                   <div className="review-queue-item static-item">
-                    <span className="review-course">{record.passRate}% passed</span>
+                    <span className="review-course">
+                      {record.passRate}% passed
+                    </span>
                     <span className="review-lesson">{record.phaseTitle}</span>
                     <span className="microcopy">
-                      {record.passedTransferLessons}/{record.totalTransferLessons} transfer lessons cleared
+                      {record.passedTransferLessons}/
+                      {record.totalTransferLessons} transfer lessons cleared
                     </span>
                   </div>
                 </li>
@@ -988,7 +1012,9 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                 </span>
               </div>
               <p className="microcopy">
-                {independentReadiness.documentationArtifacts} documentation artifacts across {independentReadiness.documentedLessons} lessons.
+                {independentReadiness.documentationArtifacts} documentation
+                artifacts across {independentReadiness.documentedLessons}{" "}
+                lessons.
               </p>
               <ul className="review-queue-list">
                 {independentReadiness.checks.map((check) => (
@@ -1164,10 +1190,17 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
             {selectedLesson.exercises.map((exercise) => {
               const exerciseAnswer = answers[exercise.id] ?? "";
               const exerciseFeedback = feedback[exercise.id];
-              const isCorrect = evaluateExerciseAnswer(
+              const validation = evaluateExerciseAnswer(
                 exercise,
                 exerciseAnswer,
-              ).passed;
+              );
+              const isCorrect = validation.passed;
+              const inspection = buildExerciseInspection(
+                exercise,
+                exerciseAnswer,
+              );
+              const inspectionKey = `${selectedLesson.id}:${exercise.id}`;
+              const showInspection = Boolean(inspectionOpen[inspectionKey]);
 
               return (
                 <article className="exercise-card" key={exercise.id}>
@@ -1209,6 +1242,16 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                     >
                       {getHintButtonLabel(currentHintLevels[exercise.id] ?? 0)}
                     </button>
+                    <button
+                      type="button"
+                      className="ghost-button"
+                      disabled={!exerciseAnswer.trim()}
+                      onClick={() => toggleInspection(exercise.id)}
+                    >
+                      {showInspection
+                        ? "Hide inspect mode"
+                        : "Inspect response"}
+                    </button>
                     <span
                       className={`status-pill ${
                         isCorrect ? "complete" : "pending"
@@ -1235,6 +1278,46 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                       )}
                     </div>
                   ) : null}
+                  {showInspection ? (
+                    <div className="inspection-panel">
+                      <div className="inspection-row">
+                        <span className="inspection-label">Skill gap</span>
+                        <span>{inspection.probableSkillGap}</span>
+                      </div>
+                      <div className="inspection-grid">
+                        <div>
+                          <h5>Matched signals</h5>
+                          <ul className="inspection-list">
+                            {(inspection.matchedSignals.length > 0
+                              ? inspection.matchedSignals
+                              : ["No expected signals matched yet."]
+                            ).map((signal) => (
+                              <li key={`match-${signal}`}>{signal}</li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div>
+                          <h5>Missing signals</h5>
+                          <ul className="inspection-list">
+                            {(inspection.missingSignals.length > 0
+                              ? inspection.missingSignals
+                              : ["No missing signals."]
+                            ).map((signal) => (
+                              <li key={`missing-${signal}`}>{signal}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                      <div>
+                        <h5>Inspection prompts</h5>
+                        <ul className="inspection-list">
+                          {inspection.inspectionPrompts.map((prompt) => (
+                            <li key={prompt}>{prompt}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  ) : null}
                 </article>
               );
             })}
@@ -1243,48 +1326,124 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
           {selectedLesson.transferTask ? (
             <section className="validation-grid">
               <article className="exercise-card transfer-task-card">
-                <div className="exercise-card-header">
-                  <h4>{selectedLesson.transferTask.title}</h4>
-                  <span className="assessment-badge assessment-transfer">
-                    transfer
-                  </span>
-                </div>
-                <p>{selectedLesson.transferTask.prompt}</p>
-                <input
-                  aria-label={selectedLesson.transferTask.title}
-                  value={transferAnswers[selectedLesson.id] ?? ""}
-                  onChange={(event) =>
-                    setTransferAnswers((current) => ({
-                      ...current,
-                      [selectedLesson.id]: event.target.value,
-                    }))
-                  }
-                  placeholder={selectedLesson.transferTask.placeholder}
-                />
-                <div className="toolbar">
-                  <button
-                    type="button"
-                    className="validate-button"
-                    onClick={validateTransferTask}
-                  >
-                    Validate transfer
-                  </button>
-                  <span
-                    className={`status-pill ${selectedLessonTransferPassed ? "complete" : "pending"}`}
-                  >
-                    {selectedLessonTransferPassed ? "Passed" : "Not passed"}
-                  </span>
-                </div>
-                {transferFeedback[selectedLesson.id] ? (
-                  <div
-                    className={`feedback ${selectedLessonTransferPassed ? "success" : "warning"}`}
-                  >
-                    {transferFeedback[selectedLesson.id]}
-                  </div>
-                ) : null}
-                <div className="hint-layer">
-                  {selectedLesson.transferTask.hint}
-                </div>
+                {(() => {
+                  const transferTask = selectedLesson.transferTask;
+                  const transferInspection = buildExerciseInspection(
+                    transferTask,
+                    transferAnswers[selectedLesson.id] ?? "",
+                  );
+                  const transferInspectionKey = `${selectedLesson.id}:${transferTask.id}`;
+                  const showTransferInspection = Boolean(
+                    inspectionOpen[transferInspectionKey],
+                  );
+
+                  return (
+                    <>
+                      <div className="exercise-card-header">
+                        <h4>{transferTask.title}</h4>
+                        <span className="assessment-badge assessment-transfer">
+                          transfer
+                        </span>
+                      </div>
+                      <p>{transferTask.prompt}</p>
+                      <input
+                        aria-label={transferTask.title}
+                        value={transferAnswers[selectedLesson.id] ?? ""}
+                        onChange={(event) =>
+                          setTransferAnswers((current) => ({
+                            ...current,
+                            [selectedLesson.id]: event.target.value,
+                          }))
+                        }
+                        placeholder={transferTask.placeholder}
+                      />
+                      <div className="toolbar">
+                        <button
+                          type="button"
+                          className="validate-button"
+                          onClick={validateTransferTask}
+                        >
+                          Validate transfer
+                        </button>
+                        <button
+                          type="button"
+                          className="ghost-button"
+                          disabled={
+                            !(transferAnswers[selectedLesson.id] ?? "").trim()
+                          }
+                          onClick={() => toggleInspection(transferTask.id)}
+                        >
+                          {showTransferInspection
+                            ? "Hide inspect mode"
+                            : "Inspect response"}
+                        </button>
+                        <span
+                          className={`status-pill ${selectedLessonTransferPassed ? "complete" : "pending"}`}
+                        >
+                          {selectedLessonTransferPassed
+                            ? "Passed"
+                            : "Not passed"}
+                        </span>
+                      </div>
+                      {transferFeedback[selectedLesson.id] ? (
+                        <div
+                          className={`feedback ${selectedLessonTransferPassed ? "success" : "warning"}`}
+                        >
+                          {transferFeedback[selectedLesson.id]}
+                        </div>
+                      ) : null}
+                      <div className="hint-layer">
+                        {transferTask.hint}
+                      </div>
+                      {showTransferInspection ? (
+                        <div className="inspection-panel">
+                          <div className="inspection-row">
+                            <span className="inspection-label">Skill gap</span>
+                            <span>{transferInspection.probableSkillGap}</span>
+                          </div>
+                          <div className="inspection-grid">
+                            <div>
+                              <h5>Matched signals</h5>
+                              <ul className="inspection-list">
+                                {(transferInspection.matchedSignals.length > 0
+                                  ? transferInspection.matchedSignals
+                                  : ["No expected signals matched yet."]
+                                ).map((signal) => (
+                                  <li key={`transfer-match-${signal}`}>
+                                    {signal}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                            <div>
+                              <h5>Missing signals</h5>
+                              <ul className="inspection-list">
+                                {(transferInspection.missingSignals.length > 0
+                                  ? transferInspection.missingSignals
+                                  : ["No missing signals."]
+                                ).map((signal) => (
+                                  <li key={`transfer-missing-${signal}`}>
+                                    {signal}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+                          <div>
+                            <h5>Inspection prompts</h5>
+                            <ul className="inspection-list">
+                              {transferInspection.inspectionPrompts.map(
+                                (prompt) => (
+                                  <li key={prompt}>{prompt}</li>
+                                ),
+                              )}
+                            </ul>
+                          </div>
+                        </div>
+                      ) : null}
+                    </>
+                  );
+                })()}
               </article>
             </section>
           ) : null}
