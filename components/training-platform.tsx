@@ -30,6 +30,7 @@ import {
 import { buildIndependentLabSummary } from "@/lib/independent-lab-engine";
 import { buildIndependentReadinessSummary } from "@/lib/independent-readiness-engine";
 import { buildExerciseInspection } from "@/lib/inspection-engine";
+import { buildMilestonePassRateSummary } from "@/lib/milestone-pass-rate-engine";
 import { evaluatePhaseMilestoneStatus } from "@/lib/milestone-engine";
 import { buildPhaseStatusRecords } from "@/lib/phase-status-engine";
 import {
@@ -397,6 +398,11 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const phaseTransferAnalytics = useMemo(
     () => buildPhaseTransferAnalytics(curriculum, transferProgress),
     [curriculum, transferProgress],
+  );
+
+  const milestonePassRateSummary = useMemo(
+    () => buildMilestonePassRateSummary(phaseStatuses),
+    [phaseStatuses],
   );
 
   const independentReadiness = useMemo(
@@ -1008,6 +1014,39 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                 </li>
               ))}
             </ul>
+          </section>
+
+          <section className="panel">
+            <h3>Milestone pass rate</h3>
+            <div className="phase-metrics">
+              <span>{milestonePassRateSummary.passRate}% phases cleared</span>
+              <span>
+                {milestonePassRateSummary.passedPhases}/
+                {milestonePassRateSummary.totalPhases} phases ready
+              </span>
+              <span>{milestonePassRateSummary.blockedPhases} blocked</span>
+            </div>
+            <div className="phase-metrics">
+              <span>{milestonePassRateSummary.statusCounts.notStarted} not started</span>
+              <span>{milestonePassRateSummary.statusCounts.inProgress} in progress</span>
+              <span>{milestonePassRateSummary.statusCounts.reviewNeeded} review needed</span>
+            </div>
+            {milestonePassRateSummary.blockedPhaseTitles.length > 0 ? (
+              <ul className="review-queue-list">
+                {milestonePassRateSummary.blockedPhaseTitles.map((title) => (
+                  <li key={title}>
+                    <div className="review-queue-item static-item">
+                      <span className="review-course">Blocked</span>
+                      <span className="review-lesson">{title}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="microcopy">
+                All phases currently satisfy milestone gates.
+              </p>
+            )}
           </section>
 
           {independentReadiness ? (
