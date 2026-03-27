@@ -1,5 +1,5 @@
 ---
-name: "Curriculum Integrity Check"
+name: "curriculum-integrity-check"
 description: "Validate curriculum.ts schema and structural integrity. Use when: preparing curriculum for merge, auditing for broken references, catching duplicate IDs, verifying competency mappings, ensuring all phases are complete. Keywords: curriculum, schema, validation, integrity, structure."
 ---
 
@@ -10,6 +10,7 @@ Audit the curriculum for structural errors and gaps before merge.
 ## What This Does
 
 Validates the entire curriculum.ts against schema rules and structural constraints:
+
 - No duplicate lesson, course, or phase IDs
 - All competencies referenced in lessons exist in the framework
 - Milestones are properly linked to phases and competencies
@@ -44,5 +45,6 @@ Validates the entire curriculum.ts against schema rules and structural constrain
 ## Output
 
 A report showing:
+
 - ✓ All checks passed or
 - ✗ List of errors with location and remediation guidance

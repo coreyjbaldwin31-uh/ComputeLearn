@@ -5,7 +5,10 @@
       "label": "verify",
       "type": "shell",
       "command": "npm",
-      "args": ["run", "verify"],
+      "args": [
+        "run",
+        "verify"
+      ],
       "group": "test",
       "problemMatcher": []
     },
@@ -13,14 +16,20 @@
       "label": "docker:build",
       "type": "shell",
       "command": "npm",
-      "args": ["run", "docker:build"],
+      "args": [
+        "run",
+        "docker:build"
+      ],
       "problemMatcher": []
     },
     {
       "label": "docker:up",
       "type": "shell",
       "command": "npm",
-      "args": ["run", "docker:up"],
+      "args": [
+        "run",
+        "docker:up"
+      ],
       "isBackground": true,
       "problemMatcher": []
     }

@@ -33,4 +33,3 @@ Before finishing a change, run the existing checks when relevant:
 
 - `npm run lint`
 - `npm run build`
-

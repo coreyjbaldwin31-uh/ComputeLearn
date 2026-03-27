@@ -1,5 +1,5 @@
 ---
-name: "Lab Validator Authoring"
+name: "lab-validator-authoring"
 description: "Design and test lab validators. Use when: creating validation rules for lessons, testing validators against sample attempts, troubleshooting validation failures, generating hint guidance for failed checks. Keywords: validator, lab, validation rule, evidence, gating."
 ---
 
@@ -36,6 +36,7 @@ Helps you write and debug validators that check learner attempt correctness. Val
 ## Output
 
 Well-tested validators that:
+
 - Are specific and unambiguous
 - Fail fast on clearly wrong attempts
 - Guide learners toward the right answer via hints

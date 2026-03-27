@@ -73,13 +73,13 @@ This workspace defines reusable skills under `.github/skills/`. Before starting 
 
 Known skills and their domains:
 
-| Skill | Use when |
-|---|---|
-| `lab-validator-authoring` | Creating or testing validation rules for labs |
+| Skill                        | Use when                                                             |
+| ---------------------------- | -------------------------------------------------------------------- |
+| `lab-validator-authoring`    | Creating or testing validation rules for labs                        |
 | `curriculum-integrity-check` | Auditing `curriculum.ts` for structural errors, broken refs, or gaps |
-| `competency-mapping` | Mapping lessons to competencies and mastery gates |
-| `artifact-analytics` | Analyzing learner artifacts, attempt patterns, or skill-gap reports |
-| `newman-api-test-suite` | Defining or running API test collections with Newman |
+| `competency-mapping`         | Mapping lessons to competencies and mastery gates                    |
+| `artifact-analytics`         | Analyzing learner artifacts, attempt patterns, or skill-gap reports  |
+| `newman-api-test-suite`      | Defining or running API test collections with Newman                 |
 
 If no skill matches, proceed with general-purpose reasoning. If you create reusable domain knowledge during a task, propose a new skill to the user.
 
@@ -155,17 +155,20 @@ When working on a feature branch for an extended session:
 When a task calls for a lightweight, self-contained web UI — such as a quick prototype, internal dashboard, data visualizer, or interactive demo — consider building it as a GitHub Spark instead of scaffolding a full application. Sparks are small, shareable micro-apps hosted on GitHub that can be created and iterated on rapidly with natural language.
 
 **When to use Spark:**
+
 - Rapid prototyping of a UI concept before committing to a full implementation.
 - Internal tooling or dashboards that do not need the full Next.js stack.
 - Interactive demos or visualizations to communicate ideas to stakeholders.
 - Standalone utilities (calculators, converters, checklists) that support the learning platform but live outside the main codebase.
 
 **When NOT to use Spark:**
+
 - The feature belongs in the core ComputeLearn application and must share its state, routing, or components.
 - The work requires server-side data, authentication, or complex backend logic already handled by the existing stack.
 - The deliverable must be part of the tested and deployed production build.
 
 **Spark workflow:**
+
 1. Identify that the task fits the Spark profile (small, visual, self-contained).
 2. Create or iterate the Spark via GitHub Spark using natural language descriptions.
 3. Link the resulting Spark URL in the PR description or project docs so stakeholders can access it.

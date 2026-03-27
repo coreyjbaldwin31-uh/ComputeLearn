@@ -46,18 +46,44 @@ const postmanVersion = run("postman --version");
 const npmVersion = run("npm --version");
 const nodeVersion = run("node --version");
 
+// PR context
+const prNumber = run("gh pr view --json number -q .number");
+const prTitle = run("gh pr view --json title -q .title");
+
+// Recent commits
+const recentCommits = run("git log -3 --oneline");
+
+// Quick test and lint check
+const lintErrors = run("npm run lint 2>&1 | grep -c 'error'");
+const testRun = run("npm run test 2>&1 | grep -E '(passed|failed)'");
+
 const lines = [
   "Autonomy context loaded for this repository.",
   `Branch: ${branch}`,
+  prNumber !== "unavailable"
+    ? `Active PR: #${prNumber} — ${prTitle}`
+    : "Active PR: none detected",
   `Remote: ${remote}`,
   `Changed files: ${changedFiles === "" || changedFiles === "unavailable" ? "clean or unavailable" : changedFiles.split("\n").length}`,
+  "",
+  "Recent commits:",
+  recentCommits || "(none)",
+  "",
+  "Environment:",
   `Node: ${nodeVersion}`,
   `npm: ${npmVersion}`,
   `Docker: ${dockerVersion}`,
   `Docker Compose: ${dockerCompose}`,
   `Newman: ${newmanVersion}`,
   `Postman CLI: ${postmanVersion}`,
-  `Package scripts: ${packageScripts.join(", ") || "none detected"}`,
+  "",
+  "Available scripts:",
+  packageScripts.join(", ") || "none detected",
+  "",
+  "Quick checks:",
+  `Lint errors: ${lintErrors === "unavailable" || lintErrors === "0" ? "clean" : `${lintErrors} found`}`,
+  `Tests: ${testRun || "status unavailable"}`,
+  "",
   "When autonomous delivery is requested, prefer verified increments, then commit and push them so the remote branch stays current.",
 ];
 

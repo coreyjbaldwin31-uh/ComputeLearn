@@ -1,5 +1,5 @@
 ---
-name: "Artifact Analytics"
+name: "artifact-analytics"
 description: "Analyze learner artifacts and attempt patterns. Use when: understanding learner outcomes, identifying repeated errors, diagnosing skill gaps, generating summary reports on learning progress. Keywords: artifact, analytics, learner outcome, error pattern, evidence."
 ---
 
@@ -10,6 +10,7 @@ Analyze saved learner work and attempt history to understand learning outcomes.
 ## What This Does
 
 Mines artifact and attempt data to reveal patterns:
+
 - Which lessons have the highest failure rate?
 - What errors do learners repeat across attempts?
 - Which competencies show weakest mastery?
@@ -33,18 +34,21 @@ Mines artifact and attempt data to reveal patterns:
 ## Types of Analysis
 
 **Learner-level:**
+
 - Total attempts by lesson
 - Pass rate by phase
 - Time to mastery per competency
 - Error frequency and types
 
 **Curriculum-level:**
+
 - Lesson difficulty (pass rate distribution)
 - Competency bottlenecks (where most learners struggle)
 - Phase progression rate (how many advance to next phase?)
 - Transfer task performance vs. guided task performance
 
 **Error pattern detection:**
+
 - Same error across attempts (indicates misunderstanding)
 - Different errors (indicates exploration or luck)
 - Off-by-one errors, type mismatches, logic errors
@@ -60,6 +64,7 @@ Mines artifact and attempt data to reveal patterns:
 ## Output
 
 Reports showing:
+
 - Learner outcome summaries
 - Skill gap distribution
 - Lesson difficulty and effectiveness

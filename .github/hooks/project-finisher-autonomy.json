@@ -7,6 +7,13 @@
         "timeout": 20
       }
     ],
+    "PreToolUse": [
+      {
+        "type": "command",
+        "command": "node ./.github/scripts/pre-tool-safety-check.mjs",
+        "timeout": 5
+      }
+    ],
     "Stop": [
       {
         "type": "command",

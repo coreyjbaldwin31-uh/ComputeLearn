@@ -1,5 +1,5 @@
 ---
-name: "Newman API Test Suite"
+name: "newman-api-test-suite"
 description: "Define and run API test collections with Newman. Use when: testing platform endpoints, validating request/response contracts, checking error handling, verifying API behavior matches specs. Keywords: API, testing, Newman, HTTP, validation, endpoint."
 ---
 
@@ -10,6 +10,7 @@ Author and execute API test collections to validate platform endpoints.
 ## What This Does
 
 Uses Newman (Postman's CLI runner) to define, run, and validate API test collections:
+
 - Request/response contract validation
 - Error handling and status code verification
 - Header and body assertion
@@ -71,6 +72,7 @@ Uses Newman (Postman's CLI runner) to define, run, and validate API test collect
 ## Output
 
 Test collection and results showing:
+
 - ✓ All endpoints return expected responses
 - ✗ Failed assertions with details for debugging
 - Execution summary (tests run, passed, failed, duration)

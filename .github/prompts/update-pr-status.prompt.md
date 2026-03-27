@@ -3,6 +3,7 @@ description: "Post a structured progress summary to the active pull request on G
 name: "Update PR Status"
 argument-hint: "Describe what was just completed. If omitted, the agent summarizes the most recent commits."
 ---
+
 Post a progress update comment to the active pull request for this repository.
 
 Steps:

@@ -4,6 +4,7 @@ name: "Autonomous Project Finisher"
 agent: "Project Finisher"
 argument-hint: "Describe the outcome or scope to drive autonomously."
 ---
+
 Operate in autonomous delivery mode for this repository.
 
 Requirements:

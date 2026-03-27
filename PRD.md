@@ -26,31 +26,9 @@ Version 1.0 | Prepared for product planning and implementation alignment
 | **Product** | Mastery-based learning platform for turning everyday computer users into technically fluent builders. |
 | **Core promise** | Learners progress by operating real tools inside safe, reversible labs instead of consuming passive lessons. |
 | **Primary outcome** | Practical entry-level software engineering competence across system use, coding, debugging, Git, testing, and delivery workflow. |
-| **Current baseline** | Next.js App Router, React 19, TypeScript, component-based UI, local persistence, evidence-gated progression, inspect mode, artifact history, and learner analytics panels. |
+| **Current baseline** | Next.js App Router, React 19, TypeScript, component-based UI, local persistence, curriculum shell, and lightweight validation. |
 
 > **Executive framing:** The current concept is strong, but it becomes significantly more investable and buildable once the end state, competency gates, lab engine, and capstone path are made explicit. This document reframes ComputeLearn as a training system for engineering behavior, not only a content platform.
-
-### Implementation Status Snapshot (March 2026)
-
-#### Implemented Now
-
-- Curriculum shell, learner profile, local persistence, notes, reflections, review scheduling, and milestone gating
-- Guided exercise validation, transfer-task gating, layered hints, inspect mode, and diff-style inspection output
-- Exportable artifact history and evidence browsing
-- PRD-aligned learner metrics: transfer-task pass rate, independent lab completion, repeated error reduction, milestone pass rate, artifact completion rate, and outcomes rollup scoring
-- Independent readiness and competency dashboards for Phase 4 preparation
-
-#### Still Open at Platform Level
-
-- A true lab workspace/template runtime with deterministic baseline state, reset, and replay at the lab-engine layer
-- A richer validator contract for file presence, directory structure, command output, code behavior, and test pass criteria
-- CI expansion for curriculum validation and preview deployments
-- Full branch/process alignment so normal feature work consistently flows through the intended integration branch strategy
-
-#### Interpretation
-
-- ComputeLearn has moved beyond a lightweight curriculum shell for learner-facing analytics and guidance
-- The remaining highest-risk gap is still the lab runtime and validation depth, not the metric/dashboard surface
 
 ---
 
@@ -103,7 +81,7 @@ A strong learning system can own this transition by treating operational fluency
 ## 3. Product Principles
 
 | Principle | Definition |
-|---|---|
+| --- | --- |
 | **Learning by doing** | Every concept should connect directly to an action. Explanations support execution instead of replacing it. |
 | **Safe failure** | Learners need isolated workspaces, reset actions, and replayable labs so failure becomes useful rather than discouraging. |
 | **Mastery over completion** | Progress should be based on demonstrated capability, not only lesson completion or time spent. |
@@ -120,7 +98,7 @@ ComputeLearn should be organized as a staged progression from machine control to
 ### Phase Structure
 
 | Stage | Title | Primary Goal | Representative Content |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | **Phase 1** | Computer and Tooling Mastery | Operate with confidence and control | Filesystem navigation, keyboard-first workflows, terminal basics, PowerShell, search, process awareness, simple automation, editor fluency |
 | **Phase 2** | Programming and Debugging Foundations | Build mental models for software behavior | Variables, functions, types, runtime vs compile-time errors, package managers, configuration, JSON, APIs, code reading, small application structure |
 | **Phase 3** | Engineering Workflow and Delivery | Execute scoped engineering work with discipline | Git, branches, diffs, testing, refactoring, bug triage, task decomposition, documentation, verification habits |
@@ -183,7 +161,7 @@ Curriculum flow alone is not enough. ComputeLearn should track discrete competen
 ### Lab Difficulty Progression
 
 | Level | Instruction Model | Purpose |
-|---|---|---|
+| --- | --- | --- |
 | **Level 1** | Step-by-step execution | Used for first exposure and confidence building |
 | **Level 2** | Goal-driven with hints | Learner chooses actions while retaining guided support |
 | **Level 3** | Problem statement with partial scaffolding | Focus shifts toward debugging and reasoning |
@@ -192,7 +170,7 @@ Curriculum flow alone is not enough. ComputeLearn should track discrete competen
 ### Assessment Dimensions
 
 | Dimension | Definition |
-|---|---|
+| --- | --- |
 | **Action correctness** | Did the learner produce the required output, file state, code behavior, or system result? |
 | **Reasoning quality** | Can the learner explain why the result worked? |
 | **Debugging accuracy** | Can the learner identify the root issue instead of reacting only to symptoms? |
@@ -207,7 +185,7 @@ The MVP should prove that ComputeLearn materially improves learner capability th
 ### MVP Build Priorities
 
 | Priority | Category | Definition |
-|---|---|---|
+| --- | --- | --- |
 | **Must** | Core platform shell | Curriculum navigation, learner profile, local progress persistence, notes, and milestone gating |
 | **Must** | Lab engine | Workspace template model, reset/replay, validation rules, and completion evidence |
 | **Must** | Phase 1 excellence | Filesystem, terminal, search/filtering, automation basics, and workflow efficiency |
@@ -216,18 +194,10 @@ The MVP should prove that ComputeLearn materially improves learner capability th
 | **Later** | AI review loop | Bounded support for explanation, critique, and next-step guidance |
 | **Later** | Advanced templates | More realistic bug sets, project scaffolds, and saved transcripts |
 
-### Current MVP Status
-
-- **Core platform shell:** Implemented and in active use.
-- **Guided debugging:** Implemented through inspect mode, diff-style signal output, and layered hints.
-- **Retention system:** Partially implemented through reflections, review queues, reinforcement signals, and competency tracking.
-- **Lab engine:** Still incomplete at the PRD target level because workspace templates, deterministic reset/replay, and richer validation contracts are not yet first-class runtime capabilities.
-- **AI review loop and advanced templates:** Still later-stage work.
-
 ### Recommended First-Release Modules
 
 | Module | Content |
-|---|---|
+| --- | --- |
 | **Filesystem Navigation** | Paths, relative vs absolute locations, listing contents, moving between directories, finding misplaced files |
 | **File Operations** | Create, move, rename, copy, delete, extension awareness, safe bulk actions |
 | **Terminal Confidence** | Command execution, parameters, command history, reading terminal feedback |
@@ -248,19 +218,12 @@ The stated stack is appropriate for the current product direction: Next.js App R
 ### Recommended Application Layers
 
 | Layer | Responsibility |
-|---|---|
+| --- | --- |
 | **Application layer** | Routing, orchestration, learner state, navigation flow, and gating decisions |
 | **Curriculum layer** | Phases, courses, lessons, competencies, milestones, and assessment rules |
 | **Lab engine layer** | Workspace templates, resets, replays, validation, hints, artifacts, and attempt tracking |
 | **Persistence layer** | Local storage or indexed persistence for progress, notes, attempts, competencies, and artifacts |
 | **Review layer** | Feedback presentation, reflections, and optional AI-assisted critique |
-
-### Current Architecture Status
-
-- The application and curriculum layers are already supported by typed curriculum data, milestone logic, review scheduling, and learner state orchestration.
-- The review layer now includes inspect-mode feedback, diff-style signal inspection, reflections, artifact exports, and outcomes dashboards.
-- The lab engine layer is only partially realized today. Attempt tracking, artifacts, and validation exist, but isolated workspace templates, deterministic reset/replay behavior, and environment-level validation are still open.
-- The persistence layer remains browser-local and is sufficient for current learner-state storage, but not yet for durable multi-device histories or lab snapshots.
 
 ### Minimum Data Model
 
@@ -281,37 +244,28 @@ The validator should be able to check file presence, directory structure, file c
 
 ### Roadmap Recommendation
 
-1. Finalize the workspace and lab template model
-2. Ship the full validation engine contract
-3. Add deterministic reset/replay behavior to meaningful labs
-4. Expand CI to include curriculum validation and preview deployments
-5. Align long-lived branch policy and required checks with the active repository workflow
-6. Create the first 10 high-value Phase 1 labs on top of the stronger lab runtime
-7. Expand Phase 2 and Phase 4 depth once lab-engine outcomes are visibly strong
+1. Define the competency graph for Phase 1
+2. Define the workspace and lab template model
+3. Ship the validation engine contract
+4. Create the first 10 high-value Phase 1 labs
+5. Add milestone gating, reflections, and artifact saving
+6. Introduce guided debugging labs and inspect mode
+7. Expand into Phase 2 once Phase 1 outcomes are visibly strong
 
 ### Primary Product Metrics
 
 | Metric | Why It Matters |
-|---|---|
+| --- | --- |
 | **Transfer-task pass rate** | Best single indicator of genuine learning instead of walkthrough completion |
 | **Independent lab completion rate** | Measures whether support can be reduced without collapse |
 | **Repeated error reduction** | Shows whether the platform actually repairs foundational weaknesses |
 | **Milestone pass rate** | Tracks progression quality through gated curriculum |
 | **Artifact completion rate** | Indicates whether learners leave with saved evidence of work |
 
-### Metrics Status
-
-- Transfer-task pass rate: implemented in product analytics
-- Independent lab completion rate: implemented in product analytics
-- Repeated error reduction: implemented in product analytics
-- Milestone pass rate: implemented in product analytics
-- Artifact completion rate: implemented in product analytics
-- Remaining work is to connect these metrics to a deeper lab runtime and stronger validator signals
-
 ### Key Risks and Mitigation
 
 | Risk | Mitigation |
-|---|---|
+| --- | --- |
 | Too much explanation, not enough execution | Keep concept blocks short and lab-first |
 | Labs feel toy-like or artificial | Model realistic tasks and authentic failure modes |
 | Progress becomes completion-based | Require transfer evidence and competency gates |
@@ -322,7 +276,7 @@ The validator should be able to check file presence, directory structure, file c
 
 ## Final Recommendation
 
-> Treat ComputeLearn as a training platform for engineering execution. The analytics and learner-feedback layer is now materially ahead of the underlying lab runtime, so the next priority is to finish the lab engine, validation depth, and process hardening before broadening scope further.
+> Treat ComputeLearn as a training platform for engineering execution. Build the competency graph, the lab engine, and the first ten excellent labs before expanding into heavier AI, analytics, or broad curriculum surface area.
 
 ---
 

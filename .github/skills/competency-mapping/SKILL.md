@@ -1,5 +1,5 @@
 ---
-name: "Competency Mapping"
+name: "competency-mapping"
 description: "Map lessons to competencies and define mastery gates. Use when: designing competency progression, setting mastery thresholds, creating transfer tasks, verifying gating rules align with the PRD. Keywords: competency, mastery, gating, transfer task, evidence."
 ---
 
@@ -12,6 +12,7 @@ Align lessons with competencies and author evidence-based mastery gates.
 Helps you design the learning progression by mapping lessons to discrete competencies and defining what mastery means at each level.
 
 Based on the PRD competency model:
+
 - **Aware**: Recognizes concept, knows terminology
 - **Assisted**: Can complete tasks with guidance
 - **Functional**: Can complete standard tasks reliably
@@ -59,6 +60,7 @@ Based on the PRD competency model:
 ## Output
 
 Competency mappings that:
+
 - Are explicit and measurable
 - Align lessons to progression phases
 - Gate advancement on evidence
