@@ -493,15 +493,18 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     }));
   }
 
-  function navigateToEntry(entry: {
-    phase: typeof selectedPhase;
-    course: typeof selectedCourse;
-    lesson: Lesson;
-  }) {
-    setSelectedPhaseId(entry.phase.id);
-    setSelectedCourseId(entry.course.id);
-    setSelectedLessonId(entry.lesson.id);
-  }
+  const navigateToEntry = useCallback(
+    (entry: {
+      phase: typeof selectedPhase;
+      course: typeof selectedCourse;
+      lesson: Lesson;
+    }) => {
+      setSelectedPhaseId(entry.phase.id);
+      setSelectedCourseId(entry.course.id);
+      setSelectedLessonId(entry.lesson.id);
+    },
+    [],
+  );
 
   function selectPhase(phaseId: string) {
     const phase = curriculum.phases.find((item) => item.id === phaseId);
@@ -775,7 +778,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
 
     window.addEventListener("keydown", handleKeyboard);
     return () => window.removeEventListener("keydown", handleKeyboard);
-  });
+  }, [navigateToEntry, nextEntry, prevEntry]);
 
   const currentHintLevels = useMemo(() => {
     const prefix = `${selectedLesson?.id ?? ""}:`;
@@ -978,8 +981,8 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
             </div>
             <p>{selectedPhase.purpose}</p>
             <ul className="tool-list">
-              {selectedPhase.tools.map((tool) => (
-                <li key={tool}>{tool}</li>
+              {selectedPhase.tools.map((tool, i) => (
+                <li key={i}>{tool}</li>
               ))}
             </ul>
           </section>
@@ -1332,15 +1335,15 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
           <section className="section-grid">
             <article className="lesson-card">
               <h4>Concept explanation</h4>
-              {selectedLesson.explanation.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
+              {selectedLesson.explanation.map((paragraph, i) => (
+                <p key={i}>{paragraph}</p>
               ))}
             </article>
 
             <article className="lesson-card">
               <h4>Guided demonstration</h4>
-              {selectedLesson.demonstration.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
+              {selectedLesson.demonstration.map((paragraph, i) => (
+                <p key={i}>{paragraph}</p>
               ))}
             </article>
           </section>
@@ -1349,8 +1352,8 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
             <article className="exercise-card">
               <h4>Hands-on exercise</h4>
               <ol className="exercise-list">
-                {selectedLesson.exerciseSteps.map((step) => (
-                  <li key={step}>{step}</li>
+                {selectedLesson.exerciseSteps.map((step, i) => (
+                  <li key={i}>{step}</li>
                 ))}
               </ol>
             </article>
@@ -1358,8 +1361,8 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
             <article className="check-card">
               <h4>Validation criteria</h4>
               <ul className="validation-list">
-                {selectedLesson.validationChecks.map((check) => (
-                  <li key={check}>{check}</li>
+                {selectedLesson.validationChecks.map((check, i) => (
+                  <li key={i}>{check}</li>
                 ))}
               </ul>
             </article>
@@ -1719,8 +1722,8 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
             <article className="note-card">
               <h4>Retention cues</h4>
               <ul className="retention-list">
-                {selectedLesson.retention.map((item) => (
-                  <li key={item}>{item}</li>
+                {selectedLesson.retention.map((item, i) => (
+                  <li key={i}>{item}</li>
                 ))}
               </ul>
             </article>
@@ -2090,8 +2093,8 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
               <article className="safety-card">
                 <h4>Guardrails</h4>
                 <ul className="safety-list">
-                  {selectedPhase.guardrails.map((item) => (
-                    <li key={item}>{item}</li>
+                  {selectedPhase.guardrails.map((item, i) => (
+                    <li key={i}>{item}</li>
                   ))}
                 </ul>
               </article>
@@ -2113,16 +2116,16 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
               <article className="project-card">
                 <h4>Milestones</h4>
                 <ul className="project-list">
-                  {selectedPhase.milestones.map((milestone) => (
-                    <li key={milestone}>{milestone}</li>
+                  {selectedPhase.milestones.map((milestone, i) => (
+                    <li key={i}>{milestone}</li>
                   ))}
                 </ul>
               </article>
               <article className="project-card">
                 <h4>Phase projects</h4>
                 <ul className="deliverable-list">
-                  {selectedPhase.projects.map((project) => (
-                    <li key={project}>{project}</li>
+                  {selectedPhase.projects.map((project, i) => (
+                    <li key={i}>{project}</li>
                   ))}
                 </ul>
               </article>
