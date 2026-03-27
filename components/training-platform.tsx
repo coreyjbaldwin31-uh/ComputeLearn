@@ -1425,6 +1425,14 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                           ))}
                         </ul>
                       </div>
+                      <div>
+                        <h5>Signal diff</h5>
+                        <pre className="inspection-diff">
+                          {inspection.signalDiff.length > 0
+                            ? inspection.signalDiff.join("\n")
+                            : "No signal diff available yet."}
+                        </pre>
+                      </div>
                     </div>
                   ) : null}
                 </article>
@@ -1545,6 +1553,14 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                                 ),
                               )}
                             </ul>
+                          </div>
+                          <div>
+                            <h5>Signal diff</h5>
+                            <pre className="inspection-diff">
+                              {transferInspection.signalDiff.length > 0
+                                ? transferInspection.signalDiff.join("\n")
+                                : "No signal diff available yet."}
+                            </pre>
                           </div>
                         </div>
                       ) : null}

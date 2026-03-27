@@ -23,6 +23,10 @@ describe("buildExerciseInspection", () => {
       expect.arrayContaining(["symptom", "log"]),
     );
     expect(inspection.missingSignals).toContain("root");
+    expect(inspection.extraSignals).toContain("found");
+    expect(inspection.signalDiff).toEqual(
+      expect.arrayContaining(["+ symptom", "+ log", "- root"]),
+    );
     expect(inspection.probableSkillGap).toBe("Debugging accuracy");
     expect(inspection.inspectionPrompts[0]).toContain("symptom");
   });
@@ -47,6 +51,9 @@ describe("buildExerciseInspection", () => {
     expect(inspection.matchedSignals).toContain("readme");
     expect(inspection.missingSignals).toEqual(
       expect.arrayContaining(["tests", "usage"]),
+    );
+    expect(inspection.signalDiff).toEqual(
+      expect.arrayContaining(["+ readme", "- tests", "- usage"]),
     );
     expect(inspection.inspectionPrompts[0]).toContain("deliverable");
   });

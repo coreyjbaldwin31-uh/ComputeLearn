@@ -7,6 +7,8 @@ export type ExerciseInspection = {
   observedEvidence: string[];
   matchedSignals: string[];
   missingSignals: string[];
+  extraSignals: string[];
+  signalDiff: string[];
   inspectionPrompts: string[];
 };
 
@@ -78,6 +80,13 @@ export function buildExerciseInspection(
   const missingSignals = expectedSignals.filter(
     (signal) => !observedSet.has(signal),
   );
+  const expectedSet = new Set(expectedSignals);
+  const extraSignals = observedEvidence.filter((signal) => !expectedSet.has(signal));
+  const signalDiff = [
+    ...matchedSignals.map((signal) => `+ ${signal}`),
+    ...missingSignals.map((signal) => `- ${signal}`),
+    ...extraSignals.slice(0, 8).map((signal) => `~ ${signal}`),
+  ];
 
   return {
     passed: validation.passed,
@@ -85,6 +94,8 @@ export function buildExerciseInspection(
     observedEvidence,
     matchedSignals,
     missingSignals,
+    extraSignals,
+    signalDiff,
     inspectionPrompts: buildInspectionPrompts(exercise),
   };
 }
