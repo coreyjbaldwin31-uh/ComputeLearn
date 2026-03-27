@@ -5,6 +5,7 @@ import {
   buildArtifactBrowserSummary,
   getArtifactPreview,
 } from "@/lib/artifact-browser-engine";
+import { buildAttemptAnalyticsSummary } from "@/lib/attempt-analytics-engine";
 import type { ArtifactRecord } from "@/lib/artifact-engine";
 import {
   type AttemptRecord,
@@ -353,6 +354,16 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       .filter((artifact) => artifact.lessonId === selectedLesson.id)
       .slice(0, 4);
   }, [artifacts, selectedLesson]);
+
+  const attemptAnalytics = useMemo(
+    () => buildAttemptAnalyticsSummary(attempts),
+    [attempts],
+  );
+
+  const lessonAttemptAnalytics = useMemo(
+    () => buildAttemptAnalyticsSummary(attempts, selectedLesson?.id),
+    [attempts, selectedLesson?.id],
+  );
 
   const phaseStatuses = useMemo(
     () =>
@@ -1699,6 +1710,29 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
               <span>{lessonArtifactSummary.counts.reflection} reflections</span>
               <span>{lessonArtifactSummary.counts.transfer} transfers</span>
             </div>
+            <div className="phase-metrics">
+              <span>{attemptAnalytics.errorReductionRate}% recovery rate</span>
+              <span>{attemptAnalytics.recoveredExercises} recovered checks</span>
+              <span>{attemptAnalytics.unresolvedExercises} unresolved checks</span>
+            </div>
+            <p className="microcopy">
+              This lesson: {lessonAttemptAnalytics.failedAttempts} failed attempt{lessonAttemptAnalytics.failedAttempts === 1 ? "" : "s"}, {lessonAttemptAnalytics.recoveredExercises} recovered exercise{lessonAttemptAnalytics.recoveredExercises === 1 ? "" : "s"}.
+            </p>
+            {attemptAnalytics.breakdown.length > 0 ? (
+              <ul className="review-queue-list">
+                {attemptAnalytics.breakdown.slice(0, 3).map((entry) => (
+                  <li key={entry.assessmentType}>
+                    <div className="review-queue-item static-item">
+                      <span className="review-course">{entry.assessmentType}</span>
+                      <span className="review-lesson">
+                        {entry.failures} failures · {entry.recoveries} recoveries
+                      </span>
+                      <span className="microcopy">{entry.attempts} total attempts</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
             {recentAttempts.length > 0 ? (
               <ul className="review-queue-list">
                 {recentAttempts.map((attempt) => (
