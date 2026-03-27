@@ -62,6 +62,7 @@ describe("buildIndependentReadinessSummary", () => {
         Testing: 8,
         Debugging: 12,
         ApiInteraction: 8,
+        IndependentProblemSolving: 8,
       },
       [
         buildArtifact("a1", coreLessons[0].id, "note"),
@@ -83,6 +84,7 @@ describe("buildIndependentReadinessSummary", () => {
         Testing: 8,
         Debugging: 12,
         ApiInteraction: 8,
+        IndependentProblemSolving: 8,
       },
       [
         buildArtifact("a1", coreLessons[0].id, "note"),
