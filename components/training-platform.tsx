@@ -3,6 +3,10 @@
 import type { Curriculum, Exercise, Lesson } from "@/data/curriculum";
 import type { ArtifactRecord } from "@/lib/artifact-engine";
 import {
+  buildArtifactBrowserSummary,
+  getArtifactPreview,
+} from "@/lib/artifact-browser-engine";
+import {
   type AttemptRecord,
   buildArtifactRecord,
   buildAttemptRecord,
@@ -16,6 +20,8 @@ import {
   getHintText,
   isHintExhausted,
 } from "@/lib/hint-engine";
+import { evaluatePhaseMilestoneStatus } from "@/lib/milestone-engine";
+import { buildPhaseStatusRecords } from "@/lib/phase-status-engine";
 import {
   calculateActivityStreak,
   calculateCompetencyLevels,
@@ -33,7 +39,6 @@ import {
   buildReflectionPrompts,
   formatReflectionArtifactContent,
 } from "@/lib/reflection-engine";
-import { evaluatePhaseMilestoneStatus } from "@/lib/milestone-engine";
 import {
   getReinforcementQueue,
   getWeakTrackHits,
@@ -294,7 +299,8 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   }, [allLessonsFlat, reviews]);
 
   const selectedPhaseEntries = useMemo(
-    () => allLessonsFlat.filter((entry) => entry.phase.id === selectedPhase?.id),
+    () =>
+      allLessonsFlat.filter((entry) => entry.phase.id === selectedPhase?.id),
     [allLessonsFlat, selectedPhase?.id],
   );
 
@@ -336,6 +342,23 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       .filter((artifact) => artifact.lessonId === selectedLesson.id)
       .slice(0, 4);
   }, [artifacts, selectedLesson]);
+
+  const phaseStatuses = useMemo(
+    () =>
+      buildPhaseStatusRecords(
+        curriculum,
+        progress,
+        transferProgress,
+        competencyLevels,
+        reviews,
+      ),
+    [curriculum, progress, transferProgress, competencyLevels, reviews],
+  );
+
+  const lessonArtifactSummary = useMemo(
+    () => buildArtifactBrowserSummary(artifacts, selectedLesson?.id),
+    [artifacts, selectedLesson?.id],
+  );
 
   const selectedLessonWeakTracks = useMemo(() => {
     if (!selectedLesson) return [];
@@ -778,6 +801,9 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
 
             <ul className="phase-list">
               {curriculum.phases.map((phase) => {
+                const status = phaseStatuses.find(
+                  (record) => record.phaseId === phase.id,
+                );
                 const phaseLessonCount = phase.courses.flatMap(
                   (course) => course.lessons,
                 ).length;
@@ -799,6 +825,23 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                         <span>
                           {phaseCompletedCount}/{phaseLessonCount} lessons
                         </span>
+                        {status ? (
+                          <span
+                            className={`status-pill ${
+                              status.statusLabel === "ready"
+                                ? "complete"
+                                : "pending"
+                            }`}
+                          >
+                            {status.statusLabel === "not-started"
+                              ? "Not started"
+                              : status.statusLabel === "in-progress"
+                                ? "In progress"
+                                : status.statusLabel === "review-needed"
+                                  ? "Review needed"
+                                  : "Ready"}
+                          </span>
+                        ) : null}
                       </div>
                     </button>
                   </li>
@@ -1330,11 +1373,16 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
             </p>
             <div className="phase-metrics">
               <span>{recentAttempts.length} recent attempts</span>
-              <span>{recentArtifacts.length} lesson artifacts</span>
+              <span>{lessonArtifactSummary.total} lesson artifacts</span>
               <span>
                 {transferEvidenceWithinPhase}/{transferLessonsCount} transfer
                 gates passed
               </span>
+            </div>
+            <div className="phase-metrics">
+              <span>{lessonArtifactSummary.counts.note} notes</span>
+              <span>{lessonArtifactSummary.counts.reflection} reflections</span>
+              <span>{lessonArtifactSummary.counts.transfer} transfers</span>
             </div>
             {recentAttempts.length > 0 ? (
               <ul className="review-queue-list">
@@ -1357,6 +1405,21 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                 No attempts logged for this lesson yet.
               </p>
             )}
+            {lessonArtifactSummary.recent.length > 0 ? (
+              <ul className="review-queue-list">
+                {lessonArtifactSummary.recent.map((artifact) => (
+                  <li key={artifact.id}>
+                    <div className="review-queue-item static-item">
+                      <span className="review-course">{artifact.type}</span>
+                      <span className="review-lesson">{artifact.title}</span>
+                      <span className="microcopy">
+                        {getArtifactPreview(artifact.content)}
+                      </span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
           </section>
 
           <section className="panel">
@@ -1597,7 +1660,9 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                     className={`gate-item ${phaseMilestoneStatus?.reinforcementGatePassed ? "gate-passed" : "gate-pending"}`}
                   >
                     <span className="gate-icon" aria-hidden="true">
-                      {phaseMilestoneStatus?.reinforcementGatePassed ? "✓" : "○"}
+                      {phaseMilestoneStatus?.reinforcementGatePassed
+                        ? "✓"
+                        : "○"}
                     </span>
                     <span className="gate-description">
                       Clear overdue reinforcement work for weak competencies
@@ -1614,7 +1679,8 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                 <section className="panel">
                   <h3>Before you advance</h3>
                   <p className="panel-subtext">
-                    Advancement now depends on competency, transfer, and reinforcement readiness together.
+                    Advancement now depends on competency, transfer, and
+                    reinforcement readiness together.
                   </p>
                   <ul className="review-queue-list">
                     {phaseMilestoneStatus?.blockedReasons.map((reason) => (
