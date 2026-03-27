@@ -22,7 +22,7 @@ Version 1.0 | Prepared for product planning and implementation alignment
 ## At a Glance
 
 | Field | Detail |
-|---|---|
+| --- | --- |
 | **Product** | Mastery-based learning platform for turning everyday computer users into technically fluent builders. |
 | **Core promise** | Learners progress by operating real tools inside safe, reversible labs instead of consuming passive lessons. |
 | **Primary outcome** | Practical entry-level software engineering competence across system use, coding, debugging, Git, testing, and delivery workflow. |
@@ -79,6 +79,7 @@ Most beginner learning products teach concepts out of context. Real confidence a
 The primary user is an everyday computer user who is comfortable browsing, installing software, and using common applications but lacks deep confidence with the filesystem, terminal, code, debugging, and development tooling.
 
 **Typical starting profile:**
+
 - Uses a computer daily but relies on trial and error when something breaks
 - Has little or no terminal experience
 - May have tried coding tutorials but struggles to apply them in real environments
@@ -142,7 +143,7 @@ Curriculum flow alone is not enough. ComputeLearn should track discrete competen
 ### Core Competency Domains
 
 | Column A | Column B |
-|---|---|
+| --- | --- |
 | System Navigation | Configuration and Environments |
 | Terminal Operation | API Interaction |
 | File Manipulation | Version Control |
@@ -154,7 +155,7 @@ Curriculum flow alone is not enough. ComputeLearn should track discrete competen
 ### Mastery Ladder
 
 | Level | Definition |
-|---|---|
+| --- | --- |
 | **Aware** | Recognizes the concept and basic terminology |
 | **Assisted** | Can complete tasks with structured guidance |
 | **Functional** | Can complete standard tasks reliably |
@@ -268,6 +269,7 @@ At minimum, the platform should represent **Learner**, **Phase**, **Course**, **
 ### Validation Engine Contract
 
 The validator should be able to check file presence, directory structure, file content, command output, code behavior, and test pass conditions. Each result should return:
+
 - pass or fail
 - failed criteria
 - probable skill gap

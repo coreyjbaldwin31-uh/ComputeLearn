@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import type { ArtifactRecord } from "./artifact-engine";
 import {
-  buildArtifactExportDocument,
-  buildArtifactExportFilename,
+    buildArtifactExportDocument,
+    buildArtifactExportFilename,
 } from "./artifact-export-engine";
 import type { LessonEntry } from "./progression-engine";
 

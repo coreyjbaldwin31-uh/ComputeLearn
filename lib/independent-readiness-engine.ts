@@ -1,9 +1,9 @@
 import type { Curriculum } from "@/data/curriculum";
 import type { ArtifactRecord } from "./artifact-engine";
 import {
-  evaluatePhaseExitStatus,
-  getMasteryLevel,
-  getPhaseProgressSnapshot,
+    evaluatePhaseExitStatus,
+    getMasteryLevel,
+    getPhaseProgressSnapshot,
 } from "./progression-engine";
 
 export type IndependentReadinessCheck = {

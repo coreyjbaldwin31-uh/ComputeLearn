@@ -2,11 +2,11 @@ import type { Curriculum } from "@/data/curriculum";
 import { getWeakCompetencyTracks } from "./competency-engine";
 import { evaluatePhaseMilestoneStatus } from "./milestone-engine";
 import {
-  evaluatePhaseExitStatus,
-  flattenLessonEntries,
-  getMasteryLevel,
-  getPhaseProgressSnapshot,
-  type ReviewRecord,
+    evaluatePhaseExitStatus,
+    flattenLessonEntries,
+    getMasteryLevel,
+    getPhaseProgressSnapshot,
+    type ReviewRecord,
 } from "./progression-engine";
 import { getReinforcementQueue } from "./reinforcement-engine";
 

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
-  buildArtifactBrowserSummary,
-  getArtifactPreview,
+    buildArtifactBrowserSummary,
+    getArtifactPreview,
 } from "./artifact-browser-engine";
 
 describe("buildArtifactBrowserSummary", () => {
