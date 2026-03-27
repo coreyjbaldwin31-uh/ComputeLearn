@@ -1,5 +1,5 @@
-import { formatTrackName, getMasteryLevel } from "./progression-engine";
 import { getWeakCompetencyTracks } from "./competency-engine";
+import { formatTrackName, getMasteryLevel } from "./progression-engine";
 
 export type CompetencyDashboardRecord = {
   track: string;

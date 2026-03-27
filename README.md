@@ -12,26 +12,32 @@ The platform is designed around a strict progression:
 
 The core product rule is that learners should practice inside controlled, reversible environments rather than passively consuming explanations.
 
-## MVP in this repository
+## Current implementation in this repository
 
-This first version implements a curriculum shell with:
+The current app goes beyond a curriculum shell. It now includes:
 
-- phased learning progression
-- course and lesson navigation
-- concept explanation and guided demonstration sections
-- hands-on exercises with lightweight validation
-- local progress persistence
-- local lesson notes persistence
+- phased learning progression with milestone gating
+- learner profile, local progress persistence, notes, reflections, and review scheduling
+- guided exercises, transfer tasks, and evidence-gated lesson completion
+- layered hints, inspect mode, and diff-style inspection output for failed validation
+- competency dashboard, transfer analytics, independent readiness, independent lab completion, repeated error reduction, milestone pass rate, artifact coverage, and outcomes rollup panels
+- artifact history, evidence browsing, and markdown export of learner work
 - explicit safe-lab framing and guardrails
+
+## Still open platform work
+
+- true workspace/template runtime with deterministic baseline state plus reset/replay at the lab-engine level
+- validator expansion for file presence, directory structure, command output, code behavior, and test pass criteria
+- explicit curriculum validation and preview-deploy workflow expansion in CI
+- final branch/process hardening around the intended integration workflow
 
 ## Planned product capabilities
 
-- sandboxed workspaces and resettable labs
-- command validation against isolated environments
 - real project templates with seeded bugs and guided objectives
-- review loops for AI-assisted workflows
-- saved outputs, transcripts, and learner artifacts
-- spaced repetition and revisit prompts
+- bounded review loops for AI-assisted workflows
+- stronger lab runtime and validation depth
+- durable saved outputs, transcripts, and learner artifacts beyond browser-local persistence
+- deeper spaced repetition and revisit prompts
 
 ## Development
 
@@ -57,6 +63,12 @@ Run type-checking:
 
 ```bash
 npm run type-check
+```
+
+Run tests:
+
+```bash
+npm run test
 ```
 
 Build and run with Docker:

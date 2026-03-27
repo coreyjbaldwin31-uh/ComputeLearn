@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
 import type { Curriculum } from "@/data/curriculum";
+import { describe, expect, it } from "vitest";
 import { buildPhaseTransferAnalytics } from "./transfer-analytics-engine";
 
 describe("buildPhaseTransferAnalytics", () => {

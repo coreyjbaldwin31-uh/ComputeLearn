@@ -30,9 +30,9 @@ import {
 import { buildIndependentLabSummary } from "@/lib/independent-lab-engine";
 import { buildIndependentReadinessSummary } from "@/lib/independent-readiness-engine";
 import { buildExerciseInspection } from "@/lib/inspection-engine";
+import { evaluatePhaseMilestoneStatus } from "@/lib/milestone-engine";
 import { buildMilestonePassRateSummary } from "@/lib/milestone-pass-rate-engine";
 import { buildOutcomesDashboardSummary } from "@/lib/outcomes-dashboard-engine";
-import { evaluatePhaseMilestoneStatus } from "@/lib/milestone-engine";
 import { buildPhaseStatusRecords } from "@/lib/phase-status-engine";
 import {
   calculateActivityStreak,
@@ -1046,9 +1046,16 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
               <span>{milestonePassRateSummary.blockedPhases} blocked</span>
             </div>
             <div className="phase-metrics">
-              <span>{milestonePassRateSummary.statusCounts.notStarted} not started</span>
-              <span>{milestonePassRateSummary.statusCounts.inProgress} in progress</span>
-              <span>{milestonePassRateSummary.statusCounts.reviewNeeded} review needed</span>
+              <span>
+                {milestonePassRateSummary.statusCounts.notStarted} not started
+              </span>
+              <span>
+                {milestonePassRateSummary.statusCounts.inProgress} in progress
+              </span>
+              <span>
+                {milestonePassRateSummary.statusCounts.reviewNeeded} review
+                needed
+              </span>
             </div>
             {milestonePassRateSummary.blockedPhaseTitles.length > 0 ? (
               <ul className="review-queue-list">
@@ -1186,9 +1193,13 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                         <span className="review-course">
                           {phase.completionRate}% complete
                         </span>
-                        <span className="review-lesson">{phase.phaseTitle}</span>
+                        <span className="review-lesson">
+                          {phase.phaseTitle}
+                        </span>
                         <span className="microcopy">
-                          {phase.completedLabs}/{phase.totalLabs} complete · {phase.validatedLabs} validated · {phase.firstPassLabs} first pass
+                          {phase.completedLabs}/{phase.totalLabs} complete ·{" "}
+                          {phase.validatedLabs} validated ·{" "}
+                          {phase.firstPassLabs} first pass
                         </span>
                       </div>
                     </li>

@@ -13,6 +13,12 @@ This repository follows a strict PR-first workflow.
 - `hotfix/<scope>`
 - `release/<version-or-date>`
 
+## Current workflow note
+
+- Default target branch for new feature work is `develop`.
+- During repository bootstrap, branch-model migration, or maintainer-directed hardening work, a PR may explicitly target `main`.
+- If a task or active coordination thread names a different base branch, follow that instruction instead of assuming the default.
+
 ## Local quality checks
 
 Run all checks before opening a PR:
@@ -42,8 +48,8 @@ docker compose up --build
 
 ## Pull request requirements
 
-- PR targets `develop` for normal feature work
-- PR targets `main` only for release/hotfix workflows
+- PR targets `develop` for normal feature work unless a maintainer explicitly directs the work to `main`
+- PR targets `main` for release/hotfix workflows and approved bootstrap or hardening exceptions
 - At least one approval is required
 - All required CI checks must pass
 - Branch must be up to date before merge
