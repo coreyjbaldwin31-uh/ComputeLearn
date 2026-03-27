@@ -7,6 +7,10 @@ import {
   getArtifactPreview,
 } from "@/lib/artifact-browser-engine";
 import {
+  buildArtifactExportDocument,
+  buildArtifactExportFilename,
+} from "@/lib/artifact-export-engine";
+import {
   type AttemptRecord,
   buildArtifactRecord,
   buildAttemptRecord,
@@ -668,6 +672,23 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       ...prev,
       [key]: advanceHintLevel(prev[key] ?? 0),
     }));
+  }
+
+  function exportArtifacts(lessonId?: string) {
+    const exportDocument = buildArtifactExportDocument(artifacts, allLessonsFlat, {
+      lessonId,
+    });
+    const blob = new Blob([exportDocument], {
+      type: "text/markdown;charset=utf-8",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = buildArtifactExportFilename(lessonId);
+    document.body.append(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
   }
 
   useEffect(() => {
@@ -1490,6 +1511,22 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
               Attempts and artifacts are saved locally as evidence for mastery
               gates.
             </p>
+            <div className="toolbar">
+              <button
+                type="button"
+                className="ghost-button"
+                onClick={() => exportArtifacts(selectedLesson.id)}
+              >
+                Export lesson evidence
+              </button>
+              <button
+                type="button"
+                className="ghost-button"
+                onClick={() => exportArtifacts()}
+              >
+                Export all evidence
+              </button>
+            </div>
             <div className="phase-metrics">
               <span>{recentAttempts.length} recent attempts</span>
               <span>{lessonArtifactSummary.total} lesson artifacts</span>
