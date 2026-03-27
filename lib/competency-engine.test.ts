@@ -55,14 +55,14 @@ describe("getWeakCompetencyTracks", () => {
   const levels: Record<string, string> = {
     VersionControl: "Functional",
     Debugging: "Assisted",
-    ApiIntegration: "Aware",
+    ApiInteraction: "Aware",
     ProgrammingLogic: "Independent",
   };
 
   it("returns tracks below the Functional threshold", () => {
     const weak = getWeakCompetencyTracks(levels, "Functional");
     expect(weak).toContain("Debugging");
-    expect(weak).toContain("ApiIntegration");
+    expect(weak).toContain("ApiInteraction");
     expect(weak).not.toContain("VersionControl");
     expect(weak).not.toContain("ProgrammingLogic");
   });
@@ -90,7 +90,7 @@ describe("getWeakCompetencyTracks", () => {
     const weak = getWeakCompetencyTracks(levels, "Independent");
     expect(weak).toContain("VersionControl");
     expect(weak).toContain("Debugging");
-    expect(weak).toContain("ApiIntegration");
+    expect(weak).toContain("ApiInteraction");
     expect(weak).not.toContain("ProgrammingLogic");
   });
 });

@@ -21,7 +21,7 @@ describe("getWeakTrackHits", () => {
       exercises: [],
       competencies: [
         { track: "Debugging", targetLevel: "Functional" },
-        { track: "ApiIntegration", targetLevel: "Aware" },
+        { track: "ApiInteraction", targetLevel: "Aware" },
       ],
     };
 
@@ -109,7 +109,7 @@ describe("getReinforcementQueue", () => {
                 tools: [],
                 notesPrompt: "",
                 exercises: [],
-                competencies: [{ track: "ApiIntegration", targetLevel: "Functional" }],
+                competencies: [{ track: "ApiInteraction", targetLevel: "Functional" }],
               },
               {
                 id: "l3",
@@ -212,7 +212,7 @@ describe("getReinforcementQueue", () => {
           reviewCount: 0,
         },
       },
-      ["Debugging", "ApiIntegration", "VersionControl"],
+      ["Debugging", "ApiInteraction", "VersionControl"],
       Date.parse("2026-04-10T00:00:00.000Z"),
       2,
     );

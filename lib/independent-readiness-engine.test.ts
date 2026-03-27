@@ -61,7 +61,7 @@ describe("buildIndependentReadinessSummary", () => {
         DeliveryWorkflow: 12,
         Testing: 8,
         Debugging: 12,
-        ApiIntegration: 8,
+        ApiInteraction: 8,
       },
       [
         buildArtifact("a1", coreLessons[0].id, "note"),
@@ -82,7 +82,7 @@ describe("buildIndependentReadinessSummary", () => {
         DeliveryWorkflow: 12,
         Testing: 8,
         Debugging: 12,
-        ApiIntegration: 8,
+        ApiInteraction: 8,
       },
       [
         buildArtifact("a1", coreLessons[0].id, "note"),

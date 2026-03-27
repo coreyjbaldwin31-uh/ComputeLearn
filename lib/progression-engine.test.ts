@@ -52,7 +52,7 @@ describe("progression-engine", () => {
   });
 
   it("formats competency track names", () => {
-    expect(formatTrackName("ApiIntegration")).toBe("Api Integration");
+    expect(formatTrackName("ApiInteraction")).toBe("Api Interaction");
   });
 
   it("calculates activity streak from review history", () => {

@@ -5,12 +5,12 @@ describe("buildCompetencyDashboardSummary", () => {
   it("sorts competencies by count and marks weak ones", () => {
     const summary = buildCompetencyDashboardSummary({
       Debugging: 10,
-      ApiIntegration: 2,
+      ApiInteraction: 2,
       VersionControl: 8,
     });
 
     expect(summary.records[0].track).toBe("Debugging");
-    expect(summary.records.find((record) => record.track === "ApiIntegration")?.isWeak).toBe(true);
+    expect(summary.records.find((record) => record.track === "ApiInteraction")?.isWeak).toBe(true);
     expect(summary.passingCount).toBe(2);
     expect(summary.weakCount).toBe(1);
   });
