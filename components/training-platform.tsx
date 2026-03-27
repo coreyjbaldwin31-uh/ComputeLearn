@@ -69,6 +69,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import { CodeExercise } from "./code-exercise";
+import { InspectionPanel } from "./inspection-panel";
 import { TerminalSimulator } from "./terminal-simulator";
 
 type ProgressState = Record<string, true>;
@@ -1461,52 +1462,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                     </div>
                   ) : null}
                   {showInspection ? (
-                    <div className="inspection-panel">
-                      <div className="inspection-row">
-                        <span className="inspection-label">Skill gap</span>
-                        <span>{inspection.probableSkillGap}</span>
-                      </div>
-                      <div className="inspection-grid">
-                        <div>
-                          <h5>Matched signals</h5>
-                          <ul className="inspection-list">
-                            {(inspection.matchedSignals.length > 0
-                              ? inspection.matchedSignals
-                              : ["No expected signals matched yet."]
-                            ).map((signal) => (
-                              <li key={`match-${signal}`}>{signal}</li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div>
-                          <h5>Missing signals</h5>
-                          <ul className="inspection-list">
-                            {(inspection.missingSignals.length > 0
-                              ? inspection.missingSignals
-                              : ["No missing signals."]
-                            ).map((signal) => (
-                              <li key={`missing-${signal}`}>{signal}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                      <div>
-                        <h5>Inspection prompts</h5>
-                        <ul className="inspection-list">
-                          {inspection.inspectionPrompts.map((prompt) => (
-                            <li key={prompt}>{prompt}</li>
-                          ))}
-                        </ul>
-                      </div>
-                      <div>
-                        <h5>Signal diff</h5>
-                        <pre className="inspection-diff">
-                          {inspection.signalDiff.length > 0
-                            ? inspection.signalDiff.join("\n")
-                            : "No signal diff available yet."}
-                        </pre>
-                      </div>
-                    </div>
+                    <InspectionPanel inspection={inspection} />
                   ) : null}
                 </article>
               );
@@ -1584,58 +1540,10 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                       ) : null}
                       <div className="hint-layer">{transferTask.hint}</div>
                       {showTransferInspection ? (
-                        <div className="inspection-panel">
-                          <div className="inspection-row">
-                            <span className="inspection-label">Skill gap</span>
-                            <span>{transferInspection.probableSkillGap}</span>
-                          </div>
-                          <div className="inspection-grid">
-                            <div>
-                              <h5>Matched signals</h5>
-                              <ul className="inspection-list">
-                                {(transferInspection.matchedSignals.length > 0
-                                  ? transferInspection.matchedSignals
-                                  : ["No expected signals matched yet."]
-                                ).map((signal) => (
-                                  <li key={`transfer-match-${signal}`}>
-                                    {signal}
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                            <div>
-                              <h5>Missing signals</h5>
-                              <ul className="inspection-list">
-                                {(transferInspection.missingSignals.length > 0
-                                  ? transferInspection.missingSignals
-                                  : ["No missing signals."]
-                                ).map((signal) => (
-                                  <li key={`transfer-missing-${signal}`}>
-                                    {signal}
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          </div>
-                          <div>
-                            <h5>Inspection prompts</h5>
-                            <ul className="inspection-list">
-                              {transferInspection.inspectionPrompts.map(
-                                (prompt) => (
-                                  <li key={prompt}>{prompt}</li>
-                                ),
-                              )}
-                            </ul>
-                          </div>
-                          <div>
-                            <h5>Signal diff</h5>
-                            <pre className="inspection-diff">
-                              {transferInspection.signalDiff.length > 0
-                                ? transferInspection.signalDiff.join("\n")
-                                : "No signal diff available yet."}
-                            </pre>
-                          </div>
-                        </div>
+                        <InspectionPanel
+                          inspection={transferInspection}
+                          keyPrefix="transfer-"
+                        />
                       ) : null}
                     </>
                   );
