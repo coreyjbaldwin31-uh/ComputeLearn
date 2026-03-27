@@ -21,6 +21,7 @@ import {
   getHintText,
   isHintExhausted,
 } from "@/lib/hint-engine";
+import { buildIndependentReadinessSummary } from "@/lib/independent-readiness-engine";
 import { evaluatePhaseMilestoneStatus } from "@/lib/milestone-engine";
 import { buildPhaseStatusRecords } from "@/lib/phase-status-engine";
 import {
@@ -370,6 +371,18 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const phaseTransferAnalytics = useMemo(
     () => buildPhaseTransferAnalytics(curriculum, transferProgress),
     [curriculum, transferProgress],
+  );
+
+  const independentReadiness = useMemo(
+    () =>
+      buildIndependentReadinessSummary(
+        curriculum,
+        progress,
+        transferProgress,
+        competencyLevels,
+        artifacts,
+      ),
+    [artifacts, competencyLevels, curriculum, progress, transferProgress],
   );
 
   const selectedLessonWeakTracks = useMemo(() => {
@@ -922,6 +935,57 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
               ))}
             </ul>
           </section>
+
+          {independentReadiness ? (
+            <section className="panel">
+              <div className="panel-header">
+                <div>
+                  <h3>Independent readiness</h3>
+                  <p>{independentReadiness.phaseTitle}</p>
+                </div>
+                <span
+                  className={`status-pill ${
+                    independentReadiness.statusLabel === "portfolio-ready"
+                      ? "complete"
+                      : "pending"
+                  }`}
+                >
+                  {independentReadiness.statusLabel === "not-started"
+                    ? "Not started"
+                    : independentReadiness.statusLabel === "building"
+                      ? "Building"
+                      : independentReadiness.statusLabel === "capstone-ready"
+                        ? "Capstone ready"
+                        : "Portfolio ready"}
+                </span>
+              </div>
+              <div className="phase-metrics">
+                <span>{independentReadiness.readinessPercent}% ready</span>
+                <span>
+                  {independentReadiness.completedLessons}/
+                  {independentReadiness.totalLessons} lessons complete
+                </span>
+              </div>
+              <p className="microcopy">
+                {independentReadiness.documentationArtifacts} documentation artifacts across {independentReadiness.documentedLessons} lessons.
+              </p>
+              <ul className="review-queue-list">
+                {independentReadiness.checks.map((check) => (
+                  <li key={check.id}>
+                    <div className="review-queue-item static-item">
+                      <span
+                        className={`review-course ${check.passed ? "" : "warning-text"}`}
+                      >
+                        {check.passed ? "Ready" : "Blocked"}
+                      </span>
+                      <span className="review-lesson">{check.label}</span>
+                      <span className="microcopy">{check.detail}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
         </aside>
 
         <section className="content">
