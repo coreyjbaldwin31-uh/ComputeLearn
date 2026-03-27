@@ -1726,7 +1726,7 @@ export const curriculum: Curriculum = {
                 hint: "Start with what is running, then check logs, then look at port mappings or exec into the container.",
                 assessmentType: "transfer",
               },
-              competencies: [{ track: "DeliveryWorkflow", targetLevel: "Functional" }],
+              competencies: [{ track: "DeliveryWorkflow", targetLevel: "Functional" }, { track: "Debugging", targetLevel: "Functional" }],
               scaffoldingLevel: "goal-driven",
             },
             {
