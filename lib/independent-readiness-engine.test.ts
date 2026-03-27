@@ -16,6 +16,12 @@ const capstoneLessons = phaseFourLessons.filter((lesson) =>
 const coreLessons = phaseFourLessons.filter(
   (lesson) => !/capstone|portfolio/i.test(`${lesson.id} ${lesson.title}`),
 );
+const transferLessonIds = phaseFourLessons
+  .filter((lesson) => lesson.transferTask)
+  .map((lesson) => lesson.id);
+const allTransferProgress = Object.fromEntries(
+  transferLessonIds.map((id) => [id, true as const]),
+);
 
 function buildArtifact(
   id: string,
@@ -50,7 +56,7 @@ describe("buildIndependentReadinessSummary", () => {
     const summary = buildIndependentReadinessSummary(
       curriculum,
       Object.fromEntries(coreLessons.map((lesson) => [lesson.id, true])),
-      { "lesson-cli-build": true },
+      allTransferProgress,
       {
         DeliveryWorkflow: 12,
         Testing: 8,
@@ -71,7 +77,7 @@ describe("buildIndependentReadinessSummary", () => {
     const summary = buildIndependentReadinessSummary(
       curriculum,
       Object.fromEntries(phaseFourLessons.map((lesson) => [lesson.id, true])),
-      { "lesson-cli-build": true },
+      allTransferProgress,
       {
         DeliveryWorkflow: 12,
         Testing: 8,

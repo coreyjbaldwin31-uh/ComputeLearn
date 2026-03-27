@@ -128,7 +128,8 @@ Curriculum flow alone is not enough. ComputeLearn should track discrete competen
 | Automation | Testing |
 | Programming Logic | Documentation |
 | Code Reading | Independent Problem Solving |
-| Debugging | |
+| Debugging | Delivery Workflow |
+| Security Awareness | |
 
 ### Mastery Ladder
 
