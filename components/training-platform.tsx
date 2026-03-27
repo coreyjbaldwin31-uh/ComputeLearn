@@ -5,7 +5,6 @@ import {
   buildArtifactBrowserSummary,
   getArtifactPreview,
 } from "@/lib/artifact-browser-engine";
-import { buildAttemptAnalyticsSummary } from "@/lib/attempt-analytics-engine";
 import type { ArtifactRecord } from "@/lib/artifact-engine";
 import {
   type AttemptRecord,
@@ -18,6 +17,7 @@ import {
   buildArtifactExportDocument,
   buildArtifactExportFilename,
 } from "@/lib/artifact-export-engine";
+import { buildAttemptAnalyticsSummary } from "@/lib/attempt-analytics-engine";
 import { buildCompetencyDashboardSummary } from "@/lib/competency-dashboard-engine";
 import { getWeakCompetencyTracks } from "@/lib/competency-engine";
 import {
@@ -26,6 +26,7 @@ import {
   getHintText,
   isHintExhausted,
 } from "@/lib/hint-engine";
+import { buildIndependentLabSummary } from "@/lib/independent-lab-engine";
 import { buildIndependentReadinessSummary } from "@/lib/independent-readiness-engine";
 import { buildExerciseInspection } from "@/lib/inspection-engine";
 import { evaluatePhaseMilestoneStatus } from "@/lib/milestone-engine";
@@ -402,6 +403,17 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
         artifacts,
       ),
     [artifacts, competencyLevels, curriculum, progress, transferProgress],
+  );
+
+  const independentLabSummary = useMemo(
+    () =>
+      buildIndependentLabSummary(
+        curriculum,
+        progress,
+        transferProgress,
+        attempts,
+      ),
+    [attempts, curriculum, progress, transferProgress],
   );
 
   const selectedLessonWeakTracks = useMemo(() => {
@@ -1044,6 +1056,47 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
               </ul>
             </section>
           ) : null}
+
+          <section className="panel">
+            <h3>Independent lab completion</h3>
+            <div className="phase-metrics">
+              <span>{independentLabSummary.completionRate}% completed</span>
+              <span>
+                {independentLabSummary.completedLabs}/
+                {independentLabSummary.totalLabs} ticket labs
+              </span>
+            </div>
+            <div className="phase-metrics">
+              <span>{independentLabSummary.validatedLabs} fully validated</span>
+              <span>{independentLabSummary.firstPassLabs} first-pass labs</span>
+            </div>
+            {independentLabSummary.phaseBreakdown.some(
+              (phase) => phase.totalLabs > 0,
+            ) ? (
+              <ul className="review-queue-list">
+                {independentLabSummary.phaseBreakdown
+                  .filter((phase) => phase.totalLabs > 0)
+                  .map((phase) => (
+                    <li key={phase.phaseId}>
+                      <div className="review-queue-item static-item">
+                        <span className="review-course">
+                          {phase.completionRate}% complete
+                        </span>
+                        <span className="review-lesson">{phase.phaseTitle}</span>
+                        <span className="microcopy">
+                          {phase.completedLabs}/{phase.totalLabs} complete · {phase.validatedLabs} validated · {phase.firstPassLabs} first pass
+                        </span>
+                      </div>
+                    </li>
+                  ))}
+              </ul>
+            ) : (
+              <p className="microcopy">
+                Ticket-style labs appear in late phases and will populate here
+                as you progress.
+              </p>
+            )}
+          </section>
         </aside>
 
         <section className="content">
@@ -1403,9 +1456,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                           {transferFeedback[selectedLesson.id]}
                         </div>
                       ) : null}
-                      <div className="hint-layer">
-                        {transferTask.hint}
-                      </div>
+                      <div className="hint-layer">{transferTask.hint}</div>
                       {showTransferInspection ? (
                         <div className="inspection-panel">
                           <div className="inspection-row">
@@ -1712,22 +1763,34 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
             </div>
             <div className="phase-metrics">
               <span>{attemptAnalytics.errorReductionRate}% recovery rate</span>
-              <span>{attemptAnalytics.recoveredExercises} recovered checks</span>
-              <span>{attemptAnalytics.unresolvedExercises} unresolved checks</span>
+              <span>
+                {attemptAnalytics.recoveredExercises} recovered checks
+              </span>
+              <span>
+                {attemptAnalytics.unresolvedExercises} unresolved checks
+              </span>
             </div>
             <p className="microcopy">
-              This lesson: {lessonAttemptAnalytics.failedAttempts} failed attempt{lessonAttemptAnalytics.failedAttempts === 1 ? "" : "s"}, {lessonAttemptAnalytics.recoveredExercises} recovered exercise{lessonAttemptAnalytics.recoveredExercises === 1 ? "" : "s"}.
+              This lesson: {lessonAttemptAnalytics.failedAttempts} failed
+              attempt{lessonAttemptAnalytics.failedAttempts === 1 ? "" : "s"},{" "}
+              {lessonAttemptAnalytics.recoveredExercises} recovered exercise
+              {lessonAttemptAnalytics.recoveredExercises === 1 ? "" : "s"}.
             </p>
             {attemptAnalytics.breakdown.length > 0 ? (
               <ul className="review-queue-list">
                 {attemptAnalytics.breakdown.slice(0, 3).map((entry) => (
                   <li key={entry.assessmentType}>
                     <div className="review-queue-item static-item">
-                      <span className="review-course">{entry.assessmentType}</span>
-                      <span className="review-lesson">
-                        {entry.failures} failures · {entry.recoveries} recoveries
+                      <span className="review-course">
+                        {entry.assessmentType}
                       </span>
-                      <span className="microcopy">{entry.attempts} total attempts</span>
+                      <span className="review-lesson">
+                        {entry.failures} failures · {entry.recoveries}{" "}
+                        recoveries
+                      </span>
+                      <span className="microcopy">
+                        {entry.attempts} total attempts
+                      </span>
                     </div>
                   </li>
                 ))}
