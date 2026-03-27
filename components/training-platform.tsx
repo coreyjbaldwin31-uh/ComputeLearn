@@ -31,6 +31,7 @@ import { buildIndependentLabSummary } from "@/lib/independent-lab-engine";
 import { buildIndependentReadinessSummary } from "@/lib/independent-readiness-engine";
 import { buildExerciseInspection } from "@/lib/inspection-engine";
 import { buildMilestonePassRateSummary } from "@/lib/milestone-pass-rate-engine";
+import { buildOutcomesDashboardSummary } from "@/lib/outcomes-dashboard-engine";
 import { evaluatePhaseMilestoneStatus } from "@/lib/milestone-engine";
 import { buildPhaseStatusRecords } from "@/lib/phase-status-engine";
 import {
@@ -426,6 +427,24 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
         attempts,
       ),
     [attempts, curriculum, progress, transferProgress],
+  );
+
+  const outcomesDashboardSummary = useMemo(
+    () =>
+      buildOutcomesDashboardSummary({
+        transferAnalytics: phaseTransferAnalytics,
+        independentLabSummary,
+        attemptAnalytics,
+        milestonePassRateSummary,
+        artifactCompletionSummary,
+      }),
+    [
+      artifactCompletionSummary,
+      attemptAnalytics,
+      independentLabSummary,
+      milestonePassRateSummary,
+      phaseTransferAnalytics,
+    ],
   );
 
   const selectedLessonWeakTracks = useMemo(() => {
@@ -1047,6 +1066,46 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                 All phases currently satisfy milestone gates.
               </p>
             )}
+          </section>
+
+          <section className="panel">
+            <div className="panel-header">
+              <div>
+                <h3>Outcomes dashboard</h3>
+                <p>PRD metric rollup and recommended next actions.</p>
+              </div>
+              <span
+                className={`status-pill ${
+                  outcomesDashboardSummary.status === "strong"
+                    ? "complete"
+                    : "pending"
+                }`}
+              >
+                {outcomesDashboardSummary.overallScore}%
+              </span>
+            </div>
+            <ul className="review-queue-list">
+              {outcomesDashboardSummary.snapshots.map((snapshot) => (
+                <li key={snapshot.id}>
+                  <div className="review-queue-item static-item">
+                    <span
+                      className={`review-course ${
+                        snapshot.status === "strong" ? "" : "warning-text"
+                      }`}
+                    >
+                      {snapshot.value}%
+                    </span>
+                    <span className="review-lesson">{snapshot.label}</span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <h4>Priority actions</h4>
+            <ul className="retention-list">
+              {outcomesDashboardSummary.prioritizedActions.map((action) => (
+                <li key={action}>{action}</li>
+              ))}
+            </ul>
           </section>
 
           {independentReadiness ? (
