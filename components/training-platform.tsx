@@ -13,6 +13,7 @@ import {
   createId,
   formatCompletionContent,
 } from "@/lib/artifact-engine";
+import { buildCompetencyDashboardSummary } from "@/lib/competency-dashboard-engine";
 import { getWeakCompetencyTracks } from "@/lib/competency-engine";
 import {
   advanceHintLevel,
@@ -43,6 +44,7 @@ import {
   getReinforcementQueue,
   getWeakTrackHits,
 } from "@/lib/reinforcement-engine";
+import { buildPhaseTransferAnalytics } from "@/lib/transfer-analytics-engine";
 import {
   evaluateExerciseAnswer,
   evaluateLessonEvidenceGate,
@@ -358,6 +360,16 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const lessonArtifactSummary = useMemo(
     () => buildArtifactBrowserSummary(artifacts, selectedLesson?.id),
     [artifacts, selectedLesson?.id],
+  );
+
+  const competencyDashboard = useMemo(
+    () => buildCompetencyDashboardSummary(competencyLevels),
+    [competencyLevels],
+  );
+
+  const phaseTransferAnalytics = useMemo(
+    () => buildPhaseTransferAnalytics(curriculum, transferProgress),
+    [curriculum, transferProgress],
   );
 
   const selectedLessonWeakTracks = useMemo(() => {
@@ -864,6 +876,49 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
             <ul className="tool-list">
               {selectedPhase.tools.map((tool) => (
                 <li key={tool}>{tool}</li>
+              ))}
+            </ul>
+          </section>
+
+          <section className="panel">
+            <h3>Mastery overview</h3>
+            <div className="phase-metrics">
+              <span>{competencyDashboard.passingCount} strong tracks</span>
+              <span>{competencyDashboard.weakCount} weak tracks</span>
+            </div>
+            {competencyDashboard.records.length > 0 ? (
+              <ul className="review-queue-list">
+                {competencyDashboard.records.slice(0, 5).map((record) => (
+                  <li key={record.track}>
+                    <div className="review-queue-item static-item">
+                      <span className="review-course">{record.level}</span>
+                      <span className="review-lesson">{record.displayName}</span>
+                      <span className="microcopy">
+                        {record.count} evidence point{record.count === 1 ? "" : "s"}
+                        {record.isWeak ? " · reinforcement suggested" : ""}
+                      </span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="microcopy">Complete lessons to build competency signals.</p>
+            )}
+          </section>
+
+          <section className="panel">
+            <h3>Transfer analytics</h3>
+            <ul className="review-queue-list">
+              {phaseTransferAnalytics.map((record) => (
+                <li key={record.phaseId}>
+                  <div className="review-queue-item static-item">
+                    <span className="review-course">{record.passRate}% passed</span>
+                    <span className="review-lesson">{record.phaseTitle}</span>
+                    <span className="microcopy">
+                      {record.passedTransferLessons}/{record.totalTransferLessons} transfer lessons cleared
+                    </span>
+                  </div>
+                </li>
               ))}
             </ul>
           </section>
