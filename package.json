@@ -10,7 +10,11 @@
     "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "verify": "npm run lint && npm run type-check && npm run test && npm run build",
+    "docker:build": "docker build -t computelearn-platform .",
+    "docker:up": "docker compose up --build",
+    "docker:down": "docker compose down"
   },
   "dependencies": {
     "next": "^16.2.1",

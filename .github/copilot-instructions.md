@@ -19,6 +19,14 @@ ComputeLearn is a Next.js learning platform focused on guided, hands-on software
 - Avoid adding dependencies unless they clearly reduce maintenance or implementation risk.
 - Keep styling consistent with the existing CSS and component structure.
 
+## Autonomous delivery
+
+- When the user explicitly asks for autonomous execution, continue from audit through implementation, validation, and repo hygiene with minimal back-and-forth.
+- Prefer repeatable automation paths first: npm scripts, VS Code tasks, Docker commands, Git and GitHub tooling, and deterministic CLI workflows.
+- Keep the remote branch current with small verified commits and pushes only when the user has explicitly asked for autonomous repo updating.
+- Use Docker for environment parity, build checks, and runtime validation when the repository already includes container assets.
+- Use Postman, Newman, or equivalent HTTP tooling for API verification when relevant and available.
+
 ## Validation
 
 Before finishing a change, run the existing checks when relevant:
