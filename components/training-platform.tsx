@@ -5,6 +5,7 @@ import {
   buildArtifactBrowserSummary,
   getArtifactPreview,
 } from "@/lib/artifact-browser-engine";
+import { buildArtifactCompletionSummary } from "@/lib/artifact-completion-engine";
 import type { ArtifactRecord } from "@/lib/artifact-engine";
 import {
   type AttemptRecord,
@@ -381,6 +382,11 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const lessonArtifactSummary = useMemo(
     () => buildArtifactBrowserSummary(artifacts, selectedLesson?.id),
     [artifacts, selectedLesson?.id],
+  );
+
+  const artifactCompletionSummary = useMemo(
+    () => buildArtifactCompletionSummary(curriculum, progress, artifacts),
+    [artifacts, curriculum, progress],
   );
 
   const competencyDashboard = useMemo(
@@ -1760,6 +1766,20 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
               <span>{lessonArtifactSummary.counts.note} notes</span>
               <span>{lessonArtifactSummary.counts.reflection} reflections</span>
               <span>{lessonArtifactSummary.counts.transfer} transfers</span>
+            </div>
+            <div className="phase-metrics">
+              <span>
+                {artifactCompletionSummary.completionRate}% artifact coverage
+              </span>
+              <span>
+                {artifactCompletionSummary.lessonsWithEvidence}/
+                {artifactCompletionSummary.completedLessons} completed lessons
+                with evidence
+              </span>
+              <span>
+                {artifactCompletionSummary.lessonsMissingEvidence} missing
+                evidence
+              </span>
             </div>
             <div className="phase-metrics">
               <span>{attemptAnalytics.errorReductionRate}% recovery rate</span>
