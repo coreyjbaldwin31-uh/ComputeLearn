@@ -1,10 +1,7 @@
 "use client";
 
 import type { Curriculum, Exercise, Lesson } from "@/data/curriculum";
-import {
-  buildArtifactBrowserSummary,
-  getArtifactPreview,
-} from "@/lib/artifact-browser-engine";
+import { buildArtifactBrowserSummary } from "@/lib/artifact-browser-engine";
 import { buildArtifactCompletionSummary } from "@/lib/artifact-completion-engine";
 import type { ArtifactRecord } from "@/lib/artifact-engine";
 import {
@@ -34,8 +31,8 @@ import { evaluatePhaseMilestoneStatus } from "@/lib/milestone-engine";
 import { buildMilestonePassRateSummary } from "@/lib/milestone-pass-rate-engine";
 import { buildOutcomesDashboardSummary } from "@/lib/outcomes-dashboard-engine";
 import { buildPhaseStatusRecords } from "@/lib/phase-status-engine";
+import type { ReviewRecord } from "@/lib/progression-engine";
 import {
-  type ReviewRecord,
   calculateActivityStreak,
   calculateCompetencyLevels,
   calculatePercentComplete,
@@ -70,7 +67,10 @@ import {
   useSyncExternalStore,
 } from "react";
 import { CodeExercise } from "./code-exercise";
+import { useLearnerProfile } from "./hooks/use-learner-profile";
 import { InspectionPanel } from "./inspection-panel";
+import { RailPanels } from "./rail-panels";
+import { SidebarPanels } from "./sidebar-panels";
 import { TerminalSimulator } from "./terminal-simulator";
 
 type ProgressState = Record<string, true>;
@@ -81,13 +81,6 @@ type ReflectionState = Record<string, string>;
 type ReviewState = Record<string, ReviewRecord>;
 type TransferState = Record<string, true>;
 
-type LearnerProfile = {
-  displayName: string;
-  goal: string;
-  weeklyHours: number;
-  createdAt: string | null;
-};
-
 type TrainingPlatformProps = {
   curriculum: Curriculum;
 };
@@ -96,7 +89,6 @@ const progressStorageKey = "computelearn-progress";
 const notesStorageKey = "computelearn-notes";
 const reflectionsStorageKey = "computelearn-reflections";
 const reviewsStorageKey = "computelearn-reviews";
-const learnerProfileStorageKey = "computelearn-learner-profile";
 const attemptsStorageKey = "computelearn-attempts";
 const artifactsStorageKey = "computelearn-artifacts";
 const transferStorageKey = "computelearn-transfer";
@@ -106,12 +98,6 @@ const emptyNotes: NotesState = {};
 const emptyReflections: ReflectionState = {};
 const emptyReviews: ReviewState = {};
 const emptyTransfer: TransferState = {};
-const emptyProfile: LearnerProfile = {
-  displayName: "",
-  goal: "",
-  weeklyHours: 4,
-  createdAt: null,
-};
 
 function useLocalStorageState<T>(key: string, initial: T) {
   const initialRef = useRef(initial);
@@ -222,11 +208,8 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   );
   const [transferProgress, setTransferProgress] =
     useLocalStorageState<TransferState>(transferStorageKey, emptyTransfer);
-  const [learnerProfile, setLearnerProfile] =
-    useLocalStorageState<LearnerProfile>(
-      learnerProfileStorageKey,
-      emptyProfile,
-    );
+  const { profile: learnerProfile, update: updateLearnerProfile } =
+    useLearnerProfile();
   const [attempts, setAttempts] = useLocalStorageState<AttemptRecord[]>(
     attemptsStorageKey,
     [],
@@ -488,16 +471,6 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       createdAt: new Date().toISOString(),
     });
     setArtifacts((current) => [nextArtifact, ...current].slice(0, 250));
-  }
-
-  function updateLearnerProfile(
-    patch: Partial<Omit<LearnerProfile, "createdAt">>,
-  ) {
-    setLearnerProfile((current) => ({
-      ...current,
-      ...patch,
-      createdAt: current.createdAt ?? new Date().toISOString(),
-    }));
   }
 
   const navigateToEntry = useCallback(
@@ -926,324 +899,22 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       </section>
 
       <section className="main-grid">
-        <aside className="sidebar">
-          <section className="panel">
-            <div className="panel-header">
-              <div>
-                <h3>Phases</h3>
-                <p>
-                  Progressive learning path from operational fluency to real
-                  engineering work.
-                </p>
-              </div>
-              <span className="tag">{curriculum.phases.length} total</span>
-            </div>
-
-            <progress
-              className="progress-meter"
-              aria-label="Overall completion"
-              max={100}
-              value={percentComplete}
-            />
-
-            <ul className="phase-list">
-              {curriculum.phases.map((phase) => {
-                const status = phaseStatuses.find(
-                  (record) => record.phaseId === phase.id,
-                );
-                const phaseLessonCount = phase.courses.flatMap(
-                  (course) => course.lessons,
-                ).length;
-                const phaseCompletedCount = phase.courses
-                  .flatMap((course) => course.lessons)
-                  .filter((lesson) => progress[lesson.id]).length;
-
-                return (
-                  <li key={phase.id}>
-                    <button
-                      type="button"
-                      className={`phase-button ${phase.id === selectedPhase.id ? "active" : ""}`}
-                      onClick={() => selectPhase(phase.id)}
-                    >
-                      <span className="phase-kicker">{phase.level}</span>
-                      <span className="phase-title">{phase.title}</span>
-                      <div className="phase-metrics">
-                        <span>{phase.duration}</span>
-                        <span>
-                          {phaseCompletedCount}/{phaseLessonCount} lessons
-                        </span>
-                        {status ? (
-                          <span
-                            className={`status-pill ${
-                              status.statusLabel === "ready"
-                                ? "complete"
-                                : "pending"
-                            }`}
-                          >
-                            {status.statusLabel === "not-started"
-                              ? "Not started"
-                              : status.statusLabel === "in-progress"
-                                ? "In progress"
-                                : status.statusLabel === "review-needed"
-                                  ? "Review needed"
-                                  : "Ready"}
-                          </span>
-                        ) : null}
-                      </div>
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          </section>
-
-          <section className="panel">
-            <div className="panel-header">
-              <div>
-                <h3>{selectedPhase.title}</h3>
-                <p>{selectedPhase.strapline}</p>
-              </div>
-              <span className="tag">
-                {completedWithinPhase}/{totalWithinPhase}
-              </span>
-            </div>
-            <p>{selectedPhase.purpose}</p>
-            <ul className="tool-list">
-              {selectedPhase.tools.map((tool, i) => (
-                <li key={i}>{tool}</li>
-              ))}
-            </ul>
-          </section>
-
-          <section className="panel">
-            <h3>Mastery overview</h3>
-            <div className="phase-metrics">
-              <span>{competencyDashboard.passingCount} strong tracks</span>
-              <span>{competencyDashboard.weakCount} weak tracks</span>
-            </div>
-            {competencyDashboard.records.length > 0 ? (
-              <ul className="review-queue-list">
-                {competencyDashboard.records.slice(0, 5).map((record) => (
-                  <li key={record.track}>
-                    <div className="review-queue-item static-item">
-                      <span className="review-course">{record.level}</span>
-                      <span className="review-lesson">
-                        {record.displayName}
-                      </span>
-                      <span className="microcopy">
-                        {record.count} evidence point
-                        {record.count === 1 ? "" : "s"}
-                        {record.isWeak ? " · reinforcement suggested" : ""}
-                      </span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="microcopy">
-                Complete lessons to build competency signals.
-              </p>
-            )}
-          </section>
-
-          <section className="panel">
-            <h3>Transfer analytics</h3>
-            <ul className="review-queue-list">
-              {phaseTransferAnalytics.map((record) => (
-                <li key={record.phaseId}>
-                  <div className="review-queue-item static-item">
-                    <span className="review-course">
-                      {record.passRate}% passed
-                    </span>
-                    <span className="review-lesson">{record.phaseTitle}</span>
-                    <span className="microcopy">
-                      {record.passedTransferLessons}/
-                      {record.totalTransferLessons} transfer lessons cleared
-                    </span>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </section>
-
-          <section className="panel">
-            <h3>Milestone pass rate</h3>
-            <div className="phase-metrics">
-              <span>{milestonePassRateSummary.passRate}% phases cleared</span>
-              <span>
-                {milestonePassRateSummary.passedPhases}/
-                {milestonePassRateSummary.totalPhases} phases ready
-              </span>
-              <span>{milestonePassRateSummary.blockedPhases} blocked</span>
-            </div>
-            <div className="phase-metrics">
-              <span>
-                {milestonePassRateSummary.statusCounts.notStarted} not started
-              </span>
-              <span>
-                {milestonePassRateSummary.statusCounts.inProgress} in progress
-              </span>
-              <span>
-                {milestonePassRateSummary.statusCounts.reviewNeeded} review
-                needed
-              </span>
-            </div>
-            {milestonePassRateSummary.blockedPhaseTitles.length > 0 ? (
-              <ul className="review-queue-list">
-                {milestonePassRateSummary.blockedPhaseTitles.map((title) => (
-                  <li key={title}>
-                    <div className="review-queue-item static-item">
-                      <span className="review-course">Blocked</span>
-                      <span className="review-lesson">{title}</span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="microcopy">
-                All phases currently satisfy milestone gates.
-              </p>
-            )}
-          </section>
-
-          <section className="panel">
-            <div className="panel-header">
-              <div>
-                <h3>Outcomes dashboard</h3>
-                <p>PRD metric rollup and recommended next actions.</p>
-              </div>
-              <span
-                className={`status-pill ${
-                  outcomesDashboardSummary.status === "strong"
-                    ? "complete"
-                    : "pending"
-                }`}
-              >
-                {outcomesDashboardSummary.overallScore}%
-              </span>
-            </div>
-            <ul className="review-queue-list">
-              {outcomesDashboardSummary.snapshots.map((snapshot) => (
-                <li key={snapshot.id}>
-                  <div className="review-queue-item static-item">
-                    <span
-                      className={`review-course ${
-                        snapshot.status === "strong" ? "" : "warning-text"
-                      }`}
-                    >
-                      {snapshot.value}%
-                    </span>
-                    <span className="review-lesson">{snapshot.label}</span>
-                  </div>
-                </li>
-              ))}
-            </ul>
-            <h4>Priority actions</h4>
-            <ul className="retention-list">
-              {outcomesDashboardSummary.prioritizedActions.map((action) => (
-                <li key={action}>{action}</li>
-              ))}
-            </ul>
-          </section>
-
-          {independentReadiness ? (
-            <section className="panel">
-              <div className="panel-header">
-                <div>
-                  <h3>Independent readiness</h3>
-                  <p>{independentReadiness.phaseTitle}</p>
-                </div>
-                <span
-                  className={`status-pill ${
-                    independentReadiness.statusLabel === "portfolio-ready"
-                      ? "complete"
-                      : "pending"
-                  }`}
-                >
-                  {independentReadiness.statusLabel === "not-started"
-                    ? "Not started"
-                    : independentReadiness.statusLabel === "building"
-                      ? "Building"
-                      : independentReadiness.statusLabel === "capstone-ready"
-                        ? "Capstone ready"
-                        : "Portfolio ready"}
-                </span>
-              </div>
-              <div className="phase-metrics">
-                <span>{independentReadiness.readinessPercent}% ready</span>
-                <span>
-                  {independentReadiness.completedLessons}/
-                  {independentReadiness.totalLessons} lessons complete
-                </span>
-              </div>
-              <p className="microcopy">
-                {independentReadiness.documentationArtifacts} documentation
-                artifacts across {independentReadiness.documentedLessons}{" "}
-                lessons.
-              </p>
-              <ul className="review-queue-list">
-                {independentReadiness.checks.map((check) => (
-                  <li key={check.id}>
-                    <div className="review-queue-item static-item">
-                      <span
-                        className={`review-course ${check.passed ? "" : "warning-text"}`}
-                      >
-                        {check.passed ? "Ready" : "Blocked"}
-                      </span>
-                      <span className="review-lesson">{check.label}</span>
-                      <span className="microcopy">{check.detail}</span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ) : null}
-
-          <section className="panel">
-            <h3>Independent lab completion</h3>
-            <div className="phase-metrics">
-              <span>{independentLabSummary.completionRate}% completed</span>
-              <span>
-                {independentLabSummary.completedLabs}/
-                {independentLabSummary.totalLabs} ticket labs
-              </span>
-            </div>
-            <div className="phase-metrics">
-              <span>{independentLabSummary.validatedLabs} fully validated</span>
-              <span>{independentLabSummary.firstPassLabs} first-pass labs</span>
-            </div>
-            {independentLabSummary.phaseBreakdown.some(
-              (phase) => phase.totalLabs > 0,
-            ) ? (
-              <ul className="review-queue-list">
-                {independentLabSummary.phaseBreakdown
-                  .filter((phase) => phase.totalLabs > 0)
-                  .map((phase) => (
-                    <li key={phase.phaseId}>
-                      <div className="review-queue-item static-item">
-                        <span className="review-course">
-                          {phase.completionRate}% complete
-                        </span>
-                        <span className="review-lesson">
-                          {phase.phaseTitle}
-                        </span>
-                        <span className="microcopy">
-                          {phase.completedLabs}/{phase.totalLabs} complete ·{" "}
-                          {phase.validatedLabs} validated ·{" "}
-                          {phase.firstPassLabs} first pass
-                        </span>
-                      </div>
-                    </li>
-                  ))}
-              </ul>
-            ) : (
-              <p className="microcopy">
-                Ticket-style labs appear in late phases and will populate here
-                as you progress.
-              </p>
-            )}
-          </section>
-        </aside>
+        <SidebarPanels
+          curriculum={curriculum}
+          selectedPhase={selectedPhase}
+          percentComplete={percentComplete}
+          progress={progress}
+          completedWithinPhase={completedWithinPhase}
+          totalWithinPhase={totalWithinPhase}
+          phaseStatuses={phaseStatuses}
+          competencyDashboard={competencyDashboard}
+          phaseTransferAnalytics={phaseTransferAnalytics}
+          milestonePassRateSummary={milestonePassRateSummary}
+          outcomesDashboardSummary={outcomesDashboardSummary}
+          independentReadiness={independentReadiness}
+          independentLabSummary={independentLabSummary}
+          selectPhase={selectPhase}
+        />
 
         <section className="content">
           <section className="panel">
@@ -1749,474 +1420,34 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
           </nav>
         </section>
 
-        <aside className="rail">
-          <section className="panel">
-            <h3>Learner profile</h3>
-            <div className="profile-grid">
-              <label className="profile-field">
-                <span>Name</span>
-                <input
-                  aria-label="Learner name"
-                  value={learnerProfile.displayName}
-                  onChange={(event) =>
-                    updateLearnerProfile({ displayName: event.target.value })
-                  }
-                  placeholder="Your name"
-                />
-              </label>
-              <label className="profile-field">
-                <span>Weekly hours</span>
-                <input
-                  aria-label="Weekly hours"
-                  type="number"
-                  min={1}
-                  max={40}
-                  value={learnerProfile.weeklyHours}
-                  onChange={(event) =>
-                    updateLearnerProfile({
-                      weeklyHours: Math.max(
-                        1,
-                        Number.parseInt(event.target.value || "1", 10),
-                      ),
-                    })
-                  }
-                />
-              </label>
-              <label className="profile-field">
-                <span>Current goal</span>
-                <input
-                  aria-label="Current goal"
-                  value={learnerProfile.goal}
-                  onChange={(event) =>
-                    updateLearnerProfile({ goal: event.target.value })
-                  }
-                  placeholder="Example: Complete Phase 1 this month"
-                />
-              </label>
-            </div>
-          </section>
-
-          <section className="panel">
-            <h3>Evidence and attempts</h3>
-            <p className="panel-subtext">
-              Attempts and artifacts are saved locally as evidence for mastery
-              gates.
-            </p>
-            <div className="toolbar">
-              <button
-                type="button"
-                className="ghost-button"
-                onClick={() => exportArtifacts(selectedLesson.id)}
-              >
-                Export lesson evidence
-              </button>
-              <button
-                type="button"
-                className="ghost-button"
-                onClick={() => exportArtifacts()}
-              >
-                Export all evidence
-              </button>
-            </div>
-            <div className="phase-metrics">
-              <span>{recentAttempts.length} recent attempts</span>
-              <span>{lessonArtifactSummary.total} lesson artifacts</span>
-              <span>
-                {transferEvidenceWithinPhase}/{transferLessonsCount} transfer
-                gates passed
-              </span>
-            </div>
-            <div className="phase-metrics">
-              <span>{lessonArtifactSummary.counts.note} notes</span>
-              <span>{lessonArtifactSummary.counts.reflection} reflections</span>
-              <span>{lessonArtifactSummary.counts.transfer} transfers</span>
-            </div>
-            <div className="phase-metrics">
-              <span>
-                {artifactCompletionSummary.completionRate}% artifact coverage
-              </span>
-              <span>
-                {artifactCompletionSummary.lessonsWithEvidence}/
-                {artifactCompletionSummary.completedLessons} completed lessons
-                with evidence
-              </span>
-              <span>
-                {artifactCompletionSummary.lessonsMissingEvidence} missing
-                evidence
-              </span>
-            </div>
-            <div className="phase-metrics">
-              <span>{attemptAnalytics.errorReductionRate}% recovery rate</span>
-              <span>
-                {attemptAnalytics.recoveredExercises} recovered checks
-              </span>
-              <span>
-                {attemptAnalytics.unresolvedExercises} unresolved checks
-              </span>
-            </div>
-            <p className="microcopy">
-              This lesson: {lessonAttemptAnalytics.failedAttempts} failed
-              attempt{lessonAttemptAnalytics.failedAttempts === 1 ? "" : "s"},{" "}
-              {lessonAttemptAnalytics.recoveredExercises} recovered exercise
-              {lessonAttemptAnalytics.recoveredExercises === 1 ? "" : "s"}.
-            </p>
-            {attemptAnalytics.breakdown.length > 0 ? (
-              <ul className="review-queue-list">
-                {attemptAnalytics.breakdown.slice(0, 3).map((entry) => (
-                  <li key={entry.assessmentType}>
-                    <div className="review-queue-item static-item">
-                      <span className="review-course">
-                        {entry.assessmentType}
-                      </span>
-                      <span className="review-lesson">
-                        {entry.failures} failures · {entry.recoveries}{" "}
-                        recoveries
-                      </span>
-                      <span className="microcopy">
-                        {entry.attempts} total attempts
-                      </span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-            {recentAttempts.length > 0 ? (
-              <ul className="review-queue-list">
-                {recentAttempts.map((attempt) => (
-                  <li key={attempt.id}>
-                    <div className="review-queue-item static-item">
-                      <span className="review-course">
-                        {attempt.assessmentType}
-                      </span>
-                      <span className="review-lesson">
-                        {attempt.passed ? "Passed" : "Needs work"} ·{" "}
-                        {attempt.exerciseId}
-                      </span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="microcopy">
-                No attempts logged for this lesson yet.
-              </p>
-            )}
-            {lessonArtifactSummary.recent.length > 0 ? (
-              <ul className="review-queue-list">
-                {lessonArtifactSummary.recent.map((artifact) => (
-                  <li key={artifact.id}>
-                    <div className="review-queue-item static-item">
-                      <span className="review-course">{artifact.type}</span>
-                      <span className="review-lesson">{artifact.title}</span>
-                      <span className="microcopy">
-                        {getArtifactPreview(artifact.content)}
-                      </span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-          </section>
-
-          <section className="panel">
-            <h3>Lessons in this course</h3>
-            <progress
-              className="course-progress"
-              max={selectedCourse.lessons.length}
-              value={
-                selectedCourse.lessons.filter((l) => progress[l.id]).length
-              }
-              aria-label="Course completion"
-            />
-            <ul className="lesson-list">
-              {visibleLessons.map((lesson) => (
-                <li key={lesson.id}>
-                  <button
-                    type="button"
-                    className={`lesson-button ${lesson.id === selectedLesson.id ? "active" : ""}`}
-                    onClick={() => setSelectedLessonId(lesson.id)}
-                  >
-                    <span className="lesson-kicker">{lesson.duration}</span>
-                    <span className="lesson-title">{lesson.title}</span>
-                    <div className="lesson-button-status">
-                      {reviews[lesson.id] != null &&
-                      isDueForReview(reviews[lesson.id]) ? (
-                        <span className="due-pill">Due</span>
-                      ) : null}
-                      <span
-                        className={`status-pill ${progress[lesson.id] ? "complete" : "pending"}`}
-                      >
-                        {progress[lesson.id] ? "Complete" : "Pending"}
-                      </span>
-                    </div>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </section>
-
-          {reinforcementQueue.length > 0 ? (
-            <section className="panel">
-              <div className="panel-header">
-                <div>
-                  <h3>Reinforcement focus</h3>
-                  <p>Due reviews prioritized by weak competency overlap.</p>
-                </div>
-                <span className="tag due-count">
-                  {reinforcementQueue.length}
-                </span>
-              </div>
-              <ul className="review-queue-list">
-                {reinforcementQueue.map((item) => (
-                  <li key={item.entry.lesson.id}>
-                    <button
-                      type="button"
-                      className="review-queue-item"
-                      onClick={() => navigateToEntry(item.entry)}
-                    >
-                      <span className="review-course">
-                        {item.entry.course.title}
-                      </span>
-                      <span className="review-lesson">
-                        {item.entry.lesson.title}
-                      </span>
-                      <span className="microcopy">
-                        Focus: {item.weakTracks.map(formatTrackName).join(", ")}{" "}
-                        · {item.dueSinceDays} day
-                        {item.dueSinceDays === 1 ? "" : "s"} overdue
-                      </span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ) : null}
-
-          {reviewQueue.length > 0 ? (
-            <section className="panel">
-              <div className="panel-header">
-                <div>
-                  <h3>Due for review</h3>
-                  <p>Spaced repetition keeps knowledge fresh.</p>
-                </div>
-                <span className="tag due-count">{reviewQueue.length}</span>
-              </div>
-              <ul className="review-queue-list">
-                {reviewQueue.slice(0, 5).map(({ phase, course, lesson }) => (
-                  <li key={lesson.id}>
-                    <button
-                      type="button"
-                      className="review-queue-item"
-                      onClick={() => navigateToEntry({ phase, course, lesson })}
-                    >
-                      <span className="review-course">{course.title}</span>
-                      <span className="review-lesson">{lesson.title}</span>
-                    </button>
-                  </li>
-                ))}
-                {reviewQueue.length > 5 ? (
-                  <li className="review-more">
-                    +{reviewQueue.length - 5} more due
-                  </li>
-                ) : null}
-              </ul>
-            </section>
-          ) : null}
-
-          <section className="panel">
-            <h3>Safe lab design</h3>
-            <div className="lab-grid">
-              <article className="safety-card">
-                <h4>Guardrails</h4>
-                <ul className="safety-list">
-                  {selectedPhase.guardrails.map((item, i) => (
-                    <li key={i}>{item}</li>
-                  ))}
-                </ul>
-              </article>
-              <article className="safety-card">
-                <h4>Environment</h4>
-                <p>{selectedPhase.environment}</p>
-                <div className="chip-row">
-                  <span className="safety-tag">Resettable labs</span>
-                  <span className="safety-tag">Scoped permissions</span>
-                  <span className="safety-tag">Replayable actions</span>
-                </div>
-              </article>
-            </div>
-          </section>
-
-          <section className="panel">
-            <h3>Practical outcomes</h3>
-            <div className="project-grid">
-              <article className="project-card">
-                <h4>Milestones</h4>
-                <ul className="project-list">
-                  {selectedPhase.milestones.map((milestone, i) => (
-                    <li key={i}>{milestone}</li>
-                  ))}
-                </ul>
-              </article>
-              <article className="project-card">
-                <h4>Phase projects</h4>
-                <ul className="deliverable-list">
-                  {selectedPhase.projects.map((project, i) => (
-                    <li key={i}>{project}</li>
-                  ))}
-                </ul>
-              </article>
-            </div>
-          </section>
-
-          {selectedPhase.competencyFocus &&
-          selectedPhase.competencyFocus.length > 0 ? (
-            <section className="panel">
-              <div className="panel-header">
-                <div>
-                  <h3>Competency progress</h3>
-                  <p>Tracked against completed lessons in this phase.</p>
-                </div>
-              </div>
-              <div className="competency-list">
-                {selectedPhase.competencyFocus.map((track) => {
-                  const count = competencyLevels[track] ?? 0;
-                  const level = getMasteryLevel(count);
-                  const isWeak = weakCompetencyTracks.includes(track);
-                  return (
-                    <div
-                      className={`competency-item${isWeak ? " competency-weak" : ""}`}
-                      key={track}
-                    >
-                      <div className="competency-row">
-                        <span className="competency-track">
-                          {formatTrackName(track)}
-                        </span>
-                        <span className={`mastery-badge mastery-${level}`}>
-                          {level}
-                        </span>
-                        {isWeak ? (
-                          <span
-                            className="weak-indicator"
-                            title="Needs reinforcement"
-                          >
-                            ↺
-                          </span>
-                        ) : null}
-                      </div>
-                      <progress
-                        className="mastery-bar"
-                        max={15}
-                        value={count}
-                        aria-label={`${formatTrackName(track)} mastery`}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-          ) : null}
-
-          {selectedPhase.exitStandard && phaseExitStatus ? (
-            <>
-              <section className="panel">
-                <h3>Phase exit gates</h3>
-                <p className="panel-subtext">
-                  {selectedPhase.exitStandard.summary}
-                </p>
-                <ul className="gate-list">
-                  {phaseExitStatus.gates.map((gate) => (
-                    <li
-                      key={`${gate.competency}-${gate.description}`}
-                      className={`gate-item ${gate.passed ? "gate-passed" : "gate-pending"}`}
-                    >
-                      <span className="gate-icon" aria-hidden="true">
-                        {gate.passed ? "✓" : "○"}
-                      </span>
-                      <span className="gate-description">
-                        {gate.description}
-                        <span className="gate-level">{gate.requiredLevel}</span>
-                      </span>
-                    </li>
-                  ))}
-                  <li
-                    className={`gate-item ${phaseExitStatus.transferGatePassed ? "gate-passed" : "gate-pending"}`}
-                  >
-                    <span className="gate-icon" aria-hidden="true">
-                      {phaseExitStatus.transferGatePassed ? "✓" : "○"}
-                    </span>
-                    <span className="gate-description">
-                      Pass at least one transfer challenge in this phase
-                      <span className="gate-level">
-                        {transferEvidenceWithinPhase}/{transferLessonsCount}{" "}
-                        complete
-                      </span>
-                    </span>
-                  </li>
-                  <li
-                    className={`gate-item ${phaseMilestoneStatus?.reinforcementGatePassed ? "gate-passed" : "gate-pending"}`}
-                  >
-                    <span className="gate-icon" aria-hidden="true">
-                      {phaseMilestoneStatus?.reinforcementGatePassed
-                        ? "✓"
-                        : "○"}
-                    </span>
-                    <span className="gate-description">
-                      Clear overdue reinforcement work for weak competencies
-                      <span className="gate-level">
-                        {phaseReinforcementQueue.length === 0
-                          ? "No overdue reinforcement"
-                          : `${phaseReinforcementQueue.length} still due`}
-                      </span>
-                    </span>
-                  </li>
-                </ul>
-              </section>
-              {!phaseMilestoneStatus?.allPassed ? (
-                <section className="panel">
-                  <h3>Before you advance</h3>
-                  <p className="panel-subtext">
-                    Advancement now depends on competency, transfer, and
-                    reinforcement readiness together.
-                  </p>
-                  <ul className="review-queue-list">
-                    {phaseMilestoneStatus?.blockedReasons.map((reason) => (
-                      <li key={reason}>
-                        <div className="review-queue-item static-item">
-                          <span className="review-lesson">{reason}</span>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-              ) : null}
-              {phaseMilestoneStatus?.allPassed && phaseExitStatus.nextPhase ? (
-                <section className="panel phase-advance-panel">
-                  <div className="phase-advance-content">
-                    <span className="phase-advance-icon" aria-hidden="true">
-                      🏆
-                    </span>
-                    <div>
-                      <h3>Phase complete!</h3>
-                      <p>
-                        All milestone gates cleared. You are ready to advance to{" "}
-                        <strong>{phaseExitStatus.nextPhase.title}</strong>.
-                      </p>
-                      <button
-                        type="button"
-                        className="validate-button phase-advance-button"
-                        onClick={() =>
-                          selectPhase(phaseExitStatus.nextPhase!.id)
-                        }
-                      >
-                        Start {phaseExitStatus.nextPhase.title} →
-                      </button>
-                    </div>
-                  </div>
-                </section>
-              ) : null}
-            </>
-          ) : null}
-        </aside>
+        <RailPanels
+          learnerProfile={learnerProfile}
+          updateLearnerProfile={updateLearnerProfile}
+          selectedPhase={selectedPhase}
+          selectedCourse={selectedCourse}
+          selectedLesson={selectedLesson}
+          progress={progress}
+          reviews={reviews}
+          visibleLessons={visibleLessons}
+          setSelectedLessonId={setSelectedLessonId}
+          exportArtifacts={exportArtifacts}
+          recentAttempts={recentAttempts}
+          lessonArtifactSummary={lessonArtifactSummary}
+          artifactCompletionSummary={artifactCompletionSummary}
+          attemptAnalytics={attemptAnalytics}
+          lessonAttemptAnalytics={lessonAttemptAnalytics}
+          transferEvidenceWithinPhase={transferEvidenceWithinPhase}
+          transferLessonsCount={transferLessonsCount}
+          competencyLevels={competencyLevels}
+          weakCompetencyTracks={weakCompetencyTracks}
+          reinforcementQueue={reinforcementQueue}
+          phaseReinforcementQueue={phaseReinforcementQueue}
+          reviewQueue={reviewQueue}
+          navigateToEntry={navigateToEntry}
+          selectPhase={selectPhase}
+          phaseExitStatus={phaseExitStatus}
+          phaseMilestoneStatus={phaseMilestoneStatus}
+        />
       </section>
     </main>
   );
