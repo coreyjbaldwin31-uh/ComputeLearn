@@ -1273,6 +1273,28 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                         : "Not quite — re-read the description and look for the expected pattern.",
                     };
                   }}
+                  onAttempt={(code, passed) => {
+                    const record = buildAttemptRecord({
+                      id: createId("attempt"),
+                      lessonId: selectedLesson.id,
+                      exerciseId: ex.id,
+                      assessmentType: "action",
+                      answer: code,
+                      passed,
+                      attemptedAt: new Date().toISOString(),
+                    });
+                    setAttempts((current) =>
+                      [record, ...current].slice(0, 500),
+                    );
+                    if (passed) {
+                      addArtifact(
+                        "completion",
+                        `Code exercise: ${ex.title}`,
+                        code,
+                        selectedLesson.id,
+                      );
+                    }
+                  }}
                 />
               ))}
             </section>
