@@ -1,5 +1,3 @@
-import { execSync } from "node:child_process";
-
 const readStdin = async () =>
   new Promise((resolve) => {
     if (process.stdin.isTTY) {
@@ -12,18 +10,6 @@ const readStdin = async () =>
     });
     process.stdin.on("end", resolve);
   });
-
-const run = (command) => {
-  try {
-    return execSync(command, {
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "ignore"],
-      windowsHide: true,
-    }).trim();
-  } catch {
-    return null;
-  }
-};
 
 const DANGEROUS_COMMANDS = [
   /git\s+push\s+.*--force/i,

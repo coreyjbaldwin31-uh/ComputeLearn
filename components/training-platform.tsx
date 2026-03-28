@@ -302,6 +302,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
 
   const reviewQueue = useMemo(() => {
     return getDueReviewQueue(allLessonsFlat, reviews);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- todayKey is an intentional cache-buster for date-dependent review filtering
   }, [allLessonsFlat, reviews, todayKey]);
 
   const selectedPhaseEntries = useMemo(
@@ -332,6 +333,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
 
   const activityStreak = useMemo(
     () => calculateActivityStreak(reviews),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- todayKey is an intentional cache-buster for date-dependent streak calculation
     [reviews, todayKey],
   );
 

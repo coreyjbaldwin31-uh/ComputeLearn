@@ -14,8 +14,7 @@
     "verify": "npm run lint && npm run type-check && npm run test && npm run build",
     "docker:build": "docker build -t computelearn-platform .",
     "docker:up": "docker compose up --build",
-    "docker:down": "docker compose down",
-    "api:test": "newman run"
+    "docker:down": "docker compose down"
   },
   "dependencies": {
     "next": "^16.2.1",

@@ -26,8 +26,8 @@ The current app goes beyond a curriculum shell. It now includes:
 
 ## Still open platform work
 
-- true workspace/template runtime with deterministic baseline state plus reset/replay at the lab-engine level
-- validator expansion for file presence, directory structure, command output, code behavior, and test pass criteria
+- validator expansion for code behavior and test pass criteria (file presence, directory structure, content match, and command output are implemented)
+- true workspace/template runtime beyond the current in-memory lab-engine model
 - explicit curriculum validation and preview-deploy workflow expansion in CI
 - final branch/process hardening around the intended integration workflow
 
@@ -40,6 +40,8 @@ The current app goes beyond a curriculum shell. It now includes:
 - deeper spaced repetition and revisit prompts
 
 ## Development
+
+Prerequisites: Node.js 20+, npm.
 
 Install dependencies:
 
@@ -71,11 +73,30 @@ Run tests:
 npm run test
 ```
 
+Run all checks (lint, type-check, test, build):
+
+```bash
+npm run verify
+```
+
 Build and run with Docker:
 
 ```bash
 docker compose up --build
 ```
+
+## Repository structure
+
+See [docs/repository-map.md](docs/repository-map.md) for a detailed layout. Key areas:
+
+| Path | Purpose |
+| --- | --- |
+| `app/` | Next.js App Router — single-page entry at `/` |
+| `components/` | React components and hooks |
+| `data/` | Curriculum definition (phases, courses, lessons) |
+| `lib/` | Stateless engines for validation, progression, analytics |
+| `docs/` | Contributor and process documentation |
+| `.github/` | CI workflows, agent definitions, skills |
 
 ## Contributing
 
