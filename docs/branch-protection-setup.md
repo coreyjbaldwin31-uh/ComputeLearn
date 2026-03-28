@@ -8,7 +8,8 @@ Apply these rules in GitHub repository settings for `main` and `develop`.
 2. Require approvals: enabled (minimum 1)
 3. Dismiss stale approvals when new commits are pushed: enabled
 4. Require status checks to pass before merging: enabled
-5. Required checks:
+5. Required checks (use the exact check names shown in the PR UI, typically
+   `<workflow name> / <job name>`, such as `CI / lint` or `CI / docker-build`):
 - `lint`
 - `type-check`
 - `test`

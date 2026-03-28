@@ -66,9 +66,12 @@ export function evaluateExerciseAnswer(
   const matchesAcceptedAnswer = exercise.acceptedAnswers.some(
     (acceptedAnswer) => {
       const normalizedAccepted = normalize(acceptedAnswer);
-      return exercise.validationMode === "exact"
-        ? normalizedAnswer === normalizedAccepted
-        : normalizedAnswer.includes(normalizedAccepted);
+      if (exercise.validationMode === "exact") {
+        return normalizedAnswer === normalizedAccepted;
+      }
+      const escaped = normalizedAccepted.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const pattern = new RegExp(`(?:^|\\b|\\s)${escaped}(?:\\b|\\s|$)`);
+      return pattern.test(normalizedAnswer);
     },
   );
 

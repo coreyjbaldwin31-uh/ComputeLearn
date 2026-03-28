@@ -4,15 +4,21 @@ export type AssessmentType = "action" | "reasoning" | "debugging" | "transfer";
 
 export type ScaffoldingLevel = "step-by-step" | "goal-driven" | "ticket-style";
 
+export type CompetencyMasteryLevel =
+  | "Aware"
+  | "Assisted"
+  | "Functional"
+  | "Independent";
+
 export type CompetencyTarget = {
   track: string;
-  targetLevel: string;
+  targetLevel: CompetencyMasteryLevel;
 };
 
 export type ExitStandardGate = {
   description: string;
   competency: string;
-  requiredLevel: string;
+  requiredLevel: CompetencyMasteryLevel;
 };
 
 export type ExitStandard = {

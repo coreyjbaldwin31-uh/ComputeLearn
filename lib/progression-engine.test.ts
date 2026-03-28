@@ -1,3 +1,4 @@
+import type { Curriculum } from "@/data/curriculum";
 import { describe, expect, it } from "vitest";
 import {
     calculateActivityStreak,
@@ -141,7 +142,7 @@ describe("progression-engine", () => {
           ],
         },
       ],
-    };
+    } satisfies Curriculum;
 
     const result = calculateCompetencyLevels(curriculum, { l1: true });
     expect(result.Debugging).toBe(2);
@@ -194,7 +195,7 @@ describe("progression-engine", () => {
           courses: [],
         },
       ],
-    };
+    } satisfies Curriculum;
 
     const evaluated = evaluatePhaseExitStatus(
       curriculum,

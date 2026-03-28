@@ -149,6 +149,7 @@ describe("validation-engine", () => {
     expect(evaluateExerciseAnswer(exercise, "dir").passed).toBe(true);
     expect(evaluateExerciseAnswer(exercise, "get-childitem").passed).toBe(true);
     expect(evaluateExerciseAnswer(exercise, "whoami").passed).toBe(false);
+    expect(evaluateExerciseAnswer(exercise, "also").passed).toBe(false);
   });
 
   it("returns a skill gap label matching the assessment type", () => {

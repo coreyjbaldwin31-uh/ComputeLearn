@@ -1,8 +1,5 @@
 import type { Lesson } from "@/data/curriculum";
-
-function formatTrackName(track: string): string {
-  return track.replace(/([A-Z])/g, " $1").trim();
-}
+import { formatTrackName } from "@/lib/progression-engine";
 
 export type ReflectionContext = {
   lesson: Lesson;

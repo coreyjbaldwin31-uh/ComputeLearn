@@ -1,3 +1,4 @@
+import type { Curriculum, Lesson } from "@/data/curriculum";
 import { describe, expect, it } from "vitest";
 import { flattenLessonEntries } from "./progression-engine";
 import { getReinforcementQueue, getWeakTrackHits } from "./reinforcement-engine";
@@ -23,7 +24,7 @@ describe("getWeakTrackHits", () => {
         { track: "Debugging", targetLevel: "Functional" },
         { track: "ApiInteraction", targetLevel: "Aware" },
       ],
-    };
+    } satisfies Lesson;
 
     expect(getWeakTrackHits(lesson, ["Debugging", "VersionControl"])).toEqual([
       "Debugging",
@@ -133,7 +134,7 @@ describe("getReinforcementQueue", () => {
         ],
       },
     ],
-  };
+  } satisfies Curriculum;
 
   const entries = flattenLessonEntries(curriculum);
 

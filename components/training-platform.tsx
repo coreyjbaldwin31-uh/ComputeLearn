@@ -35,6 +35,7 @@ import { buildMilestonePassRateSummary } from "@/lib/milestone-pass-rate-engine"
 import { buildOutcomesDashboardSummary } from "@/lib/outcomes-dashboard-engine";
 import { buildPhaseStatusRecords } from "@/lib/phase-status-engine";
 import {
+  type ReviewRecord,
   calculateActivityStreak,
   calculateCompetencyLevels,
   calculatePercentComplete,
@@ -77,11 +78,6 @@ type NotesState = Record<string, string>;
 type AnswerState = Record<string, string>;
 type ReflectionState = Record<string, string>;
 
-type ReviewRecord = {
-  completedAt: string;
-  lastReviewedAt: string | null;
-  reviewCount: number;
-};
 type ReviewState = Record<string, ReviewRecord>;
 type TransferState = Record<string, true>;
 
@@ -241,6 +237,16 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   );
   const { theme, toggle: toggleTheme } = useTheme();
 
+  const [todayKey, setTodayKey] = useState(() => new Date().toDateString());
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const nextKey = new Date().toDateString();
+      setTodayKey((prev) => (prev === nextKey ? prev : nextKey));
+    }, 60_000);
+    return () => clearInterval(intervalId);
+  }, []);
+
   const selectedPhase = useMemo(
     () =>
       curriculum.phases.find((phase) => phase.id === selectedPhaseId) ??
@@ -313,7 +319,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
 
   const reviewQueue = useMemo(() => {
     return getDueReviewQueue(allLessonsFlat, reviews);
-  }, [allLessonsFlat, reviews]);
+  }, [allLessonsFlat, reviews, todayKey]);
 
   const selectedPhaseEntries = useMemo(
     () =>
@@ -343,7 +349,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
 
   const activityStreak = useMemo(
     () => calculateActivityStreak(reviews),
-    [reviews],
+    [reviews, todayKey],
   );
 
   const recentAttempts = useMemo(() => {
@@ -560,6 +566,21 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
 
     setLessonGateFeedback(null);
 
+    if (!isComplete) {
+      setReviews((current) => {
+        if (!current[lessonId]) return current;
+        const next = { ...current };
+        delete next[lessonId];
+        return next;
+      });
+      setTransferProgress((current) => {
+        if (!current[lessonId]) return current;
+        const next = { ...current };
+        delete next[lessonId];
+        return next;
+      });
+    }
+
     if (isComplete && !reviews[lessonId]) {
       setReviews((current) => ({
         ...current,
@@ -625,6 +646,12 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       delete next[selectedLesson.id];
       return next;
     });
+    setTransferProgress((prev) => {
+      const next = { ...prev };
+      delete next[selectedLesson.id];
+      return next;
+    });
+    setLessonGateFeedback(null);
   }
 
   function updateNote(lessonId: string, value: string) {
@@ -845,7 +872,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
         <h1>{curriculum.productTitle}</h1>
         <p>{curriculum.productVision}</p>
         <div className="hero-grid">
-          <div className="stats">
+          <div className="stats stats--four-column">
             <article className="stat-card">
               <span>Progression model</span>
               <div className="stat-value">
@@ -1301,9 +1328,10 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
               <span className="metric-pill">{selectedLesson.duration}</span>
               <span className="metric-pill">{selectedLesson.difficulty}</span>
               <span
-                className={`status-pill ${selectedLessonEvidenceGate.passed ? "complete" : "pending"}`}
+                className={`status-pill ${selectedLessonEvidenceGate.passed || !!progress[selectedLesson.id] ? "complete" : "pending"}`}
               >
-                {selectedLessonEvidenceGate.passed
+                {selectedLessonEvidenceGate.passed ||
+                !!progress[selectedLesson.id]
                   ? "Evidence gate ready"
                   : "Evidence gate pending"}
               </span>

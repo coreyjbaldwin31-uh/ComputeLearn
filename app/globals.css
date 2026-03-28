@@ -1365,7 +1365,7 @@ select {
   color: var(--muted);
 }
 
-.stats {
+.stats--four-column {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
