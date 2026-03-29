@@ -193,7 +193,7 @@ The MVP should prove that ComputeLearn materially improves learner capability th
 | **Should** | Guided debugging | Error-focused labs, inspect mode, diff view, and layered hints | ✅ Done |
 | **Should** | Retention system | Reflection prompts and spaced repetition tied to weak competencies | ✅ Done |
 | **Later** | AI review loop | Bounded support for explanation, critique, and next-step guidance | ⬚ Not started |
-| **Later** | Advanced templates | More realistic bug sets, project scaffolds, and saved transcripts |
+| **Later** | Advanced templates | More realistic bug sets, project scaffolds, and saved transcripts | ⬚ Not started |
 
 ### Recommended First-Release Modules
 

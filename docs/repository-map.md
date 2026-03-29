@@ -4,7 +4,7 @@ Quick orientation for contributors.
 
 ## Top-level layout
 
-```
+```text
 app/              Next.js App Router (single route at /)
 components/       React UI components and hooks
 data/             Curriculum data (curriculum.ts)

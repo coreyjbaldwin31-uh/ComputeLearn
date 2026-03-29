@@ -11,7 +11,7 @@ Operational log for autonomous workflow runs. Entries are concise.
 ### Startup Checklist
 
 | Check | Result |
-|-------|--------|
+| ----- | ------ |
 | PRD.md | Present, detailed, canonical plan — 9 sections covering vision through roadmap |
 | README.md | Present, setup and verify instructions correct |
 | git status | 1 modified file (whitespace-only in lab-engine.test.ts), 19+ untracked .github agent/skill files |
@@ -47,7 +47,7 @@ Operational log for autonomous workflow runs. Entries are concise.
 ### Drift Summary
 
 | Item | PRD/README says | Repo reality |
-|------|----------------|--------------|
+| ---- | --------------- | ------------ |
 | Lab engine workspace runtime | "Still open" (README) | Lab engine exists with template model, validation rules, reset/replay, hints, artifacts — partially delivered |
 | PRD execution tracking | PRD is the living plan | PRD has no task-level status markers; it reads as a static spec |
 | Branch model | CONTRIBUTING: develop is default target | develop has no remote; PR #1 targets main directly |

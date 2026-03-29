@@ -28,18 +28,7 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <main
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            minHeight: "60vh",
-            gap: "1rem",
-            padding: "2rem",
-            textAlign: "center",
-          }}
-        >
+        <main className="error-boundary-fallback">
           <h1>Something went wrong</h1>
           <p>
             The platform encountered an unexpected error. Your progress is saved
@@ -48,14 +37,7 @@ export class ErrorBoundary extends Component<Props, State> {
           <button
             type="button"
             onClick={() => this.setState({ hasError: false })}
-            style={{
-              padding: "0.75rem 1.5rem",
-              borderRadius: "0.5rem",
-              border: "1px solid currentColor",
-              background: "transparent",
-              cursor: "pointer",
-              fontSize: "1rem",
-            }}
+            className="error-boundary-retry"
           >
             Try again
           </button>
