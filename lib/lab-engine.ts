@@ -52,12 +52,23 @@ export type CodeBehaviorRule = {
   forbiddenPatterns?: string[];
 };
 
+export type TestPassRule = {
+  kind: "test-pass";
+  /** The test command to evaluate */
+  command: string;
+  /** Minimum number of passing tests required */
+  minPassing: number;
+  /** Maximum number of failing tests allowed (0 = none) */
+  maxFailing: number;
+};
+
 export type LabValidationRule =
   | FilePresenceRule
   | DirectoryStructureRule
   | ContentMatchRule
   | CommandOutputRule
-  | CodeBehaviorRule;
+  | CodeBehaviorRule
+  | TestPassRule;
 
 // ---------------------------------------------------------------------------
 // Lab template — the authored definition of a lab
@@ -268,6 +279,28 @@ function evaluateRule(
             ? "Code contains a discouraged pattern."
             : "Code is missing required patterns.",
         probableSkillGap: passed ? undefined : "Programming Logic",
+      };
+    }
+
+    case "test-pass": {
+      const output = instance.commandOutputs[rule.command] ?? "";
+      const passingMatch = output.match(/(\d+)\s+passing/);
+      const failingMatch = output.match(/(\d+)\s+failing/);
+      const passing = passingMatch ? parseInt(passingMatch[1], 10) : 0;
+      const failing = failingMatch ? parseInt(failingMatch[1], 10) : 0;
+      const meetsMin = passing >= rule.minPassing;
+      const withinMax = failing <= rule.maxFailing;
+      const passed = meetsMin && withinMax;
+      return {
+        ruleIndex,
+        rule,
+        passed,
+        message: passed
+          ? `Tests pass: ${passing} passing, ${failing} failing.`
+          : !meetsMin
+            ? `Need at least ${rule.minPassing} passing tests, found ${passing}.`
+            : `Too many failing tests: ${failing} (max ${rule.maxFailing}).`,
+        probableSkillGap: passed ? undefined : "Testing",
       };
     }
   }

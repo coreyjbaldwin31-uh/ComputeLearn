@@ -361,6 +361,82 @@ describe("validateLabInstance — code-behavior", () => {
 });
 
 // ---------------------------------------------------------------------------
+// validateLabInstance — test-pass
+// ---------------------------------------------------------------------------
+
+describe("validateLabInstance — test-pass", () => {
+  it("passes when enough tests pass and none fail", () => {
+    const template: LabTemplate = {
+      ...baseTemplate,
+      rules: [
+        { kind: "test-pass", command: "npm test", minPassing: 3, maxFailing: 0 },
+      ],
+      hints: {},
+    };
+    const instance = createLabInstance(template);
+    instance.commandOutputs["npm test"] = "3 passing (80ms)";
+    expect(validateLabInstance(template, instance).passed).toBe(true);
+  });
+
+  it("fails when not enough tests pass", () => {
+    const template: LabTemplate = {
+      ...baseTemplate,
+      rules: [
+        { kind: "test-pass", command: "npm test", minPassing: 5, maxFailing: 0 },
+      ],
+      hints: {},
+    };
+    const instance = createLabInstance(template);
+    instance.commandOutputs["npm test"] = "2 passing (40ms)";
+    const result = validateLabInstance(template, instance);
+    expect(result.passed).toBe(false);
+    expect(result.failedResults[0].message).toContain("at least 5");
+  });
+
+  it("fails when too many tests fail", () => {
+    const template: LabTemplate = {
+      ...baseTemplate,
+      rules: [
+        { kind: "test-pass", command: "npm test", minPassing: 1, maxFailing: 0 },
+      ],
+      hints: {},
+    };
+    const instance = createLabInstance(template);
+    instance.commandOutputs["npm test"] = "3 passing\n1 failing";
+    const result = validateLabInstance(template, instance);
+    expect(result.passed).toBe(false);
+    expect(result.failedResults[0].message).toContain("Too many failing");
+  });
+
+  it("tolerates failures within maxFailing threshold", () => {
+    const template: LabTemplate = {
+      ...baseTemplate,
+      rules: [
+        { kind: "test-pass", command: "npm test", minPassing: 2, maxFailing: 1 },
+      ],
+      hints: {},
+    };
+    const instance = createLabInstance(template);
+    instance.commandOutputs["npm test"] = "3 passing\n1 failing";
+    expect(validateLabInstance(template, instance).passed).toBe(true);
+  });
+
+  it("fails when no output is recorded", () => {
+    const template: LabTemplate = {
+      ...baseTemplate,
+      rules: [
+        { kind: "test-pass", command: "npm test", minPassing: 1, maxFailing: 0 },
+      ],
+      hints: {},
+    };
+    const instance = createLabInstance(template);
+    const result = validateLabInstance(template, instance);
+    expect(result.passed).toBe(false);
+    expect(result.failedResults[0].probableSkillGap).toBe("Testing");
+  });
+});
+
+// ---------------------------------------------------------------------------
 // recordLabAttempt
 // ---------------------------------------------------------------------------
 

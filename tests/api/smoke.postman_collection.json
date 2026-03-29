@@ -1,0 +1,81 @@
+{
+  "info": {
+    "name": "ComputeLearn Smoke Tests",
+    "_postman_id": "computelearn-smoke-001",
+    "description": "Basic smoke tests for the ComputeLearn platform. Verifies the app serves content and returns expected status codes.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health — home page loads",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Response contains ComputeLearn', function () {",
+              "  pm.expect(pm.response.text()).to.include('ComputeLearn');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Static — _next assets reachable",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTML includes script reference', function () {",
+              "  pm.expect(pm.response.text()).to.include('_next');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "404 — unknown route returns proper error",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/nonexistent-page"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 404', function () {",
+              "  pm.response.to.have.status(404);",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

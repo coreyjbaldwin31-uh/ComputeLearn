@@ -185,14 +185,14 @@ The MVP should prove that ComputeLearn materially improves learner capability th
 
 ### MVP Build Priorities
 
-| Priority | Category | Definition |
-| --- | --- | --- |
-| **Must** | Core platform shell | Curriculum navigation, learner profile, local progress persistence, notes, and milestone gating |
-| **Must** | Lab engine | Workspace template model, reset/replay, validation rules, and completion evidence |
-| **Must** | Phase 1 excellence | Filesystem, terminal, search/filtering, automation basics, and workflow efficiency |
-| **Should** | Guided debugging | Error-focused labs, inspect mode, diff view, and layered hints |
-| **Should** | Retention system | Reflection prompts and spaced repetition tied to weak competencies |
-| **Later** | AI review loop | Bounded support for explanation, critique, and next-step guidance |
+| Priority | Category | Definition | Status |
+| --- | --- | --- | --- |
+| **Must** | Core platform shell | Curriculum navigation, learner profile, local progress persistence, notes, and milestone gating | ✅ Done |
+| **Must** | Lab engine | Workspace template model, reset/replay, validation rules, and completion evidence | ✅ Done |
+| **Must** | Phase 1 excellence | Filesystem, terminal, search/filtering, automation basics, and workflow efficiency | 🔧 Curriculum authored, lab templates pending |
+| **Should** | Guided debugging | Error-focused labs, inspect mode, diff view, and layered hints | ✅ Done |
+| **Should** | Retention system | Reflection prompts and spaced repetition tied to weak competencies | ✅ Done |
+| **Later** | AI review loop | Bounded support for explanation, critique, and next-step guidance | ⬚ Not started |
 | **Later** | Advanced templates | More realistic bug sets, project scaffolds, and saved transcripts |
 
 ### Recommended First-Release Modules
@@ -239,19 +239,23 @@ The validator should be able to check file presence, directory structure, file c
 - probable skill gap
 - optional hint guidance
 
+**Implementation status:** All six validation rule kinds are implemented in `lib/lab-engine.ts` — `file-presence`, `directory-structure`, `content-match`, `command-output`, `code-behavior`, and `test-pass`. Each returns pass/fail, a human-readable message, and a probable skill gap string. Hint access is provided via `getLabHint()` with layered escalation.
+
 ---
 
 ## 9. Roadmap, Metrics, and Risks
 
 ### Roadmap Recommendation
 
-1. Define the competency graph for Phase 1
-2. Define the workspace and lab template model
-3. Ship the validation engine contract
-4. Create the first 10 high-value Phase 1 labs
-5. Add milestone gating, reflections, and artifact saving
-6. Introduce guided debugging labs and inspect mode
-7. Expand into Phase 2 once Phase 1 outcomes are visibly strong
+> Status markers: ✅ done · 🔧 in progress · ⬚ not started
+
+1. ✅ Define the competency graph for Phase 1 — 15 domains mapped across 37 lessons with mastery levels
+2. ✅ Define the workspace and lab template model — lab-engine with template, instance, reset/replay, hints, artifact capture
+3. ✅ Ship the validation engine contract — file-presence, directory-structure, content-match, command-output, code-behavior, test-pass rules
+4. ⬚ Create the first 10 high-value Phase 1 labs — curriculum has exercises but no authored lab templates yet
+5. ✅ Add milestone gating, reflections, and artifact saving — milestone-engine, reflection-engine, artifact-engine, export, and browser
+6. ✅ Introduce guided debugging labs and inspect mode — inspection-engine, layered hints, diff-style output
+7. 🔧 Expand into Phase 2 once Phase 1 outcomes are visibly strong — Phase 2–4 curriculum authored; lab runtime integration pending
 
 ### Primary Product Metrics
 
