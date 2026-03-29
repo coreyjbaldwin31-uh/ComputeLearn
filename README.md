@@ -82,7 +82,39 @@ npm run verify
 Build and run with Docker:
 
 ```bash
+# First-time setup — create your local env file
+cp .env.example .env
+
+# Build the image and start the container
 docker compose up --build
+
+# Or run detached
+docker compose up --build -d
+```
+
+Stop the container:
+
+```bash
+docker compose down
+```
+
+Rebuild after dependency or config changes:
+
+```bash
+docker compose build --no-cache
+docker compose up -d
+```
+
+Check container health:
+
+```bash
+docker compose ps
+```
+
+View logs:
+
+```bash
+docker compose logs -f app
 ```
 
 ## Repository structure
