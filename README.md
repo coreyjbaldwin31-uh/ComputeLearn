@@ -117,6 +117,13 @@ View logs:
 docker compose logs -f app
 ```
 
+Run API smoke tests (requires a running server):
+
+```bash
+# Start the app first, then in a separate terminal:
+npm run api:test
+```
+
 ## Repository structure
 
 See [docs/repository-map.md](docs/repository-map.md) for a detailed layout. Key areas:

@@ -252,7 +252,7 @@ The validator should be able to check file presence, directory structure, file c
 1. ✅ Define the competency graph for Phase 1 — 15 domains mapped across 37 lessons with mastery levels
 2. ✅ Define the workspace and lab template model — lab-engine with template, instance, reset/replay, hints, artifact capture
 3. ✅ Ship the validation engine contract — file-presence, directory-structure, content-match, command-output, code-behavior, test-pass rules
-4. ⬚ Create the first 10 high-value Phase 1 labs — curriculum has exercises but no authored lab templates yet
+4. ✅ Create the first 10 high-value Phase 1 labs — 10 authored templates in `data/lab-templates.ts` covering all 9 lessons with 26 structural tests
 5. ✅ Add milestone gating, reflections, and artifact saving — milestone-engine, reflection-engine, artifact-engine, export, and browser
 6. ✅ Introduce guided debugging labs and inspect mode — inspection-engine, layered hints, diff-style output
 7. 🔧 Expand into Phase 2 once Phase 1 outcomes are visibly strong — Phase 2–4 curriculum authored; lab runtime integration pending
