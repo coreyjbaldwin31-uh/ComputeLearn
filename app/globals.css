@@ -78,6 +78,12 @@
   color: var(--text);
 }
 
+[data-theme="dark"] .lab-file-editor {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+}
+
 [data-theme="dark"] .eyebrow {
   background: rgba(255, 255, 255, 0.06);
 }
@@ -91,7 +97,8 @@
 [data-theme="dark"] .project-card,
 [data-theme="dark"] .note-card,
 [data-theme="dark"] .timeline-card,
-[data-theme="dark"] .safety-card {
+[data-theme="dark"] .safety-card,
+[data-theme="dark"] .lab-panel {
   -webkit-backdrop-filter: blur(20px) saturate(1.2);
   backdrop-filter: blur(20px) saturate(1.2);
 }
@@ -1564,5 +1571,173 @@ select {
   background: transparent;
   cursor: pointer;
   font-size: 1rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Lab panel
+   --------------------------------------------------------------------------- */
+
+.lab-section {
+  margin-top: 0.5rem;
+}
+
+.lab-panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.lab-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.lab-panel-header h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--heading);
+}
+
+.lab-meta {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.lab-workspace h5 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--heading);
+  margin: 0 0 0.5rem;
+}
+
+.lab-file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.lab-file-card {
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  background: var(--bg);
+}
+
+.lab-file-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.lab-file-path {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent-strong);
+}
+
+.lab-file-editor {
+  width: 100%;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  background: var(--bg);
+  color: var(--text);
+  resize: vertical;
+}
+
+.lab-file-preview {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border-radius: 0.375rem;
+  color: var(--muted);
+  white-space: pre-wrap;
+  margin: 0;
+  max-height: 6rem;
+  overflow: auto;
+}
+
+.lab-validation-results h5 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+}
+
+.lab-rule-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.lab-rule-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 0.4rem 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.82rem;
+}
+
+.lab-rule-row.passed {
+  background: rgba(13, 107, 87, 0.06);
+}
+
+.lab-rule-row.failed {
+  background: rgba(198, 68, 44, 0.06);
+}
+
+.lab-rule-status {
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.lab-rule-row.passed .lab-rule-status {
+  color: var(--accent-strong);
+}
+
+.lab-rule-row.failed .lab-rule-status {
+  color: var(--error, #c4442c);
+}
+
+.lab-rule-message {
+  flex: 1;
+  color: var(--text);
+}
+
+.lab-rule-gap {
+  font-size: 0.72rem;
+  color: var(--muted);
+  flex-basis: 100%;
+}
+
+.lab-completion-summary {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  padding: 0.75rem;
+  background: rgba(13, 107, 87, 0.06);
+  border-radius: 0.5rem;
+  color: var(--text);
+  white-space: pre-wrap;
+  margin: 0;
 }
 

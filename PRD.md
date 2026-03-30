@@ -189,7 +189,7 @@ The MVP should prove that ComputeLearn materially improves learner capability th
 | --- | --- | --- | --- |
 | **Must** | Core platform shell | Curriculum navigation, learner profile, local progress persistence, notes, and milestone gating | ✅ Done |
 | **Must** | Lab engine | Workspace template model, reset/replay, validation rules, and completion evidence | ✅ Done |
-| **Must** | Phase 1 excellence | Filesystem, terminal, search/filtering, automation basics, and workflow efficiency | 🔧 Curriculum authored, lab templates pending |
+| **Must** | Phase 1 excellence | Filesystem, terminal, search/filtering, automation basics, and workflow efficiency | 🔧 Curriculum authored, lab templates authored, lab UI wired, terminal connected with alias normalisation |
 | **Should** | Guided debugging | Error-focused labs, inspect mode, diff view, and layered hints | ✅ Done |
 | **Should** | Retention system | Reflection prompts and spaced repetition tied to weak competencies | ✅ Done |
 | **Later** | AI review loop | Bounded support for explanation, critique, and next-step guidance | ⬚ Not started |
@@ -255,7 +255,7 @@ The validator should be able to check file presence, directory structure, file c
 4. ✅ Create the first 10 high-value Phase 1 labs — 10 authored templates in `data/lab-templates.ts` covering all 9 lessons with 26 structural tests
 5. ✅ Add milestone gating, reflections, and artifact saving — milestone-engine, reflection-engine, artifact-engine, export, and browser
 6. ✅ Introduce guided debugging labs and inspect mode — inspection-engine, layered hints, diff-style output
-7. 🔧 Expand into Phase 2 once Phase 1 outcomes are visibly strong — Phase 2–4 curriculum authored; lab runtime integration pending
+7. 🔧 Expand into Phase 2 once Phase 1 outcomes are visibly strong — Phase 2–4 curriculum authored; lab UI wired, terminal connected with alias normalisation (23 files, 194 tests); next: smoke-test full lab flow end to end
 
 ### Primary Product Metrics
 

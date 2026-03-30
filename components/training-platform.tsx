@@ -1,6 +1,7 @@
 "use client";
 
 import type { Curriculum, Exercise, Lesson } from "@/data/curriculum";
+import { phase1LabsByLesson } from "@/data/lab-templates";
 import { buildArtifactBrowserSummary } from "@/lib/artifact-browser-engine";
 import { buildArtifactCompletionSummary } from "@/lib/artifact-completion-engine";
 import type { ArtifactRecord } from "@/lib/artifact-engine";
@@ -27,6 +28,15 @@ import {
 import { buildIndependentLabSummary } from "@/lib/independent-lab-engine";
 import { buildIndependentReadinessSummary } from "@/lib/independent-readiness-engine";
 import { buildExerciseInspection } from "@/lib/inspection-engine";
+import type { LabInstance } from "@/lib/lab-engine";
+import {
+  buildLabCompletionSummary,
+  createLabInstance,
+  getLabHint,
+  recordLabAttempt,
+  resetLabInstance,
+  validateLabInstance,
+} from "@/lib/lab-engine";
 import { evaluatePhaseMilestoneStatus } from "@/lib/milestone-engine";
 import { buildMilestonePassRateSummary } from "@/lib/milestone-pass-rate-engine";
 import { buildOutcomesDashboardSummary } from "@/lib/outcomes-dashboard-engine";
@@ -69,6 +79,7 @@ import {
 import { CodeExercise } from "./code-exercise";
 import { useLearnerProfile } from "./hooks/use-learner-profile";
 import { InspectionPanel } from "./inspection-panel";
+import { LabPanel } from "./lab-panel";
 import { RailPanels } from "./rail-panels";
 import { SidebarPanels } from "./sidebar-panels";
 import { TerminalSimulator } from "./terminal-simulator";
@@ -92,6 +103,7 @@ const reviewsStorageKey = "computelearn-reviews";
 const attemptsStorageKey = "computelearn-attempts";
 const artifactsStorageKey = "computelearn-artifacts";
 const transferStorageKey = "computelearn-transfer";
+const labInstancesStorageKey = "computelearn-lab-instances";
 
 const emptyProgress: ProgressState = {};
 const emptyNotes: NotesState = {};
@@ -217,6 +229,12 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const [artifacts, setArtifacts] = useLocalStorageState<ArtifactRecord[]>(
     artifactsStorageKey,
     [],
+  );
+  const [labInstances, setLabInstances] = useLocalStorageState<
+    Record<string, LabInstance>
+  >(labInstancesStorageKey, {});
+  const [labHintLevels, setLabHintLevels] = useState<Record<string, number>>(
+    {},
   );
   const { theme, toggle: toggleTheme } = useTheme();
 
@@ -736,6 +754,141 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       ...prev,
       [key]: advanceHintLevel(prev[key] ?? 0),
     }));
+  }
+
+  // --- Lab lifecycle handlers ---
+
+  const currentLabTemplates = selectedLesson
+    ? (phase1LabsByLesson[selectedLesson.id] ?? null)
+    : null;
+  const currentLabTemplate = currentLabTemplates?.[0] ?? null;
+  const currentLabInstance = currentLabTemplate
+    ? (labInstances[currentLabTemplate.id] ?? null)
+    : null;
+
+  function startLab() {
+    if (!currentLabTemplate) return;
+    const instance = createLabInstance(currentLabTemplate);
+    setLabInstances((prev) => ({ ...prev, [currentLabTemplate.id]: instance }));
+  }
+
+  function validateLab() {
+    if (!currentLabTemplate || !currentLabInstance) return null;
+    const result = validateLabInstance(currentLabTemplate, currentLabInstance);
+    const updated = recordLabAttempt(currentLabInstance, result);
+    setLabInstances((prev) => ({
+      ...prev,
+      [currentLabTemplate.id]: updated,
+    }));
+    if (result.passed && selectedLesson) {
+      addArtifact(
+        "completion",
+        `Lab completed: ${currentLabTemplate.title}`,
+        buildLabCompletionSummary(currentLabTemplate, updated),
+        selectedLesson.id,
+      );
+    }
+    return result;
+  }
+
+  function resetCurrentLab() {
+    if (!currentLabTemplate || !currentLabInstance) return;
+    const reset = resetLabInstance(currentLabInstance, currentLabTemplate);
+    setLabInstances((prev) => ({
+      ...prev,
+      [currentLabTemplate.id]: reset,
+    }));
+  }
+
+  function requestLabHint(ruleIndex: number) {
+    if (!currentLabTemplate) return null;
+    // Track hint levels per template+rule in a simple escalation
+    const key = `${currentLabTemplate.id}:${ruleIndex}`;
+    const currentLevel = labHintLevels[key] ?? 0;
+    const hint = getLabHint(currentLabTemplate, ruleIndex, currentLevel);
+    setLabHintLevels((prev) => ({ ...prev, [key]: currentLevel + 1 }));
+    return hint;
+  }
+
+  function updateLabFile(path: string, content: string) {
+    if (!currentLabTemplate || !currentLabInstance) return;
+    const updatedFiles = currentLabInstance.files.map((f) =>
+      f.path === path ? { ...f, content } : f,
+    );
+    setLabInstances((prev) => ({
+      ...prev,
+      [currentLabTemplate.id]: { ...currentLabInstance, files: updatedFiles },
+    }));
+  }
+
+  const labCompletionSummary =
+    currentLabTemplate && currentLabInstance?.status === "completed"
+      ? buildLabCompletionSummary(currentLabTemplate, currentLabInstance)
+      : null;
+
+  // ---- T2: terminal ↔ lab integration ----
+
+  /** Build a terminal-compatible filesystem from lab template files. */
+  const labTerminalFilesystem = useMemo(() => {
+    if (!currentLabTemplate) return undefined;
+    const basePath = "C:\\Users\\learner";
+    const fs: Record<string, string[]> = { [basePath]: [] };
+    for (const file of currentLabTemplate.initialFiles) {
+      const segments = file.path.split("/");
+      let dir = basePath;
+      for (let i = 0; i < segments.length; i++) {
+        const name = segments[i];
+        if (!fs[dir]) fs[dir] = [];
+        if (!fs[dir].includes(name)) {
+          fs[dir].push(name);
+        }
+        if (i < segments.length - 1) {
+          dir = `${dir}\\${name}`;
+        }
+      }
+    }
+    return fs;
+  }, [currentLabTemplate]);
+
+  /** Map resolved terminal paths to lab file contents for cat/Get-Content. */
+  const labFileContents = useMemo(() => {
+    if (!currentLabInstance) return undefined;
+    const map: Record<string, string> = {};
+    for (const f of currentLabInstance.files) {
+      map[`C:\\Users\\learner\\${f.path.replace(/\//g, "\\")}`] = f.content;
+    }
+    return map;
+  }, [currentLabInstance]);
+
+  /** Capture terminal command output into the active lab instance.
+   *
+   *  The `command` argument is already the canonical PowerShell name
+   *  (e.g. "Get-Location" even when the user typed "pwd") because
+   *  TerminalSimulator resolves aliases via CANONICAL_COMMANDS before
+   *  invoking onCommandExecuted.
+   *
+   *  NOTE: test-pass validation rules are not yet supported — no Phase 1
+   *  labs use them.  When Phase 2+ labs add test-pass rules, a lab-aware
+   *  test runner (simulated npm-test output) will need to be wired here. */
+  function handleTerminalCommand(command: string, output: string) {
+    if (!currentLabTemplate || !currentLabInstance) return;
+    const firstToken = command.split(/\s+/)[0];
+    const keys = new Set([command, firstToken]);
+    setLabInstances((prev) => {
+      const instance = prev[currentLabTemplate.id];
+      if (!instance) return prev;
+      const updatedOutputs = { ...instance.commandOutputs };
+      for (const key of keys) {
+        updatedOutputs[key] = output;
+      }
+      return {
+        ...prev,
+        [currentLabTemplate.id]: {
+          ...instance,
+          commandOutputs: updatedOutputs,
+        },
+      };
+    });
   }
 
   function toggleInspection(exerciseId: string) {
@@ -1302,6 +1455,21 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
             </section>
           ) : null}
 
+          {currentLabTemplate ? (
+            <section className="lab-section">
+              <LabPanel
+                template={currentLabTemplate}
+                instance={currentLabInstance}
+                onStart={startLab}
+                onValidate={validateLab}
+                onReset={resetCurrentLab}
+                onHint={requestLabHint}
+                onFileChange={updateLabFile}
+                completionSummary={labCompletionSummary}
+              />
+            </section>
+          ) : null}
+
           <section className="notes-grid">
             <article className="note-card">
               <h4>Saved notes</h4>
@@ -1402,7 +1570,16 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                 Try the commands from this lesson in a safe, simulated
                 environment. Type <code>help</code> for available commands.
               </p>
-              <TerminalSimulator />
+              <TerminalSimulator
+                key={currentLabTemplate?.id ?? "default"}
+                filesystem={labTerminalFilesystem}
+                fileContents={labFileContents}
+                onCommandExecuted={
+                  currentLabInstance?.status === "active"
+                    ? handleTerminalCommand
+                    : undefined
+                }
+              />
             </section>
           ) : null}
 

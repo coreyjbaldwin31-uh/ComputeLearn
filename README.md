@@ -22,14 +22,15 @@ The current app goes beyond a curriculum shell. It now includes:
 - layered hints, inspect mode, and diff-style inspection output for failed validation
 - competency dashboard, transfer analytics, independent readiness, independent lab completion, repeated error reduction, milestone pass rate, artifact coverage, and outcomes rollup panels
 - artifact history, evidence browsing, and markdown export of learner work
+- lab UI panel wired into lesson view with start, validate, reset, hint escalation, and completion summary
+- terminal simulator connected to active lab instances with command-output capture, lab filesystem, and file content display
 - explicit safe-lab framing and guardrails
 
 ## Still open platform work
 
-- validator expansion for code behavior and test pass criteria (file presence, directory structure, content match, and command output are implemented)
+- test-pass validation rule integration with terminal (command-output rules are now connected)
 - true workspace/template runtime beyond the current in-memory lab-engine model
 - explicit curriculum validation and preview-deploy workflow expansion in CI
-- final branch/process hardening around the intended integration workflow
 
 ## Planned product capabilities
 
