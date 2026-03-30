@@ -2,11 +2,23 @@
   "name": "computelearn-platform",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "verify": "npm run lint && npm run type-check && npm run test && npm run build",
+    "docker:build": "docker build -t computelearn-platform .",
+    "docker:up": "docker compose up --build",
+    "docker:down": "docker compose down",
+    "api:test": "newman run tests/api/smoke.postman_collection.json"
   },
   "dependencies": {
     "next": "^16.2.1",
@@ -17,8 +29,11 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitest/coverage-v8": "^3.2.4",
     "eslint": "^9",
     "eslint-config-next": "^16.2.1",
-    "typescript": "^5"
+    "newman": "^6.2.2",
+    "typescript": "^5",
+    "vitest": "^3.2.4"
   }
 }

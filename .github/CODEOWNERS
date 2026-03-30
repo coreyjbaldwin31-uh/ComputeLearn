@@ -1,2 +1,16 @@
+# Default ownership
 * @coreyjbaldwin31-uh
+
+# Application surface
+/app/ @coreyjbaldwin31-uh
+/components/ @coreyjbaldwin31-uh
+/data/ @coreyjbaldwin31-uh
+/lib/ @coreyjbaldwin31-uh
+
+# Governance and delivery controls
+/.github/workflows/ @coreyjbaldwin31-uh
+/.github/CODEOWNERS @coreyjbaldwin31-uh
+/.github/pull_request_template.md @coreyjbaldwin31-uh
+/Dockerfile @coreyjbaldwin31-uh
+/docker-compose.yml @coreyjbaldwin31-uh
 
