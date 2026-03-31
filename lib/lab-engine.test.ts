@@ -1,14 +1,14 @@
 import { describe, expect, it } from "vitest";
 import type { LabInstance, LabTemplate } from "./lab-engine";
 import {
-  buildLabCompletionSummary,
-  createLabInstance,
-  getDifficultyLabel,
-  getLabHint,
-  getMaxHintLevel,
-  recordLabAttempt,
-  resetLabInstance,
-  validateLabInstance,
+    buildLabCompletionSummary,
+    createLabInstance,
+    getDifficultyLabel,
+    getLabHint,
+    getMaxHintLevel,
+    recordLabAttempt,
+    resetLabInstance,
+    validateLabInstance,
 } from "./lab-engine";
 
 // ---------------------------------------------------------------------------
@@ -357,6 +357,88 @@ describe("validateLabInstance — code-behavior", () => {
     const instance = createLabInstance(template);
     instance.codeSubmissions[0] = "function sync() {}";
     expect(validateLabInstance(template, instance).passed).toBe(false);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// validateLabInstance — code-behavior regression guards
+// ---------------------------------------------------------------------------
+
+describe("validateLabInstance — code-behavior regression", () => {
+  it("multiple code-behavior rules at non-contiguous indices validate independently", () => {
+    const template: LabTemplate = {
+      ...baseTemplate,
+      rules: [
+        { kind: "content-match", path: "projects/output.txt", pattern: "done" },
+        { kind: "code-behavior", requiredPatterns: ["let x"] },
+        { kind: "file-presence", path: "projects/readme.txt", shouldExist: true },
+        { kind: "code-behavior", requiredPatterns: ["return"], forbiddenPatterns: ["var "] },
+      ],
+      hints: {},
+    };
+    const instance = createLabInstance(template);
+    // Satisfy file rules
+    instance.files.push({ path: "projects/output.txt", content: "done" });
+
+    // Submit code only for rule index 1 — rule 3 should still fail
+    instance.codeSubmissions[1] = "let x = 1;";
+    const r1 = validateLabInstance(template, instance);
+    expect(r1.results[0].passed).toBe(true);  // content-match
+    expect(r1.results[1].passed).toBe(true);  // code-behavior at idx 1
+    expect(r1.results[2].passed).toBe(true);  // file-presence
+    expect(r1.results[3].passed).toBe(false); // code-behavior at idx 3 — no submission
+    expect(r1.passed).toBe(false);
+
+    // Submit code for rule index 3 — all should pass
+    instance.codeSubmissions[3] = "function f() { return 42; }";
+    const r2 = validateLabInstance(template, instance);
+    expect(r2.results[3].passed).toBe(true);
+    expect(r2.passed).toBe(true);
+  });
+
+  it("empty requiredPatterns always passes unless forbidden pattern present", () => {
+    const template: LabTemplate = {
+      ...baseTemplate,
+      rules: [
+        { kind: "code-behavior", requiredPatterns: [], forbiddenPatterns: ["eval("] },
+      ],
+      hints: {},
+    };
+    const instance = createLabInstance(template);
+
+    // No submission — requiredPatterns is empty so [].every() = true
+    const r1 = validateLabInstance(template, instance);
+    expect(r1.passed).toBe(true);
+
+    // Submission with forbidden pattern — fails
+    instance.codeSubmissions[0] = "eval('x')";
+    const r2 = validateLabInstance(template, instance);
+    expect(r2.passed).toBe(false);
+    expect(r2.results[0].message).toContain("discouraged");
+  });
+
+  it("code-behavior submissions do not affect file-based rule evaluation", () => {
+    const template: LabTemplate = {
+      ...baseTemplate,
+      rules: [
+        { kind: "content-match", path: "projects/readme.txt", pattern: "Welcome" },
+        { kind: "code-behavior", requiredPatterns: ["function"] },
+      ],
+      hints: {},
+    };
+    const instance = createLabInstance(template);
+
+    // File rule passes from initial files, code-behavior fails
+    const r1 = validateLabInstance(template, instance);
+    expect(r1.results[0].passed).toBe(true);
+    expect(r1.results[1].passed).toBe(false);
+
+    // Adding code submission should not change file rule result
+    instance.codeSubmissions[1] = "function hello() {}";
+    const r2 = validateLabInstance(template, instance);
+    expect(r2.results[0].passed).toBe(true);
+    expect(r2.results[1].passed).toBe(true);
+    expect(r2.passed).toBe(true);
   });
 });
 
