@@ -256,7 +256,7 @@ The validator should be able to check file presence, directory structure, file c
 5. ✅ Add milestone gating, reflections, and artifact saving — milestone-engine, reflection-engine, artifact-engine, export, and browser
 6. ✅ Introduce guided debugging labs and inspect mode — inspection-engine, layered hints, diff-style output
 7. ✅ Smoke-test full lab flow end to end — 4 end-to-end smoke tests added covering file-edit→validate round-trip, multi-attempt progression, full lifecycle (create→edit→fail→hint→reset→pass→completion), and file-edit isolation (23 files, 199 tests)
-8. ✅ Expand into Phase 2 once Phase 1 outcomes are visibly strong — Phase 2–4 curriculum authored; lab UI wired, terminal connected with alias normalisation; Phase 2 lab templates authored (15 templates, 3 courses); code-behavior and test-pass submission UI wired; Phase 2 labs accessible in training platform (234 total tests)
+8. ✅ Expand into Phase 2–4 once Phase 1 outcomes are visibly strong — Phase 2–4 curriculum authored; lab UI wired, terminal connected with alias normalisation; 38 lab templates across all 4 phases (10 Phase 1 + 15 Phase 2 + 9 Phase 3 + 4 Phase 4); code-behavior and test-pass submission UI wired; all 15 engines implemented and wired to training platform; 288 tests passing across 23 test files
 
 ### Primary Product Metrics
 

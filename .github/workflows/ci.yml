@@ -63,12 +63,39 @@ jobs:
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           NEXT_PUBLIC_SENTRY_DSN: ${{ secrets.NEXT_PUBLIC_SENTRY_DSN }}
           NEXT_PUBLIC_SENTRY_ENVIRONMENT: ci
+      - name: Bundle size budget
+        run: |
+          # Fail if the client-side static output exceeds 2 MB (raw, uncompressed).
+          BUDGET_KB=2048
+          SIZE_KB=$(du -sk .next/static | cut -f1)
+          echo "Client static size: ${SIZE_KB} KB (budget: ${BUDGET_KB} KB)"
+          if [ "$SIZE_KB" -gt "$BUDGET_KB" ]; then
+            echo "::error::Client bundle ${SIZE_KB} KB exceeds budget of ${BUDGET_KB} KB"
+            exit 1
+          fi
 
   docker:
-    name: Docker build
+    name: Docker build & health
     needs: quality
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - run: docker build --file Dockerfile --tag computelearn:ci .
+      - name: Health probe
+        run: |
+          docker run -d --name ci-health -p 3000:3000 computelearn:ci
+          # Wait up to 30 s for the container to become healthy
+          for i in $(seq 1 30); do
+            STATUS=$(docker inspect --format='{{.State.Health.Status}}' ci-health 2>/dev/null || echo "starting")
+            echo "  attempt $i: $STATUS"
+            [ "$STATUS" = "healthy" ] && break
+            sleep 1
+          done
+          FINAL=$(docker inspect --format='{{.State.Health.Status}}' ci-health)
+          docker rm -f ci-health
+          if [ "$FINAL" != "healthy" ]; then
+            echo "::error::Container never became healthy (status: $FINAL)"
+            exit 1
+          fi
+          echo "Container health check passed"
