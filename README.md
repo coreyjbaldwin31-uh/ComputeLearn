@@ -164,6 +164,27 @@ Server request errors are reported through [`instrumentation.ts`](instrumentatio
 
 The app will still run without them. When the DSN is absent, Sentry stays disabled.
 
+### Verifying Sentry
+
+Hit the test route to send a smoke event without opening a browser console:
+
+```
+curl http://localhost:3000/api/sentry-test
+```
+
+Returns `{ "ok": true, "eventId": "…" }` when the DSN is configured, or a 503 when it is absent.
+
+### Secrets in CI / deployed environments
+
+The CI build job reads `SENTRY_DSN` and `NEXT_PUBLIC_SENTRY_DSN` from GitHub Actions secrets so production bundles include Sentry wiring. Add these two secrets in the repository settings if hosted environments should report errors:
+
+| Secret | Purpose |
+| --- | --- |
+| `SENTRY_DSN` | Server-side error reporting |
+| `NEXT_PUBLIC_SENTRY_DSN` | Client-side error reporting (embedded in JS bundle) |
+
+For local development, `.env` is the source of truth (gitignored). Copy `.env.example` and fill in the DSN values. For deployed/hosted environments, set the DSN through the platform's secret management (Vercel Environment Variables, AWS Secrets Manager, etc.) rather than committing credentials.
+
 ## Repository structure
 
 See [docs/repository-map.md](docs/repository-map.md) for a detailed layout. Key areas:
