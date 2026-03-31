@@ -10,6 +10,8 @@ type CodeExerciseProps = {
   expectedOutput?: string;
   validateFn?: (code: string) => { passed: boolean; message: string };
   hint?: string;
+  /** Called after every validation attempt with the code and result */
+  onAttempt?: (code: string, passed: boolean) => void;
 };
 
 function defaultValidate(
@@ -39,6 +41,7 @@ export function CodeExercise({
   expectedOutput,
   validateFn,
   hint,
+  onAttempt,
 }: CodeExerciseProps) {
   const [code, setCode] = useState(starterCode);
   const [result, setResult] = useState<{
@@ -52,6 +55,7 @@ export function CodeExercise({
       ? validateFn(code)
       : defaultValidate(code, expectedOutput);
     setResult(validation);
+    onAttempt?.(code, validation.passed);
   }
 
   function handleReset() {

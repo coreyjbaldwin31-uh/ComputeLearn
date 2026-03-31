@@ -1,0 +1,25 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "node ./.github/scripts/session-start-context.mjs",
+        "timeout": 20
+      }
+    ],
+    "PreToolUse": [
+      {
+        "type": "command",
+        "command": "node ./.github/scripts/pre-tool-safety-check.mjs",
+        "timeout": 5
+      }
+    ],
+    "Stop": [
+      {
+        "type": "command",
+        "command": "node ./.github/scripts/stop-summary-guard.mjs",
+        "timeout": 20
+      }
+    ]
+  }
+}
