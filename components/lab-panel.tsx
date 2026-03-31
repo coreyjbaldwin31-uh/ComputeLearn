@@ -19,6 +19,7 @@ type LabPanelProps = {
   onHint: (ruleIndex: number) => string | null;
   onFileChange: (path: string, content: string) => void;
   onCodeSubmit: (ruleIndex: number, code: string) => void;
+  onTestOutput: (command: string, output: string) => void;
   completionSummary: string | null;
 };
 
@@ -31,6 +32,7 @@ export function LabPanel({
   onHint,
   onFileChange,
   onCodeSubmit,
+  onTestOutput,
   completionSummary,
 }: LabPanelProps) {
   const [validationResult, setValidationResult] =
@@ -151,6 +153,25 @@ export function LabPanel({
                   ruleIndex={idx}
                   value={instance.codeSubmissions[idx] ?? ""}
                   onChange={(code) => onCodeSubmit(idx, code)}
+                />
+              ) : null,
+            )}
+          </div>
+        </div>
+      ) : null}
+
+      {/* Test output — one editor per test-pass rule */}
+      {template.rules.some((r) => r.kind === "test-pass") ? (
+        <div className="lab-workspace">
+          <h5>Test output</h5>
+          <div className="lab-file-list">
+            {template.rules.map((rule, idx) =>
+              rule.kind === "test-pass" ? (
+                <TestOutputCard
+                  key={idx}
+                  command={rule.command}
+                  value={instance.commandOutputs[rule.command] ?? ""}
+                  onChange={(output) => onTestOutput(rule.command, output)}
                 />
               ) : null,
             )}
@@ -289,6 +310,32 @@ function CodeSubmissionCard({
         onChange={(e) => onChange(e.target.value)}
         rows={Math.max(6, value.split("\n").length + 1)}
         placeholder="Write your code here…"
+      />
+    </div>
+  );
+}
+
+function TestOutputCard({
+  command,
+  value,
+  onChange,
+}: {
+  command: string;
+  value: string;
+  onChange: (output: string) => void;
+}) {
+  return (
+    <div className="lab-file-card">
+      <div className="lab-file-header">
+        <code className="lab-file-path">{command}</code>
+      </div>
+      <textarea
+        className="lab-file-editor"
+        aria-label={`Test output for ${command}`}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        rows={Math.max(4, value.split("\n").length + 1)}
+        placeholder="Paste your test output here…"
       />
     </div>
   );

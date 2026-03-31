@@ -1,7 +1,7 @@
 "use client";
 
 import type { Curriculum, Exercise, Lesson } from "@/data/curriculum";
-import { phase1LabsByLesson } from "@/data/lab-templates";
+import { phase1LabsByLesson, phase2LabsByLesson } from "@/data/lab-templates";
 import { buildArtifactBrowserSummary } from "@/lib/artifact-browser-engine";
 import { buildArtifactCompletionSummary } from "@/lib/artifact-completion-engine";
 import type { ArtifactRecord } from "@/lib/artifact-engine";
@@ -301,7 +301,8 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const prevEntry = lessonNeighbors.previous;
   const nextEntry = lessonNeighbors.next;
 
-  const showTerminal = selectedPhase?.id === "phase-1";
+  const showTerminal =
+    selectedPhase?.id === "phase-1" || selectedPhase?.id === "phase-2";
 
   const competencyLevels = useMemo(
     () => calculateCompetencyLevels(curriculum, progress),
@@ -759,7 +760,9 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   // --- Lab lifecycle handlers ---
 
   const currentLabTemplates = selectedLesson
-    ? (phase1LabsByLesson[selectedLesson.id] ?? null)
+    ? (phase1LabsByLesson[selectedLesson.id] ??
+        phase2LabsByLesson[selectedLesson.id] ??
+        null)
     : null;
   const currentLabTemplate = currentLabTemplates?.[0] ?? null;
   const currentLabInstance = currentLabTemplate
@@ -831,6 +834,21 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
         [currentLabTemplate.id]: {
           ...instance,
           codeSubmissions: { ...instance.codeSubmissions, [ruleIndex]: code },
+        },
+      };
+    });
+  }
+
+  function updateTestOutput(command: string, output: string) {
+    if (!currentLabTemplate || !currentLabInstance) return;
+    setLabInstances((prev) => {
+      const instance = prev[currentLabTemplate.id];
+      if (!instance) return prev;
+      return {
+        ...prev,
+        [currentLabTemplate.id]: {
+          ...instance,
+          commandOutputs: { ...instance.commandOutputs, [command]: output },
         },
       };
     });
@@ -1481,6 +1499,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                 onHint={requestLabHint}
                 onFileChange={updateLabFile}
                 onCodeSubmit={updateCodeSubmission}
+                onTestOutput={updateTestOutput}
                 completionSummary={labCompletionSummary}
               />
             </section>

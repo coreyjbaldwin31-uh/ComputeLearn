@@ -1,17 +1,20 @@
 /**
- * T1 integration tests — verify the contract between Phase 1 lab templates
+ * Integration tests — verify the contract between lab templates
  * (data layer) and the lab engine (logic layer) that the UI depends on.
  *
  * These tests protect the integration surface wired by training-platform.tsx:
- *   phase1LabsByLesson → createLabInstance → validateLabInstance →
+ *   phase1/phase2LabsByLesson → createLabInstance → validateLabInstance →
  *   recordLabAttempt → getLabHint → resetLabInstance → buildLabCompletionSummary
  */
 
 import {
     phase1LabsByLesson,
     phase1LabTemplates,
+    phase2LabsByLesson,
+    phase2LabTemplates,
 } from "@/data/lab-templates";
 import {
+    type LabTemplate,
     buildLabCompletionSummary,
     createLabInstance,
     getLabHint,
@@ -783,5 +786,156 @@ describe("Code-behavior validation — engine round-trip", () => {
 
     const reset = resetLabInstance(instance, template);
     expect(reset.codeSubmissions).toEqual({});
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 2 lab template integration
+// ---------------------------------------------------------------------------
+
+describe("Phase 2 lab template integration", () => {
+  it("every Phase 2 template can create a lab instance", () => {
+    for (const template of phase2LabTemplates) {
+      const instance = createLabInstance(template);
+      expect(instance.status).toBe("active");
+      expect(instance.templateId).toBe(template.id);
+      expect(instance.files).toHaveLength(template.initialFiles.length);
+    }
+  });
+
+  it("phase2LabsByLesson covers all 15 Phase 2 lessons", () => {
+    const PHASE2_LESSON_IDS = [
+      "lesson-code-reading",
+      "lesson-debugging",
+      "lesson-project-structure",
+      "lesson-package-management",
+      "lesson-programming-logic",
+      "lesson-typescript-types",
+      "lesson-json-config",
+      "lesson-error-reading",
+      "lesson-vscode-debugger",
+      "lesson-git-workflow",
+      "lesson-branching",
+      "lesson-git-merge-conflict",
+      "lesson-http-basics",
+      "lesson-postman-basics",
+      "lesson-api-authentication",
+    ] as const;
+    for (const lessonId of PHASE2_LESSON_IDS) {
+      expect(
+        phase2LabsByLesson[lessonId],
+        `${lessonId} should have labs`,
+      ).toBeDefined();
+      expect(phase2LabsByLesson[lessonId].length).toBeGreaterThanOrEqual(1);
+    }
+  });
+
+  it("validation fails on a fresh Phase 2 instance (no work done yet)", () => {
+    const template = phase2LabTemplates[0];
+    const instance = createLabInstance(template);
+    const result = validateLabInstance(template, instance);
+    expect(result.passed).toBe(false);
+    expect(result.failedResults.length).toBeGreaterThan(0);
+  });
+
+  it("hints are available for every rule in every Phase 2 template", () => {
+    for (const template of phase2LabTemplates) {
+      for (let i = 0; i < template.rules.length; i++) {
+        const hint = getLabHint(template, i, 0);
+        expect(hint, `${template.id} rule ${i} missing hint`).not.toBeNull();
+      }
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// test-pass validation — engine round-trip
+// ---------------------------------------------------------------------------
+
+describe("test-pass validation — engine round-trip", () => {
+  it("passes when command output contains enough passing tests", () => {
+    const template: LabTemplate = {
+      id: "test-pass-roundtrip",
+      title: "Test pass round-trip",
+      description: "Verify test-pass rule evaluation",
+      difficulty: 2,
+      scaffoldingLevel: "goal-driven",
+      initialFiles: [{ path: "src/index.ts", content: "export {};\n" }],
+      rules: [
+        {
+          kind: "test-pass",
+          command: "npm test",
+          minPassing: 3,
+          maxFailing: 1,
+        },
+      ],
+      hints: { 0: [{ level: 0, text: "Run tests" }, { level: 1, text: "npm test" }] },
+      maxResets: 0,
+    };
+
+    const instance = createLabInstance(template);
+    // Simulate pasting test output
+    instance.commandOutputs["npm test"] = "  3 passing\n  0 failing\n";
+
+    const result = validateLabInstance(template, instance);
+    expect(result.passed).toBe(true);
+    expect(result.results[0].passed).toBe(true);
+    expect(result.results[0].message).toContain("3 passing");
+  });
+
+  it("fails when too many tests are failing", () => {
+    const template: LabTemplate = {
+      id: "test-pass-fail-roundtrip",
+      title: "Test pass fail scenario",
+      description: "Verify test-pass failure detection",
+      difficulty: 2,
+      scaffoldingLevel: "goal-driven",
+      initialFiles: [{ path: "src/index.ts", content: "export {};\n" }],
+      rules: [
+        {
+          kind: "test-pass",
+          command: "npm test",
+          minPassing: 3,
+          maxFailing: 0,
+        },
+      ],
+      hints: { 0: [{ level: 0, text: "Fix tests" }, { level: 1, text: "npm test" }] },
+      maxResets: 0,
+    };
+
+    const instance = createLabInstance(template);
+    instance.commandOutputs["npm test"] = "  2 passing\n  2 failing\n";
+
+    const result = validateLabInstance(template, instance);
+    expect(result.passed).toBe(false);
+    expect(result.results[0].passed).toBe(false);
+  });
+
+  it("reset clears commandOutputs used by test-pass rules", () => {
+    const template: LabTemplate = {
+      id: "test-pass-reset",
+      title: "Test pass reset",
+      description: "Verify reset clears test output",
+      difficulty: 2,
+      scaffoldingLevel: "goal-driven",
+      initialFiles: [{ path: "src/index.ts", content: "export {};\n" }],
+      rules: [
+        {
+          kind: "test-pass",
+          command: "npm test",
+          minPassing: 1,
+          maxFailing: 0,
+        },
+      ],
+      hints: { 0: [{ level: 0, text: "Run tests" }, { level: 1, text: "npm test" }] },
+      maxResets: 0,
+    };
+
+    const instance = createLabInstance(template);
+    instance.commandOutputs["npm test"] = "  5 passing\n  0 failing\n";
+    expect(instance.commandOutputs["npm test"]).toBe("  5 passing\n  0 failing\n");
+
+    const reset = resetLabInstance(instance, template);
+    expect(reset.commandOutputs).toEqual({});
   });
 });
