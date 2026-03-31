@@ -132,7 +132,7 @@ Pushes and pull requests to `main` run four jobs via GitHub Actions (`.github/wo
 | Job | Steps | Purpose |
 | --- | --- | --- |
 | **Quality gate** | `npm run lint`, `npm run type-check` | Fast feedback on code hygiene |
-| **Test** | `npm run test` | Verify correctness (204 unit/integration tests) |
+| **Test** | `npm run test` | Verify correctness (227 unit/integration tests) |
 | **Build** | `npm run build` | Verify production build succeeds |
 | **Docker build** | `docker build` | Verify container image builds |
 
