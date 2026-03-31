@@ -69,3 +69,46 @@ Operational log for autonomous workflow runs. Entries are concise.
 4. **Docs-sync** — align README.md "still open" section with actual lab-engine delivery state.
 5. **CI-sync** — verify `develop` branch strategy or simplify to match actual workflow.
 6. **Implementer** — address remaining lab-engine validator gaps (code-behavior, test-pass criteria) per PRD §8.
+
+---
+
+## 2026-03-30 — End-to-end Lab Smoke Tests (Workflow Conductor)
+
+**Branch:** `feature/phase2-testing-gates` (PR #1 → `main`)
+
+### Startup State
+
+| Check | Result |
+| ----- | ------ |
+| Verify suite | 195 tests passing, lint clean, type-check clean, build green |
+| Uncommitted | package.json: 3 unused observability deps added (not wired) |
+| PRD next | Roadmap item 7 🔧: "next: smoke-test full lab flow end to end" |
+
+### Routing Decision
+
+**Task:** Smoke-test full lab flow end to end (PRD roadmap item 7).
+**Agent:** Test Specialist — test authoring against stable engine layer.
+**Files:** `lib/lab-integration.test.ts`, `lib/lab-engine.ts`, `data/lab-templates.ts`.
+
+### Outcome
+
+4 end-to-end smoke tests added to `lib/lab-integration.test.ts` (T3 block):
+
+1. **content-match round-trip** — file edit → validate → rule flips pass (lab-keyboard-shortcuts)
+2. **multi-attempt progression** — 3 attempts with progressive improvement (lab-file-ops-safe-delete)
+3. **full lifecycle** — create → edit → fail → hint → reset → edit → pass → completion (lab-filesystem-nav)
+4. **file isolation** — editing one file does not mutate others (lab-keyboard-shortcuts)
+
+### Verification
+
+- `npx vitest run lib/lab-integration.test.ts` — 32/32 pass
+- `npm run verify` — lint clean, type-check clean, 199/199 tests pass, build succeeds
+
+### PRD Update
+
+- Roadmap item 7 marked ✅ (smoke tests complete)
+- New item 8 🔧: Phase 2 expansion — author Phase 2 lab templates and wire code-behavior validation UI
+
+### Next Action
+
+Route to **Implementer** or **Planner** for Phase 2 lab templates and code-behavior validation UI wiring.

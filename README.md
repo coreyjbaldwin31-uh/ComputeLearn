@@ -125,6 +125,45 @@ Run API smoke tests (requires a running server):
 npm run api:test
 ```
 
+## CI
+
+Pushes and pull requests to `main` run four jobs via GitHub Actions (`.github/workflows/ci.yml`):
+
+| Job | Steps | Purpose |
+| --- | --- | --- |
+| **Quality gate** | `npm run lint`, `npm run type-check` | Fast feedback on code hygiene |
+| **Test** | `npm run test` | Verify correctness (204 unit/integration tests) |
+| **Build** | `npm run build` | Verify production build succeeds |
+| **Docker build** | `docker build` | Verify container image builds |
+
+Test, Build, and Docker run in parallel after the Quality gate passes.
+
+To match CI locally:
+
+```bash
+npm run verify
+```
+
+No secrets are required — monitoring is DSN-gated and stays disabled when env vars are absent.
+
+## Monitoring
+
+Local telemetry and error reporting are wired through Sentry and OpenTelemetry.
+
+Set these environment variables in `.env` if you want live reporting:
+
+- `SENTRY_DSN`
+- `NEXT_PUBLIC_SENTRY_DSN`
+- `SENTRY_ENVIRONMENT`
+- `NEXT_PUBLIC_SENTRY_ENVIRONMENT`
+- `SENTRY_TRACES_SAMPLE_RATE`
+- `NEXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE`
+- `OTEL_SERVICE_NAME`
+
+Server request errors are reported through [`instrumentation.ts`](instrumentation.ts), browser routing hooks are registered in [`instrumentation-client.ts`](instrumentation-client.ts), and app-render failures are captured in [`app/error.tsx`](app/error.tsx).
+
+The app will still run without them. When the DSN is absent, Sentry stays disabled.
+
 ## Repository structure
 
 See [docs/repository-map.md](docs/repository-map.md) for a detailed layout. Key areas:
