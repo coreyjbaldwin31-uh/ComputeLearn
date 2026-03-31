@@ -28,9 +28,7 @@ The current app goes beyond a curriculum shell. It now includes:
 
 ## Still open platform work
 
-- test-pass validation rule integration with terminal (command-output rules are now connected)
 - true workspace/template runtime beyond the current in-memory lab-engine model
-- explicit curriculum validation and preview-deploy workflow expansion in CI
 
 ## Planned product capabilities
 
@@ -132,9 +130,9 @@ Pushes and pull requests to `main` run four jobs via GitHub Actions (`.github/wo
 | Job | Steps | Purpose |
 | --- | --- | --- |
 | **Quality gate** | `npm run lint`, `npm run type-check` | Fast feedback on code hygiene |
-| **Test** | `npm run test` | Verify correctness (234 unit/integration tests) |
-| **Build** | `npm run build` | Verify production build succeeds |
-| **Docker build** | `docker build` | Verify container image builds |
+| **Test** | `npm run test` | Verify correctness (303 unit/integration tests) |
+| **Build** | `npm run build` + bundle budget | Verify production build succeeds and client bundle stays under 2 MB |
+| **Docker build & health** | `docker build` + health probe | Verify container image builds and passes health check |
 
 Test, Build, and Docker run in parallel after the Quality gate passes.
 
