@@ -1,12 +1,12 @@
 import {
-  phase1LabTemplates,
-  phase1LabsByLesson,
-  phase2LabTemplates,
-  phase2LabsByLesson,
-  phase3LabTemplates,
-  phase3LabsByLesson,
-  phase4LabTemplates,
-  phase4LabsByLesson,
+    phase1LabTemplates,
+    phase1LabsByLesson,
+    phase2LabTemplates,
+    phase2LabsByLesson,
+    phase3LabTemplates,
+    phase3LabsByLesson,
+    phase4LabTemplates,
+    phase4LabsByLesson,
 } from "@/data/lab-templates";
 import { createLabInstance } from "@/lib/lab-engine";
 import { describe, expect, it } from "vitest";
