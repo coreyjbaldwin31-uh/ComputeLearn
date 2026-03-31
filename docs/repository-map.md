@@ -80,8 +80,8 @@ Single-page app: all navigation happens client-side inside `TrainingPlatform`.
 | Path | Role |
 | --- | --- |
 | `workflows/ci.yml` | CI pipeline: lint, type-check, test, build, docker-build |
-| `agents/` | 18 custom agent definitions for autonomous workflows |
-| `skills/` | 12 procedural skill files for targeted tasks |
+| `agents/` | 19 custom agent definitions for autonomous workflows |
+| `skills/` | 17 procedural skill files for targeted tasks |
 | `scripts/` | Pre-tool safety check for dangerous command detection |
 | `copilot-instructions.md` | Project-wide Copilot customization |
 
