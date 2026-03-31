@@ -59,6 +59,10 @@ jobs:
             nextjs-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-
       - run: npm ci
       - run: npm run build
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          NEXT_PUBLIC_SENTRY_DSN: ${{ secrets.NEXT_PUBLIC_SENTRY_DSN }}
+          NEXT_PUBLIC_SENTRY_ENVIRONMENT: ci
 
   docker:
     name: Docker build

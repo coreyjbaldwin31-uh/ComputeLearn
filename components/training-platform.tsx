@@ -1,7 +1,12 @@
 "use client";
 
 import type { Curriculum, Exercise, Lesson } from "@/data/curriculum";
-import { phase1LabsByLesson, phase2LabsByLesson } from "@/data/lab-templates";
+import {
+  phase1LabsByLesson,
+  phase2LabsByLesson,
+  phase3LabsByLesson,
+  phase4LabsByLesson,
+} from "@/data/lab-templates";
 import { buildArtifactBrowserSummary } from "@/lib/artifact-browser-engine";
 import { buildArtifactCompletionSummary } from "@/lib/artifact-completion-engine";
 import type { ArtifactRecord } from "@/lib/artifact-engine";
@@ -302,7 +307,10 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const nextEntry = lessonNeighbors.next;
 
   const showTerminal =
-    selectedPhase?.id === "phase-1" || selectedPhase?.id === "phase-2";
+    selectedPhase?.id === "phase-1" ||
+    selectedPhase?.id === "phase-2" ||
+    selectedPhase?.id === "phase-3" ||
+    selectedPhase?.id === "phase-4";
 
   const competencyLevels = useMemo(
     () => calculateCompetencyLevels(curriculum, progress),
@@ -762,6 +770,8 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const currentLabTemplates = selectedLesson
     ? (phase1LabsByLesson[selectedLesson.id] ??
       phase2LabsByLesson[selectedLesson.id] ??
+      phase3LabsByLesson[selectedLesson.id] ??
+      phase4LabsByLesson[selectedLesson.id] ??
       null)
     : null;
   const currentLabTemplate = currentLabTemplates?.[0] ?? null;
