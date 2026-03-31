@@ -189,7 +189,7 @@ The MVP should prove that ComputeLearn materially improves learner capability th
 | --- | --- | --- | --- |
 | **Must** | Core platform shell | Curriculum navigation, learner profile, local progress persistence, notes, and milestone gating | ✅ Done |
 | **Must** | Lab engine | Workspace template model, reset/replay, validation rules, and completion evidence | ✅ Done |
-| **Must** | Phase 1 excellence | Filesystem, terminal, search/filtering, automation basics, and workflow efficiency | 🔧 Curriculum authored, lab templates authored, lab UI wired, terminal connected with alias normalisation |
+| **Must** | Phase 1 excellence | Filesystem, terminal, search/filtering, automation basics, and workflow efficiency | ✅ Done — curriculum, lab templates, lab UI, terminal integration, code-behavior and test-pass UI all wired |
 | **Should** | Guided debugging | Error-focused labs, inspect mode, diff view, and layered hints | ✅ Done |
 | **Should** | Retention system | Reflection prompts and spaced repetition tied to weak competencies | ✅ Done |
 | **Later** | AI review loop | Bounded support for explanation, critique, and next-step guidance | ⬚ Not started |
@@ -256,7 +256,7 @@ The validator should be able to check file presence, directory structure, file c
 5. ✅ Add milestone gating, reflections, and artifact saving — milestone-engine, reflection-engine, artifact-engine, export, and browser
 6. ✅ Introduce guided debugging labs and inspect mode — inspection-engine, layered hints, diff-style output
 7. ✅ Smoke-test full lab flow end to end — 4 end-to-end smoke tests added covering file-edit→validate round-trip, multi-attempt progression, full lifecycle (create→edit→fail→hint→reset→pass→completion), and file-edit isolation (23 files, 199 tests)
-8. 🔧 Expand into Phase 2 once Phase 1 outcomes are visibly strong — Phase 2–4 curriculum authored; lab UI wired, terminal connected with alias normalisation; Phase 2 lab templates authored — 15 templates across 3 courses (code-reading through API auth) with 23 structural tests and full engine integration; code-behavior submission UI wired (227 total tests)
+8. ✅ Expand into Phase 2 once Phase 1 outcomes are visibly strong — Phase 2–4 curriculum authored; lab UI wired, terminal connected with alias normalisation; Phase 2 lab templates authored (15 templates, 3 courses); code-behavior and test-pass submission UI wired; Phase 2 labs accessible in training platform (234 total tests)
 
 ### Primary Product Metrics
 
