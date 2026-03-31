@@ -12,6 +12,10 @@ import {
     phase1LabTemplates,
     phase2LabsByLesson,
     phase2LabTemplates,
+    phase3LabsByLesson,
+    phase3LabTemplates,
+    phase4LabsByLesson,
+    phase4LabTemplates,
 } from "@/data/lab-templates";
 import {
     type LabTemplate,
@@ -937,5 +941,106 @@ describe("test-pass validation — engine round-trip", () => {
 
     const reset = resetLabInstance(instance, template);
     expect(reset.commandOutputs).toEqual({});
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 3 lab template integration
+// ---------------------------------------------------------------------------
+
+describe("Phase 3 lab template integration", () => {
+  it("every Phase 3 template can create a lab instance", () => {
+    for (const template of phase3LabTemplates) {
+      const instance = createLabInstance(template);
+      expect(instance.status).toBe("active");
+      expect(instance.templateId).toBe(template.id);
+      expect(instance.files).toHaveLength(template.initialFiles.length);
+    }
+  });
+
+  it("phase3LabsByLesson covers all 9 Phase 3 lessons", () => {
+    const PHASE3_LESSON_IDS = [
+      "lesson-docker-basics",
+      "lesson-dockerfile",
+      "lesson-ai-prompting",
+      "lesson-ai-verification",
+      "lesson-git-workflow-advanced",
+      "lesson-automated-testing",
+      "lesson-ci-cd",
+      "lesson-refactoring",
+      "lesson-technical-documentation",
+    ] as const;
+    for (const lessonId of PHASE3_LESSON_IDS) {
+      expect(
+        phase3LabsByLesson[lessonId],
+        `${lessonId} should have labs`,
+      ).toBeDefined();
+      expect(phase3LabsByLesson[lessonId].length).toBeGreaterThanOrEqual(1);
+    }
+  });
+
+  it("validation fails on a fresh Phase 3 instance (no work done yet)", () => {
+    const template = phase3LabTemplates[0];
+    const instance = createLabInstance(template);
+    const result = validateLabInstance(template, instance);
+    expect(result.passed).toBe(false);
+    expect(result.failedResults.length).toBeGreaterThan(0);
+  });
+
+  it("hints are available for every rule in every Phase 3 template", () => {
+    for (const template of phase3LabTemplates) {
+      for (let i = 0; i < template.rules.length; i++) {
+        const hint = getLabHint(template, i, 0);
+        expect(hint, `${template.id} rule ${i} missing hint`).not.toBeNull();
+      }
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 4 lab template integration
+// ---------------------------------------------------------------------------
+
+describe("Phase 4 lab template integration", () => {
+  it("every Phase 4 template can create a lab instance", () => {
+    for (const template of phase4LabTemplates) {
+      const instance = createLabInstance(template);
+      expect(instance.status).toBe("active");
+      expect(instance.templateId).toBe(template.id);
+      expect(instance.files).toHaveLength(template.initialFiles.length);
+    }
+  });
+
+  it("phase4LabsByLesson covers all 4 Phase 4 lessons", () => {
+    const PHASE4_LESSON_IDS = [
+      "lesson-cli-build",
+      "lesson-crud-app",
+      "lesson-debugging-case-study",
+      "lesson-portfolio-capstone",
+    ] as const;
+    for (const lessonId of PHASE4_LESSON_IDS) {
+      expect(
+        phase4LabsByLesson[lessonId],
+        `${lessonId} should have labs`,
+      ).toBeDefined();
+      expect(phase4LabsByLesson[lessonId].length).toBeGreaterThanOrEqual(1);
+    }
+  });
+
+  it("validation fails on a fresh Phase 4 instance (no work done yet)", () => {
+    const template = phase4LabTemplates[0];
+    const instance = createLabInstance(template);
+    const result = validateLabInstance(template, instance);
+    expect(result.passed).toBe(false);
+    expect(result.failedResults.length).toBeGreaterThan(0);
+  });
+
+  it("hints are available for every rule in every Phase 4 template", () => {
+    for (const template of phase4LabTemplates) {
+      for (let i = 0; i < template.rules.length; i++) {
+        const hint = getLabHint(template, i, 0);
+        expect(hint, `${template.id} rule ${i} missing hint`).not.toBeNull();
+      }
+    }
   });
 });
