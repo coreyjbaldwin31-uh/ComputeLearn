@@ -761,8 +761,8 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
 
   const currentLabTemplates = selectedLesson
     ? (phase1LabsByLesson[selectedLesson.id] ??
-        phase2LabsByLesson[selectedLesson.id] ??
-        null)
+      phase2LabsByLesson[selectedLesson.id] ??
+      null)
     : null;
   const currentLabTemplate = currentLabTemplates?.[0] ?? null;
   const currentLabInstance = currentLabTemplate
