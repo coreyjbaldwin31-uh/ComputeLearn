@@ -65,12 +65,12 @@ jobs:
           NEXT_PUBLIC_SENTRY_ENVIRONMENT: ci
       - name: Bundle size budget
         run: |
-          # Fail if the standalone JS output exceeds 2 MB (raw, uncompressed).
+          # Fail if the client-side static output exceeds 2 MB (raw, uncompressed).
           BUDGET_KB=2048
-          SIZE_KB=$(du -sk .next/standalone | cut -f1)
-          echo "Standalone size: ${SIZE_KB} KB (budget: ${BUDGET_KB} KB)"
+          SIZE_KB=$(du -sk .next/static | cut -f1)
+          echo "Client static size: ${SIZE_KB} KB (budget: ${BUDGET_KB} KB)"
           if [ "$SIZE_KB" -gt "$BUDGET_KB" ]; then
-            echo "::error::Bundle size ${SIZE_KB} KB exceeds budget of ${BUDGET_KB} KB"
+            echo "::error::Client bundle ${SIZE_KB} KB exceeds budget of ${BUDGET_KB} KB"
             exit 1
           fi
 

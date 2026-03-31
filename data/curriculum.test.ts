@@ -1,10 +1,10 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { curriculum } from "./curriculum";
 import {
-  phase1LabTemplates,
-  phase2LabTemplates,
-  phase3LabTemplates,
-  phase4LabTemplates,
+    phase1LabTemplates,
+    phase2LabTemplates,
+    phase3LabTemplates,
+    phase4LabTemplates,
 } from "./lab-templates";
 
 // ---------------------------------------------------------------------------
