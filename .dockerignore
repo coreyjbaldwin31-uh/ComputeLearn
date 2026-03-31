@@ -10,7 +10,7 @@ coverage
 .env
 .env.*
 !.env.example
-tsconfig.tsbuildinfo
+*.tsbuildinfo
 README.md
 PRD.md
 CONTRIBUTING.md
