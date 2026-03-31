@@ -821,6 +821,21 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     }));
   }
 
+  function updateCodeSubmission(ruleIndex: number, code: string) {
+    if (!currentLabTemplate || !currentLabInstance) return;
+    setLabInstances((prev) => {
+      const instance = prev[currentLabTemplate.id];
+      if (!instance) return prev;
+      return {
+        ...prev,
+        [currentLabTemplate.id]: {
+          ...instance,
+          codeSubmissions: { ...instance.codeSubmissions, [ruleIndex]: code },
+        },
+      };
+    });
+  }
+
   const labCompletionSummary =
     currentLabTemplate && currentLabInstance?.status === "completed"
       ? buildLabCompletionSummary(currentLabTemplate, currentLabInstance)
@@ -1465,6 +1480,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                 onReset={resetCurrentLab}
                 onHint={requestLabHint}
                 onFileChange={updateLabFile}
+                onCodeSubmit={updateCodeSubmission}
                 completionSummary={labCompletionSummary}
               />
             </section>

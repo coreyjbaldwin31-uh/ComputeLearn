@@ -18,6 +18,7 @@ type LabPanelProps = {
   onReset: () => void;
   onHint: (ruleIndex: number) => string | null;
   onFileChange: (path: string, content: string) => void;
+  onCodeSubmit: (ruleIndex: number, code: string) => void;
   completionSummary: string | null;
 };
 
@@ -29,6 +30,7 @@ export function LabPanel({
   onReset,
   onHint,
   onFileChange,
+  onCodeSubmit,
   completionSummary,
 }: LabPanelProps) {
   const [validationResult, setValidationResult] =
@@ -137,6 +139,25 @@ export function LabPanel({
         </div>
       </div>
 
+      {/* Code submissions — one editor per code-behavior rule */}
+      {template.rules.some((r) => r.kind === "code-behavior") ? (
+        <div className="lab-workspace">
+          <h5>Code submissions</h5>
+          <div className="lab-file-list">
+            {template.rules.map((rule, idx) =>
+              rule.kind === "code-behavior" ? (
+                <CodeSubmissionCard
+                  key={idx}
+                  ruleIndex={idx}
+                  value={instance.codeSubmissions[idx] ?? ""}
+                  onChange={(code) => onCodeSubmit(idx, code)}
+                />
+              ) : null,
+            )}
+          </div>
+        </div>
+      ) : null}
+
       {/* Action bar */}
       <div className="toolbar">
         <button
@@ -242,5 +263,33 @@ function LabRuleResultRow({
       ) : null}
       {hintText ? <div className="hint-layer">{hintText}</div> : null}
     </li>
+  );
+}
+
+function CodeSubmissionCard({
+  ruleIndex,
+  value,
+  onChange,
+}: {
+  ruleIndex: number;
+  value: string;
+  onChange: (code: string) => void;
+}) {
+  return (
+    <div className="lab-file-card">
+      <div className="lab-file-header">
+        <code className="lab-file-path">
+          Rule {ruleIndex + 1} — code submission
+        </code>
+      </div>
+      <textarea
+        className="lab-file-editor"
+        aria-label={`Code submission for rule ${ruleIndex + 1}`}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        rows={Math.max(6, value.split("\n").length + 1)}
+        placeholder="Write your code here…"
+      />
+    </div>
   );
 }

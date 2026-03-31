@@ -483,3 +483,305 @@ describe("Smoke — lab-filesystem-nav: cd project, pwd, validate", () => {
     expect(completed.completedAt).not.toBeNull();
   });
 });
+
+// ---------------------------------------------------------------------------
+// T3: End-to-end lab smoke tests
+// ---------------------------------------------------------------------------
+
+describe("T3 — End-to-end lab smoke tests", () => {
+  // -------------------------------------------------------------------------
+  // Test 1: File editing → content-match validation round-trip
+  // -------------------------------------------------------------------------
+  it("content-match rules flip from fail to pass after editing the file (lab-keyboard-shortcuts)", () => {
+    const template = phase1LabsByLesson["lesson-keyboard-shortcuts"][0];
+    expect(template.id).toBe("lab-keyboard-shortcuts");
+
+    // 1. Create instance
+    const instance = createLabInstance(template);
+
+    // 2. Validate pristine — should fail (content-match rule 0 not met)
+    const pristineResult = validateLabInstance(template, instance);
+    expect(pristineResult.passed).toBe(false);
+
+    // Rule 0: content-match for Ctrl|Alt|Shift — fails on pristine
+    const rule0Pristine = pristineResult.results[0];
+    expect(rule0Pristine.passed).toBe(false);
+    expect(rule0Pristine.rule.kind).toBe("content-match");
+
+    // Rules 1 and 2 already pass on pristine (table rows exist, file exists)
+    expect(pristineResult.results[1].passed).toBe(true);
+    expect(pristineResult.results[2].passed).toBe(true);
+
+    // 3. Edit shortcut-log.md to satisfy the content-match rules
+    const logFile = instance.files.find(
+      (f) => f.path === "workspace/shortcut-log.md",
+    )!;
+    logFile.content +=
+      "| Open file | Ctrl+O |\n| Save file | Ctrl+S |\n| Find | Ctrl+F |\n";
+
+    // 4. Validate again — all rules should now pass
+    const afterEditResult = validateLabInstance(template, instance);
+    expect(afterEditResult.passed).toBe(true);
+
+    // 5. Assert rule 0 specifically flipped from fail to pass
+    const rule0After = afterEditResult.results[0];
+    expect(rule0After.passed).toBe(true);
+    expect(rule0After.rule.kind).toBe("content-match");
+  });
+
+  // -------------------------------------------------------------------------
+  // Test 2: Multi-attempt progression (fail → modify → fail → modify → pass)
+  // -------------------------------------------------------------------------
+  it("progressive improvement across three attempts (lab-file-ops-safe-delete)", () => {
+    const template = phase1LabsByLesson["lesson-file-operations"][0];
+    expect(template.id).toBe("lab-file-ops-safe-delete");
+
+    // 1. Create instance
+    let instance = createLabInstance(template);
+
+    // --- Attempt 1: pristine → all file-manipulation rules fail ---
+    const r1 = validateLabInstance(template, instance);
+    expect(r1.passed).toBe(false);
+    // Rules: 0=dir-structure(backup), 1=file-presence(backup/draft), 2=file-presence(!draft), 3=file-presence(keep-this)
+    // Pristine: backup dir missing (fail), backup/draft missing (fail), draft still exists (fail), keep-this exists (pass)
+    expect(r1.results[0].passed).toBe(false); // backup dir missing
+    expect(r1.results[1].passed).toBe(false); // backup/draft-report.txt missing
+    expect(r1.results[2].passed).toBe(false); // sandbox/draft-report.txt should NOT exist
+    expect(r1.results[3].passed).toBe(true);  // keep-this.md exists
+    const failedCountR1 = r1.failedResults.length;
+    expect(failedCountR1).toBe(3);
+
+    instance = recordLabAttempt(instance, r1);
+    expect(instance.attemptCount).toBe(1);
+    expect(instance.status).toBe("active");
+
+    // --- Attempt 2: partial fix — copy draft to backup (but original still exists) ---
+    const draftContent = instance.files.find(
+      (f) => f.path === "sandbox/draft-report.txt",
+    )!.content;
+    instance.files.push({
+      path: "sandbox/backup/draft-report.txt",
+      content: draftContent,
+    });
+
+    const r2 = validateLabInstance(template, instance);
+    expect(r2.passed).toBe(false);
+    // Now backup dir exists (pass), backup/draft exists (pass), but original draft still there (fail)
+    expect(r2.results[0].passed).toBe(true);  // backup dir exists
+    expect(r2.results[1].passed).toBe(true);  // backup/draft-report.txt exists
+    expect(r2.results[2].passed).toBe(false); // sandbox/draft-report.txt still there
+    expect(r2.results[3].passed).toBe(true);  // keep-this.md untouched
+    const failedCountR2 = r2.failedResults.length;
+    expect(failedCountR2).toBe(1);
+    // Progressive improvement: fewer failures than attempt 1
+    expect(failedCountR2).toBeLessThan(failedCountR1);
+
+    instance = recordLabAttempt(instance, r2);
+    expect(instance.attemptCount).toBe(2);
+    expect(instance.status).toBe("active");
+
+    // --- Attempt 3: remove original draft → all rules pass ---
+    instance.files = instance.files.filter(
+      (f) => f.path !== "sandbox/draft-report.txt",
+    );
+
+    const r3 = validateLabInstance(template, instance);
+    expect(r3.passed).toBe(true);
+    expect(r3.failedResults).toHaveLength(0);
+
+    instance = recordLabAttempt(instance, r3);
+    expect(instance.attemptCount).toBe(3);
+    expect(instance.status).toBe("completed");
+    expect(instance.completedAt).not.toBeNull();
+  });
+
+  // -------------------------------------------------------------------------
+  // Test 3: Full lifecycle (create → edit → fail → hint → reset → edit → pass → completion)
+  // -------------------------------------------------------------------------
+  it("full lifecycle with hint and reset (lab-filesystem-nav)", () => {
+    const template = phase1LabsByLesson["lesson-filesystem"][0];
+    expect(template.id).toBe("lab-filesystem-nav");
+
+    // 1. Create instance
+    let instance = createLabInstance(template);
+    expect(instance.status).toBe("active");
+
+    // 2. Make a wrong edit: delete the required settings.json file
+    instance.files = instance.files.filter(
+      (f) => f.path !== "project/.config/settings.json",
+    );
+
+    // 3. Validate → fails (no command output + file deleted)
+    const failResult = validateLabInstance(template, instance);
+    expect(failResult.passed).toBe(false);
+
+    // Rule 0 (command-output) fails — no output recorded
+    const cmdRule = failResult.results.find(
+      (r) => r.rule.kind === "command-output",
+    );
+    expect(cmdRule!.passed).toBe(false);
+
+    // Rule 2 (file-presence) fails — settings.json deleted
+    const fileRule = failResult.results.find(
+      (r) => r.rule.kind === "file-presence",
+    );
+    expect(fileRule!.passed).toBe(false);
+
+    instance = recordLabAttempt(instance, failResult);
+    expect(instance.attemptCount).toBe(1);
+    expect(instance.status).toBe("active");
+
+    // 4. Request hint for the file-presence rule (index 2)
+    const hint = getLabHint(template, 2, 0);
+    expect(hint).not.toBeNull();
+    expect(hint!.length).toBeGreaterThan(0);
+    expect(hint).toContain("dot");
+
+    // 5. Reset the instance → files restored, commandOutputs cleared
+    instance = resetLabInstance(instance, template);
+    expect(instance.resetCount).toBe(1);
+    expect(instance.files).toHaveLength(template.initialFiles.length);
+    expect(instance.commandOutputs).toEqual({});
+    // Verify settings.json is restored
+    const settingsFile = instance.files.find(
+      (f) => f.path === "project/.config/settings.json",
+    );
+    expect(settingsFile).toBeDefined();
+
+    // 6. Supply correct command output
+    instance.commandOutputs["Get-Location"] =
+      "\nPath\n----\nC:\\Users\\learner\\project\n";
+
+    // 7. Validate → all rules pass
+    const passResult = validateLabInstance(template, instance);
+    expect(passResult.passed).toBe(true);
+    expect(passResult.failedResults).toHaveLength(0);
+
+    instance = recordLabAttempt(instance, passResult);
+    expect(instance.status).toBe("completed");
+    expect(instance.completedAt).not.toBeNull();
+
+    // 8. Build completion summary → assert it has correct data
+    const summary = buildLabCompletionSummary(template, instance);
+    expect(summary).toContain(template.title);
+    expect(summary).toContain("Attempts: 2");
+    expect(summary).toContain("completed");
+    expect(summary).toContain("Resets: 1");
+  });
+
+  // -------------------------------------------------------------------------
+  // Test 4: File editing does not affect other files
+  // -------------------------------------------------------------------------
+  it("editing one file does not mutate other files (lab-keyboard-shortcuts)", () => {
+    const template = phase1LabsByLesson["lesson-keyboard-shortcuts"][0];
+    const instance = createLabInstance(template);
+
+    // Snapshot the original content of all files
+    const originals = new Map(
+      instance.files.map((f) => [f.path, f.content]),
+    );
+
+    // Edit only shortcut-log.md
+    const targetPath = "workspace/shortcut-log.md";
+    const targetFile = instance.files.find((f) => f.path === targetPath)!;
+    targetFile.content += "| Toggle sidebar | Ctrl+B |\n";
+
+    // Assert the edited file actually changed
+    expect(targetFile.content).not.toBe(originals.get(targetPath));
+
+    // Assert every other file remains identical
+    for (const file of instance.files) {
+      if (file.path !== targetPath) {
+        expect(file.content, `${file.path} should be unchanged`).toBe(
+          originals.get(file.path),
+        );
+      }
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Code-behavior validation round-trip
+// ---------------------------------------------------------------------------
+
+describe("Code-behavior validation — engine round-trip", () => {
+  it("code-behavior rule fails when no submission, passes when patterns match", () => {
+    // Build a minimal template with a code-behavior rule
+    const template = {
+      id: "lab-code-behavior-test",
+      title: "Code Behavior Test",
+      description: "Verify code-behavior rule round-trip",
+      difficulty: 2 as const,
+      scaffoldingLevel: "goal-driven" as const,
+      initialFiles: [{ path: "main.ts", content: "// starter" }],
+      rules: [
+        {
+          kind: "code-behavior" as const,
+          requiredPatterns: ["function greet", "return"],
+          forbiddenPatterns: ["eval("],
+        },
+      ],
+      hints: { 0: [{ level: 0, text: "Write a function called greet that returns a string." }] },
+      maxResets: 3,
+    };
+
+    // 1. Create instance — codeSubmissions starts empty
+    const instance = createLabInstance(template);
+    expect(instance.codeSubmissions).toEqual({});
+
+    // 2. Validate with no submission — rule fails
+    const r1 = validateLabInstance(template, instance);
+    expect(r1.passed).toBe(false);
+    expect(r1.results[0].passed).toBe(false);
+    expect(r1.results[0].message).toContain("missing required patterns");
+
+    // 3. Submit code missing one required pattern — still fails
+    instance.codeSubmissions[0] = "function greet(name: string) { console.log(name); }";
+    const r2 = validateLabInstance(template, instance);
+    expect(r2.passed).toBe(false);
+    expect(r2.results[0].passed).toBe(false);
+
+    // 4. Submit code with a forbidden pattern — still fails
+    instance.codeSubmissions[0] = "function greet() { return eval('hi'); }";
+    const r3 = validateLabInstance(template, instance);
+    expect(r3.passed).toBe(false);
+    expect(r3.results[0].passed).toBe(false);
+    expect(r3.results[0].message).toContain("discouraged pattern");
+
+    // 5. Submit correct code — passes
+    instance.codeSubmissions[0] = "function greet(name: string) { return `Hello, ${name}!`; }";
+    const r4 = validateLabInstance(template, instance);
+    expect(r4.passed).toBe(true);
+    expect(r4.results[0].passed).toBe(true);
+
+    // 6. Record attempt → completed
+    const completed = recordLabAttempt(instance, r4);
+    expect(completed.status).toBe("completed");
+  });
+
+  it("reset clears codeSubmissions", () => {
+    const template = {
+      id: "lab-code-behavior-reset",
+      title: "Code Behavior Reset Test",
+      description: "Verify reset clears code submissions",
+      difficulty: 1 as const,
+      scaffoldingLevel: "step-by-step" as const,
+      initialFiles: [],
+      rules: [
+        {
+          kind: "code-behavior" as const,
+          requiredPatterns: ["let x"],
+        },
+      ],
+      hints: {},
+      maxResets: 0,
+    };
+
+    const instance = createLabInstance(template);
+    instance.codeSubmissions[0] = "let x = 42;";
+    expect(instance.codeSubmissions[0]).toBe("let x = 42;");
+
+    const reset = resetLabInstance(instance, template);
+    expect(reset.codeSubmissions).toEqual({});
+  });
+});
