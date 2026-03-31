@@ -1,4 +1,4 @@
-import { phase1LabTemplates, phase1LabsByLesson } from "@/data/lab-templates";
+import { phase1LabTemplates, phase1LabsByLesson, phase2LabTemplates, phase2LabsByLesson } from "@/data/lab-templates";
 import { createLabInstance } from "@/lib/lab-engine";
 import { describe, expect, it } from "vitest";
 
@@ -210,6 +210,202 @@ describe("Phase 1 lab templates — lab engine integration", () => {
 
   it("the resulting instance has the correct templateId", () => {
     for (const t of phase1LabTemplates) {
+      const instance = createLabInstance(t);
+      expect(instance.templateId).toBe(t.id);
+    }
+  });
+});
+
+// ===========================================================================
+// Phase 2 Tests
+// ===========================================================================
+
+const PHASE2_LESSON_IDS = [
+  "lesson-code-reading",
+  "lesson-debugging",
+  "lesson-project-structure",
+  "lesson-package-management",
+  "lesson-programming-logic",
+  "lesson-typescript-types",
+  "lesson-json-config",
+  "lesson-error-reading",
+  "lesson-vscode-debugger",
+  "lesson-git-workflow",
+  "lesson-branching",
+  "lesson-git-merge-conflict",
+  "lesson-http-basics",
+  "lesson-postman-basics",
+  "lesson-api-authentication",
+] as const;
+
+describe("Phase 2 lab templates — structural integrity", () => {
+  it("has exactly 15 lab templates", () => {
+    expect(phase2LabTemplates).toHaveLength(15);
+  });
+
+  it("all IDs are unique", () => {
+    const ids = phase2LabTemplates.map((t) => t.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('all IDs start with "lab-"', () => {
+    for (const t of phase2LabTemplates) {
+      expect(t.id).toMatch(/^lab-/);
+    }
+  });
+
+  it("all have non-empty title and description", () => {
+    for (const t of phase2LabTemplates) {
+      expect(t.title.length).toBeGreaterThan(0);
+      expect(t.description.length).toBeGreaterThan(0);
+    }
+  });
+});
+
+describe("Phase 2 lab templates — lesson mapping", () => {
+  it("every Phase 2 lesson has at least one lab", () => {
+    for (const lessonId of PHASE2_LESSON_IDS) {
+      const labs = phase2LabTemplates.filter((t) => t.lessonId === lessonId);
+      expect(labs.length, `${lessonId} should have at least 1 lab`).toBeGreaterThanOrEqual(1);
+    }
+  });
+
+  it("phase2LabsByLesson has exactly 15 keys", () => {
+    expect(Object.keys(phase2LabsByLesson)).toHaveLength(15);
+  });
+
+  it('every lessonId in templates starts with "lesson-"', () => {
+    for (const t of phase2LabTemplates) {
+      expect(t.lessonId).toMatch(/^lesson-/);
+    }
+  });
+});
+
+describe("Phase 2 lab templates — difficulty and scaffolding alignment", () => {
+  it("all labs are difficulty 2 or 3", () => {
+    for (const t of phase2LabTemplates) {
+      expect([2, 3]).toContain(t.difficulty);
+    }
+  });
+
+  it('all labs have scaffoldingLevel "goal-driven"', () => {
+    for (const t of phase2LabTemplates) {
+      expect(t.scaffoldingLevel, `${t.id} scaffolding`).toBe("goal-driven");
+    }
+  });
+
+  it("all labs have maxResets 0", () => {
+    for (const t of phase2LabTemplates) {
+      expect(t.maxResets, `${t.id} maxResets`).toBe(0);
+    }
+  });
+});
+
+describe("Phase 2 lab templates — validation rules quality", () => {
+  it("every lab has at least 3 rules", () => {
+    for (const t of phase2LabTemplates) {
+      expect(t.rules.length, `${t.id} rules count`).toBeGreaterThanOrEqual(3);
+    }
+  });
+
+  it("every lab has at most 5 rules", () => {
+    for (const t of phase2LabTemplates) {
+      expect(t.rules.length, `${t.id} rules count`).toBeLessThanOrEqual(5);
+    }
+  });
+
+  it("all rule kinds are valid", () => {
+    for (const t of phase2LabTemplates) {
+      for (const rule of t.rules) {
+        expect(VALID_RULE_KINDS).toContain(rule.kind);
+      }
+    }
+  });
+});
+
+describe("Phase 2 lab templates — hint coverage", () => {
+  it("every lab has hints for every rule index", () => {
+    for (const t of phase2LabTemplates) {
+      for (let i = 0; i < t.rules.length; i++) {
+        expect(t.hints[i], `${t.id} missing hint for rule index ${i}`).toBeDefined();
+      }
+    }
+  });
+
+  it("every hint array has at least 2 levels (level 0 and level 1)", () => {
+    for (const t of phase2LabTemplates) {
+      for (const [idx, layers] of Object.entries(t.hints)) {
+        expect(
+          layers.length,
+          `${t.id} hint[${idx}] should have >= 2 levels`,
+        ).toBeGreaterThanOrEqual(2);
+      }
+    }
+  });
+
+  it("hint levels start at 0", () => {
+    for (const t of phase2LabTemplates) {
+      for (const [idx, layers] of Object.entries(t.hints)) {
+        expect(layers[0].level, `${t.id} hint[${idx}] first level`).toBe(0);
+      }
+    }
+  });
+});
+
+describe("Phase 2 lab templates — initial files", () => {
+  it("every lab has at least 2 initial files", () => {
+    for (const t of phase2LabTemplates) {
+      expect(
+        t.initialFiles.length,
+        `${t.id} initial files count`,
+      ).toBeGreaterThanOrEqual(2);
+    }
+  });
+
+  it("all initial file paths are non-empty", () => {
+    for (const t of phase2LabTemplates) {
+      for (const f of t.initialFiles) {
+        expect(f.path.length, `${t.id} file path`).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it("all initial file content is a string", () => {
+    for (const t of phase2LabTemplates) {
+      for (const f of t.initialFiles) {
+        expect(typeof f.content, `${t.id} ${f.path} content type`).toBe("string");
+      }
+    }
+  });
+
+  it("non-placeholder files have non-empty content", () => {
+    for (const t of phase2LabTemplates) {
+      for (const f of t.initialFiles) {
+        if (!f.path.endsWith(".gitkeep")) {
+          expect(f.content.length, `${t.id} ${f.path} content`).toBeGreaterThan(0);
+        }
+      }
+    }
+  });
+});
+
+describe("Phase 2 lab templates — lab engine integration", () => {
+  it("each lab can be used with createLabInstance", () => {
+    for (const t of phase2LabTemplates) {
+      const instance = createLabInstance(t);
+      expect(instance).toBeDefined();
+    }
+  });
+
+  it('the resulting instance has status "active"', () => {
+    for (const t of phase2LabTemplates) {
+      const instance = createLabInstance(t);
+      expect(instance.status).toBe("active");
+    }
+  });
+
+  it("the resulting instance has the correct templateId", () => {
+    for (const t of phase2LabTemplates) {
       const instance = createLabInstance(t);
       expect(instance.templateId).toBe(t.id);
     }
