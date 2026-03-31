@@ -37,7 +37,12 @@ function useLocalStorageValue<T>(key: string, initial: T) {
   const getSnapshot = useCallback(() => {
     const raw = localStorage.getItem(key) ?? undefined;
     if (raw === cached.current.raw) return cached.current.value;
-    const val = raw != null ? (JSON.parse(raw) as T) : initialRef.current;
+    let val: T;
+    try {
+      val = raw != null ? (JSON.parse(raw) as T) : initialRef.current;
+    } catch {
+      val = initialRef.current;
+    }
     cached.current = { raw, value: val };
     return val;
   }, [key]);
@@ -50,7 +55,11 @@ function useLocalStorageValue<T>(key: string, initial: T) {
     (fn: T | ((prev: T) => T)) => {
       const cur = (() => {
         const r = localStorage.getItem(key);
-        return r != null ? (JSON.parse(r) as T) : initialRef.current;
+        try {
+          return r != null ? (JSON.parse(r) as T) : initialRef.current;
+        } catch {
+          return initialRef.current;
+        }
       })();
       const next = typeof fn === "function" ? (fn as (p: T) => T)(cur) : fn;
       const raw = JSON.stringify(next);

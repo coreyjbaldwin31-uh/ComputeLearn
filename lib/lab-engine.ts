@@ -232,9 +232,20 @@ function evaluateRule(
           probableSkillGap: "File Manipulation",
         };
       }
-      const matches = rule.isRegex
-        ? new RegExp(rule.pattern).test(file.content)
-        : file.content.includes(rule.pattern);
+      let matches: boolean;
+      try {
+        matches = rule.isRegex
+          ? new RegExp(rule.pattern).test(file.content)
+          : file.content.includes(rule.pattern);
+      } catch {
+        return {
+          ruleIndex,
+          rule,
+          passed: false,
+          message: `Invalid regex pattern "${rule.pattern}" in content-match rule.`,
+          probableSkillGap: "Code Reading",
+        };
+      }
       return {
         ruleIndex,
         rule,
@@ -248,9 +259,20 @@ function evaluateRule(
 
     case "command-output": {
       const output = instance.commandOutputs[rule.command] ?? "";
-      const matches = rule.isRegex
-        ? new RegExp(rule.expectedOutput).test(output)
-        : output.includes(rule.expectedOutput);
+      let matches: boolean;
+      try {
+        matches = rule.isRegex
+          ? new RegExp(rule.expectedOutput).test(output)
+          : output.includes(rule.expectedOutput);
+      } catch {
+        return {
+          ruleIndex,
+          rule,
+          passed: false,
+          message: `Invalid regex pattern "${rule.expectedOutput}" in command-output rule.`,
+          probableSkillGap: "Terminal Operation",
+        };
+      }
       return {
         ruleIndex,
         rule,

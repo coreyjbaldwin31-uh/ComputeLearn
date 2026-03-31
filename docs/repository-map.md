@@ -79,7 +79,7 @@ Single-page app: all navigation happens client-side inside `TrainingPlatform`.
 
 | Path | Role |
 | --- | --- |
-| `workflows/ci.yml` | CI pipeline: lint, type-check, test, build, docker-build |
+| `workflows/ci.yml` | CI pipeline: Quality gate, Test, Build, Docker build |
 | `agents/` | 19 custom agent definitions for autonomous workflows |
 | `skills/` | 17 procedural skill files for targeted tasks |
 | `scripts/` | Pre-tool safety check for dangerous command detection |

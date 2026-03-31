@@ -243,7 +243,7 @@ export function TerminalSimulator({
             return;
           }
           const filePath = resolvePath(args[0]).replace(/\//g, "\\");
-          if (fileContents?.[filePath]) {
+          if (fileContents && filePath in fileContents) {
             addEntry("output", fileContents[filePath]);
             return;
           }
