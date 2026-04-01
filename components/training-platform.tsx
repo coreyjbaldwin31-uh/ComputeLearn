@@ -18,7 +18,6 @@ import {
   calculatePercentComplete,
   evaluatePhaseExitStatus,
   flattenLessonEntries,
-  formatTrackName,
   getDueReviewQueue,
   getLessonNeighbors,
   getMasteryLevel,
@@ -43,6 +42,7 @@ import {
   useState,
 } from "react";
 import { CodeExercise } from "./code-exercise";
+import { HeroSection } from "./hero-section";
 import { useAnalyticsDashboards } from "./hooks/use-analytics-dashboards";
 import { useArtifactManager } from "./hooks/use-artifact-manager";
 import {
@@ -61,6 +61,7 @@ import { useLocalStorageState } from "./hooks/use-local-storage-state";
 import { useTheme } from "./hooks/use-theme";
 import { InspectionPanel } from "./inspection-panel";
 import { LabPanel } from "./lab-panel";
+import { NotesSection } from "./notes-section";
 import { RailPanels } from "./rail-panels";
 import { SidebarPanels } from "./sidebar-panels";
 import { TerminalSimulator } from "./terminal-simulator";
@@ -658,100 +659,25 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
         <span>{theme === "dark" ? "Light" : "Dark"}</span>
       </button>
 
-      <section className="hero">
-        <span className="eyebrow">
-          Interactive software engineering training
-        </span>
-        <h1>{curriculum.productTitle}</h1>
-        <p>{curriculum.productVision}</p>
-
-        {isCurriculumComplete ? (
-          <div className="welcome-banner completion-banner">
-            <h3>🎓 Curriculum complete!</h3>
-            <p>
-              You have finished all {allLessonsFlat.length} lessons across{" "}
-              {curriculum.phases.length} phases. Revisit any lesson to
-              strengthen weak competencies, or explore independent labs to
-              sharpen your skills further.
-            </p>
-          </div>
-        ) : isNewUser ? (
-          <div className="welcome-banner">
-            <h3>Welcome — start your first lesson</h3>
-            <p>
-              Pick a phase from the sidebar, read the lesson, then work through
-              the exercises and validation checks below. Your progress saves
-              automatically.
-            </p>
-            <button
-              type="button"
-              className="welcome-cta"
-              onClick={() => {
-                if (nextUnfinishedEntry) {
-                  setSelectedPhaseId(nextUnfinishedEntry.phase.id);
-                  setSelectedLessonId(nextUnfinishedEntry.lesson.id);
-                }
-                contentRef.current?.scrollIntoView({ behavior: "smooth" });
-              }}
-            >
-              Begin lesson: {nextUnfinishedEntry?.lesson.title ?? selectedLesson.title} →
-            </button>
-          </div>
-        ) : (
-          <div className="hero-grid">
-            <div className="stats stats--four-column">
-              <article className="stat-card">
-                <span>Progression model</span>
-                <div className="stat-value">
-                  {curriculum.phases.length} phases
-                </div>
-                <p>
-                  Computer mastery, engineering foundations, and modern
-                  AI-assisted delivery.
-                </p>
-              </article>
-              <article className="stat-card">
-                <span>Tracked completion</span>
-                <div className="stat-value">{percentComplete}%</div>
-                <p>
-                  Local progress persistence across lessons, notes, and
-                  validation exercises.
-                </p>
-              </article>
-              <article className="stat-card">
-                <span>Core promise</span>
-                <div className="stat-value">Learn by doing</div>
-                <p>
-                  Operational confidence first, programming understanding
-                  second, disciplined engineering execution third.
-                </p>
-              </article>
-              <article className="stat-card">
-                <span>Activity streak</span>
-                <div className="stat-value streak-value">
-                  {activityStreak > 0 ? `${activityStreak}d` : "—"}
-                </div>
-                <p>
-                  {activityStreak > 1
-                    ? `${activityStreak} consecutive days of activity.`
-                    : activityStreak === 1
-                      ? "Active today. Keep building the habit."
-                      : "Complete your first lesson to start a streak."}
-                </p>
-              </article>
-            </div>
-            <article className="timeline-card">
-              <h4>How the system trains</h4>
-              <ul className="retention-list">
-                <li>Explain the concept with operational clarity.</li>
-                <li>Demonstrate the workflow in a guided environment.</li>
-                <li>Require hands-on action and validate the response.</li>
-                <li>Retain notes, outputs, and completion state for review.</li>
-              </ul>
-            </article>
-          </div>
-        )}
-      </section>
+      <HeroSection
+        productTitle={curriculum.productTitle}
+        productVision={curriculum.productVision}
+        phasesCount={curriculum.phases.length}
+        allLessonsCount={allLessonsFlat.length}
+        percentComplete={percentComplete}
+        activityStreak={activityStreak}
+        isCurriculumComplete={isCurriculumComplete}
+        isNewUser={isNewUser}
+        nextUnfinishedEntry={nextUnfinishedEntry}
+        selectedLessonTitle={selectedLesson.title}
+        onBeginLesson={() => {
+          if (nextUnfinishedEntry) {
+            setSelectedPhaseId(nextUnfinishedEntry.phase.id);
+            setSelectedLessonId(nextUnfinishedEntry.lesson.id);
+          }
+          contentRef.current?.scrollIntoView({ behavior: "smooth" });
+        }}
+      />
 
       <section className="main-grid">
         <SidebarPanels
@@ -1244,98 +1170,22 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
             </section>
           ) : null}
 
-          <section className="notes-grid" id="section-notes">
-            <article className="note-card">
-              <h4>Saved notes</h4>
-              <p>{selectedLesson.notesPrompt}</p>
-              <textarea
-                aria-label="Lesson notes"
-                value={notes[selectedLesson.id] ?? ""}
-                onChange={(event) =>
-                  updateNote(selectedLesson.id, event.target.value)
-                }
-                placeholder="Capture notes, commands, mistakes, and things to revisit later."
-              />
-              <p className="microcopy">
-                Notes are stored locally for spaced repetition review.
-              </p>
-              <div className="notes-review-row">
-                <span className="review-meta">
-                  {recentArtifacts.length} saved artifacts for this lesson
-                </span>
-                <button
-                  type="button"
-                  className="ghost-button"
-                  onClick={() => saveNoteArtifact(selectedLesson.id)}
-                >
-                  Save note artifact
-                </button>
-              </div>
-              {reviews[selectedLesson.id] != null ? (
-                <div className="notes-review-row">
-                  <span className="review-meta">
-                    {reviews[selectedLesson.id].reviewCount > 0
-                      ? `Reviewed ${reviews[selectedLesson.id].reviewCount}×`
-                      : reviews[selectedLesson.id] != null &&
-                          isDueForReview(reviews[selectedLesson.id])
-                        ? "Due for review"
-                        : "Not yet reviewed — check back soon"}
-                  </span>
-                  <button
-                    type="button"
-                    className="ghost-button"
-                    onClick={() => markReviewed(selectedLesson.id)}
-                  >
-                    Mark reviewed
-                  </button>
-                </div>
-              ) : null}
-            </article>
-
-            <article className="note-card">
-              <h4>Retention cues</h4>
-              <ul className="retention-list">
-                {selectedLesson.retention.map((item, i) => (
-                  <li key={i}>{item}</li>
-                ))}
-              </ul>
-            </article>
-
-            <article className="note-card">
-              <h4>Reflection checkpoint</h4>
-              <p className="microcopy">
-                Capture what changed, what still feels weak, and what signal you
-                will reuse next time.
-              </p>
-              <ul className="retention-list">
-                {reflectionPrompts.map((prompt) => (
-                  <li key={prompt}>{prompt}</li>
-                ))}
-              </ul>
-              <textarea
-                aria-label="Lesson reflection"
-                value={reflections[selectedLesson.id] ?? ""}
-                onChange={(event) =>
-                  updateReflection(selectedLesson.id, event.target.value)
-                }
-                placeholder="Write a short reflection: what you verified, what was weak, and what you will do differently next time."
-              />
-              <div className="notes-review-row">
-                <span className="review-meta">
-                  {selectedLessonWeakTracks.length > 0
-                    ? `Weak focus: ${selectedLessonWeakTracks.map(formatTrackName).join(", ")}`
-                    : "No weak competency flags for this lesson yet"}
-                </span>
-                <button
-                  type="button"
-                  className="ghost-button"
-                  onClick={() => saveReflectionArtifact(selectedLesson.id)}
-                >
-                  Save reflection artifact
-                </button>
-              </div>
-            </article>
-          </section>
+          <NotesSection
+            lessonId={selectedLesson.id}
+            notesPrompt={selectedLesson.notesPrompt}
+            retention={selectedLesson.retention}
+            noteValue={notes[selectedLesson.id] ?? ""}
+            reflectionValue={reflections[selectedLesson.id] ?? ""}
+            reviewRecord={reviews[selectedLesson.id]}
+            recentArtifactCount={recentArtifacts.length}
+            reflectionPrompts={reflectionPrompts}
+            weakTracks={selectedLessonWeakTracks}
+            onNoteChange={updateNote}
+            onReflectionChange={updateReflection}
+            onMarkReviewed={markReviewed}
+            onSaveNote={saveNoteArtifact}
+            onSaveReflection={saveReflectionArtifact}
+          />
 
           {showTerminal ? (
             <section
