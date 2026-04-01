@@ -35,6 +35,7 @@ export function LessonValidation({
 }: LessonValidationProps) {
   return (
     <section className="validation-grid" id="section-validation">
+      <div className="section-label"><span className="section-label-icon">✅</span> Validation</div>
       {lesson.exercises.map((exercise) => {
         const exerciseAnswer = answers[exercise.id] ?? "";
         const exerciseFeedback = feedback[exercise.id];

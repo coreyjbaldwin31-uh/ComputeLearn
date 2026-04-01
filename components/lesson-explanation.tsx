@@ -9,6 +9,7 @@ type LessonExplanationProps = {
 export function LessonExplanation({ lesson }: LessonExplanationProps) {
   return (
     <section className="section-grid" id="section-explanation">
+      <div className="section-label"><span className="section-label-icon">📖</span> Concept</div>
       <article className="lesson-card">
         <h4>Concept explanation</h4>
         {lesson.explanation.map((paragraph, i) => (

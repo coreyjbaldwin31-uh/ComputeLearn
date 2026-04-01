@@ -30,6 +30,7 @@ import {
 import { evaluateLessonEvidenceGate } from "@/lib/validation-engine";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FeatureHighlights } from "./feature-highlights";
+import { FaqSection } from "./faq-section";
 import { HeroSection } from "./hero-section";
 import { useAnalyticsDashboards } from "./hooks/use-analytics-dashboards";
 import { useArtifactManager } from "./hooks/use-artifact-manager";
@@ -51,14 +52,15 @@ import { LessonTerminal } from "./lesson-terminal";
 import { LessonTransfer } from "./lesson-transfer";
 import { LessonValidation } from "./lesson-validation";
 import { NotesSection } from "./notes-section";
+import { OnboardingCard } from "./onboarding-card";
 import { PageFooter } from "./page-footer";
 import { PricingCallout } from "./pricing-callout";
 import { ProgressRoadmap } from "./progress-roadmap";
 import { RailPanels } from "./rail-panels";
 import { SaveToast } from "./save-toast";
-import { SocialProof } from "./social-proof";
 import { SidebarPanels } from "./sidebar-panels";
 import { SkipLink } from "./skip-link";
+import { SocialProof } from "./social-proof";
 import { ThemeToggle } from "./theme-toggle";
 
 type ProgressState = Record<string, true>;
@@ -710,6 +712,13 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
         />
 
         <section className="content" ref={contentRef} id="lesson-content">
+          {isNewUser && (
+            <OnboardingCard
+              onStartFirstLesson={() => {
+                contentRef.current?.scrollIntoView({ behavior: "smooth" });
+              }}
+            />
+          )}
           <LessonHeader
             selectedPhase={selectedPhase}
             selectedCourse={selectedCourse}
@@ -862,6 +871,10 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       <FeatureHighlights />
 
       <SocialProof />
+
+      <hr className="section-divider" />
+
+      <FaqSection />
 
       <hr className="section-divider" />
 

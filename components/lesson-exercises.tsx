@@ -9,6 +9,7 @@ type LessonExercisesProps = {
 export function LessonExercises({ lesson }: LessonExercisesProps) {
   return (
     <section className="exercise-grid" id="section-exercises">
+      <div className="section-label"><span className="section-label-icon">🏋️</span> Practice</div>
       <article className="exercise-card">
         <h4>Hands-on exercise</h4>
         <ol className="exercise-list">

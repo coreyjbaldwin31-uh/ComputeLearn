@@ -36,6 +36,7 @@ export function NotesSection({
 }: NotesSectionProps) {
   return (
     <section className="notes-grid" id="section-notes">
+      <div className="section-label"><span className="section-label-icon">📝</span> Notes</div>
       <article className="note-card">
         <h4>Saved notes</h4>
         <p>{notesPrompt}</p>

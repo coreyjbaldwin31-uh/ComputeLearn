@@ -945,8 +945,9 @@ select {
 }
 
 .lesson-nav-button:hover {
-  transform: translateY(-1px);
-  border-color: rgba(13, 107, 87, 0.35);
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: 0 4px 16px rgba(13, 107, 87, 0.1);
 }
 
 .lesson-nav-button:disabled {
@@ -2900,6 +2901,454 @@ button[disabled] {
   display: flex;
   flex-direction: column;
   gap: 14px;
+}
+
+/* ---------------------------------------------------------------------------
+   Section labels (icon + text markers for lesson content areas)
+   --------------------------------------------------------------------------- */
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  padding: 0 2px;
+  grid-column: 1 / -1;
+}
+
+.section-label-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* ---------------------------------------------------------------------------
+   Onboarding card (new-user getting-started guide)
+   --------------------------------------------------------------------------- */
+
+.onboarding-card {
+  border: 2px solid var(--accent);
+  border-radius: 22px;
+  padding: 28px 32px;
+  background: linear-gradient(135deg, var(--accent-soft), rgba(198, 139, 44, 0.06));
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin-bottom: 6px;
+}
+
+.onboarding-steps {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.onboarding-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.onboarding-step-number {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.onboarding-step-content h4 {
+  margin: 0 0 4px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.onboarding-step-content p {
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.onboarding-cta {
+  align-self: center;
+  padding: 12px 32px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: #fff;
+  font: inherit;
+  font-size: 0.94rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.onboarding-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(13, 107, 87, 0.25);
+}
+
+[data-theme="dark"] .onboarding-card {
+  background: linear-gradient(135deg, rgba(13, 107, 87, 0.12), rgba(198, 139, 44, 0.06));
+  border-color: rgba(13, 107, 87, 0.4);
+}
+
+/* ---------------------------------------------------------------------------
+   FAQ accordion section
+   --------------------------------------------------------------------------- */
+
+.faq-section {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.faq-heading {
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin: 0 0 8px;
+}
+
+.faq-subheading {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.94rem;
+  margin: 0 0 28px;
+}
+
+.faq-list {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--border);
+}
+
+.faq-item:first-child {
+  border-top: 1px solid var(--border);
+}
+
+.faq-question {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 4px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: color 150ms ease;
+}
+
+.faq-question:hover {
+  color: var(--accent-strong);
+}
+
+.faq-icon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-size: 1.1rem;
+  font-weight: 700;
+  transition: background 150ms ease, transform 200ms ease;
+}
+
+.faq-item.open .faq-icon {
+  background: var(--accent);
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+.faq-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 250ms ease;
+  margin: 0;
+  padding: 0;
+}
+
+.faq-answer[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+
+.faq-answer-inner {
+  overflow: hidden;
+}
+
+.faq-answer-inner p {
+  padding: 0 4px 18px;
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+[data-theme="dark"] .faq-icon {
+  background: rgba(13, 107, 87, 0.18);
+}
+
+[data-theme="dark"] .faq-item.open .faq-icon {
+  background: var(--accent);
+}
+
+/* ---------------------------------------------------------------------------
+   Lesson nav polish
+   --------------------------------------------------------------------------- */
+
+.lesson-nav-arrow {
+  font-size: 1.25rem;
+  line-height: 1;
+  opacity: 0.5;
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.lesson-nav-button:hover .lesson-nav-arrow {
+  opacity: 1;
+}
+
+.lesson-nav-prev:hover .lesson-nav-arrow {
+  transform: translateX(-3px);
+}
+
+.lesson-nav-next:hover .lesson-nav-arrow {
+  transform: translateX(3px);
+}
+
+.lesson-nav-next {
+  margin-left: auto;
+}
+
+/* ---------------------------------------------------------------------------
+   Scroll-reveal animation
+   --------------------------------------------------------------------------- */
+
+@keyframes revealUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.section-grid,
+.exercise-grid,
+.validation-grid,
+.code-exercises-section,
+.notes-grid,
+.lesson-terminal-section,
+.lesson-nav,
+.onboarding-card,
+.feature-highlights,
+.faq-section,
+.social-proof,
+.pricing-callout {
+  animation: revealUp 0.5s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-grid,
+  .exercise-grid,
+  .validation-grid,
+  .code-exercises-section,
+  .notes-grid,
+  .lesson-terminal-section,
+  .lesson-nav,
+  .onboarding-card,
+  .feature-highlights,
+  .faq-section,
+  .social-proof,
+  .pricing-callout {
+    animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Lesson TOC – active highlight
+   --------------------------------------------------------------------------- */
+
+.lesson-toc-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.lesson-toc-link:active {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ---------------------------------------------------------------------------
+   Mobile responsive additions
+   --------------------------------------------------------------------------- */
+
+@media (max-width: 1180px) {
+  .onboarding-steps {
+    grid-template-columns: 1fr;
+  }
+  .faq-section {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 760px) {
+  .onboarding-card {
+    padding: 22px 20px;
+  }
+  .onboarding-steps {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .faq-heading {
+    font-size: 1.3rem;
+  }
+  .faq-question {
+    font-size: 0.92rem;
+    padding: 14px 2px;
+  }
+  .lesson-nav {
+    flex-direction: column;
+  }
+  .lesson-nav-button {
+    width: 100%;
+  }
+  .lesson-nav-next {
+    margin-left: 0;
+  }
+  .section-label {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .onboarding-card {
+    padding: 18px 14px;
+  }
+  .onboarding-step-number {
+    width: 26px;
+    height: 26px;
+    font-size: 0.74rem;
+  }
+  .onboarding-step-content h4 {
+    font-size: 0.84rem;
+  }
+  .faq-heading {
+    font-size: 1.15rem;
+  }
+  .faq-question {
+    font-size: 0.86rem;
+    padding: 12px 0;
+  }
+  .faq-icon {
+    width: 24px;
+    height: 24px;
+    font-size: 0.92rem;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Dark mode – additional consistency
+   --------------------------------------------------------------------------- */
+
+[data-theme="dark"] .lesson-nav-button {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+[data-theme="dark"] .lesson-nav-button:hover {
+  border-color: var(--accent);
+  background: rgba(13, 107, 87, 0.08);
+}
+
+[data-theme="dark"] .section-label {
+  color: var(--muted);
+}
+
+[data-theme="dark"] .lesson-toc-link {
+  border-color: var(--border);
+  color: var(--muted);
+}
+
+[data-theme="dark"] .lesson-toc-link:hover {
+  background: rgba(13, 107, 87, 0.12);
+  color: var(--accent);
+}
+
+[data-theme="dark"] .lesson-toc-link:active {
+  background: var(--accent);
+  color: #fff;
+}
+
+[data-theme="dark"] .note-card textarea,
+[data-theme="dark"] .exercise-card textarea,
+[data-theme="dark"] .exercise-card input {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+[data-theme="dark"] .note-card textarea:focus,
+[data-theme="dark"] .exercise-card textarea:focus,
+[data-theme="dark"] .exercise-card input:focus {
+  border-color: var(--accent);
+}
+
+[data-theme="dark"] .lesson-search-input {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+[data-theme="dark"] .lesson-search-input:focus {
+  border-color: var(--accent);
+}
+
+[data-theme="dark"] .hint-layer {
+  background: rgba(198, 139, 44, 0.1);
+  border-color: rgba(198, 139, 44, 0.3);
+}
+
+[data-theme="dark"] .gate-feedback-banner {
+  background: rgba(198, 139, 44, 0.12);
+  border-color: rgba(198, 139, 44, 0.35);
+}
+
+[data-theme="dark"] .confirm-dialog {
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+[data-theme="dark"] .scaffolding-badge {
+  color: var(--text);
 }
 
 .proof-story-card p {

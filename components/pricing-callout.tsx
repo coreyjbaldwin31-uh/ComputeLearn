@@ -63,11 +63,7 @@ export function PricingCallout({ onBeginLesson }: PricingCalloutProps) {
             Lifetime updates at no extra cost
           </li>
         </ul>
-        <button
-          type="button"
-          className="pricing-cta"
-          onClick={onBeginLesson}
-        >
+        <button type="button" className="pricing-cta" onClick={onBeginLesson}>
           Start learning now →
         </button>
         <p className="pricing-note">

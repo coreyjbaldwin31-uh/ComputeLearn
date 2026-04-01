@@ -45,6 +45,7 @@ export function LessonTransfer({
 
   return (
     <section className="validation-grid" id="section-transfer">
+      <div className="section-label"><span className="section-label-icon">🎯</span> Transfer</div>
       <article className="exercise-card transfer-task-card">
         <div className="exercise-card-header">
           <h4>{transferTask.title}</h4>
