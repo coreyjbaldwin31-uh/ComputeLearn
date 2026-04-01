@@ -17,8 +17,8 @@ import {
 } from "@/lib/progression-engine";
 import type { ReinforcementRecommendation } from "@/lib/reinforcement-engine";
 import { useEffect, useState } from "react";
-import { useFocusTrap } from "./hooks/use-focus-trap";
 import { CollapsiblePanel } from "./collapsible-panel";
+import { useFocusTrap } from "./hooks/use-focus-trap";
 import type { LearnerProfile } from "./hooks/use-learner-profile";
 
 type RailPanelsProps = {

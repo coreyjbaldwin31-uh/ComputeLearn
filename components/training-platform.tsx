@@ -24,34 +24,24 @@ import {
   getPhaseProgressSnapshot,
   isDueForReview,
 } from "@/lib/progression-engine";
-import {
-  buildReflectionPrompts,
-} from "@/lib/reflection-engine";
+import { buildReflectionPrompts } from "@/lib/reflection-engine";
 import {
   getReinforcementQueue,
   getWeakTrackHits,
 } from "@/lib/reinforcement-engine";
-import {
-  evaluateLessonEvidenceGate,
-} from "@/lib/validation-engine";
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { evaluateLessonEvidenceGate } from "@/lib/validation-engine";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CodeExercise } from "./code-exercise";
 import { HeroSection } from "./hero-section";
 import { useAnalyticsDashboards } from "./hooks/use-analytics-dashboards";
 import { useArtifactManager } from "./hooks/use-artifact-manager";
 import {
-  useExerciseValidation,
+  buildExerciseInspection,
+  evaluateExerciseAnswer,
   getHintButtonLabel,
   getHintText,
   isHintExhausted,
-  evaluateExerciseAnswer,
-  buildExerciseInspection,
+  useExerciseValidation,
 } from "./hooks/use-exercise-validation";
 import { useFocusTrap } from "./hooks/use-focus-trap";
 import { useKeyboardShortcuts } from "./hooks/use-keyboard-shortcuts";
@@ -558,7 +548,12 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     labCompletionSummary,
     labTerminalFilesystem,
     labFileContents,
-  } = useLabLifecycle(selectedLesson?.id, labInstances, setLabInstances, addArtifact);
+  } = useLabLifecycle(
+    selectedLesson?.id,
+    labInstances,
+    setLabInstances,
+    addArtifact,
+  );
 
   const {
     validateExercise,
@@ -1010,7 +1005,9 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                     transferTask,
                     transferAnswers[selectedLesson.id] ?? "",
                   );
-                  const showTransferInspection = isInspectionOpen(transferTask.id);
+                  const showTransferInspection = isInspectionOpen(
+                    transferTask.id,
+                  );
 
                   return (
                     <>
@@ -1046,11 +1043,15 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                           className="ghost-button"
                           disabled={
                             selectedLessonTransferPassed ||
-                            isHintExhausted(currentHintLevels[transferTask.id] ?? 0)
+                            isHintExhausted(
+                              currentHintLevels[transferTask.id] ?? 0,
+                            )
                           }
                           onClick={() => advanceHint(transferTask.id)}
                         >
-                          {getHintButtonLabel(currentHintLevels[transferTask.id] ?? 0)}
+                          {getHintButtonLabel(
+                            currentHintLevels[transferTask.id] ?? 0,
+                          )}
                         </button>
                         <button
                           type="button"
@@ -1344,7 +1345,9 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
               <li className="shortcut-item">
                 <span>Toggle dark mode</span>
                 <span className="shortcut-keys">
-                  <kbd className="kbd-hint">Ctrl</kbd>+<kbd className="kbd-hint">Shift</kbd>+<kbd className="kbd-hint">D</kbd>
+                  <kbd className="kbd-hint">Ctrl</kbd>+
+                  <kbd className="kbd-hint">Shift</kbd>+
+                  <kbd className="kbd-hint">D</kbd>
                 </span>
               </li>
             </ul>
