@@ -8,7 +8,8 @@ import type {
   LabValidationResult,
 } from "@/lib/lab-engine";
 import { getDifficultyLabel } from "@/lib/lab-engine";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useFocusTrap } from "./hooks/use-focus-trap";
 
 type LabPanelProps = {
   template: LabTemplate;
@@ -41,6 +42,16 @@ export function LabPanel({
   const [hintLevels, setHintLevels] = useState<Record<number, number>>({});
   const [editingFile, setEditingFile] = useState<string | null>(null);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const resetDialogRef = useFocusTrap(showResetConfirm);
+
+  useEffect(() => {
+    if (!showResetConfirm) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setShowResetConfirm(false);
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [showResetConfirm]);
 
   function handleValidate() {
     const result = onValidate();
@@ -120,7 +131,11 @@ export function LabPanel({
             onClick={() => setShowResetConfirm(false)}
           >
             <div
+              ref={resetDialogRef}
               className="confirm-dialog"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Confirm lab reset"
               onClick={(e) => e.stopPropagation()}
             >
               <h4>Reset this lab?</h4>
@@ -241,7 +256,14 @@ export function LabPanel({
           className="confirm-backdrop"
           onClick={() => setShowResetConfirm(false)}
         >
-          <div className="confirm-dialog" onClick={(e) => e.stopPropagation()}>
+          <div
+            ref={resetDialogRef}
+            className="confirm-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Confirm lab reset"
+            onClick={(e) => e.stopPropagation()}
+          >
             <h4>Reset this lab?</h4>
             <p>
               All your file edits, code submissions, and validation results will

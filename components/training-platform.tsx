@@ -82,6 +82,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import { CodeExercise } from "./code-exercise";
+import { useFocusTrap } from "./hooks/use-focus-trap";
 import { useLearnerProfile } from "./hooks/use-learner-profile";
 import { InspectionPanel } from "./inspection-panel";
 import { LabPanel } from "./lab-panel";
@@ -247,6 +248,9 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const { theme, toggle: toggleTheme } = useTheme();
 
   const contentRef = useRef<HTMLElement>(null);
+
+  const resetDialogRef = useFocusTrap(showResetConfirm);
+  const keyboardDialogRef = useFocusTrap(showKeyboardHelp);
 
   const [todayKey, setTodayKey] = useState(() => new Date().toDateString());
 
@@ -1025,8 +1029,11 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
         navigateToEntry(nextEntry);
       } else if (e.key === "k" && prevEntry) {
         navigateToEntry(prevEntry);
-      } else if (e.key === "?") {
+      } else if (e.key === "?" && !e.ctrlKey && !e.metaKey) {
         setShowKeyboardHelp((v) => !v);
+      } else if (e.key === "d" && (e.ctrlKey || e.metaKey) && e.shiftKey) {
+        e.preventDefault();
+        toggleTheme();
       } else if (e.key === "Escape") {
         setShowKeyboardHelp(false);
         setShowResetConfirm(false);
@@ -1035,7 +1042,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
 
     window.addEventListener("keydown", handleKeyboard);
     return () => window.removeEventListener("keydown", handleKeyboard);
-  }, [navigateToEntry, nextEntry, prevEntry]);
+  }, [navigateToEntry, nextEntry, prevEntry, toggleTheme]);
 
   // Scroll content into view when lesson changes
   useEffect(() => {
@@ -1092,6 +1099,14 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
 
   const isNewUser = Object.keys(progress).length === 0;
 
+  const isCurriculumComplete =
+    allLessonsFlat.length > 0 &&
+    allLessonsFlat.every((entry) => progress[entry.lesson.id]);
+
+  const nextUnfinishedEntry = allLessonsFlat.find(
+    (entry) => !progress[entry.lesson.id],
+  );
+
   return (
     <main className="shell">
       <a href="#lesson-content" className="skip-link">
@@ -1114,7 +1129,17 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
         <h1>{curriculum.productTitle}</h1>
         <p>{curriculum.productVision}</p>
 
-        {isNewUser ? (
+        {isCurriculumComplete ? (
+          <div className="welcome-banner completion-banner">
+            <h3>🎓 Curriculum complete!</h3>
+            <p>
+              You have finished all {allLessonsFlat.length} lessons across{" "}
+              {curriculum.phases.length} phases. Revisit any lesson to
+              strengthen weak competencies, or explore independent labs to
+              sharpen your skills further.
+            </p>
+          </div>
+        ) : isNewUser ? (
           <div className="welcome-banner">
             <h3>Welcome — start your first lesson</h3>
             <p>
@@ -1126,11 +1151,14 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
               type="button"
               className="welcome-cta"
               onClick={() => {
-                setSelectedLessonId(selectedLesson.id);
+                if (nextUnfinishedEntry) {
+                  setSelectedPhaseId(nextUnfinishedEntry.phase.id);
+                  setSelectedLessonId(nextUnfinishedEntry.lesson.id);
+                }
                 contentRef.current?.scrollIntoView({ behavior: "smooth" });
               }}
             >
-              Begin lesson: {selectedLesson.title} →
+              Begin lesson: {nextUnfinishedEntry?.lesson.title ?? selectedLesson.title} →
             </button>
           </div>
         ) : (
@@ -1288,6 +1316,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                 onClick={() => setShowResetConfirm(false)}
               >
                 <div
+                  ref={resetDialogRef}
                   className="confirm-dialog"
                   role="dialog"
                   aria-modal="true"
@@ -1558,6 +1587,17 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                           type="button"
                           className="ghost-button"
                           disabled={
+                            selectedLessonTransferPassed ||
+                            isHintExhausted(currentHintLevels[transferTask.id] ?? 0)
+                          }
+                          onClick={() => advanceHint(transferTask.id)}
+                        >
+                          {getHintButtonLabel(currentHintLevels[transferTask.id] ?? 0)}
+                        </button>
+                        <button
+                          type="button"
+                          className="ghost-button"
+                          disabled={
                             !(transferAnswers[selectedLesson.id] ?? "").trim()
                           }
                           onClick={() => toggleInspection(transferTask.id)}
@@ -1582,7 +1622,17 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                           {transferFeedback[selectedLesson.id]}
                         </div>
                       ) : null}
-                      <div className="hint-layer">{transferTask.hint}</div>
+                      {getHintText(
+                        currentHintLevels[transferTask.id] ?? 0,
+                        transferTask.hint,
+                      ) !== null ? (
+                        <div className="hint-layer">
+                          {getHintText(
+                            currentHintLevels[transferTask.id] ?? 0,
+                            transferTask.hint,
+                          )}
+                        </div>
+                      ) : null}
                       {showTransferInspection ? (
                         <InspectionPanel
                           inspection={transferInspection}
@@ -1869,6 +1919,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
           onClick={() => setShowKeyboardHelp(false)}
         >
           <div
+            ref={keyboardDialogRef}
             className="keyboard-overlay"
             role="dialog"
             aria-modal="true"
@@ -1906,6 +1957,12 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                 <span>Close overlay</span>
                 <span className="shortcut-keys">
                   <kbd className="kbd-hint">Esc</kbd>
+                </span>
+              </li>
+              <li className="shortcut-item">
+                <span>Toggle dark mode</span>
+                <span className="shortcut-keys">
+                  <kbd className="kbd-hint">Ctrl</kbd>+<kbd className="kbd-hint">Shift</kbd>+<kbd className="kbd-hint">D</kbd>
                 </span>
               </li>
             </ul>

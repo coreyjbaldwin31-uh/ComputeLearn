@@ -728,6 +728,66 @@ select {
   }
 }
 
+@media (max-width: 480px) {
+  .shell {
+    padding-top: 12px;
+  }
+
+  .hero {
+    padding: 16px;
+  }
+
+  .hero h1 {
+    font-size: 1.4rem;
+  }
+
+  .eyebrow {
+    font-size: 0.68rem;
+  }
+
+  .exercise-card,
+  .stat-card,
+  .panel {
+    padding: 14px;
+  }
+
+  pre,
+  code,
+  .code-textarea,
+  .terminal-body {
+    font-size: 0.75rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .toolbar {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .toolbar button,
+  .validate-button,
+  .ghost-button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .theme-toggle {
+    padding: 6px 10px;
+    font-size: 0.72rem;
+  }
+
+  .welcome-banner {
+    padding: 14px;
+  }
+
+  .confirm-dialog {
+    min-width: auto;
+    width: calc(100vw - 32px);
+    margin: 0 16px;
+  }
+}
+
 /* ── Theme toggle ────────────────────────────────────────── */
 
 .theme-toggle {
@@ -1544,9 +1604,9 @@ button[disabled] {
   color: #4a3a8a;
 }
 
-[data-theme="dark"] .assessment-reasoning { color: var(--gold); }
-[data-theme="dark"] .assessment-debugging { color: #f7768e; }
-[data-theme="dark"] .assessment-transfer { color: #bb9af7; }
+[data-theme="dark"] .assessment-reasoning { color: var(--gold); background: rgba(229, 166, 68, 0.15); }
+[data-theme="dark"] .assessment-debugging { color: #f7768e; background: rgba(247, 118, 142, 0.15); }
+[data-theme="dark"] .assessment-transfer { color: #bb9af7; background: rgba(187, 154, 247, 0.15); }
 
 /* ── Scaffolding level badge ─────────────────────────────── */
 
@@ -2343,6 +2403,16 @@ button[disabled] {
 .welcome-cta:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 14px rgba(13, 107, 87, 0.3);
+}
+
+.completion-banner {
+  background: linear-gradient(135deg, rgba(45, 212, 168, 0.15), rgba(198, 139, 44, 0.12));
+  border-color: var(--gold);
+}
+
+.completion-banner h3 {
+  font-size: 1.6rem;
+  color: var(--gold);
 }
 
 /* ---------------------------------------------------------------------------

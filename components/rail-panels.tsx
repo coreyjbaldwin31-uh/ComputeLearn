@@ -16,7 +16,8 @@ import {
   isDueForReview,
 } from "@/lib/progression-engine";
 import type { ReinforcementRecommendation } from "@/lib/reinforcement-engine";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useFocusTrap } from "./hooks/use-focus-trap";
 import { CollapsiblePanel } from "./collapsible-panel";
 import type { LearnerProfile } from "./hooks/use-learner-profile";
 
@@ -80,6 +81,16 @@ export function RailPanels({
   phaseMilestoneStatus,
 }: RailPanelsProps) {
   const [showResetAllConfirm, setShowResetAllConfirm] = useState(false);
+  const resetAllDialogRef = useFocusTrap(showResetAllConfirm);
+
+  useEffect(() => {
+    if (!showResetAllConfirm) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setShowResetAllConfirm(false);
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [showResetAllConfirm]);
 
   return (
     <aside className="rail">
@@ -550,6 +561,7 @@ export function RailPanels({
           onClick={() => setShowResetAllConfirm(false)}
         >
           <div
+            ref={resetAllDialogRef}
             className="confirm-dialog"
             role="dialog"
             aria-modal="true"
