@@ -1,32 +1,20 @@
 "use client";
 
-import type { Curriculum, Exercise, Lesson } from "@/data/curriculum";
+import type { Curriculum, Lesson } from "@/data/curriculum";
 import { buildArtifactBrowserSummary } from "@/lib/artifact-browser-engine";
 import { buildArtifactCompletionSummary } from "@/lib/artifact-completion-engine";
 import type { ArtifactRecord } from "@/lib/artifact-engine";
 import {
   type AttemptRecord,
-  buildArtifactRecord,
   buildAttemptRecord,
   createId,
   formatCompletionContent,
 } from "@/lib/artifact-engine";
-import {
-  buildArtifactExportDocument,
-  buildArtifactExportFilename,
-} from "@/lib/artifact-export-engine";
 import { buildAttemptAnalyticsSummary } from "@/lib/attempt-analytics-engine";
 import { buildCompetencyDashboardSummary } from "@/lib/competency-dashboard-engine";
 import { getWeakCompetencyTracks } from "@/lib/competency-engine";
-import {
-  advanceHintLevel,
-  getHintButtonLabel,
-  getHintText,
-  isHintExhausted,
-} from "@/lib/hint-engine";
 import { buildIndependentLabSummary } from "@/lib/independent-lab-engine";
 import { buildIndependentReadinessSummary } from "@/lib/independent-readiness-engine";
-import { buildExerciseInspection } from "@/lib/inspection-engine";
 import type { LabInstance } from "@/lib/lab-engine";
 import { evaluatePhaseMilestoneStatus } from "@/lib/milestone-engine";
 import { buildMilestonePassRateSummary } from "@/lib/milestone-pass-rate-engine";
@@ -48,7 +36,6 @@ import {
 } from "@/lib/progression-engine";
 import {
   buildReflectionPrompts,
-  formatReflectionArtifactContent,
 } from "@/lib/reflection-engine";
 import {
   getReinforcementQueue,
@@ -56,7 +43,6 @@ import {
 } from "@/lib/reinforcement-engine";
 import { buildPhaseTransferAnalytics } from "@/lib/transfer-analytics-engine";
 import {
-  evaluateExerciseAnswer,
   evaluateLessonEvidenceGate,
 } from "@/lib/validation-engine";
 import {
@@ -67,7 +53,17 @@ import {
   useState,
 } from "react";
 import { CodeExercise } from "./code-exercise";
+import { useArtifactManager } from "./hooks/use-artifact-manager";
+import {
+  useExerciseValidation,
+  getHintButtonLabel,
+  getHintText,
+  isHintExhausted,
+  evaluateExerciseAnswer,
+  buildExerciseInspection,
+} from "./hooks/use-exercise-validation";
 import { useFocusTrap } from "./hooks/use-focus-trap";
+import { useKeyboardShortcuts } from "./hooks/use-keyboard-shortcuts";
 import { useLabLifecycle } from "./hooks/use-lab-lifecycle";
 import { useLearnerProfile } from "./hooks/use-learner-profile";
 import { useLocalStorageState } from "./hooks/use-local-storage-state";
@@ -129,10 +125,6 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   );
   const [answers, setAnswers] = useState<AnswerState>({});
   const [feedback, setFeedback] = useState<Record<string, string>>({});
-  const [hintLevels, setHintLevels] = useState<Record<string, number>>({});
-  const [inspectionOpen, setInspectionOpen] = useState<Record<string, boolean>>(
-    {},
-  );
   const [transferAnswers, setTransferAnswers] = useState<
     Record<string, string>
   >({});
@@ -145,7 +137,6 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const [showCompletedOnly, setShowCompletedOnly] = useState(false);
   const [showKeyboardHelp, setShowKeyboardHelp] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
-  const [saveFlash, setSaveFlash] = useState<string | null>(null);
   const [reviews, setReviews] = useLocalStorageState<ReviewState>(
     reviewsStorageKey,
     emptyReviews,
@@ -412,24 +403,22 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     });
   }, [reviews, selectedLesson, selectedLessonWeakTracks]);
 
-  function addArtifact(
-    type: ArtifactRecord["type"],
-    title: string,
-    content: string,
-    lessonId: string,
-  ) {
-    const trimmed = content.trim();
-    if (!trimmed) return;
-    const nextArtifact = buildArtifactRecord({
-      id: createId("artifact"),
-      lessonId,
-      type,
-      title,
-      content: trimmed,
-      createdAt: new Date().toISOString(),
-    });
-    setArtifacts((current) => [nextArtifact, ...current].slice(0, 250));
-  }
+  const {
+    addArtifact,
+    saveNoteArtifact,
+    saveReflectionArtifact,
+    exportArtifacts,
+    saveFlash,
+  } = useArtifactManager({
+    artifacts,
+    setArtifacts,
+    notes,
+    reflections,
+    selectedLesson,
+    reflectionPrompts,
+    selectedLessonWeakTracks,
+    allLessonsFlat,
+  });
 
   const navigateToEntry = useCallback(
     (entry: {
@@ -638,110 +627,6 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     setAnswers((current) => ({ ...current, [exerciseId]: value }));
   }
 
-  function validateExercise(exercise: Exercise) {
-    if (!selectedLesson) return;
-    const answer = answers[exercise.id] ?? "";
-    const validation = evaluateExerciseAnswer(exercise, answer);
-    const passed = validation.passed;
-
-    setFeedback((current) => ({
-      ...current,
-      [exercise.id]: passed
-        ? exercise.successMessage
-        : (validation.hint ??
-          "Not quite right. Check your answer and try again."),
-    }));
-
-    setLessonGateFeedback(null);
-
-    const record = buildAttemptRecord({
-      id: createId("attempt"),
-      lessonId: selectedLesson.id,
-      exerciseId: exercise.id,
-      assessmentType: exercise.assessmentType ?? "action",
-      answer,
-      passed,
-      attemptedAt: new Date().toISOString(),
-    });
-    setAttempts((current) => [record, ...current].slice(0, 500));
-  }
-
-  function validateTransferTask() {
-    if (!selectedLesson?.transferTask) return;
-    const answer = transferAnswers[selectedLesson.id] ?? "";
-    const validation = evaluateExerciseAnswer(
-      selectedLesson.transferTask,
-      answer,
-    );
-    const passed = validation.passed;
-
-    setTransferFeedback((current) => ({
-      ...current,
-      [selectedLesson.id]: passed
-        ? selectedLesson.transferTask!.successMessage
-        : (validation.hint ??
-          "Transfer response needs more evidence. Refine your plan and try again."),
-    }));
-
-    setLessonGateFeedback(null);
-
-    const record = buildAttemptRecord({
-      id: createId("attempt"),
-      lessonId: selectedLesson.id,
-      exerciseId: selectedLesson.transferTask.id,
-      assessmentType: "transfer",
-      answer,
-      passed,
-      attemptedAt: new Date().toISOString(),
-    });
-    setAttempts((current) => [record, ...current].slice(0, 500));
-
-    if (passed) {
-      setTransferProgress((current) => ({
-        ...current,
-        [selectedLesson.id]: true,
-      }));
-      addArtifact(
-        "transfer",
-        `Transfer evidence: ${selectedLesson.title}`,
-        answer,
-        selectedLesson.id,
-      );
-    }
-  }
-
-  function showSaveConfirmation(label: string) {
-    setSaveFlash(label);
-    setTimeout(() => setSaveFlash(null), 2000);
-  }
-
-  function saveNoteArtifact(lessonId: string) {
-    const note = notes[lessonId] ?? "";
-    addArtifact("note", "Lesson note", note, lessonId);
-    showSaveConfirmation("Note saved ✓");
-  }
-
-  function saveReflectionArtifact(lessonId: string) {
-    if (!selectedLesson || selectedLesson.id !== lessonId) return;
-    const reflection = reflections[lessonId] ?? "";
-    const content = formatReflectionArtifactContent(
-      selectedLesson.title,
-      reflectionPrompts,
-      reflection,
-      selectedLessonWeakTracks,
-    );
-    addArtifact("reflection", "Reflection checkpoint", content, lessonId);
-    showSaveConfirmation("Reflection saved ✓");
-  }
-
-  function advanceHint(exerciseId: string) {
-    const key = `${selectedLesson?.id ?? ""}:${exerciseId}`;
-    setHintLevels((prev) => ({
-      ...prev,
-      [key]: advanceHintLevel(prev[key] ?? 0),
-    }));
-  }
-
   // --- Lab lifecycle ---
 
   const {
@@ -760,72 +645,43 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     labFileContents,
   } = useLabLifecycle(selectedLesson?.id, labInstances, setLabInstances, addArtifact);
 
-  function toggleInspection(exerciseId: string) {
-    const key = `${selectedLesson?.id ?? ""}:${exerciseId}`;
-    setInspectionOpen((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
-  }
+  const {
+    validateExercise,
+    validateTransferTask,
+    advanceHint,
+    toggleInspection,
+    currentHintLevels,
+    isInspectionOpen,
+    selectedLessonTransferPassed,
+    setHintLevels,
+  } = useExerciseValidation({
+    selectedLesson,
+    answers,
+    setFeedback,
+    setLessonGateFeedback,
+    setAttempts,
+    transferAnswers,
+    setTransferFeedback,
+    transferProgress,
+    setTransferProgress,
+    addArtifact,
+  });
 
-  function exportArtifacts(lessonId?: string) {
-    const exportDocument = buildArtifactExportDocument(
-      artifacts,
-      allLessonsFlat,
-      {
-        lessonId,
-      },
-    );
-    const blob = new Blob([exportDocument], {
-      type: "text/markdown;charset=utf-8",
-    });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = buildArtifactExportFilename(lessonId);
-    document.body.append(link);
-    link.click();
-    link.remove();
-    URL.revokeObjectURL(url);
-  }
-
-  useEffect(() => {
-    function handleKeyboard(e: KeyboardEvent) {
-      const tag = (e.target as HTMLElement)?.tagName;
-      if (tag === "INPUT" || tag === "TEXTAREA") return;
-
-      if (e.key === "j" && nextEntry) {
-        navigateToEntry(nextEntry);
-      } else if (e.key === "k" && prevEntry) {
-        navigateToEntry(prevEntry);
-      } else if (e.key === "?" && !e.ctrlKey && !e.metaKey) {
-        setShowKeyboardHelp((v) => !v);
-      } else if (e.key === "d" && (e.ctrlKey || e.metaKey) && e.shiftKey) {
-        e.preventDefault();
-        toggleTheme();
-      } else if (e.key === "Escape") {
-        setShowKeyboardHelp(false);
-        setShowResetConfirm(false);
-      }
-    }
-
-    window.addEventListener("keydown", handleKeyboard);
-    return () => window.removeEventListener("keydown", handleKeyboard);
-  }, [navigateToEntry, nextEntry, prevEntry, toggleTheme]);
+  useKeyboardShortcuts({
+    navigateNext: nextEntry ? () => navigateToEntry(nextEntry) : null,
+    navigatePrev: prevEntry ? () => navigateToEntry(prevEntry) : null,
+    toggleTheme,
+    toggleKeyboardHelp: () => setShowKeyboardHelp((v) => !v),
+    closeOverlays: () => {
+      setShowKeyboardHelp(false);
+      setShowResetConfirm(false);
+    },
+  });
 
   // Scroll content into view when lesson changes
   useEffect(() => {
     contentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [selectedLessonId]);
-
-  const currentHintLevels = useMemo(() => {
-    const prefix = `${selectedLesson?.id ?? ""}:`;
-    return Object.fromEntries(
-      Object.entries(hintLevels)
-        .filter(([k]) => k.startsWith(prefix))
-        .map(([k, v]) => [k.slice(prefix.length), v]),
-    );
-  }, [hintLevels, selectedLesson?.id]);
 
   if (
     !selectedPhase ||
@@ -861,9 +717,6 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const phaseMilestoneStatus = evaluatePhaseMilestoneStatus(
     phaseExitStatus,
     phaseReinforcementQueue.length,
-  );
-  const selectedLessonTransferPassed = Boolean(
-    transferProgress[selectedLesson.id],
   );
 
   const isNewUser = Object.keys(progress).length === 0;
@@ -1221,8 +1074,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                 exercise,
                 exerciseAnswer,
               );
-              const inspectionKey = `${selectedLesson.id}:${exercise.id}`;
-              const showInspection = Boolean(inspectionOpen[inspectionKey]);
+              const showInspection = isInspectionOpen(exercise.id);
 
               return (
                 <article className="exercise-card" key={exercise.id}>
@@ -1318,10 +1170,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                     transferTask,
                     transferAnswers[selectedLesson.id] ?? "",
                   );
-                  const transferInspectionKey = `${selectedLesson.id}:${transferTask.id}`;
-                  const showTransferInspection = Boolean(
-                    inspectionOpen[transferInspectionKey],
-                  );
+                  const showTransferInspection = isInspectionOpen(transferTask.id);
 
                   return (
                     <>
