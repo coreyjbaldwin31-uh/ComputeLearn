@@ -284,6 +284,8 @@ export const curriculum: Curriculum = {
               notesPrompt: "Write down the commands to check CPU, memory, and disk space. Note anything surprising you found about your system.",
               exercises: [
                 { id: "process-list", title: "List processes", prompt: "Enter a PowerShell command that shows running processes.", placeholder: "Get-...", validationMode: "includes", acceptedAnswers: ["get-process", "ps"], successMessage: "Correct. Knowing what is running is the first step to understanding system behavior.", hint: "The cmdlet name describes exactly what it does \u2014 it gets processes.", assessmentType: "action" },
+                { id: "disk-space", title: "Check disk space", prompt: "What PowerShell cmdlet shows disk volume information including free space?", placeholder: "Get-...", validationMode: "includes", acceptedAnswers: ["get-volume"], successMessage: "Correct. Get-Volume shows drive letters, sizes, and free space so you can assess storage before it becomes a problem.", hint: "The cmdlet gets information about storage volumes.", assessmentType: "action" },
+                { id: "high-cpu-reasoning", title: "Investigate high CPU", prompt: "A machine feels slow. You open Task Manager and see one process using 95% CPU. What should you do before killing it?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["identify", "what it is", "name", "research", "check", "look up"], successMessage: "Correct. Always identify the process first \u2014 it could be a critical system service or an active operation you do not want to interrupt.", hint: "Killing an unknown process can cause data loss or system instability.", assessmentType: "reasoning" },
               ],
               transferTask: {
                 id: "transfer-system-triage",
@@ -480,6 +482,8 @@ export const curriculum: Curriculum = {
               notesPrompt: "Capture one repetitive workflow from your own computer life and describe how you would sandbox it before automating it.",
               exercises: [
                 { id: "safety-principle", title: "Safety first", prompt: "Type the principle that should come before writing automation that modifies many files.", placeholder: "Short phrase", validationMode: "includes", acceptedAnswers: ["dry run", "preview", "test in sandbox", "reversible"], successMessage: "Correct. Safe automation starts with previewing, isolating, and making rollback possible.", hint: "Think about what you should do before bulk edits hit real files.", assessmentType: "action" },
+                { id: "variable-store", title: "Store a value", prompt: "In PowerShell, what symbol precedes a variable name when you assign or read it?", placeholder: "Single character", validationMode: "includes", acceptedAnswers: ["$"], successMessage: "Correct. PowerShell uses $ to declare and reference variables, e.g. $fileName = 'report.txt'.", hint: "It is the same symbol used for variables in many scripting languages.", assessmentType: "action" },
+                { id: "automation-scope", title: "Scope the change", prompt: "Why is it important to define the scope of an automation before running it?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["limit", "control", "unintended", "wrong files", "boundary", "target", "only affect"], successMessage: "Correct. Without clear scope, automation can modify files or folders you did not intend to touch.", hint: "Think about what happens if a script runs against the wrong directory.", assessmentType: "reasoning" },
               ],
               transferTask: {
                 id: "transfer-automation-plan",
@@ -644,6 +648,7 @@ export const curriculum: Curriculum = {
               notesPrompt: "Design your ideal vault folder structure. List the categories that matter most for your learning.",
               exercises: [
                 { id: "vault-structure", title: "Vault categories", prompt: "Name at least three folder categories you would create in an engineering knowledge vault.", placeholder: "e.g. Commands, Concepts, ...", validationMode: "includes", acceptedAnswers: ["commands", "concepts", "projects", "logs", "notes", "debugging", "references"], successMessage: "Good structure. Organized vaults make knowledge retrieval fast.", hint: "Think about the types of information an engineer needs to record.", assessmentType: "action" },
+                { id: "backlink-purpose", title: "Why backlink?", prompt: "What is the purpose of creating backlinks between notes in a knowledge vault?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["connect", "link", "relationship", "related", "discover", "navigate", "find"], successMessage: "Correct. Backlinks create a web of connections so you can discover related knowledge and navigate between topics.", hint: "Think about how one concept relates to another and how you would find those connections later.", assessmentType: "reasoning" },
               ],
               transferTask: {
                 id: "transfer-vault-design",
@@ -831,6 +836,7 @@ export const curriculum: Curriculum = {
               notesPrompt: "List the five most important fields in package.json and what each one controls.",
               exercises: [
                 { id: "npm-install", title: "Install dependencies", prompt: "What command installs all dependencies listed in package.json?", placeholder: "npm ...", validationMode: "includes", acceptedAnswers: ["npm install", "npm i"], successMessage: "Correct. npm install reads package.json and downloads everything the project needs.", hint: "It is the most common first command when cloning a project.", assessmentType: "action" },
+                { id: "dev-vs-prod-deps", title: "Dev vs production dependencies", prompt: "What is the difference between dependencies and devDependencies in package.json?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["production", "development", "build", "runtime", "deploy", "test", "not needed in production"], successMessage: "Correct. dependencies are needed at runtime; devDependencies are only needed during development (testing, building, linting).", hint: "Think about which packages the app needs to run vs. which are only used while building or testing.", assessmentType: "reasoning" },
               ],
               transferTask: {
                 id: "transfer-project-onboard",
@@ -1390,6 +1396,7 @@ export const curriculum: Curriculum = {
               notesPrompt: "Write the commands for creating, switching, and merging a branch. Note common mistakes to avoid.",
               exercises: [
                 { id: "branch-create", title: "Create a branch", prompt: "What Git command creates a new branch and switches to it?", placeholder: "git ...", validationMode: "includes", acceptedAnswers: ["git checkout -b", "git switch -c"], successMessage: "Correct. This single command creates and positions you on the new branch.", hint: "There are two ways: one with checkout and one with switch.", assessmentType: "action" },
+                { id: "branch-list", title: "List branches", prompt: "What Git command shows all local branches and highlights the one you are currently on?", placeholder: "git ...", validationMode: "includes", acceptedAnswers: ["git branch"], successMessage: "Correct. git branch lists local branches and marks the active one with an asterisk.", hint: "The command name is simply the concept itself.", assessmentType: "action" },
               ],
               transferTask: {
                 id: "transfer-branching-strategy",
@@ -1555,6 +1562,7 @@ export const curriculum: Curriculum = {
               notesPrompt: "Document the steps to create a Postman collection from scratch. Note how variables make it flexible.",
               exercises: [
                 { id: "postman-env-var", title: "Environment variables", prompt: "In Postman, how do you reference an environment variable in a URL? Use double curly braces syntax.", placeholder: "{{...}}", validationMode: "includes", acceptedAnswers: ["{{", "}}"], successMessage: "Correct. {{variable_name}} is how Postman injects dynamic values.", hint: "Variables are wrapped in a special syntax using curly braces.", assessmentType: "action" },
+                { id: "postman-collection-benefit", title: "Why use collections?", prompt: "Why should you organize API requests into a Postman collection instead of sending them individually?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["reuse", "organize", "share", "repeat", "automate", "group", "save", "portable"], successMessage: "Correct. Collections let you organize, reuse, share, and automate groups of related requests.", hint: "Think about what happens when you need to re-run the same set of requests tomorrow or share them with a teammate.", assessmentType: "reasoning" },
               ],
               transferTask: {
                 id: "transfer-postman-collection",
@@ -1754,6 +1762,7 @@ export const curriculum: Curriculum = {
               notesPrompt: "Write a Dockerfile template you can reuse. Annotate each line with its purpose.",
               exercises: [
                 { id: "dockerfile-from", title: "Base image", prompt: "What Dockerfile instruction specifies the base image?", placeholder: "Instruction name", validationMode: "exact", acceptedAnswers: ["FROM", "from"], successMessage: "Correct. FROM is always the first instruction in a Dockerfile.", hint: "Every Docker image is built FROM another image.", assessmentType: "action" },
+                { id: "dockerfile-layer-order", title: "Layer ordering", prompt: "Why should you COPY package.json and run npm install before copying the rest of your source code in a Dockerfile?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["cache", "layer", "rebuild", "change", "faster", "avoid", "skip"], successMessage: "Correct. Copying package.json first lets Docker cache the npm install layer. Source code changes then skip the slow install step.", hint: "Think about what Docker has to re-run when a layer changes.", assessmentType: "reasoning" },
               ],
               transferTask: {
                 id: "transfer-dockerfile-review",
@@ -1800,6 +1809,7 @@ export const curriculum: Curriculum = {
               notesPrompt: "Write a template for engineering prompts. Include sections for task, constraints, context, and verification.",
               exercises: [
                 { id: "prompt-improve", title: "Improve the prompt", prompt: "A developer says \u2018write a function to sort data.\u2019 Name one critical missing constraint.", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["type", "language", "order", "input", "format", "ascending", "descending", "what kind"], successMessage: "Correct. Without specifying the data type, language, or sort order, the AI is guessing.", hint: "Think about what you would need to know before writing the function yourself.", assessmentType: "reasoning" },
+                { id: "prompt-edge-cases", title: "Specify edge cases", prompt: "Why should an engineering prompt include edge cases or error conditions for the AI to handle?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["miss", "ignore", "skip", "forget", "handle", "robust", "error", "unexpected", "assume"], successMessage: "Correct. Without explicit edge cases, AI will often produce code that only handles the happy path and breaks on unexpected input.", hint: "Think about what AI-generated code usually leaves out when the prompt does not mention it.", assessmentType: "reasoning" },
               ],
               transferTask: {
                 id: "transfer-prompt-engineering",
@@ -2097,6 +2107,7 @@ export const curriculum: Curriculum = {
               notesPrompt: "List three refactoring moves you know (e.g., extract function, rename variable) and when you would use each.",
               exercises: [
                 { id: "refactor-safety", title: "Safety first", prompt: "What must be in place before refactoring to ensure you don't break behavior?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["tests", "test suite", "unit tests"], successMessage: "Correct. Tests are the safety net that make refactoring possible without fear.", hint: "Think about what would catch a regression automatically.", assessmentType: "reasoning" },
+                { id: "refactor-extract", title: "Extract function", prompt: "You see the same five lines of code copied into three different functions. What refactoring move should you apply?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["extract", "shared function", "reusable function", "helper", "common function"], successMessage: "Correct. Extract the shared logic into a single named function and call it from all three places.", hint: "The goal is to have one source of truth for that logic instead of three copies.", assessmentType: "action" },
               ],
               transferTask: {
                 id: "transfer-refactoring",
@@ -2294,6 +2305,7 @@ export const curriculum: Curriculum = {
               notesPrompt: "Document the decisions you made: language choice, argument parsing approach, test strategy. Explain one tradeoff you encountered.",
               exercises: [
                 { id: "cli-interface", title: "Define the interface", prompt: "Before writing code for a CLI tool, what should you define first?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["interface", "arguments", "flags", "input", "output", "contract"], successMessage: "Correct. Defining the interface first prevents you from building a tool that is hard to use.", hint: "Think about what a user of your tool needs to know before running it.", assessmentType: "reasoning" },
+                { id: "cli-test-timing", title: "When to test", prompt: "When building a CLI tool incrementally, at what point should you write tests?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["after each", "each function", "as you go", "incrementally", "every step", "each major"], successMessage: "Correct. Write tests after each major function, not after the whole project is built. Incremental testing catches issues early.", hint: "Think about the cost of finding a bug in the last function vs. the first.", assessmentType: "reasoning" },
               ],
               transferTask: {
                 id: "transfer-cli-delivery",
@@ -2346,6 +2358,7 @@ export const curriculum: Curriculum = {
               notesPrompt: "Write up the architecture decisions you made. What would you change if you built this again?",
               exercises: [
                 { id: "crud-model-first", title: "Data model priority", prompt: "Why should you design the data model before writing API routes for a CRUD application?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["schema", "structure", "fields", "model", "constrain", "shape"], successMessage: "Correct. The data model defines the shape of everything else — routes, validation, and UI all follow from it.", hint: "Think about what your routes and validation depend on.", assessmentType: "reasoning" },
+                { id: "crud-validation-boundary", title: "Where to validate", prompt: "Should input validation happen in the frontend UI, the API route, or both? Why?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["both", "api", "server", "boundary", "bypass", "trust"], successMessage: "Correct. Validate at the API boundary because the UI can be bypassed. Frontend validation improves UX but the server is the authority.", hint: "Think about what happens if someone sends a request directly to the API, skipping the UI.", assessmentType: "reasoning" },
               ],
               transferTask: {
                 id: "transfer-crud-variation",
@@ -2398,6 +2411,7 @@ export const curriculum: Curriculum = {
               notesPrompt: "Write your personal debugging protocol in five steps. Note which step most engineers skip.",
               exercises: [
                 { id: "root-cause-vs-symptom", title: "Root cause vs symptom", prompt: "A server throws a 500 error. Is the 500 error the root cause? Why or why not?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["symptom", "not the cause", "result", "what happened", "deeper"], successMessage: "Correct. The 500 error is the symptom. The root cause is the condition that triggered it — which requires investigation to find.", hint: "Think about the difference between what you observe and why it happened.", assessmentType: "debugging" },
+                { id: "reproduce-first", title: "Reproduce before fixing", prompt: "Why must you reproduce a bug reliably before attempting to fix it?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["verify", "confirm", "know", "prove", "same", "consistent", "reliable", "actually fixed"], successMessage: "Correct. Without reliable reproduction, you cannot confirm the fix works — you might fix the wrong thing or mask the real issue.", hint: "Think about how you would know your fix actually solved the problem.", assessmentType: "debugging" },
               ],
               transferTask: {
                 id: "transfer-debugging-protocol",
