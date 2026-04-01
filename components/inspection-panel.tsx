@@ -10,14 +10,18 @@ export function InspectionPanel({
   keyPrefix = "",
 }: InspectionPanelProps) {
   return (
-    <div className="inspection-panel">
+    <aside
+      className="inspection-panel"
+      role="region"
+      aria-label="Response inspection"
+    >
       <div className="inspection-row">
         <span className="inspection-label">Skill gap</span>
         <span>{inspection.probableSkillGap}</span>
       </div>
       <div className="inspection-grid">
         <div>
-          <h5>Matched signals</h5>
+          <h5 className="inspection-matched">✓ Matched signals</h5>
           <ul className="inspection-list">
             {(inspection.matchedSignals.length > 0
               ? inspection.matchedSignals
@@ -28,7 +32,7 @@ export function InspectionPanel({
           </ul>
         </div>
         <div>
-          <h5>Missing signals</h5>
+          <h5 className="inspection-missing">✗ Missing signals</h5>
           <ul className="inspection-list">
             {(inspection.missingSignals.length > 0
               ? inspection.missingSignals
@@ -40,7 +44,7 @@ export function InspectionPanel({
         </div>
       </div>
       <div>
-        <h5>Inspection prompts</h5>
+        <h5 className="inspection-prompts">Inspection prompts</h5>
         <ul className="inspection-list">
           {inspection.inspectionPrompts.map((prompt) => (
             <li key={prompt}>{prompt}</li>
@@ -55,6 +59,6 @@ export function InspectionPanel({
             : "No signal diff available yet."}
         </pre>
       </div>
-    </div>
+    </aside>
   );
 }

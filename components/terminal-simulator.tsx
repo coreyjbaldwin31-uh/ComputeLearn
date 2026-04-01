@@ -427,11 +427,24 @@ export function TerminalSimulator({
     }
   }
 
+  const [copyLabel, setCopyLabel] = useState("Copy");
+
+  function handleCopyOutput() {
+    const outputText = history
+      .filter((e) => e.type === "output" || e.type === "error")
+      .map((e) => e.text)
+      .join("\n");
+    navigator.clipboard.writeText(outputText).then(() => {
+      setCopyLabel("Copied!");
+      setTimeout(() => setCopyLabel("Copy"), 1500);
+    });
+  }
+
   return (
     <div
       className="terminal-sim"
       onClick={() => inputRef.current?.focus()}
-      role="application"
+      role="region"
       aria-label="Training terminal simulator"
     >
       <div className="terminal-titlebar">
@@ -443,7 +456,25 @@ export function TerminalSimulator({
         <span className="terminal-title">
           ComputeLearn Terminal — PowerShell
         </span>
-        <span className="terminal-badge">SAFE MODE</span>
+        <div className="terminal-toolbar">
+          <button
+            type="button"
+            className={`terminal-copy-btn ${copyLabel === "Copied!" ? "copied" : ""}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleCopyOutput();
+            }}
+            aria-label="Copy terminal output"
+          >
+            {copyLabel}
+          </button>
+          <span className="terminal-badge-wrapper">
+            <span className="terminal-badge">SAFE MODE</span>
+            <span className="terminal-badge-tooltip">
+              All commands are simulated — nothing modifies your real system
+            </span>
+          </span>
+        </div>
       </div>
       <div className="terminal-body" ref={scrollRef}>
         {history.map((entry) => (
@@ -467,6 +498,9 @@ export function TerminalSimulator({
             autoComplete="off"
             aria-label="Terminal command input"
           />
+        </div>
+        <div className="sr-only" aria-live="polite" aria-atomic="false">
+          {history.length > 0 ? history[history.length - 1].text : ""}
         </div>
       </div>
     </div>

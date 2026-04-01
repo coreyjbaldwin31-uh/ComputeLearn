@@ -82,6 +82,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import { CodeExercise } from "./code-exercise";
+import { useFocusTrap } from "./hooks/use-focus-trap";
 import { useLearnerProfile } from "./hooks/use-learner-profile";
 import { InspectionPanel } from "./inspection-panel";
 import { LabPanel } from "./lab-panel";
@@ -219,6 +220,9 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     null,
   );
   const [showCompletedOnly, setShowCompletedOnly] = useState(false);
+  const [showKeyboardHelp, setShowKeyboardHelp] = useState(false);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [saveFlash, setSaveFlash] = useState<string | null>(null);
   const [reviews, setReviews] = useLocalStorageState<ReviewState>(
     reviewsStorageKey,
     emptyReviews,
@@ -242,6 +246,11 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     {},
   );
   const { theme, toggle: toggleTheme } = useTheme();
+
+  const contentRef = useRef<HTMLElement>(null);
+
+  const resetDialogRef = useFocusTrap(showResetConfirm);
+  const keyboardDialogRef = useFocusTrap(showKeyboardHelp);
 
   const [todayKey, setTodayKey] = useState(() => new Date().toDateString());
 
@@ -547,11 +556,18 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       );
 
       if (!completionGate.passed) {
-        const failedCriteriaSummary = completionGate.failedCriteria
-          .map((criterion) => criterion.description)
-          .join(", ");
+        const actionItems = completionGate.failedCriteria.map((criterion) => {
+          const desc = criterion.description.toLowerCase();
+          if (desc.includes("transfer"))
+            return "Complete the transfer task below";
+          if (desc.includes("reflection"))
+            return "Write a reflection in the Reflection checkpoint section";
+          if (desc.includes("exercise"))
+            return "Answer the exercises in the Validation criteria section";
+          return criterion.description;
+        });
         setLessonGateFeedback(
-          `${completionGate.hint ?? "Complete all required evidence before marking this lesson complete."} Remaining: ${failedCriteriaSummary}.`,
+          `To complete this lesson: ${actionItems.join(" • ")}`,
         );
         return;
       }
@@ -621,6 +637,11 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
 
   function resetLab() {
     if (!selectedLesson) return;
+    setShowResetConfirm(true);
+  }
+
+  function confirmResetLab() {
+    if (!selectedLesson) return;
     const exerciseIds = new Set(selectedLesson.exercises.map((e) => e.id));
     setAnswers((prev) => {
       const next = { ...prev };
@@ -653,6 +674,35 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       delete next[selectedLesson.id];
       return next;
     });
+    setLessonGateFeedback(null);
+    setShowResetConfirm(false);
+  }
+
+  function resetAllProgress() {
+    const keys = [
+      progressStorageKey,
+      notesStorageKey,
+      reflectionsStorageKey,
+      reviewsStorageKey,
+      attemptsStorageKey,
+      artifactsStorageKey,
+      transferStorageKey,
+      labInstancesStorageKey,
+    ];
+    for (const key of keys) localStorage.removeItem(key);
+    setProgress(() => emptyProgress);
+    setNotes(() => emptyNotes);
+    setReflections(() => emptyReflections);
+    setReviews(() => emptyReviews);
+    setTransferProgress(() => emptyTransfer);
+    setAttempts(() => []);
+    setArtifacts(() => []);
+    setLabInstances(() => ({}));
+    setAnswers({});
+    setFeedback({});
+    setHintLevels({});
+    setTransferAnswers({});
+    setTransferFeedback({});
     setLessonGateFeedback(null);
   }
 
@@ -740,9 +790,15 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     }
   }
 
+  function showSaveConfirmation(label: string) {
+    setSaveFlash(label);
+    setTimeout(() => setSaveFlash(null), 2000);
+  }
+
   function saveNoteArtifact(lessonId: string) {
     const note = notes[lessonId] ?? "";
     addArtifact("note", "Lesson note", note, lessonId);
+    showSaveConfirmation("Note saved ✓");
   }
 
   function saveReflectionArtifact(lessonId: string) {
@@ -755,6 +811,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       selectedLessonWeakTracks,
     );
     addArtifact("reflection", "Reflection checkpoint", content, lessonId);
+    showSaveConfirmation("Reflection saved ✓");
   }
 
   function advanceHint(exerciseId: string) {
@@ -972,12 +1029,25 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
         navigateToEntry(nextEntry);
       } else if (e.key === "k" && prevEntry) {
         navigateToEntry(prevEntry);
+      } else if (e.key === "?" && !e.ctrlKey && !e.metaKey) {
+        setShowKeyboardHelp((v) => !v);
+      } else if (e.key === "d" && (e.ctrlKey || e.metaKey) && e.shiftKey) {
+        e.preventDefault();
+        toggleTheme();
+      } else if (e.key === "Escape") {
+        setShowKeyboardHelp(false);
+        setShowResetConfirm(false);
       }
     }
 
     window.addEventListener("keydown", handleKeyboard);
     return () => window.removeEventListener("keydown", handleKeyboard);
-  }, [navigateToEntry, nextEntry, prevEntry]);
+  }, [navigateToEntry, nextEntry, prevEntry, toggleTheme]);
+
+  // Scroll content into view when lesson changes
+  useEffect(() => {
+    contentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [selectedLessonId]);
 
   const currentHintLevels = useMemo(() => {
     const prefix = `${selectedLesson?.id ?? ""}:`;
@@ -994,7 +1064,15 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     !selectedLesson ||
     !phaseProgressSnapshot
   ) {
-    return null;
+    return (
+      <main className="shell">
+        <section className="hero">
+          <span className="eyebrow">Loading…</span>
+          <h1>{curriculum.productTitle}</h1>
+          <p>{curriculum.productVision}</p>
+        </section>
+      </main>
+    );
   }
 
   const {
@@ -1018,14 +1096,22 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const selectedLessonTransferPassed = Boolean(
     transferProgress[selectedLesson.id],
   );
-  const selectedLessonEvidenceGate = evaluateLessonEvidenceGate(
-    selectedLesson,
-    answers,
-    selectedLessonTransferPassed,
+
+  const isNewUser = Object.keys(progress).length === 0;
+
+  const isCurriculumComplete =
+    allLessonsFlat.length > 0 &&
+    allLessonsFlat.every((entry) => progress[entry.lesson.id]);
+
+  const nextUnfinishedEntry = allLessonsFlat.find(
+    (entry) => !progress[entry.lesson.id],
   );
 
   return (
     <main className="shell">
+      <a href="#lesson-content" className="skip-link">
+        Skip to lesson content
+      </a>
       <button
         type="button"
         className="theme-toggle"
@@ -1042,58 +1128,93 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
         </span>
         <h1>{curriculum.productTitle}</h1>
         <p>{curriculum.productVision}</p>
-        <div className="hero-grid">
-          <div className="stats stats--four-column">
-            <article className="stat-card">
-              <span>Progression model</span>
-              <div className="stat-value">
-                {curriculum.phases.length} phases
-              </div>
-              <p>
-                Computer mastery, engineering foundations, and modern
-                AI-assisted delivery.
-              </p>
-            </article>
-            <article className="stat-card">
-              <span>Tracked completion</span>
-              <div className="stat-value">{percentComplete}%</div>
-              <p>
-                Local progress persistence across lessons, notes, and validation
-                exercises.
-              </p>
-            </article>
-            <article className="stat-card">
-              <span>Core promise</span>
-              <div className="stat-value">Learn by doing</div>
-              <p>
-                Operational confidence first, programming understanding second,
-                disciplined engineering execution third.
-              </p>
-            </article>
-            <article className="stat-card">
-              <span>Activity streak</span>
-              <div className="stat-value streak-value">
-                {activityStreak > 0 ? `${activityStreak}d` : "—"}
-              </div>
-              <p>
-                {activityStreak > 1
-                  ? `${activityStreak} consecutive days of activity.`
-                  : activityStreak === 1
-                    ? "Active today. Keep building the habit."
-                    : "Complete your first lesson to start a streak."}
-              </p>
+
+        {isCurriculumComplete ? (
+          <div className="welcome-banner completion-banner">
+            <h3>🎓 Curriculum complete!</h3>
+            <p>
+              You have finished all {allLessonsFlat.length} lessons across{" "}
+              {curriculum.phases.length} phases. Revisit any lesson to
+              strengthen weak competencies, or explore independent labs to
+              sharpen your skills further.
+            </p>
+          </div>
+        ) : isNewUser ? (
+          <div className="welcome-banner">
+            <h3>Welcome — start your first lesson</h3>
+            <p>
+              Pick a phase from the sidebar, read the lesson, then work through
+              the exercises and validation checks below. Your progress saves
+              automatically.
+            </p>
+            <button
+              type="button"
+              className="welcome-cta"
+              onClick={() => {
+                if (nextUnfinishedEntry) {
+                  setSelectedPhaseId(nextUnfinishedEntry.phase.id);
+                  setSelectedLessonId(nextUnfinishedEntry.lesson.id);
+                }
+                contentRef.current?.scrollIntoView({ behavior: "smooth" });
+              }}
+            >
+              Begin lesson: {nextUnfinishedEntry?.lesson.title ?? selectedLesson.title} →
+            </button>
+          </div>
+        ) : (
+          <div className="hero-grid">
+            <div className="stats stats--four-column">
+              <article className="stat-card">
+                <span>Progression model</span>
+                <div className="stat-value">
+                  {curriculum.phases.length} phases
+                </div>
+                <p>
+                  Computer mastery, engineering foundations, and modern
+                  AI-assisted delivery.
+                </p>
+              </article>
+              <article className="stat-card">
+                <span>Tracked completion</span>
+                <div className="stat-value">{percentComplete}%</div>
+                <p>
+                  Local progress persistence across lessons, notes, and
+                  validation exercises.
+                </p>
+              </article>
+              <article className="stat-card">
+                <span>Core promise</span>
+                <div className="stat-value">Learn by doing</div>
+                <p>
+                  Operational confidence first, programming understanding
+                  second, disciplined engineering execution third.
+                </p>
+              </article>
+              <article className="stat-card">
+                <span>Activity streak</span>
+                <div className="stat-value streak-value">
+                  {activityStreak > 0 ? `${activityStreak}d` : "—"}
+                </div>
+                <p>
+                  {activityStreak > 1
+                    ? `${activityStreak} consecutive days of activity.`
+                    : activityStreak === 1
+                      ? "Active today. Keep building the habit."
+                      : "Complete your first lesson to start a streak."}
+                </p>
+              </article>
+            </div>
+            <article className="timeline-card">
+              <h4>How the system trains</h4>
+              <ul className="retention-list">
+                <li>Explain the concept with operational clarity.</li>
+                <li>Demonstrate the workflow in a guided environment.</li>
+                <li>Require hands-on action and validate the response.</li>
+                <li>Retain notes, outputs, and completion state for review.</li>
+              </ul>
             </article>
           </div>
-          <article className="timeline-card">
-            <h4>How the system trains</h4>
-            <ul className="retention-list">
-              <li>Explain the concept with operational clarity.</li>
-              <li>Demonstrate the workflow in a guided environment.</li>
-              <li>Require hands-on action and validate the response.</li>
-              <li>Retain notes, outputs, and completion state for review.</li>
-            </ul>
-          </article>
-        </div>
+        )}
       </section>
 
       <section className="main-grid">
@@ -1114,9 +1235,9 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
           selectPhase={selectPhase}
         />
 
-        <section className="content">
+        <section className="content" ref={contentRef} id="lesson-content">
           <section className="panel">
-            <nav className="breadcrumbs">
+            <nav className="breadcrumbs" aria-label="Breadcrumb">
               <button
                 type="button"
                 className="breadcrumb-link"
@@ -1169,7 +1290,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
               </button>
               <button
                 type="button"
-                className="ghost-button"
+                className={`mark-complete-button ${progress[selectedLesson.id] ? "completed" : ""}`}
                 onClick={() =>
                   setLessonCompletion(
                     selectedLesson.id,
@@ -1178,8 +1299,8 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                 }
               >
                 {progress[selectedLesson.id]
-                  ? "Mark incomplete"
-                  : "Mark complete"}
+                  ? "✓ Completed — mark incomplete"
+                  : "Mark complete ✓"}
               </button>
               <button
                 type="button"
@@ -1189,21 +1310,52 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                 ↺ Reset lab
               </button>
             </div>
+            {showResetConfirm ? (
+              <div
+                className="confirm-backdrop"
+                onClick={() => setShowResetConfirm(false)}
+              >
+                <div
+                  ref={resetDialogRef}
+                  className="confirm-dialog"
+                  role="dialog"
+                  aria-modal="true"
+                  aria-label="Confirm reset"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <h4>Reset all exercise data?</h4>
+                  <p>
+                    This will clear your answers, hints, feedback, and transfer
+                    progress for this lesson.
+                  </p>
+                  <div className="confirm-actions">
+                    <button
+                      type="button"
+                      className="ghost-button"
+                      onClick={() => setShowResetConfirm(false)}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      className="confirm-destructive"
+                      onClick={confirmResetLab}
+                    >
+                      Reset
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : null}
             {lessonGateFeedback ? (
-              <p className="panel-subtext">{lessonGateFeedback}</p>
+              <div className="gate-feedback-banner" role="alert">
+                {lessonGateFeedback}
+              </div>
             ) : null}
 
             <div className="lesson-meta">
               <span className="metric-pill">{selectedLesson.duration}</span>
               <span className="metric-pill">{selectedLesson.difficulty}</span>
-              <span
-                className={`status-pill ${selectedLessonEvidenceGate.passed || !!progress[selectedLesson.id] ? "complete" : "pending"}`}
-              >
-                {selectedLessonEvidenceGate.passed ||
-                !!progress[selectedLesson.id]
-                  ? "Evidence gate ready"
-                  : "Evidence gate pending"}
-              </span>
               {selectedLesson.scaffoldingLevel ? (
                 <span
                   className={`scaffolding-badge scaffolding-${selectedLesson.scaffoldingLevel}`}
@@ -1215,22 +1367,43 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                       : "Ticket-style"}
                 </span>
               ) : null}
-              {selectedLesson.transferTask ? (
-                <span
-                  className={`status-pill ${selectedLessonTransferPassed ? "complete" : "pending"}`}
-                >
-                  {selectedLessonTransferPassed
-                    ? "Transfer evidence passed"
-                    : "Transfer evidence pending"}
-                </span>
-              ) : null}
-              <span className="metric-pill">
-                Objective: {selectedLesson.objective}
-              </span>
             </div>
+
+            <nav className="lesson-toc" aria-label="Lesson sections">
+              <a className="lesson-toc-link" href="#section-explanation">
+                Concept
+              </a>
+              <a className="lesson-toc-link" href="#section-exercises">
+                Exercises
+              </a>
+              {selectedLesson.exercises.length > 0 ? (
+                <a className="lesson-toc-link" href="#section-validation">
+                  Validation
+                </a>
+              ) : null}
+              {selectedLesson.transferTask ? (
+                <a className="lesson-toc-link" href="#section-transfer">
+                  Transfer
+                </a>
+              ) : null}
+              {selectedLesson.codeExercises &&
+              selectedLesson.codeExercises.length > 0 ? (
+                <a className="lesson-toc-link" href="#section-code">
+                  Code
+                </a>
+              ) : null}
+              <a className="lesson-toc-link" href="#section-notes">
+                Notes
+              </a>
+              {showTerminal ? (
+                <a className="lesson-toc-link" href="#section-terminal">
+                  Terminal
+                </a>
+              ) : null}
+            </nav>
           </section>
 
-          <section className="section-grid">
+          <section className="section-grid" id="section-explanation">
             <article className="lesson-card">
               <h4>Concept explanation</h4>
               {selectedLesson.explanation.map((paragraph, i) => (
@@ -1246,7 +1419,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
             </article>
           </section>
 
-          <section className="exercise-grid">
+          <section className="exercise-grid" id="section-exercises">
             <article className="exercise-card">
               <h4>Hands-on exercise</h4>
               <ol className="exercise-list">
@@ -1266,7 +1439,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
             </article>
           </section>
 
-          <section className="validation-grid">
+          <section className="validation-grid" id="section-validation">
             {selectedLesson.exercises.map((exercise) => {
               const exerciseAnswer = answers[exercise.id] ?? "";
               const exerciseFeedback = feedback[exercise.id];
@@ -1342,6 +1515,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                   </div>
                   {exerciseFeedback ? (
                     <div
+                      role="alert"
                       className={`feedback ${isCorrect ? "success" : "warning"}`}
                     >
                       {exerciseFeedback}
@@ -1367,7 +1541,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
           </section>
 
           {selectedLesson.transferTask ? (
-            <section className="validation-grid">
+            <section className="validation-grid" id="section-transfer">
               <article className="exercise-card transfer-task-card">
                 {(() => {
                   const transferTask = selectedLesson.transferTask;
@@ -1389,7 +1563,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                         </span>
                       </div>
                       <p>{transferTask.prompt}</p>
-                      <input
+                      <textarea
                         aria-label={transferTask.title}
                         value={transferAnswers[selectedLesson.id] ?? ""}
                         onChange={(event) =>
@@ -1399,6 +1573,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                           }))
                         }
                         placeholder={transferTask.placeholder}
+                        rows={4}
                       />
                       <div className="toolbar">
                         <button
@@ -1407,6 +1582,17 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                           onClick={validateTransferTask}
                         >
                           Validate transfer
+                        </button>
+                        <button
+                          type="button"
+                          className="ghost-button"
+                          disabled={
+                            selectedLessonTransferPassed ||
+                            isHintExhausted(currentHintLevels[transferTask.id] ?? 0)
+                          }
+                          onClick={() => advanceHint(transferTask.id)}
+                        >
+                          {getHintButtonLabel(currentHintLevels[transferTask.id] ?? 0)}
                         </button>
                         <button
                           type="button"
@@ -1430,12 +1616,23 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                       </div>
                       {transferFeedback[selectedLesson.id] ? (
                         <div
+                          role="alert"
                           className={`feedback ${selectedLessonTransferPassed ? "success" : "warning"}`}
                         >
                           {transferFeedback[selectedLesson.id]}
                         </div>
                       ) : null}
-                      <div className="hint-layer">{transferTask.hint}</div>
+                      {getHintText(
+                        currentHintLevels[transferTask.id] ?? 0,
+                        transferTask.hint,
+                      ) !== null ? (
+                        <div className="hint-layer">
+                          {getHintText(
+                            currentHintLevels[transferTask.id] ?? 0,
+                            transferTask.hint,
+                          )}
+                        </div>
+                      ) : null}
                       {showTransferInspection ? (
                         <InspectionPanel
                           inspection={transferInspection}
@@ -1451,7 +1648,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
 
           {selectedLesson.codeExercises &&
           selectedLesson.codeExercises.length > 0 ? (
-            <section className="code-exercises-section">
+            <section className="code-exercises-section" id="section-code">
               {selectedLesson.codeExercises.map((ex) => (
                 <CodeExercise
                   key={ex.id}
@@ -1515,7 +1712,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
             </section>
           ) : null}
 
-          <section className="notes-grid">
+          <section className="notes-grid" id="section-notes">
             <article className="note-card">
               <h4>Saved notes</h4>
               <p>{selectedLesson.notesPrompt}</p>
@@ -1609,7 +1806,10 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
           </section>
 
           {showTerminal ? (
-            <section className="lesson-terminal-section panel">
+            <section
+              className="lesson-terminal-section panel"
+              id="section-terminal"
+            >
               <h4>Practice terminal</h4>
               <p className="terminal-intro-text">
                 Try the commands from this lesson in a safe, simulated
@@ -1669,6 +1869,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
         <RailPanels
           learnerProfile={learnerProfile}
           updateLearnerProfile={updateLearnerProfile}
+          onResetAll={resetAllProgress}
           selectedPhase={selectedPhase}
           selectedCourse={selectedCourse}
           selectedLesson={selectedLesson}
@@ -1695,6 +1896,79 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
           phaseMilestoneStatus={phaseMilestoneStatus}
         />
       </section>
+
+      {saveFlash ? (
+        <div className="save-toast" role="status" aria-live="polite">
+          {saveFlash}
+        </div>
+      ) : null}
+
+      <button
+        type="button"
+        className="keyboard-help-trigger"
+        onClick={() => setShowKeyboardHelp(true)}
+        aria-label="Keyboard shortcuts"
+        title="Keyboard shortcuts (?)"
+      >
+        ?
+      </button>
+
+      {showKeyboardHelp ? (
+        <div
+          className="keyboard-overlay-backdrop"
+          onClick={() => setShowKeyboardHelp(false)}
+        >
+          <div
+            ref={keyboardDialogRef}
+            className="keyboard-overlay"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Keyboard shortcuts"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="keyboard-overlay-close"
+              onClick={() => setShowKeyboardHelp(false)}
+            >
+              Close
+            </button>
+            <h3>Keyboard shortcuts</h3>
+            <ul className="shortcut-list">
+              <li className="shortcut-item">
+                <span>Next lesson</span>
+                <span className="shortcut-keys">
+                  <kbd className="kbd-hint">j</kbd>
+                </span>
+              </li>
+              <li className="shortcut-item">
+                <span>Previous lesson</span>
+                <span className="shortcut-keys">
+                  <kbd className="kbd-hint">k</kbd>
+                </span>
+              </li>
+              <li className="shortcut-item">
+                <span>Show shortcuts</span>
+                <span className="shortcut-keys">
+                  <kbd className="kbd-hint">?</kbd>
+                </span>
+              </li>
+              <li className="shortcut-item">
+                <span>Close overlay</span>
+                <span className="shortcut-keys">
+                  <kbd className="kbd-hint">Esc</kbd>
+                </span>
+              </li>
+              <li className="shortcut-item">
+                <span>Toggle dark mode</span>
+                <span className="shortcut-keys">
+                  <kbd className="kbd-hint">Ctrl</kbd>+<kbd className="kbd-hint">Shift</kbd>+<kbd className="kbd-hint">D</kbd>
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      ) : null}
     </main>
   );
 }
