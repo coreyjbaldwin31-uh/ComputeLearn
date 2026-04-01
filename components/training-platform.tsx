@@ -1,8 +1,6 @@
 "use client";
 
 import type { Curriculum, Lesson } from "@/data/curriculum";
-import { buildArtifactBrowserSummary } from "@/lib/artifact-browser-engine";
-import { buildArtifactCompletionSummary } from "@/lib/artifact-completion-engine";
 import type { ArtifactRecord } from "@/lib/artifact-engine";
 import {
   type AttemptRecord,
@@ -10,16 +8,9 @@ import {
   createId,
   formatCompletionContent,
 } from "@/lib/artifact-engine";
-import { buildAttemptAnalyticsSummary } from "@/lib/attempt-analytics-engine";
-import { buildCompetencyDashboardSummary } from "@/lib/competency-dashboard-engine";
 import { getWeakCompetencyTracks } from "@/lib/competency-engine";
-import { buildIndependentLabSummary } from "@/lib/independent-lab-engine";
-import { buildIndependentReadinessSummary } from "@/lib/independent-readiness-engine";
 import type { LabInstance } from "@/lib/lab-engine";
 import { evaluatePhaseMilestoneStatus } from "@/lib/milestone-engine";
-import { buildMilestonePassRateSummary } from "@/lib/milestone-pass-rate-engine";
-import { buildOutcomesDashboardSummary } from "@/lib/outcomes-dashboard-engine";
-import { buildPhaseStatusRecords } from "@/lib/phase-status-engine";
 import type { ReviewRecord } from "@/lib/progression-engine";
 import {
   calculateActivityStreak,
@@ -41,7 +32,6 @@ import {
   getReinforcementQueue,
   getWeakTrackHits,
 } from "@/lib/reinforcement-engine";
-import { buildPhaseTransferAnalytics } from "@/lib/transfer-analytics-engine";
 import {
   evaluateLessonEvidenceGate,
 } from "@/lib/validation-engine";
@@ -53,6 +43,7 @@ import {
   useState,
 } from "react";
 import { CodeExercise } from "./code-exercise";
+import { useAnalyticsDashboards } from "./hooks/use-analytics-dashboards";
 import { useArtifactManager } from "./hooks/use-artifact-manager";
 import {
   useExerciseValidation,
@@ -284,107 +275,30 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     [reviews, todayKey],
   );
 
-  const recentAttempts = useMemo(() => {
-    if (!selectedLesson) return [];
-    return attempts
-      .filter((attempt) => attempt.lessonId === selectedLesson.id)
-      .slice(0, 5);
-  }, [attempts, selectedLesson]);
-
-  const recentArtifacts = useMemo(() => {
-    if (!selectedLesson) return [];
-    return artifacts
-      .filter((artifact) => artifact.lessonId === selectedLesson.id)
-      .slice(0, 4);
-  }, [artifacts, selectedLesson]);
-
-  const attemptAnalytics = useMemo(
-    () => buildAttemptAnalyticsSummary(attempts),
-    [attempts],
-  );
-
-  const lessonAttemptAnalytics = useMemo(
-    () => buildAttemptAnalyticsSummary(attempts, selectedLesson?.id),
-    [attempts, selectedLesson?.id],
-  );
-
-  const phaseStatuses = useMemo(
-    () =>
-      buildPhaseStatusRecords(
-        curriculum,
-        progress,
-        transferProgress,
-        competencyLevels,
-        reviews,
-      ),
-    [curriculum, progress, transferProgress, competencyLevels, reviews],
-  );
-
-  const lessonArtifactSummary = useMemo(
-    () => buildArtifactBrowserSummary(artifacts, selectedLesson?.id),
-    [artifacts, selectedLesson?.id],
-  );
-
-  const artifactCompletionSummary = useMemo(
-    () => buildArtifactCompletionSummary(curriculum, progress, artifacts),
-    [artifacts, curriculum, progress],
-  );
-
-  const competencyDashboard = useMemo(
-    () => buildCompetencyDashboardSummary(competencyLevels),
-    [competencyLevels],
-  );
-
-  const phaseTransferAnalytics = useMemo(
-    () => buildPhaseTransferAnalytics(curriculum, transferProgress),
-    [curriculum, transferProgress],
-  );
-
-  const milestonePassRateSummary = useMemo(
-    () => buildMilestonePassRateSummary(phaseStatuses),
-    [phaseStatuses],
-  );
-
-  const independentReadiness = useMemo(
-    () =>
-      buildIndependentReadinessSummary(
-        curriculum,
-        progress,
-        transferProgress,
-        competencyLevels,
-        artifacts,
-      ),
-    [artifacts, competencyLevels, curriculum, progress, transferProgress],
-  );
-
-  const independentLabSummary = useMemo(
-    () =>
-      buildIndependentLabSummary(
-        curriculum,
-        progress,
-        transferProgress,
-        attempts,
-      ),
-    [attempts, curriculum, progress, transferProgress],
-  );
-
-  const outcomesDashboardSummary = useMemo(
-    () =>
-      buildOutcomesDashboardSummary({
-        transferAnalytics: phaseTransferAnalytics,
-        independentLabSummary,
-        attemptAnalytics,
-        milestonePassRateSummary,
-        artifactCompletionSummary,
-      }),
-    [
-      artifactCompletionSummary,
-      attemptAnalytics,
-      independentLabSummary,
-      milestonePassRateSummary,
-      phaseTransferAnalytics,
-    ],
-  );
+  const {
+    recentAttempts,
+    recentArtifacts,
+    attemptAnalytics,
+    lessonAttemptAnalytics,
+    phaseStatuses,
+    lessonArtifactSummary,
+    artifactCompletionSummary,
+    competencyDashboard,
+    phaseTransferAnalytics,
+    milestonePassRateSummary,
+    independentReadiness,
+    independentLabSummary,
+    outcomesDashboardSummary,
+  } = useAnalyticsDashboards({
+    curriculum,
+    progress,
+    transferProgress,
+    competencyLevels,
+    reviews,
+    attempts,
+    artifacts,
+    selectedLesson,
+  });
 
   const selectedLessonWeakTracks = useMemo(() => {
     if (!selectedLesson) return [];
