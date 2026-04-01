@@ -16,18 +16,26 @@ The core product rule is that learners should practice inside controlled, revers
 
 The current app goes beyond a curriculum shell. It now includes:
 
+- **37 lessons across 4 phases** — computer mastery, programming foundations, engineering workflow, independent build
+- **38 lab templates** across all phases with terminal simulation, file editing, and validation
+- **22 inline code exercises** across 13 lessons with pattern-based validation
+- **348+ automated tests** (unit + component) with Vitest across 30+ test files
 - phased learning progression with milestone gating
 - learner profile, local progress persistence, notes, reflections, and review scheduling
 - guided exercises, transfer tasks, and evidence-gated lesson completion
 - layered hints, inspect mode, and diff-style inspection output for failed validation
-- competency dashboard, transfer analytics, independent readiness, independent lab completion, repeated error reduction, milestone pass rate, artifact coverage, and outcomes rollup panels
+- competency dashboard tracking 15 domains with mastery ladder (Aware → Independent)
+- transfer analytics, independent readiness, independent lab completion, repeated error reduction, milestone pass rate, artifact coverage, and outcomes rollup panels
 - artifact history, evidence browsing, and markdown export of learner work
 - lab UI panel wired into lesson view with start, validate, reset, hint escalation, and completion summary
 - terminal simulator connected to active lab instances with command-output capture, lab filesystem, and file content display
 - interactive code exercises with starter code, pattern-based validation, and hints
-- focus traps and keyboard navigation throughout
+- focus traps, keyboard navigation, and skip-link throughout
+- WCAG-conscious colour contrast and prefers-reduced-motion support
 - curriculum completion banner when all lessons are finished
-- responsive layout down to 480px viewports
+- responsive layout down to 480 px viewports
+- health endpoint at `/api/health`
+- Docker multi-stage build with non-root runtime and health check
 - explicit safe-lab framing and guardrails
 
 ## Keyboard shortcuts
