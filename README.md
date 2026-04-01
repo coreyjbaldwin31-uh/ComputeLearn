@@ -24,7 +24,21 @@ The current app goes beyond a curriculum shell. It now includes:
 - artifact history, evidence browsing, and markdown export of learner work
 - lab UI panel wired into lesson view with start, validate, reset, hint escalation, and completion summary
 - terminal simulator connected to active lab instances with command-output capture, lab filesystem, and file content display
+- interactive code exercises with starter code, pattern-based validation, and hints
+- focus traps and keyboard navigation throughout
+- curriculum completion banner when all lessons are finished
+- responsive layout down to 480px viewports
 - explicit safe-lab framing and guardrails
+
+## Keyboard shortcuts
+
+| Key | Action |
+| --- | --- |
+| `j` | Next lesson |
+| `k` | Previous lesson |
+| `?` | Toggle keyboard shortcut overlay |
+| `Ctrl+Shift+D` | Toggle dark mode |
+| `Escape` | Close any open dialog or overlay |
 
 ## Still open platform work
 
@@ -130,7 +144,7 @@ Pushes and pull requests to `main` run four jobs via GitHub Actions (`.github/wo
 | Job | Steps | Purpose |
 | --- | --- | --- |
 | **Quality gate** | `npm run lint`, `npm run type-check` | Fast feedback on code hygiene |
-| **Test** | `npm run test` | Verify correctness (303 unit/integration tests) |
+| **Test** | `npm run test` | Verify correctness (309 unit/integration tests) |
 | **Build** | `npm run build` + bundle budget | Verify production build succeeds and client bundle stays under 2 MB |
 | **Docker build & health** | `docker build` + health probe | Verify container image builds and passes health check |
 
@@ -171,6 +185,16 @@ curl http://localhost:3000/api/sentry-test
 ```
 
 Returns `{ "ok": true, "eventId": "…" }` when the DSN is configured, or a 503 when it is absent.
+
+### Health endpoint
+
+A lightweight readiness probe is available for Docker healthchecks and load balancers:
+
+```
+curl http://localhost:3000/api/health
+```
+
+Returns `{ "status": "ok", "uptime": …, "timestamp": "…" }`.
 
 ### Secrets in CI / deployed environments
 

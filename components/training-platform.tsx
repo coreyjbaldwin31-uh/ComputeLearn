@@ -1,12 +1,6 @@
 "use client";
 
 import type { Curriculum, Exercise, Lesson } from "@/data/curriculum";
-import {
-  phase1LabsByLesson,
-  phase2LabsByLesson,
-  phase3LabsByLesson,
-  phase4LabsByLesson,
-} from "@/data/lab-templates";
 import { buildArtifactBrowserSummary } from "@/lib/artifact-browser-engine";
 import { buildArtifactCompletionSummary } from "@/lib/artifact-completion-engine";
 import type { ArtifactRecord } from "@/lib/artifact-engine";
@@ -34,14 +28,6 @@ import { buildIndependentLabSummary } from "@/lib/independent-lab-engine";
 import { buildIndependentReadinessSummary } from "@/lib/independent-readiness-engine";
 import { buildExerciseInspection } from "@/lib/inspection-engine";
 import type { LabInstance } from "@/lib/lab-engine";
-import {
-  buildLabCompletionSummary,
-  createLabInstance,
-  getLabHint,
-  recordLabAttempt,
-  resetLabInstance,
-  validateLabInstance,
-} from "@/lib/lab-engine";
 import { evaluatePhaseMilestoneStatus } from "@/lib/milestone-engine";
 import { buildMilestonePassRateSummary } from "@/lib/milestone-pass-rate-engine";
 import { buildOutcomesDashboardSummary } from "@/lib/outcomes-dashboard-engine";
@@ -79,11 +65,13 @@ import {
   useMemo,
   useRef,
   useState,
-  useSyncExternalStore,
 } from "react";
 import { CodeExercise } from "./code-exercise";
 import { useFocusTrap } from "./hooks/use-focus-trap";
+import { useLabLifecycle } from "./hooks/use-lab-lifecycle";
 import { useLearnerProfile } from "./hooks/use-learner-profile";
+import { useLocalStorageState } from "./hooks/use-local-storage-state";
+import { useTheme } from "./hooks/use-theme";
 import { InspectionPanel } from "./inspection-panel";
 import { LabPanel } from "./lab-panel";
 import { RailPanels } from "./rail-panels";
@@ -116,71 +104,6 @@ const emptyNotes: NotesState = {};
 const emptyReflections: ReflectionState = {};
 const emptyReviews: ReviewState = {};
 const emptyTransfer: TransferState = {};
-
-function useLocalStorageState<T>(key: string, initial: T) {
-  const initialRef = useRef(initial);
-  const cached = useRef({
-    raw: undefined as string | undefined,
-    value: initial,
-  });
-
-  const subscribe = useCallback((cb: () => void) => {
-    window.addEventListener("storage", cb);
-    window.addEventListener("ls-write", cb);
-    return () => {
-      window.removeEventListener("storage", cb);
-      window.removeEventListener("ls-write", cb);
-    };
-  }, []);
-
-  const getSnapshot = useCallback(() => {
-    const raw = localStorage.getItem(key) ?? undefined;
-    if (raw === cached.current.raw) return cached.current.value;
-    const val = raw != null ? (JSON.parse(raw) as T) : initialRef.current;
-    cached.current = { raw, value: val };
-    return val;
-  }, [key]);
-
-  const getServerSnapshot = useCallback(() => initialRef.current, []);
-
-  const value = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-
-  const set = useCallback(
-    (fn: T | ((prev: T) => T)) => {
-      const cur = (() => {
-        const r = localStorage.getItem(key);
-        return r != null ? (JSON.parse(r) as T) : initialRef.current;
-      })();
-      const next = typeof fn === "function" ? (fn as (p: T) => T)(cur) : fn;
-      const raw = JSON.stringify(next);
-      localStorage.setItem(key, raw);
-      cached.current = { raw, value: next };
-      window.dispatchEvent(new Event("ls-write"));
-    },
-    [key],
-  );
-
-  return [value, set] as const;
-}
-
-const themeStorageKey = "computelearn-theme";
-
-function useTheme() {
-  const [theme, setTheme] = useLocalStorageState<"light" | "dark">(
-    themeStorageKey,
-    "light",
-  );
-
-  useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-  }, [theme]);
-
-  const toggle = useCallback(() => {
-    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
-  }, [setTheme]);
-
-  return { theme, toggle };
-}
 
 export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const [selectedPhaseId, setSelectedPhaseId] = useState(
@@ -242,9 +165,6 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const [labInstances, setLabInstances] = useLocalStorageState<
     Record<string, LabInstance>
   >(labInstancesStorageKey, {});
-  const [labHintLevels, setLabHintLevels] = useState<Record<string, number>>(
-    {},
-  );
   const { theme, toggle: toggleTheme } = useTheme();
 
   const contentRef = useRef<HTMLElement>(null);
@@ -822,174 +742,23 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     }));
   }
 
-  // --- Lab lifecycle handlers ---
+  // --- Lab lifecycle ---
 
-  const currentLabTemplates = selectedLesson
-    ? (phase1LabsByLesson[selectedLesson.id] ??
-      phase2LabsByLesson[selectedLesson.id] ??
-      phase3LabsByLesson[selectedLesson.id] ??
-      phase4LabsByLesson[selectedLesson.id] ??
-      null)
-    : null;
-  const currentLabTemplate = currentLabTemplates?.[0] ?? null;
-  const currentLabInstance = currentLabTemplate
-    ? (labInstances[currentLabTemplate.id] ?? null)
-    : null;
-
-  function startLab() {
-    if (!currentLabTemplate) return;
-    const instance = createLabInstance(currentLabTemplate);
-    setLabInstances((prev) => ({ ...prev, [currentLabTemplate.id]: instance }));
-  }
-
-  function validateLab() {
-    if (!currentLabTemplate || !currentLabInstance) return null;
-    const result = validateLabInstance(currentLabTemplate, currentLabInstance);
-    const updated = recordLabAttempt(currentLabInstance, result);
-    setLabInstances((prev) => ({
-      ...prev,
-      [currentLabTemplate.id]: updated,
-    }));
-    if (result.passed && selectedLesson) {
-      addArtifact(
-        "completion",
-        `Lab completed: ${currentLabTemplate.title}`,
-        buildLabCompletionSummary(currentLabTemplate, updated),
-        selectedLesson.id,
-      );
-    }
-    return result;
-  }
-
-  function resetCurrentLab() {
-    if (!currentLabTemplate || !currentLabInstance) return;
-    const reset = resetLabInstance(currentLabInstance, currentLabTemplate);
-    setLabInstances((prev) => ({
-      ...prev,
-      [currentLabTemplate.id]: reset,
-    }));
-  }
-
-  function requestLabHint(ruleIndex: number) {
-    if (!currentLabTemplate) return null;
-    // Track hint levels per template+rule in a simple escalation
-    const key = `${currentLabTemplate.id}:${ruleIndex}`;
-    const currentLevel = labHintLevels[key] ?? 0;
-    const hint = getLabHint(currentLabTemplate, ruleIndex, currentLevel);
-    setLabHintLevels((prev) => ({ ...prev, [key]: currentLevel + 1 }));
-    return hint;
-  }
-
-  function updateLabFile(path: string, content: string) {
-    if (!currentLabTemplate || !currentLabInstance) return;
-    const updatedFiles = currentLabInstance.files.map((f) =>
-      f.path === path ? { ...f, content } : f,
-    );
-    setLabInstances((prev) => ({
-      ...prev,
-      [currentLabTemplate.id]: { ...currentLabInstance, files: updatedFiles },
-    }));
-  }
-
-  function updateCodeSubmission(ruleIndex: number, code: string) {
-    if (!currentLabTemplate || !currentLabInstance) return;
-    setLabInstances((prev) => {
-      const instance = prev[currentLabTemplate.id];
-      if (!instance) return prev;
-      return {
-        ...prev,
-        [currentLabTemplate.id]: {
-          ...instance,
-          codeSubmissions: { ...instance.codeSubmissions, [ruleIndex]: code },
-        },
-      };
-    });
-  }
-
-  function updateTestOutput(command: string, output: string) {
-    if (!currentLabTemplate || !currentLabInstance) return;
-    setLabInstances((prev) => {
-      const instance = prev[currentLabTemplate.id];
-      if (!instance) return prev;
-      return {
-        ...prev,
-        [currentLabTemplate.id]: {
-          ...instance,
-          commandOutputs: { ...instance.commandOutputs, [command]: output },
-        },
-      };
-    });
-  }
-
-  const labCompletionSummary =
-    currentLabTemplate && currentLabInstance?.status === "completed"
-      ? buildLabCompletionSummary(currentLabTemplate, currentLabInstance)
-      : null;
-
-  // ---- T2: terminal ↔ lab integration ----
-
-  /** Build a terminal-compatible filesystem from lab template files. */
-  const labTerminalFilesystem = useMemo(() => {
-    if (!currentLabTemplate) return undefined;
-    const basePath = "C:\\Users\\learner";
-    const fs: Record<string, string[]> = { [basePath]: [] };
-    for (const file of currentLabTemplate.initialFiles) {
-      const segments = file.path.split("/");
-      let dir = basePath;
-      for (let i = 0; i < segments.length; i++) {
-        const name = segments[i];
-        if (!fs[dir]) fs[dir] = [];
-        if (!fs[dir].includes(name)) {
-          fs[dir].push(name);
-        }
-        if (i < segments.length - 1) {
-          dir = `${dir}\\${name}`;
-        }
-      }
-    }
-    return fs;
-  }, [currentLabTemplate]);
-
-  /** Map resolved terminal paths to lab file contents for cat/Get-Content. */
-  const labFileContents = useMemo(() => {
-    if (!currentLabInstance) return undefined;
-    const map: Record<string, string> = {};
-    for (const f of currentLabInstance.files) {
-      map[`C:\\Users\\learner\\${f.path.replace(/\//g, "\\")}`] = f.content;
-    }
-    return map;
-  }, [currentLabInstance]);
-
-  /** Capture terminal command output into the active lab instance.
-   *
-   *  The `command` argument is already the canonical PowerShell name
-   *  (e.g. "Get-Location" even when the user typed "pwd") because
-   *  TerminalSimulator resolves aliases via CANONICAL_COMMANDS before
-   *  invoking onCommandExecuted.
-   *
-   *  NOTE: test-pass validation rules are not yet supported — no Phase 1
-   *  labs use them.  When Phase 2+ labs add test-pass rules, a lab-aware
-   *  test runner (simulated npm-test output) will need to be wired here. */
-  function handleTerminalCommand(command: string, output: string) {
-    if (!currentLabTemplate || !currentLabInstance) return;
-    const firstToken = command.split(/\s+/)[0];
-    const keys = new Set([command, firstToken]);
-    setLabInstances((prev) => {
-      const instance = prev[currentLabTemplate.id];
-      if (!instance) return prev;
-      const updatedOutputs = { ...instance.commandOutputs };
-      for (const key of keys) {
-        updatedOutputs[key] = output;
-      }
-      return {
-        ...prev,
-        [currentLabTemplate.id]: {
-          ...instance,
-          commandOutputs: updatedOutputs,
-        },
-      };
-    });
-  }
+  const {
+    currentLabTemplate,
+    currentLabInstance,
+    startLab,
+    validateLab,
+    resetCurrentLab,
+    requestLabHint,
+    updateLabFile,
+    updateCodeSubmission,
+    updateTestOutput,
+    handleTerminalCommand,
+    labCompletionSummary,
+    labTerminalFilesystem,
+    labFileContents,
+  } = useLabLifecycle(selectedLesson?.id, labInstances, setLabInstances, addArtifact);
 
   function toggleInspection(exerciseId: string) {
     const key = `${selectedLesson?.id ?? ""}:${exerciseId}`;
