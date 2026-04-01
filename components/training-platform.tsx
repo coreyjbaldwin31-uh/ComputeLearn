@@ -29,6 +29,7 @@ import {
 } from "@/lib/reinforcement-engine";
 import { evaluateLessonEvidenceGate } from "@/lib/validation-engine";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { FeatureHighlights } from "./feature-highlights";
 import { HeroSection } from "./hero-section";
 import { useAnalyticsDashboards } from "./hooks/use-analytics-dashboards";
 import { useArtifactManager } from "./hooks/use-artifact-manager";
@@ -51,6 +52,7 @@ import { LessonTransfer } from "./lesson-transfer";
 import { LessonValidation } from "./lesson-validation";
 import { NotesSection } from "./notes-section";
 import { PageFooter } from "./page-footer";
+import { PricingCallout } from "./pricing-callout";
 import { ProgressRoadmap } from "./progress-roadmap";
 import { RailPanels } from "./rail-panels";
 import { SaveToast } from "./save-toast";
@@ -855,7 +857,23 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
         />
       </section>
 
+      <hr className="section-divider" />
+
+      <FeatureHighlights />
+
       <SocialProof />
+
+      <hr className="section-divider" />
+
+      <PricingCallout
+        onBeginLesson={() => {
+          if (nextUnfinishedEntry) {
+            setSelectedPhaseId(nextUnfinishedEntry.phase.id);
+            setSelectedLessonId(nextUnfinishedEntry.lesson.id);
+          }
+          contentRef.current?.scrollIntoView({ behavior: "smooth" });
+        }}
+      />
 
       <PageFooter />
 

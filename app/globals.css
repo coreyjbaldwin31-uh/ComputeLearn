@@ -3064,5 +3064,346 @@ button[disabled] {
   .page-footer {
     padding: 24px 16px 16px;
   }
+
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pricing-card {
+    padding: 24px 20px;
+  }
+}
+
+/* ── Feature highlights section ──────────────────────────── */
+
+.feature-highlights {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.feature-highlights-header {
+  max-width: 640px;
+  margin: 0 auto 28px;
+}
+
+.feature-highlights-title {
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  margin: 12px 0 8px;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.feature-highlights-subtitle {
+  color: var(--muted);
+  font-size: 1.04rem;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  text-align: left;
+}
+
+.feature-card {
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--surface);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 40px rgba(43, 33, 17, 0.1);
+  border-color: rgba(13, 107, 87, 0.25);
+}
+
+[data-theme="dark"] .feature-card:hover {
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+  border-color: rgba(45, 212, 168, 0.2);
+}
+
+.feature-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--accent-soft);
+  font-size: 1.3rem;
+  margin-bottom: 14px;
+}
+
+.feature-card h3 {
+  margin: 0 0 6px;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.feature-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+/* ── Pricing callout section ─────────────────────────────── */
+
+.pricing-callout {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.pricing-card {
+  position: relative;
+  width: min(520px, 100%);
+  padding: 36px 32px;
+  border: 2px solid var(--accent);
+  border-radius: 24px;
+  background: linear-gradient(
+    135deg,
+    rgba(13, 107, 87, 0.06),
+    rgba(198, 139, 44, 0.04)
+  );
+  text-align: center;
+}
+
+.pricing-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: #f7f4ee;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pricing-title {
+  font-size: 1.6rem;
+  margin: 16px 0 8px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.pricing-description {
+  margin: 0 auto 20px;
+  max-width: 440px;
+  color: var(--muted);
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
+
+.pricing-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 16px;
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 0;
+  text-align: left;
+}
+
+.pricing-features li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.pricing-check {
+  color: var(--accent-strong);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.pricing-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 36px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: #f7f4ee;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.pricing-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(13, 107, 87, 0.35);
+}
+
+.pricing-note {
+  margin: 14px 0 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+[data-theme="dark"] .pricing-card {
+  background: linear-gradient(
+    135deg,
+    rgba(45, 212, 168, 0.06),
+    rgba(229, 166, 68, 0.04)
+  );
+  border-color: var(--accent);
+}
+
+/* ── Gradient accent text ────────────────────────────────── */
+
+.hero h1 {
+  background: linear-gradient(135deg, var(--text) 40%, var(--accent-strong) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+[data-theme="dark"] .hero h1 {
+  background: linear-gradient(135deg, var(--text) 30%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ── Enhanced transfer task card ─────────────────────────── */
+
+.transfer-task-card {
+  border-color: rgba(90, 70, 180, 0.2);
+  background: linear-gradient(
+    135deg,
+    var(--surface),
+    rgba(90, 70, 180, 0.04)
+  );
+}
+
+[data-theme="dark"] .transfer-task-card {
+  border-color: rgba(187, 154, 247, 0.15);
+  background: linear-gradient(
+    135deg,
+    var(--surface),
+    rgba(187, 154, 247, 0.04)
+  );
+}
+
+/* ── Empty state callouts ────────────────────────────────── */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 28px 16px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.empty-state-icon {
+  font-size: 2rem;
+  opacity: 0.5;
+}
+
+.empty-state-text {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  max-width: 280px;
+}
+
+/* ── Section divider ─────────────────────────────────────── */
+
+.section-divider {
+  width: 60px;
+  height: 3px;
+  margin: 36px auto;
+  border: none;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--gold));
+  opacity: 0.5;
+}
+
+/* ── Responsive: feature grid + pricing ──────────────────── */
+
+@media (max-width: 1180px) {
+  .feature-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pricing-features {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-highlights {
+    margin-top: 28px;
+  }
+
+  .pricing-callout {
+    margin-top: 28px;
+  }
+
+  .pricing-card {
+    padding: 28px 20px;
+  }
+
+  .pricing-title {
+    font-size: 1.3rem;
+  }
+}
+
+/* ── Dark mode polish for new elements ───────────────────── */
+
+[data-theme="dark"] .plan-chip {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="dark"] .pricing-cta {
+  background: linear-gradient(135deg, #0d6b57, #084c3d);
+}
+
+[data-theme="dark"] .pricing-cta:hover {
+  box-shadow: 0 8px 24px rgba(45, 212, 168, 0.3);
+}
+
+[data-theme="dark"] .proof-avatar {
+  background: linear-gradient(135deg, var(--accent-strong), var(--gold));
+}
+
+[data-theme="dark"] .feature-icon {
+  background: rgba(45, 212, 168, 0.1);
+}
+
+[data-theme="dark"] .roadmap-node {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="dark"] .roadmap-node:hover,
+[data-theme="dark"] .roadmap-node--active {
+  background: rgba(45, 212, 168, 0.08);
+}
+
+[data-theme="dark"] .footer-logo {
+  color: var(--accent);
+}
+
+[data-theme="dark"] .section-divider {
+  opacity: 0.35;
 }
 
