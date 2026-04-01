@@ -50,8 +50,11 @@ import { LessonTerminal } from "./lesson-terminal";
 import { LessonTransfer } from "./lesson-transfer";
 import { LessonValidation } from "./lesson-validation";
 import { NotesSection } from "./notes-section";
+import { PageFooter } from "./page-footer";
+import { ProgressRoadmap } from "./progress-roadmap";
 import { RailPanels } from "./rail-panels";
 import { SaveToast } from "./save-toast";
+import { SocialProof } from "./social-proof";
 import { SidebarPanels } from "./sidebar-panels";
 import { SkipLink } from "./skip-link";
 import { ThemeToggle } from "./theme-toggle";
@@ -569,6 +572,18 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     addArtifact,
   });
 
+  const phaseLessonCounts = useMemo(
+    () =>
+      curriculum.phases.map((phase) => {
+        const lessons = phase.courses.flatMap((c) => c.lessons);
+        return {
+          total: lessons.length,
+          completed: lessons.filter((l) => progress[l.id]).length,
+        };
+      }),
+    [curriculum.phases, progress],
+  );
+
   useKeyboardShortcuts({
     navigateNext: nextEntry ? () => navigateToEntry(nextEntry) : null,
     navigatePrev: prevEntry ? () => navigateToEntry(prevEntry) : null,
@@ -593,11 +608,21 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   ) {
     return (
       <main className="shell">
-        <section className="hero">
+        <section className="hero skeleton-hero">
           <span className="eyebrow">Loading…</span>
           <h1>{curriculum.productTitle}</h1>
           <p>{curriculum.productVision}</p>
+          <div className="skeleton-row">
+            <span className="skeleton-block" />
+            <span className="skeleton-block" />
+            <span className="skeleton-block" />
+          </div>
         </section>
+        <div className="skeleton-grid">
+          <div className="skeleton-panel" />
+          <div className="skeleton-panel skeleton-panel--wide" />
+          <div className="skeleton-panel" />
+        </div>
       </main>
     );
   }
@@ -654,6 +679,14 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
           }
           contentRef.current?.scrollIntoView({ behavior: "smooth" });
         }}
+      />
+
+      <ProgressRoadmap
+        phases={curriculum.phases}
+        selectedPhaseId={selectedPhase.id}
+        progress={progress}
+        phaseLessonCounts={phaseLessonCounts}
+        onSelectPhase={selectPhase}
       />
 
       <section className="main-grid">
@@ -821,6 +854,10 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
           phaseMilestoneStatus={phaseMilestoneStatus}
         />
       </section>
+
+      <SocialProof />
+
+      <PageFooter />
 
       <SaveToast message={saveFlash} />
 
