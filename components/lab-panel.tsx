@@ -40,6 +40,7 @@ export function LabPanel({
   const [hintTexts, setHintTexts] = useState<Record<number, string>>({});
   const [hintLevels, setHintLevels] = useState<Record<number, number>>({});
   const [editingFile, setEditingFile] = useState<string | null>(null);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   function handleValidate() {
     const result = onValidate();
@@ -52,6 +53,7 @@ export function LabPanel({
     setHintTexts({});
     setHintLevels({});
     setEditingFile(null);
+    setShowResetConfirm(false);
   }
 
   function handleHint(ruleIndex: number) {
@@ -105,9 +107,46 @@ export function LabPanel({
           <span className="status-pill complete">Completed</span>
         </div>
         <pre className="lab-completion-summary">{completionSummary}</pre>
-        <button type="button" className="ghost-button" onClick={handleReset}>
+        <button
+          type="button"
+          className="ghost-button"
+          onClick={() => setShowResetConfirm(true)}
+        >
           ↺ Reset and try again
         </button>
+        {showResetConfirm ? (
+          <div
+            className="confirm-backdrop"
+            onClick={() => setShowResetConfirm(false)}
+          >
+            <div
+              className="confirm-dialog"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h4>Reset this lab?</h4>
+              <p>
+                All your file edits, code submissions, and validation results
+                will be lost.
+              </p>
+              <div className="confirm-actions">
+                <button
+                  type="button"
+                  className="ghost-button"
+                  onClick={() => setShowResetConfirm(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="confirm-destructive"
+                  onClick={handleReset}
+                >
+                  Reset lab
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : null}
       </section>
     );
   }
@@ -188,17 +227,54 @@ export function LabPanel({
         >
           Validate
         </button>
-        <button type="button" className="ghost-button" onClick={handleReset}>
+        <button
+          type="button"
+          className="ghost-button"
+          onClick={() => setShowResetConfirm(true)}
+        >
           ↺ Reset lab
         </button>
       </div>
 
+      {showResetConfirm ? (
+        <div
+          className="confirm-backdrop"
+          onClick={() => setShowResetConfirm(false)}
+        >
+          <div className="confirm-dialog" onClick={(e) => e.stopPropagation()}>
+            <h4>Reset this lab?</h4>
+            <p>
+              All your file edits, code submissions, and validation results will
+              be lost.
+            </p>
+            <div className="confirm-actions">
+              <button
+                type="button"
+                className="ghost-button"
+                onClick={() => setShowResetConfirm(false)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="confirm-destructive"
+                onClick={handleReset}
+              >
+                Reset lab
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
       {/* Validation results */}
       {validationResult ? (
-        <div className="lab-validation-results">
+        <div
+          className={`lab-validation-results${validationResult.passed ? " all-passed" : ""}`}
+        >
           <h5>
             {validationResult.passed
-              ? "✓ All checks passed!"
+              ? "🎉 All checks passed!"
               : `${validationResult.failedResults.length} of ${validationResult.results.length} checks failed`}
           </h5>
           <ul className="lab-rule-list">
@@ -278,7 +354,12 @@ function LabRuleResultRow({
         </span>
       ) : null}
       {!result.passed ? (
-        <button type="button" className="ghost-button" onClick={onHint}>
+        <button
+          type="button"
+          className="ghost-button"
+          onClick={onHint}
+          aria-expanded={!!hintText}
+        >
           {hintText ? "More help" : "Need a hint?"}
         </button>
       ) : null}

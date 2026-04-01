@@ -6,6 +6,7 @@ import type { buildMilestonePassRateSummary } from "@/lib/milestone-pass-rate-en
 import type { buildOutcomesDashboardSummary } from "@/lib/outcomes-dashboard-engine";
 import type { buildPhaseStatusRecords } from "@/lib/phase-status-engine";
 import type { buildPhaseTransferAnalytics } from "@/lib/transfer-analytics-engine";
+import { CollapsiblePanel } from "./collapsible-panel";
 
 type SidebarPanelsProps = {
   curriculum: Curriculum;
@@ -56,12 +57,15 @@ export function SidebarPanels({
           <span className="tag">{curriculum.phases.length} total</span>
         </div>
 
-        <progress
-          className="progress-meter"
-          aria-label="Overall completion"
-          max={100}
-          value={percentComplete}
-        />
+        <div className="progress-with-label">
+          <progress
+            className="progress-meter"
+            aria-label="Overall completion"
+            max={100}
+            value={percentComplete}
+          />
+          <span className="progress-label">{percentComplete}%</span>
+        </div>
 
         <ul className="phase-list">
           {curriculum.phases.map((phase) => {
@@ -81,6 +85,9 @@ export function SidebarPanels({
                   type="button"
                   className={`phase-button ${phase.id === selectedPhase.id ? "active" : ""}`}
                   onClick={() => selectPhase(phase.id)}
+                  aria-current={
+                    phase.id === selectedPhase.id ? "true" : undefined
+                  }
                 >
                   <span className="phase-kicker">{phase.level}</span>
                   <span className="phase-title">{phase.title}</span>
@@ -132,8 +139,7 @@ export function SidebarPanels({
         </ul>
       </section>
 
-      <section className="panel">
-        <h3>Mastery overview</h3>
+      <CollapsiblePanel title="Mastery overview">
         <div className="phase-metrics">
           <span>{competencyDashboard.passingCount} strong tracks</span>
           <span>{competencyDashboard.weakCount} weak tracks</span>
@@ -159,10 +165,9 @@ export function SidebarPanels({
             Complete lessons to build competency signals.
           </p>
         )}
-      </section>
+      </CollapsiblePanel>
 
-      <section className="panel">
-        <h3>Transfer analytics</h3>
+      <CollapsiblePanel title="Transfer analytics">
         <ul className="review-queue-list">
           {phaseTransferAnalytics.map((record) => (
             <li key={record.phaseId}>
@@ -177,10 +182,9 @@ export function SidebarPanels({
             </li>
           ))}
         </ul>
-      </section>
+      </CollapsiblePanel>
 
-      <section className="panel">
-        <h3>Milestone pass rate</h3>
+      <CollapsiblePanel title="Milestone pass rate">
         <div className="phase-metrics">
           <span>{milestonePassRateSummary.passRate}% phases cleared</span>
           <span>
@@ -216,14 +220,11 @@ export function SidebarPanels({
             All phases currently satisfy milestone gates.
           </p>
         )}
-      </section>
+      </CollapsiblePanel>
 
-      <section className="panel">
+      <CollapsiblePanel title="Outcomes dashboard">
         <div className="panel-header">
-          <div>
-            <h3>Outcomes dashboard</h3>
-            <p>PRD metric rollup and recommended next actions.</p>
-          </div>
+          <p>PRD metric rollup and recommended next actions.</p>
           <span
             className={`status-pill ${
               outcomesDashboardSummary.status === "strong"
@@ -256,15 +257,12 @@ export function SidebarPanels({
             <li key={action}>{action}</li>
           ))}
         </ul>
-      </section>
+      </CollapsiblePanel>
 
       {independentReadiness ? (
-        <section className="panel">
+        <CollapsiblePanel title="Independent readiness">
           <div className="panel-header">
-            <div>
-              <h3>Independent readiness</h3>
-              <p>{independentReadiness.phaseTitle}</p>
-            </div>
+            <p>{independentReadiness.phaseTitle}</p>
             <span
               className={`status-pill ${
                 independentReadiness.statusLabel === "portfolio-ready"
@@ -307,11 +305,10 @@ export function SidebarPanels({
               </li>
             ))}
           </ul>
-        </section>
+        </CollapsiblePanel>
       ) : null}
 
-      <section className="panel">
-        <h3>Independent lab completion</h3>
+      <CollapsiblePanel title="Independent lab completion">
         <div className="phase-metrics">
           <span>{independentLabSummary.completionRate}% completed</span>
           <span>
@@ -351,7 +348,7 @@ export function SidebarPanels({
             you progress.
           </p>
         )}
-      </section>
+      </CollapsiblePanel>
     </aside>
   );
 }

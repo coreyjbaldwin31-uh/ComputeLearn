@@ -49,6 +49,14 @@ export function CodeExercise({
     message: string;
   } | null>(null);
   const [showHint, setShowHint] = useState(false);
+  const [copyLabel, setCopyLabel] = useState("Copy");
+
+  function handleCopy() {
+    navigator.clipboard.writeText(code).then(() => {
+      setCopyLabel("Copied!");
+      setTimeout(() => setCopyLabel("Copy"), 1500);
+    });
+  }
 
   function handleRun() {
     const validation = validateFn
@@ -110,11 +118,20 @@ export function CodeExercise({
         <button type="button" className="ghost-button" onClick={handleReset}>
           Reset code
         </button>
+        <button
+          type="button"
+          className={`copy-button ${copyLabel === "Copied!" ? "copied" : ""}`}
+          onClick={handleCopy}
+          aria-label="Copy code"
+        >
+          {copyLabel}
+        </button>
         {hint ? (
           <button
             type="button"
             className="ghost-button"
             onClick={() => setShowHint((v) => !v)}
+            aria-expanded={showHint}
           >
             {showHint ? "Hide hint" : "Show hint"}
           </button>

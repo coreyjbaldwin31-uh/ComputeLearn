@@ -1,26 +1,29 @@
 import type { Course, Lesson, Phase } from "@/data/curriculum";
-import { getArtifactPreview } from "@/lib/artifact-browser-engine";
 import type { buildArtifactBrowserSummary } from "@/lib/artifact-browser-engine";
+import { getArtifactPreview } from "@/lib/artifact-browser-engine";
 import type { buildArtifactCompletionSummary } from "@/lib/artifact-completion-engine";
 import type { AttemptRecord } from "@/lib/artifact-engine";
 import type { buildAttemptAnalyticsSummary } from "@/lib/attempt-analytics-engine";
 import type { evaluatePhaseMilestoneStatus } from "@/lib/milestone-engine";
+import type {
+  evaluatePhaseExitStatus,
+  LessonEntry,
+  ReviewRecord,
+} from "@/lib/progression-engine";
 import {
   formatTrackName,
   getMasteryLevel,
   isDueForReview,
 } from "@/lib/progression-engine";
-import type {
-  LessonEntry,
-  ReviewRecord,
-} from "@/lib/progression-engine";
-import type { evaluatePhaseExitStatus } from "@/lib/progression-engine";
 import type { ReinforcementRecommendation } from "@/lib/reinforcement-engine";
+import { useState } from "react";
+import { CollapsiblePanel } from "./collapsible-panel";
 import type { LearnerProfile } from "./hooks/use-learner-profile";
 
 type RailPanelsProps = {
   learnerProfile: LearnerProfile;
   updateLearnerProfile: (changes: Partial<LearnerProfile>) => void;
+  onResetAll: () => void;
   selectedPhase: Phase;
   selectedCourse: Course;
   selectedLesson: Lesson;
@@ -50,6 +53,7 @@ type RailPanelsProps = {
 export function RailPanels({
   learnerProfile,
   updateLearnerProfile,
+  onResetAll,
   selectedPhase,
   selectedCourse,
   selectedLesson,
@@ -75,6 +79,8 @@ export function RailPanels({
   phaseExitStatus,
   phaseMilestoneStatus,
 }: RailPanelsProps) {
+  const [showResetAllConfirm, setShowResetAllConfirm] = useState(false);
+
   return (
     <aside className="rail">
       <section className="panel">
@@ -123,8 +129,7 @@ export function RailPanels({
         </div>
       </section>
 
-      <section className="panel">
-        <h3>Evidence and attempts</h3>
+      <CollapsiblePanel title="Evidence and attempts">
         <p className="panel-subtext">
           Attempts and artifacts are saved locally as evidence for mastery
           gates.
@@ -135,22 +140,22 @@ export function RailPanels({
             className="ghost-button"
             onClick={() => exportArtifacts(selectedLesson.id)}
           >
-            Export lesson evidence
+            📄 Export lesson
           </button>
           <button
             type="button"
-            className="ghost-button"
+            className="validate-button"
             onClick={() => exportArtifacts()}
           >
-            Export all evidence
+            📦 Export all
           </button>
         </div>
         <div className="phase-metrics">
           <span>{recentAttempts.length} recent attempts</span>
           <span>{lessonArtifactSummary.total} lesson artifacts</span>
           <span>
-            {transferEvidenceWithinPhase}/{transferLessonsCount} transfer
-            gates passed
+            {transferEvidenceWithinPhase}/{transferLessonsCount} transfer gates
+            passed
           </span>
         </div>
         <div className="phase-metrics">
@@ -164,26 +169,21 @@ export function RailPanels({
           </span>
           <span>
             {artifactCompletionSummary.lessonsWithEvidence}/
-            {artifactCompletionSummary.completedLessons} completed lessons
-            with evidence
+            {artifactCompletionSummary.completedLessons} completed lessons with
+            evidence
           </span>
           <span>
-            {artifactCompletionSummary.lessonsMissingEvidence} missing
-            evidence
+            {artifactCompletionSummary.lessonsMissingEvidence} missing evidence
           </span>
         </div>
         <div className="phase-metrics">
           <span>{attemptAnalytics.errorReductionRate}% recovery rate</span>
-          <span>
-            {attemptAnalytics.recoveredExercises} recovered checks
-          </span>
-          <span>
-            {attemptAnalytics.unresolvedExercises} unresolved checks
-          </span>
+          <span>{attemptAnalytics.recoveredExercises} recovered checks</span>
+          <span>{attemptAnalytics.unresolvedExercises} unresolved checks</span>
         </div>
         <p className="microcopy">
-          This lesson: {lessonAttemptAnalytics.failedAttempts} failed
-          attempt{lessonAttemptAnalytics.failedAttempts === 1 ? "" : "s"},{" "}
+          This lesson: {lessonAttemptAnalytics.failedAttempts} failed attempt
+          {lessonAttemptAnalytics.failedAttempts === 1 ? "" : "s"},{" "}
           {lessonAttemptAnalytics.recoveredExercises} recovered exercise
           {lessonAttemptAnalytics.recoveredExercises === 1 ? "" : "s"}.
         </p>
@@ -192,12 +192,9 @@ export function RailPanels({
             {attemptAnalytics.breakdown.slice(0, 3).map((entry) => (
               <li key={entry.assessmentType}>
                 <div className="review-queue-item static-item">
-                  <span className="review-course">
-                    {entry.assessmentType}
-                  </span>
+                  <span className="review-course">{entry.assessmentType}</span>
                   <span className="review-lesson">
-                    {entry.failures} failures · {entry.recoveries}{" "}
-                    recoveries
+                    {entry.failures} failures · {entry.recoveries} recoveries
                   </span>
                   <span className="microcopy">
                     {entry.attempts} total attempts
@@ -224,9 +221,7 @@ export function RailPanels({
             ))}
           </ul>
         ) : (
-          <p className="microcopy">
-            No attempts logged for this lesson yet.
-          </p>
+          <p className="microcopy">No attempts logged for this lesson yet.</p>
         )}
         {lessonArtifactSummary.recent.length > 0 ? (
           <ul className="review-queue-list">
@@ -243,16 +238,14 @@ export function RailPanels({
             ))}
           </ul>
         ) : null}
-      </section>
+      </CollapsiblePanel>
 
       <section className="panel">
         <h3>Lessons in this course</h3>
         <progress
           className="course-progress"
           max={selectedCourse.lessons.length}
-          value={
-            selectedCourse.lessons.filter((l) => progress[l.id]).length
-          }
+          value={selectedCourse.lessons.filter((l) => progress[l.id]).length}
           aria-label="Course completion"
         />
         <ul className="lesson-list">
@@ -289,9 +282,7 @@ export function RailPanels({
               <h3>Reinforcement focus</h3>
               <p>Due reviews prioritized by weak competency overlap.</p>
             </div>
-            <span className="tag due-count">
-              {reinforcementQueue.length}
-            </span>
+            <span className="tag due-count">{reinforcementQueue.length}</span>
           </div>
           <ul className="review-queue-list">
             {reinforcementQueue.map((item) => (
@@ -308,8 +299,8 @@ export function RailPanels({
                     {item.entry.lesson.title}
                   </span>
                   <span className="microcopy">
-                    Focus: {item.weakTracks.map(formatTrackName).join(", ")}{" "}
-                    · {item.dueSinceDays} day
+                    Focus: {item.weakTracks.map(formatTrackName).join(", ")} ·{" "}
+                    {item.dueSinceDays} day
                     {item.dueSinceDays === 1 ? "" : "s"} overdue
                   </span>
                 </button>
@@ -350,8 +341,7 @@ export function RailPanels({
         </section>
       ) : null}
 
-      <section className="panel">
-        <h3>Safe lab design</h3>
+      <CollapsiblePanel title="Safe lab design">
         <div className="lab-grid">
           <article className="safety-card">
             <h4>Guardrails</h4>
@@ -371,10 +361,9 @@ export function RailPanels({
             </div>
           </article>
         </div>
-      </section>
+      </CollapsiblePanel>
 
-      <section className="panel">
-        <h3>Practical outcomes</h3>
+      <CollapsiblePanel title="Practical outcomes">
         <div className="project-grid">
           <article className="project-card">
             <h4>Milestones</h4>
@@ -393,7 +382,7 @@ export function RailPanels({
             </ul>
           </article>
         </div>
-      </section>
+      </CollapsiblePanel>
 
       {selectedPhase.competencyFocus &&
       selectedPhase.competencyFocus.length > 0 ? (
@@ -483,9 +472,7 @@ export function RailPanels({
                 className={`gate-item ${phaseMilestoneStatus?.reinforcementGatePassed ? "gate-passed" : "gate-pending"}`}
               >
                 <span className="gate-icon" aria-hidden="true">
-                  {phaseMilestoneStatus?.reinforcementGatePassed
-                    ? "✓"
-                    : "○"}
+                  {phaseMilestoneStatus?.reinforcementGatePassed ? "✓" : "○"}
                 </span>
                 <span className="gate-description">
                   Clear overdue reinforcement work for weak competencies
@@ -531,9 +518,7 @@ export function RailPanels({
                   <button
                     type="button"
                     className="validate-button phase-advance-button"
-                    onClick={() =>
-                      selectPhase(phaseExitStatus.nextPhase!.id)
-                    }
+                    onClick={() => selectPhase(phaseExitStatus.nextPhase!.id)}
                   >
                     Start {phaseExitStatus.nextPhase.title} →
                   </button>
@@ -542,6 +527,62 @@ export function RailPanels({
             </section>
           ) : null}
         </>
+      ) : null}
+
+      <CollapsiblePanel title="Danger zone" defaultOpen={false}>
+        <p className="panel-subtext">
+          Permanently remove all saved progress, notes, reflections, and
+          artifacts from this browser.
+        </p>
+        <button
+          type="button"
+          className="confirm-destructive"
+          style={{ width: "100%" }}
+          onClick={() => setShowResetAllConfirm(true)}
+        >
+          Reset all progress
+        </button>
+      </CollapsiblePanel>
+
+      {showResetAllConfirm ? (
+        <div
+          className="confirm-backdrop"
+          onClick={() => setShowResetAllConfirm(false)}
+        >
+          <div
+            className="confirm-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Confirm reset all progress"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h4>Erase everything?</h4>
+            <p>
+              This will permanently delete all lesson progress, notes,
+              reflections, artifacts, and lab data from this browser. This
+              cannot be undone.
+            </p>
+            <div className="confirm-actions">
+              <button
+                type="button"
+                className="ghost-button"
+                onClick={() => setShowResetAllConfirm(false)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="confirm-destructive"
+                onClick={() => {
+                  onResetAll();
+                  setShowResetAllConfirm(false);
+                }}
+              >
+                Erase all data
+              </button>
+            </div>
+          </div>
+        </div>
       ) : null}
     </aside>
   );
