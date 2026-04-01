@@ -755,6 +755,26 @@ export const curriculum: Curriculum = {
               },
               competencies: [{ track: "CodeReading", targetLevel: "Functional" }],
               scaffoldingLevel: "step-by-step",
+              codeExercises: [
+                {
+                  id: "code-read-trace-flow",
+                  title: "Trace data through a function chain",
+                  description: "Read the code below and fill in the missing return statement in processOrder so the pipeline produces the correct output. Trace the data from createOrder through applyDiscount to processOrder.",
+                  starterCode: "function createOrder(item, qty) {\n  return { item, qty, total: qty * 10 };\n}\n\nfunction applyDiscount(order) {\n  return { ...order, total: order.total * 0.9 };\n}\n\nfunction processOrder(item, qty) {\n  const order = createOrder(item, qty);\n  const discounted = applyDiscount(order);\n  // Return the final total\n  return discounted.total;\n}\n\nconsole.log(processOrder('Widget', 5)); // 45",
+                  language: "javascript",
+                  hint: "Follow the data: createOrder builds the object, applyDiscount modifies total, processOrder should return the final total from the discounted object.",
+                  acceptedPatterns: ["discounted.total", "return discounted"],
+                },
+                {
+                  id: "code-read-find-bug",
+                  title: "Spot the bug by reading",
+                  description: "This function should return the full name by joining first and last with a space, but it returns the wrong result. Read the code, find the bug, and fix it without running it first.",
+                  starterCode: "function getFullName(user) {\n  return user.first + user.last;\n}\n\n// Expected: 'Jane Doe'\nconsole.log(getFullName({ first: 'Jane', last: 'Doe' }));",
+                  language: "javascript",
+                  hint: "The function joins first and last directly. What is missing between them?",
+                  acceptedPatterns: ["+ ' ' +", "+ \" \" +", "` `", "${user.first} ${user.last}"],
+                },
+              ],
             },
             {
               id: "lesson-debugging",
@@ -1194,6 +1214,32 @@ export const curriculum: Curriculum = {
                 hint: "Think: what JSON syntax errors cause unexpected-token errors, and what could be missing from the environment?",
                 assessmentType: "transfer",
               },
+              codeExercises: [
+                {
+                  id: "json-fix-trailing-comma",
+                  title: "Fix the JSON syntax error",
+                  description: "This JSON config has a trailing comma that causes a parse error. Remove it so the file parses correctly.",
+                  starterCode: `{
+  "appName": "my-app",
+  "port": 3000,
+  "debug": true,
+}`,
+                  language: "json",
+                  hint: "JSON does not allow a comma after the last property in an object or array.",
+                  acceptedPatterns: ['"debug": true\n}', '"debug":true\n}', '"debug": true }'],
+                },
+                {
+                  id: "json-parse-config-value",
+                  title: "Read a value from parsed JSON",
+                  description: "Write a line of JavaScript that parses the JSON string stored in `raw` and logs the value of the `port` property.",
+                  starterCode: `const raw = '{"host":"localhost","port":8080}';
+// Parse the JSON and log the port value
+`,
+                  language: "javascript",
+                  hint: "Use JSON.parse() to convert the string to an object, then access .port.",
+                  acceptedPatterns: ["JSON.parse", ".port"],
+                },
+              ],
               competencies: [{ track: "ProgrammingLogic", targetLevel: "Functional" }, { track: "ConfigurationAndEnvironments", targetLevel: "Functional" }],
               scaffoldingLevel: "goal-driven",
             },
@@ -1277,6 +1323,26 @@ export const curriculum: Curriculum = {
               },
               competencies: [{ track: "Debugging", targetLevel: "Functional" }],
               scaffoldingLevel: "goal-driven",
+              codeExercises: [
+                {
+                  id: "error-fix-undefined-access",
+                  title: "Fix an undefined property access",
+                  description: "This code throws 'TypeError: Cannot read properties of undefined (reading \\'email\\')'. The user object does not always have a contact property. Add a guard so the function returns 'no email' when contact is missing.",
+                  starterCode: "function getUserEmail(user) {\n  return user.contact.email;\n}\n\nconst user = { name: 'Alice' };\nconsole.log(getUserEmail(user)); // should print 'no email'",
+                  language: "javascript",
+                  hint: "Check whether user.contact exists before accessing .email. Use optional chaining (?.) or an if statement.",
+                  acceptedPatterns: ["user.contact?.email", "if (!user.contact)", "if (user.contact)", "no email"],
+                },
+                {
+                  id: "error-fix-reference",
+                  title: "Fix a ReferenceError",
+                  description: "This code throws 'ReferenceError: totl is not defined' because of a typo. Find the misspelled variable name and correct it so the function returns the sum.",
+                  starterCode: "function calculateTotal(prices) {\n  let total = 0;\n  for (const price of prices) {\n    totl = totl + price;\n  }\n  return total;\n}\n\nconsole.log(calculateTotal([10, 20, 30])); // should print 60",
+                  language: "javascript",
+                  hint: "Look at each use of the variable name inside the loop. Compare it to the declaration on the line above.",
+                  acceptedPatterns: ["total = total + price", "total += price"],
+                },
+              ],
             },
             {
               id: "lesson-vscode-debugger",
