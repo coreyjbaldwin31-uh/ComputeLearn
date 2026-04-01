@@ -91,6 +91,12 @@
   color: var(--text);
 }
 
+[data-theme="dark"] .lesson-search-input {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+}
+
 [data-theme="dark"] .eyebrow {
   background: rgba(255, 255, 255, 0.06);
 }
@@ -273,6 +279,46 @@ select {
 .stats,
 .section-grid,
 .exercise-grid,
+.hero-offer-grid {
+  display: grid;
+  gap: 14px;
+}
+.offer-card {
+  height: 100%;
+}
+.consumer-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.plan-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--text);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+.trust-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+.trust-strip span {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
 .lab-grid,
 .project-grid,
 .notes-grid,
@@ -282,6 +328,24 @@ select {
 .phase-metrics {
   display: grid;
   gap: 18px;
+}
+.lesson-discovery-controls {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+.lesson-search-input {
+  width: 100%;
+  border: 1px solid rgba(24, 35, 31, 0.14);
+  border-radius: 14px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.78);
+  color: var(--text);
+}
+.lesson-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .hero-grid {
@@ -682,6 +746,11 @@ select {
   .rail,
   .phase-metrics {
     grid-template-columns: 1fr;
+  }
+
+  .consumer-cta-row,
+  .trust-strip {
+    gap: 6px;
   }
 
   .lesson-meta {

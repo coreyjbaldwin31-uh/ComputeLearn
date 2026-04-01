@@ -35,20 +35,23 @@ export function HeroSection({
 }: HeroSectionProps) {
   return (
     <section className="hero">
-      <span className="eyebrow">
-        Interactive software engineering training
-      </span>
+      <span className="eyebrow">Interactive software engineering training</span>
       <h1>{productTitle}</h1>
       <p>{productVision}</p>
+
+      <div className="consumer-cta-row" aria-label="Consumer value highlights">
+        <span className="plan-chip">Self-paced curriculum</span>
+        <span className="plan-chip">Hands-on validation labs</span>
+        <span className="plan-chip">Exportable learning artifacts</span>
+      </div>
 
       {isCurriculumComplete ? (
         <div className="welcome-banner completion-banner">
           <h3>🎓 Curriculum complete!</h3>
           <p>
-            You have finished all {allLessonsCount} lessons across{" "}
-            {phasesCount} phases. Revisit any lesson to strengthen weak
-            competencies, or explore independent labs to sharpen your skills
-            further.
+            You have finished all {allLessonsCount} lessons across {phasesCount}{" "}
+            phases. Revisit any lesson to strengthen weak competencies, or
+            explore independent labs to sharpen your skills further.
           </p>
         </div>
       ) : isNewUser ? (
@@ -59,11 +62,7 @@ export function HeroSection({
             the exercises and validation checks below. Your progress saves
             automatically.
           </p>
-          <button
-            type="button"
-            className="welcome-cta"
-            onClick={onBeginLesson}
-          >
+          <button type="button" className="welcome-cta" onClick={onBeginLesson}>
             Begin lesson:{" "}
             {nextUnfinishedEntry?.lesson.title ?? selectedLessonTitle} →
           </button>
@@ -75,8 +74,8 @@ export function HeroSection({
               <span>Progression model</span>
               <div className="stat-value">{phasesCount} phases</div>
               <p>
-                Computer mastery, engineering foundations, and modern AI-assisted
-                delivery.
+                Computer mastery, engineering foundations, and modern
+                AI-assisted delivery.
               </p>
             </article>
             <article className="stat-card">
@@ -109,17 +108,45 @@ export function HeroSection({
               </p>
             </article>
           </div>
-          <article className="timeline-card">
-            <h4>How the system trains</h4>
-            <ul className="retention-list">
-              <li>Explain the concept with operational clarity.</li>
-              <li>Demonstrate the workflow in a guided environment.</li>
-              <li>Require hands-on action and validate the response.</li>
-              <li>Retain notes, outputs, and completion state for review.</li>
-            </ul>
-          </article>
+          <div className="hero-offer-grid">
+            <article className="timeline-card offer-card">
+              <h4>How the system trains</h4>
+              <ul className="retention-list">
+                <li>Explain the concept with operational clarity.</li>
+                <li>Demonstrate the workflow in a guided environment.</li>
+                <li>Require hands-on action and validate the response.</li>
+                <li>Retain notes, outputs, and completion state for review.</li>
+              </ul>
+            </article>
+            <article className="timeline-card offer-card">
+              <h4>What paying users get</h4>
+              <ul className="retention-list">
+                <li>Structured progression from fundamentals to delivery.</li>
+                <li>Evidence-based completion with transfer gating.</li>
+                <li>Analytics for readiness, gaps, and reinforcement.</li>
+                <li>Portable artifacts for coaching and portfolio proof.</li>
+              </ul>
+              <button
+                type="button"
+                className="welcome-cta"
+                onClick={onBeginLesson}
+              >
+                Continue learning path →
+              </button>
+            </article>
+          </div>
         </div>
       )}
+
+      <div
+        className="trust-strip"
+        role="note"
+        aria-label="Trust and reliability"
+      >
+        <span>Live validation feedback</span>
+        <span>Offline-first progress persistence</span>
+        <span>Production-style transfer tasks</span>
+      </div>
     </section>
   );
 }

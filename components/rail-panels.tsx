@@ -16,7 +16,7 @@ import {
   isDueForReview,
 } from "@/lib/progression-engine";
 import type { ReinforcementRecommendation } from "@/lib/reinforcement-engine";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CollapsiblePanel } from "./collapsible-panel";
 import { useFocusTrap } from "./hooks/use-focus-trap";
 import type { LearnerProfile } from "./hooks/use-learner-profile";
@@ -81,7 +81,40 @@ export function RailPanels({
   phaseMilestoneStatus,
 }: RailPanelsProps) {
   const [showResetAllConfirm, setShowResetAllConfirm] = useState(false);
+  const [lessonQuery, setLessonQuery] = useState("");
+  const [lessonFilter, setLessonFilter] = useState<
+    "all" | "pending" | "complete" | "due"
+  >("all");
   const resetAllDialogRef = useFocusTrap(showResetAllConfirm);
+
+  const filteredLessons = useMemo(() => {
+    const normalizedQuery = lessonQuery.trim().toLowerCase();
+
+    return visibleLessons.filter((lesson) => {
+      const matchesQuery =
+        normalizedQuery.length === 0 ||
+        lesson.title.toLowerCase().includes(normalizedQuery) ||
+        lesson.summary.toLowerCase().includes(normalizedQuery);
+
+      if (!matchesQuery) return false;
+
+      if (lessonFilter === "complete") {
+        return Boolean(progress[lesson.id]);
+      }
+
+      if (lessonFilter === "pending") {
+        return !progress[lesson.id];
+      }
+
+      if (lessonFilter === "due") {
+        return Boolean(
+          reviews[lesson.id] && isDueForReview(reviews[lesson.id]),
+        );
+      }
+
+      return true;
+    });
+  }, [lessonFilter, lessonQuery, progress, reviews, visibleLessons]);
 
   useEffect(() => {
     if (!showResetAllConfirm) return;
@@ -259,8 +292,56 @@ export function RailPanels({
           value={selectedCourse.lessons.filter((l) => progress[l.id]).length}
           aria-label="Course completion"
         />
+        <div className="lesson-discovery-controls">
+          <input
+            className="lesson-search-input"
+            type="search"
+            value={lessonQuery}
+            onChange={(event) => setLessonQuery(event.target.value)}
+            placeholder="Search lessons by title or summary"
+            aria-label="Search lessons"
+          />
+          <div
+            className="lesson-filter-row"
+            role="tablist"
+            aria-label="Lesson status filter"
+          >
+            <button
+              type="button"
+              className={`toggle-chip ${lessonFilter === "all" ? "active" : ""}`}
+              onClick={() => setLessonFilter("all")}
+            >
+              All
+            </button>
+            <button
+              type="button"
+              className={`toggle-chip ${lessonFilter === "pending" ? "active" : ""}`}
+              onClick={() => setLessonFilter("pending")}
+            >
+              Pending
+            </button>
+            <button
+              type="button"
+              className={`toggle-chip ${lessonFilter === "complete" ? "active" : ""}`}
+              onClick={() => setLessonFilter("complete")}
+            >
+              Complete
+            </button>
+            <button
+              type="button"
+              className={`toggle-chip ${lessonFilter === "due" ? "active" : ""}`}
+              onClick={() => setLessonFilter("due")}
+            >
+              Due
+            </button>
+          </div>
+          <p className="microcopy">
+            Showing {filteredLessons.length} of {visibleLessons.length} lesson
+            {visibleLessons.length === 1 ? "" : "s"}.
+          </p>
+        </div>
         <ul className="lesson-list">
-          {visibleLessons.map((lesson) => (
+          {filteredLessons.map((lesson) => (
             <li key={lesson.id}>
               <button
                 type="button"
@@ -284,6 +365,12 @@ export function RailPanels({
             </li>
           ))}
         </ul>
+        {filteredLessons.length === 0 ? (
+          <p className="microcopy">
+            No lessons match your search and filter. Try clearing one of the
+            controls.
+          </p>
+        ) : null}
       </section>
 
       {reinforcementQueue.length > 0 ? (

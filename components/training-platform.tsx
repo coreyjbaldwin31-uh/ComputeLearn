@@ -4,8 +4,6 @@ import type { Curriculum, Lesson } from "@/data/curriculum";
 import type { ArtifactRecord } from "@/lib/artifact-engine";
 import {
   type AttemptRecord,
-  buildAttemptRecord,
-  createId,
   formatCompletionContent,
 } from "@/lib/artifact-engine";
 import { getWeakCompetencyTracks } from "@/lib/competency-engine";
@@ -31,30 +29,32 @@ import {
 } from "@/lib/reinforcement-engine";
 import { evaluateLessonEvidenceGate } from "@/lib/validation-engine";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { CodeExercise } from "./code-exercise";
 import { HeroSection } from "./hero-section";
 import { useAnalyticsDashboards } from "./hooks/use-analytics-dashboards";
 import { useArtifactManager } from "./hooks/use-artifact-manager";
-import {
-  buildExerciseInspection,
-  evaluateExerciseAnswer,
-  getHintButtonLabel,
-  getHintText,
-  isHintExhausted,
-  useExerciseValidation,
-} from "./hooks/use-exercise-validation";
-import { useFocusTrap } from "./hooks/use-focus-trap";
+import { useExerciseValidation } from "./hooks/use-exercise-validation";
 import { useKeyboardShortcuts } from "./hooks/use-keyboard-shortcuts";
 import { useLabLifecycle } from "./hooks/use-lab-lifecycle";
 import { useLearnerProfile } from "./hooks/use-learner-profile";
 import { useLocalStorageState } from "./hooks/use-local-storage-state";
 import { useTheme } from "./hooks/use-theme";
-import { InspectionPanel } from "./inspection-panel";
+import { KeyboardHelpTrigger } from "./keyboard-help-trigger";
+import { KeyboardShortcutsDialog } from "./keyboard-shortcuts-dialog";
 import { LabPanel } from "./lab-panel";
+import { LessonCodeExercises } from "./lesson-code-exercises";
+import { LessonExercises } from "./lesson-exercises";
+import { LessonExplanation } from "./lesson-explanation";
+import { LessonHeader } from "./lesson-header";
+import { LessonNavigation } from "./lesson-navigation";
+import { LessonTerminal } from "./lesson-terminal";
+import { LessonTransfer } from "./lesson-transfer";
+import { LessonValidation } from "./lesson-validation";
 import { NotesSection } from "./notes-section";
 import { RailPanels } from "./rail-panels";
+import { SaveToast } from "./save-toast";
 import { SidebarPanels } from "./sidebar-panels";
-import { TerminalSimulator } from "./terminal-simulator";
+import { SkipLink } from "./skip-link";
+import { ThemeToggle } from "./theme-toggle";
 
 type ProgressState = Record<string, true>;
 type NotesState = Record<string, string>;
@@ -141,9 +141,6 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const { theme, toggle: toggleTheme } = useTheme();
 
   const contentRef = useRef<HTMLElement>(null);
-
-  const resetDialogRef = useFocusTrap(showResetConfirm);
-  const keyboardDialogRef = useFocusTrap(showKeyboardHelp);
 
   const [todayKey, setTodayKey] = useState(() => new Date().toDateString());
 
@@ -449,11 +446,6 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     }));
   }
 
-  function resetLab() {
-    if (!selectedLesson) return;
-    setShowResetConfirm(true);
-  }
-
   function confirmResetLab() {
     if (!selectedLesson) return;
     const exerciseIds = new Set(selectedLesson.exercises.map((e) => e.id));
@@ -561,7 +553,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     advanceHint,
     toggleInspection,
     currentHintLevels,
-    isInspectionOpen,
+    inspectionOpen,
     selectedLessonTransferPassed,
     setHintLevels,
   } = useExerciseValidation({
@@ -641,18 +633,8 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
 
   return (
     <main className="shell">
-      <a href="#lesson-content" className="skip-link">
-        Skip to lesson content
-      </a>
-      <button
-        type="button"
-        className="theme-toggle"
-        onClick={toggleTheme}
-        aria-label="Toggle theme"
-      >
-        <span className="theme-icon">{theme === "dark" ? "☀️" : "🌙"}</span>
-        <span>{theme === "dark" ? "Light" : "Dark"}</span>
-      </button>
+      <SkipLink href="#lesson-content">Skip to lesson content</SkipLink>
+      <ThemeToggle theme={theme} onToggle={toggleTheme} />
 
       <HeroSection
         productTitle={curriculum.productTitle}
@@ -693,466 +675,71 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
         />
 
         <section className="content" ref={contentRef} id="lesson-content">
-          <section className="panel">
-            <nav className="breadcrumbs" aria-label="Breadcrumb">
-              <button
-                type="button"
-                className="breadcrumb-link"
-                onClick={() => selectPhase(selectedPhase.id)}
-              >
-                {selectedPhase.title}
-              </button>
-              <span>›</span>
-              <button
-                type="button"
-                className="breadcrumb-link"
-                onClick={() => selectCourse(selectedCourse.id)}
-              >
-                {selectedCourse.title}
-              </button>
-              <span>›</span>
-              <span>{selectedLesson.title}</span>
-            </nav>
+          <LessonHeader
+            selectedPhase={selectedPhase}
+            selectedCourse={selectedCourse}
+            selectedLesson={selectedLesson}
+            progress={progress}
+            showCompletedOnly={showCompletedOnly}
+            showResetConfirm={showResetConfirm}
+            lessonGateFeedback={lessonGateFeedback}
+            onSelectPhase={selectPhase}
+            onSelectCourse={selectCourse}
+            onToggleCompletedOnly={() =>
+              setShowCompletedOnly((current) => !current)
+            }
+            onToggleLessonCompletion={setLessonCompletion}
+            onResetLab={() => setShowResetConfirm(true)}
+            onCancelReset={() => setShowResetConfirm(false)}
+            onConfirmReset={confirmResetLab}
+            showTerminal={showTerminal}
+          />
 
-            <div className="lesson-headline">
-              <span className="eyebrow">Current lesson</span>
-              <span
-                className={`status-pill ${progress[selectedLesson.id] ? "complete" : "pending"}`}
-              >
-                {progress[selectedLesson.id] ? "Completed" : "In progress"}
-              </span>
-            </div>
-            <h2>{selectedLesson.title}</h2>
-            <p className="lesson-overview">{selectedLesson.summary}</p>
+          <LessonExplanation lesson={selectedLesson} />
 
-            <div className="lesson-actions">
-              {selectedPhase.courses.map((course) => (
-                <button
-                  key={course.id}
-                  type="button"
-                  className={`course-chip ${selectedCourse.id === course.id ? "active" : ""}`}
-                  onClick={() => selectCourse(course.id)}
-                >
-                  {course.title}
-                </button>
-              ))}
-              <button
-                type="button"
-                className={`toggle-chip ${showCompletedOnly ? "active" : ""}`}
-                onClick={() => setShowCompletedOnly((current) => !current)}
-              >
-                {showCompletedOnly
-                  ? "Showing completed only"
-                  : "Show completed only"}
-              </button>
-              <button
-                type="button"
-                className={`mark-complete-button ${progress[selectedLesson.id] ? "completed" : ""}`}
-                onClick={() =>
-                  setLessonCompletion(
-                    selectedLesson.id,
-                    !progress[selectedLesson.id],
-                  )
-                }
-              >
-                {progress[selectedLesson.id]
-                  ? "✓ Completed — mark incomplete"
-                  : "Mark complete ✓"}
-              </button>
-              <button
-                type="button"
-                className="ghost-button reset-lab-button"
-                onClick={resetLab}
-              >
-                ↺ Reset lab
-              </button>
-            </div>
-            {showResetConfirm ? (
-              <div
-                className="confirm-backdrop"
-                onClick={() => setShowResetConfirm(false)}
-              >
-                <div
-                  ref={resetDialogRef}
-                  className="confirm-dialog"
-                  role="dialog"
-                  aria-modal="true"
-                  aria-label="Confirm reset"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <h4>Reset all exercise data?</h4>
-                  <p>
-                    This will clear your answers, hints, feedback, and transfer
-                    progress for this lesson.
-                  </p>
-                  <div className="confirm-actions">
-                    <button
-                      type="button"
-                      className="ghost-button"
-                      onClick={() => setShowResetConfirm(false)}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="button"
-                      className="confirm-destructive"
-                      onClick={confirmResetLab}
-                    >
-                      Reset
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ) : null}
-            {lessonGateFeedback ? (
-              <div className="gate-feedback-banner" role="alert">
-                {lessonGateFeedback}
-              </div>
-            ) : null}
+          <LessonExercises lesson={selectedLesson} />
 
-            <div className="lesson-meta">
-              <span className="metric-pill">{selectedLesson.duration}</span>
-              <span className="metric-pill">{selectedLesson.difficulty}</span>
-              {selectedLesson.scaffoldingLevel ? (
-                <span
-                  className={`scaffolding-badge scaffolding-${selectedLesson.scaffoldingLevel}`}
-                >
-                  {selectedLesson.scaffoldingLevel === "step-by-step"
-                    ? "Guided"
-                    : selectedLesson.scaffoldingLevel === "goal-driven"
-                      ? "Goal-driven"
-                      : "Ticket-style"}
-                </span>
-              ) : null}
-            </div>
+          {selectedLesson.exercises.length > 0 && (
+            <LessonValidation
+              lesson={selectedLesson}
+              answers={answers}
+              feedback={feedback}
+              currentHintLevels={currentHintLevels}
+              inspectionOpenStates={inspectionOpen}
+              onUpdateAnswer={updateAnswer}
+              onValidateExercise={validateExercise}
+              onAdvanceHint={advanceHint}
+              onToggleInspection={toggleInspection}
+            />
+          )}
 
-            <nav className="lesson-toc" aria-label="Lesson sections">
-              <a className="lesson-toc-link" href="#section-explanation">
-                Concept
-              </a>
-              <a className="lesson-toc-link" href="#section-exercises">
-                Exercises
-              </a>
-              {selectedLesson.exercises.length > 0 ? (
-                <a className="lesson-toc-link" href="#section-validation">
-                  Validation
-                </a>
-              ) : null}
-              {selectedLesson.transferTask ? (
-                <a className="lesson-toc-link" href="#section-transfer">
-                  Transfer
-                </a>
-              ) : null}
-              {selectedLesson.codeExercises &&
-              selectedLesson.codeExercises.length > 0 ? (
-                <a className="lesson-toc-link" href="#section-code">
-                  Code
-                </a>
-              ) : null}
-              <a className="lesson-toc-link" href="#section-notes">
-                Notes
-              </a>
-              {showTerminal ? (
-                <a className="lesson-toc-link" href="#section-terminal">
-                  Terminal
-                </a>
-              ) : null}
-            </nav>
-          </section>
+          {selectedLesson.transferTask && (
+            <LessonTransfer
+              lesson={selectedLesson}
+              transferAnswers={transferAnswers}
+              transferFeedback={transferFeedback}
+              currentHintLevels={currentHintLevels}
+              inspectionOpenStates={inspectionOpen}
+              selectedLessonTransferPassed={selectedLessonTransferPassed}
+              onUpdateTransferAnswer={(lessonId, answer) =>
+                setTransferAnswers((current) => ({
+                  ...current,
+                  [lessonId]: answer,
+                }))
+              }
+              onValidateTransferTask={validateTransferTask}
+              onAdvanceHint={advanceHint}
+              onToggleInspection={toggleInspection}
+            />
+          )}
 
-          <section className="section-grid" id="section-explanation">
-            <article className="lesson-card">
-              <h4>Concept explanation</h4>
-              {selectedLesson.explanation.map((paragraph, i) => (
-                <p key={i}>{paragraph}</p>
-              ))}
-            </article>
-
-            <article className="lesson-card">
-              <h4>Guided demonstration</h4>
-              {selectedLesson.demonstration.map((paragraph, i) => (
-                <p key={i}>{paragraph}</p>
-              ))}
-            </article>
-          </section>
-
-          <section className="exercise-grid" id="section-exercises">
-            <article className="exercise-card">
-              <h4>Hands-on exercise</h4>
-              <ol className="exercise-list">
-                {selectedLesson.exerciseSteps.map((step, i) => (
-                  <li key={i}>{step}</li>
-                ))}
-              </ol>
-            </article>
-
-            <article className="check-card">
-              <h4>Validation criteria</h4>
-              <ul className="validation-list">
-                {selectedLesson.validationChecks.map((check, i) => (
-                  <li key={i}>{check}</li>
-                ))}
-              </ul>
-            </article>
-          </section>
-
-          <section className="validation-grid" id="section-validation">
-            {selectedLesson.exercises.map((exercise) => {
-              const exerciseAnswer = answers[exercise.id] ?? "";
-              const exerciseFeedback = feedback[exercise.id];
-              const validation = evaluateExerciseAnswer(
-                exercise,
-                exerciseAnswer,
-              );
-              const isCorrect = validation.passed;
-              const inspection = buildExerciseInspection(
-                exercise,
-                exerciseAnswer,
-              );
-              const showInspection = isInspectionOpen(exercise.id);
-
-              return (
-                <article className="exercise-card" key={exercise.id}>
-                  <div className="exercise-card-header">
-                    <h4>{exercise.title}</h4>
-                    {exercise.assessmentType ? (
-                      <span
-                        className={`assessment-badge assessment-${exercise.assessmentType}`}
-                      >
-                        {exercise.assessmentType}
-                      </span>
-                    ) : null}
-                  </div>
-                  <p>{exercise.prompt}</p>
-                  <input
-                    aria-label={exercise.title}
-                    value={exerciseAnswer}
-                    onChange={(event) =>
-                      updateAnswer(exercise.id, event.target.value)
-                    }
-                    placeholder={exercise.placeholder}
-                  />
-                  <div className="toolbar">
-                    <button
-                      type="button"
-                      className="validate-button"
-                      onClick={() => validateExercise(exercise)}
-                    >
-                      Validate
-                    </button>
-                    <button
-                      type="button"
-                      className="ghost-button"
-                      disabled={
-                        isCorrect ||
-                        isHintExhausted(currentHintLevels[exercise.id] ?? 0)
-                      }
-                      onClick={() => advanceHint(exercise.id)}
-                    >
-                      {getHintButtonLabel(currentHintLevels[exercise.id] ?? 0)}
-                    </button>
-                    <button
-                      type="button"
-                      className="ghost-button"
-                      disabled={!exerciseAnswer.trim()}
-                      onClick={() => toggleInspection(exercise.id)}
-                    >
-                      {showInspection
-                        ? "Hide inspect mode"
-                        : "Inspect response"}
-                    </button>
-                    <span
-                      className={`status-pill ${
-                        isCorrect ? "complete" : "pending"
-                      }`}
-                    >
-                      {isCorrect ? "✓ Ready" : "Needs review"}
-                    </span>
-                  </div>
-                  {exerciseFeedback ? (
-                    <div
-                      role="alert"
-                      className={`feedback ${isCorrect ? "success" : "warning"}`}
-                    >
-                      {exerciseFeedback}
-                    </div>
-                  ) : null}
-                  {getHintText(
-                    currentHintLevels[exercise.id] ?? 0,
-                    exercise.hint,
-                  ) !== null ? (
-                    <div className="hint-layer">
-                      {getHintText(
-                        currentHintLevels[exercise.id] ?? 0,
-                        exercise.hint,
-                      )}
-                    </div>
-                  ) : null}
-                  {showInspection ? (
-                    <InspectionPanel inspection={inspection} />
-                  ) : null}
-                </article>
-              );
-            })}
-          </section>
-
-          {selectedLesson.transferTask ? (
-            <section className="validation-grid" id="section-transfer">
-              <article className="exercise-card transfer-task-card">
-                {(() => {
-                  const transferTask = selectedLesson.transferTask;
-                  const transferInspection = buildExerciseInspection(
-                    transferTask,
-                    transferAnswers[selectedLesson.id] ?? "",
-                  );
-                  const showTransferInspection = isInspectionOpen(
-                    transferTask.id,
-                  );
-
-                  return (
-                    <>
-                      <div className="exercise-card-header">
-                        <h4>{transferTask.title}</h4>
-                        <span className="assessment-badge assessment-transfer">
-                          transfer
-                        </span>
-                      </div>
-                      <p>{transferTask.prompt}</p>
-                      <textarea
-                        aria-label={transferTask.title}
-                        value={transferAnswers[selectedLesson.id] ?? ""}
-                        onChange={(event) =>
-                          setTransferAnswers((current) => ({
-                            ...current,
-                            [selectedLesson.id]: event.target.value,
-                          }))
-                        }
-                        placeholder={transferTask.placeholder}
-                        rows={4}
-                      />
-                      <div className="toolbar">
-                        <button
-                          type="button"
-                          className="validate-button"
-                          onClick={validateTransferTask}
-                        >
-                          Validate transfer
-                        </button>
-                        <button
-                          type="button"
-                          className="ghost-button"
-                          disabled={
-                            selectedLessonTransferPassed ||
-                            isHintExhausted(
-                              currentHintLevels[transferTask.id] ?? 0,
-                            )
-                          }
-                          onClick={() => advanceHint(transferTask.id)}
-                        >
-                          {getHintButtonLabel(
-                            currentHintLevels[transferTask.id] ?? 0,
-                          )}
-                        </button>
-                        <button
-                          type="button"
-                          className="ghost-button"
-                          disabled={
-                            !(transferAnswers[selectedLesson.id] ?? "").trim()
-                          }
-                          onClick={() => toggleInspection(transferTask.id)}
-                        >
-                          {showTransferInspection
-                            ? "Hide inspect mode"
-                            : "Inspect response"}
-                        </button>
-                        <span
-                          className={`status-pill ${selectedLessonTransferPassed ? "complete" : "pending"}`}
-                        >
-                          {selectedLessonTransferPassed
-                            ? "Passed"
-                            : "Not passed"}
-                        </span>
-                      </div>
-                      {transferFeedback[selectedLesson.id] ? (
-                        <div
-                          role="alert"
-                          className={`feedback ${selectedLessonTransferPassed ? "success" : "warning"}`}
-                        >
-                          {transferFeedback[selectedLesson.id]}
-                        </div>
-                      ) : null}
-                      {getHintText(
-                        currentHintLevels[transferTask.id] ?? 0,
-                        transferTask.hint,
-                      ) !== null ? (
-                        <div className="hint-layer">
-                          {getHintText(
-                            currentHintLevels[transferTask.id] ?? 0,
-                            transferTask.hint,
-                          )}
-                        </div>
-                      ) : null}
-                      {showTransferInspection ? (
-                        <InspectionPanel
-                          inspection={transferInspection}
-                          keyPrefix="transfer-"
-                        />
-                      ) : null}
-                    </>
-                  );
-                })()}
-              </article>
-            </section>
-          ) : null}
-
-          {selectedLesson.codeExercises &&
-          selectedLesson.codeExercises.length > 0 ? (
-            <section className="code-exercises-section" id="section-code">
-              {selectedLesson.codeExercises.map((ex) => (
-                <CodeExercise
-                  key={ex.id}
-                  title={ex.title}
-                  description={ex.description}
-                  starterCode={ex.starterCode}
-                  language={ex.language}
-                  hint={ex.hint}
-                  validateFn={(code) => {
-                    const passed = ex.acceptedPatterns.some((pattern) =>
-                      code.includes(pattern),
-                    );
-                    return {
-                      passed,
-                      message: passed
-                        ? "Pattern matched. Good structure."
-                        : "Not quite — re-read the description and look for the expected pattern.",
-                    };
-                  }}
-                  onAttempt={(code, passed) => {
-                    const record = buildAttemptRecord({
-                      id: createId("attempt"),
-                      lessonId: selectedLesson.id,
-                      exerciseId: ex.id,
-                      assessmentType: "action",
-                      answer: code,
-                      passed,
-                      attemptedAt: new Date().toISOString(),
-                    });
-                    setAttempts((current) =>
-                      [record, ...current].slice(0, 500),
-                    );
-                    if (passed) {
-                      addArtifact(
-                        "completion",
-                        `Code exercise: ${ex.title}`,
-                        code,
-                        selectedLesson.id,
-                      );
-                    }
-                  }}
-                />
-              ))}
-            </section>
-          ) : null}
+          <LessonCodeExercises
+            lesson={selectedLesson}
+            onAttempt={(record) =>
+              setAttempts((current) => [record, ...current].slice(0, 500))
+            }
+            onAddArtifact={addArtifact}
+          />
 
           {currentLabTemplate ? (
             <section className="lab-section">
@@ -1188,65 +775,20 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
             onSaveReflection={saveReflectionArtifact}
           />
 
-          {showTerminal ? (
-            <section
-              className="lesson-terminal-section panel"
-              id="section-terminal"
-            >
-              <h4>Practice terminal</h4>
-              <p className="terminal-intro-text">
-                Try the commands from this lesson in a safe, simulated
-                environment. Type <code>help</code> for available commands.
-              </p>
-              <TerminalSimulator
-                key={currentLabTemplate?.id ?? "default"}
-                filesystem={labTerminalFilesystem}
-                fileContents={labFileContents}
-                onCommandExecuted={
-                  currentLabInstance?.status === "active"
-                    ? handleTerminalCommand
-                    : undefined
-                }
-              />
-            </section>
-          ) : null}
+          <LessonTerminal
+            showTerminal={showTerminal}
+            currentLabTemplate={currentLabTemplate}
+            currentLabInstance={currentLabInstance}
+            labTerminalFilesystem={labTerminalFilesystem}
+            labFileContents={labFileContents}
+            onCommandExecuted={handleTerminalCommand}
+          />
 
-          <nav className="lesson-nav">
-            {prevEntry ? (
-              <button
-                type="button"
-                className="lesson-nav-button"
-                onClick={() => navigateToEntry(prevEntry)}
-              >
-                <span>←</span>
-                <span className="lesson-nav-label">
-                  <span className="lesson-nav-kicker">Previous</span>
-                  <span className="lesson-nav-title">
-                    {prevEntry.lesson.title}
-                  </span>
-                </span>
-              </button>
-            ) : (
-              <span className="nav-spacer" />
-            )}
-            {nextEntry ? (
-              <button
-                type="button"
-                className="lesson-nav-button"
-                onClick={() => navigateToEntry(nextEntry)}
-              >
-                <span className="lesson-nav-label right">
-                  <span className="lesson-nav-kicker">Next</span>
-                  <span className="lesson-nav-title">
-                    {nextEntry.lesson.title}
-                  </span>
-                </span>
-                <span>→</span>
-              </button>
-            ) : (
-              <span className="nav-spacer" />
-            )}
-          </nav>
+          <LessonNavigation
+            prevEntry={prevEntry}
+            nextEntry={nextEntry}
+            onNavigateToEntry={navigateToEntry}
+          />
         </section>
 
         <RailPanels
@@ -1280,80 +822,14 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
         />
       </section>
 
-      {saveFlash ? (
-        <div className="save-toast" role="status" aria-live="polite">
-          {saveFlash}
-        </div>
-      ) : null}
+      <SaveToast message={saveFlash} />
 
-      <button
-        type="button"
-        className="keyboard-help-trigger"
-        onClick={() => setShowKeyboardHelp(true)}
-        aria-label="Keyboard shortcuts"
-        title="Keyboard shortcuts (?)"
-      >
-        ?
-      </button>
+      <KeyboardHelpTrigger onClick={() => setShowKeyboardHelp(true)} />
 
-      {showKeyboardHelp ? (
-        <div
-          className="keyboard-overlay-backdrop"
-          onClick={() => setShowKeyboardHelp(false)}
-        >
-          <div
-            ref={keyboardDialogRef}
-            className="keyboard-overlay"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Keyboard shortcuts"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              type="button"
-              className="keyboard-overlay-close"
-              onClick={() => setShowKeyboardHelp(false)}
-            >
-              Close
-            </button>
-            <h3>Keyboard shortcuts</h3>
-            <ul className="shortcut-list">
-              <li className="shortcut-item">
-                <span>Next lesson</span>
-                <span className="shortcut-keys">
-                  <kbd className="kbd-hint">j</kbd>
-                </span>
-              </li>
-              <li className="shortcut-item">
-                <span>Previous lesson</span>
-                <span className="shortcut-keys">
-                  <kbd className="kbd-hint">k</kbd>
-                </span>
-              </li>
-              <li className="shortcut-item">
-                <span>Show shortcuts</span>
-                <span className="shortcut-keys">
-                  <kbd className="kbd-hint">?</kbd>
-                </span>
-              </li>
-              <li className="shortcut-item">
-                <span>Close overlay</span>
-                <span className="shortcut-keys">
-                  <kbd className="kbd-hint">Esc</kbd>
-                </span>
-              </li>
-              <li className="shortcut-item">
-                <span>Toggle dark mode</span>
-                <span className="shortcut-keys">
-                  <kbd className="kbd-hint">Ctrl</kbd>+
-                  <kbd className="kbd-hint">Shift</kbd>+
-                  <kbd className="kbd-hint">D</kbd>
-                </span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      ) : null}
+      <KeyboardShortcutsDialog
+        isOpen={showKeyboardHelp}
+        onClose={() => setShowKeyboardHelp(false)}
+      />
     </main>
   );
 }
