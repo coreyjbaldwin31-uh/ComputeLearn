@@ -28,7 +28,10 @@ export function LessonCodeExercises({
   return (
     <section className="code-exercises-section" id="section-code">
       <div className="section-label">
-        <span className="section-label-icon">💻</span> Code
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" className="section-label-icon">
+          <path d="M5.5 4.5L2 8l3.5 3.5M10.5 4.5L14 8l-3.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        Code
       </div>
       {lesson.codeExercises.map((ex) => (
         <CodeExercise

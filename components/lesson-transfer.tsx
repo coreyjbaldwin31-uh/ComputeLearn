@@ -46,7 +46,11 @@ export function LessonTransfer({
   return (
     <section className="validation-grid" id="section-transfer">
       <div className="section-label">
-        <span className="section-label-icon">🎯</span> Transfer
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" className="section-label-icon">
+          <circle cx="8" cy="8" r="3" stroke="currentColor" strokeWidth="1.3" fill="none" />
+          <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.3" fill="none" />
+        </svg>
+        Transfer
       </div>
       <article className="exercise-card transfer-task-card">
         <div className="exercise-card-header">

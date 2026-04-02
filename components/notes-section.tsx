@@ -37,7 +37,12 @@ export function NotesSection({
   return (
     <section className="notes-grid" id="section-notes">
       <div className="section-label">
-        <span className="section-label-icon">📝</span> Notes
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" className="section-label-icon">
+          <path d="M3 2h7l3 3v9H3V2z" stroke="currentColor" strokeWidth="1.3" fill="none" />
+          <path d="M10 2v3h3" stroke="currentColor" strokeWidth="1.3" />
+          <path d="M5.5 8h5M5.5 10.5h3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+        </svg>
+        Notes
       </div>
       <article className="note-card">
         <h4>Saved notes</h4>

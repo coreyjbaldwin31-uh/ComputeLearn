@@ -36,7 +36,10 @@ export function LessonValidation({
   return (
     <section className="validation-grid" id="section-validation">
       <div className="section-label">
-        <span className="section-label-icon">✅</span> Validation
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" className="section-label-icon">
+          <path d="M4 8.5l3 3 5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        Validation
       </div>
       {lesson.exercises.map((exercise) => {
         const exerciseAnswer = answers[exercise.id] ?? "";
