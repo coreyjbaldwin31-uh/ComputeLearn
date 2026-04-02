@@ -13,6 +13,7 @@ type PlatformNavbarProps = {
   onGoHome: () => void;
   onToggleSearch: () => void;
   onDismissNotification: (id: string) => void;
+  onDismissAllNotifications: () => void;
   onToggleTheme: () => void;
 };
 
@@ -26,6 +27,7 @@ export function PlatformNavbar({
   onGoHome,
   onToggleSearch,
   onDismissNotification,
+  onDismissAllNotifications,
   onToggleTheme,
 }: PlatformNavbarProps) {
   return (
@@ -153,6 +155,7 @@ export function PlatformNavbar({
           <NotificationBell
             notifications={notifications}
             onDismiss={onDismissNotification}
+            onDismissAll={onDismissAllNotifications}
           />
 
           <button

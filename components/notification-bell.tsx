@@ -11,6 +11,7 @@ type Notification = {
 type NotificationBellProps = {
   notifications: Notification[];
   onDismiss: (id: string) => void;
+  onDismissAll: () => void;
 };
 
 export type { Notification };
@@ -18,9 +19,32 @@ export type { Notification };
 export function NotificationBell({
   notifications,
   onDismiss,
+  onDismissAll,
 }: NotificationBellProps) {
   const [isOpen, setIsOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
+
+  const groupedNotifications = ([
+    {
+      type: "milestone",
+      label: "Milestones",
+      items: notifications.filter((n) => n.type === "milestone"),
+    },
+    {
+      type: "review",
+      label: "Review",
+      items: notifications.filter((n) => n.type === "review"),
+    },
+    {
+      type: "streak",
+      label: "Streak",
+      items: notifications.filter((n) => n.type === "streak"),
+    },
+  ] satisfies Array<{
+    type: Notification["type"];
+    label: string;
+    items: Notification[];
+  }>).filter((group) => group.items.length > 0);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -81,80 +105,98 @@ export function NotificationBell({
           role="region"
           aria-label="Notifications"
         >
-          <h4 className="notif-bell-title">Notifications</h4>
+          <div className="notif-bell-header">
+            <h4 className="notif-bell-title">Notifications</h4>
+            {notifications.length > 1 && (
+              <button
+                type="button"
+                className="notif-bell-clear"
+                onClick={onDismissAll}
+              >
+                Mark all read
+              </button>
+            )}
+          </div>
           {notifications.length === 0 ? (
-            <p className="notif-bell-empty">All caught up!</p>
+            <p className="notif-bell-empty">All caught up. Keep your streak alive.</p>
           ) : (
-            <ul className="notif-bell-list">
-              {notifications.map((n) => (
-                <li
-                  key={n.id}
-                  className={`notif-bell-item notif-bell-item--${n.type}`}
-                >
-                  {n.type === "review" && (
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 14 14"
-                      fill="none"
-                      aria-hidden="true"
-                    >
-                      <circle
-                        cx="7"
-                        cy="7"
-                        r="6"
-                        stroke="var(--gold)"
-                        strokeWidth="1.5"
-                        fill="none"
-                      />
-                      <path
-                        d="M7 3.5v3.5l2 1.5"
-                        stroke="var(--gold)"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  )}
-                  {n.type === "milestone" && (
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 14 14"
-                      fill="none"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M7 1l1.8 3.6 4 .6-2.9 2.8.7 4L7 10.4 3.4 12l.7-4L1.2 5.2l4-.6L7 1z"
-                        fill="var(--accent)"
-                      />
-                    </svg>
-                  )}
-                  {n.type === "streak" && (
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 14 14"
-                      fill="none"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M7 1c0 3-2.5 4-2.5 6.5a2.5 2.5 0 005 0C9.5 5 7 4 7 1z"
-                        fill="var(--gold)"
-                      />
-                    </svg>
-                  )}
-                  <span className="notif-bell-msg">{n.message}</span>
-                  <button
-                    type="button"
-                    className="notif-bell-dismiss"
-                    onClick={() => onDismiss(n.id)}
-                    aria-label="Dismiss"
-                  >
-                    ×
-                  </button>
-                </li>
+            <div className="notif-bell-groups">
+              {groupedNotifications.map((group) => (
+                <section key={group.type} className="notif-bell-group">
+                  <h5 className="notif-bell-group-title">{group.label}</h5>
+                  <ul className="notif-bell-list">
+                    {group.items.map((n) => (
+                      <li
+                        key={n.id}
+                        className={`notif-bell-item notif-bell-item--${n.type}`}
+                      >
+                        {n.type === "review" && (
+                          <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 14 14"
+                            fill="none"
+                            aria-hidden="true"
+                          >
+                            <circle
+                              cx="7"
+                              cy="7"
+                              r="6"
+                              stroke="var(--gold)"
+                              strokeWidth="1.5"
+                              fill="none"
+                            />
+                            <path
+                              d="M7 3.5v3.5l2 1.5"
+                              stroke="var(--gold)"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                            />
+                          </svg>
+                        )}
+                        {n.type === "milestone" && (
+                          <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 14 14"
+                            fill="none"
+                            aria-hidden="true"
+                          >
+                            <path
+                              d="M7 1l1.8 3.6 4 .6-2.9 2.8.7 4L7 10.4 3.4 12l.7-4L1.2 5.2l4-.6L7 1z"
+                              fill="var(--accent)"
+                            />
+                          </svg>
+                        )}
+                        {n.type === "streak" && (
+                          <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 14 14"
+                            fill="none"
+                            aria-hidden="true"
+                          >
+                            <path
+                              d="M7 1c0 3-2.5 4-2.5 6.5a2.5 2.5 0 005 0C9.5 5 7 4 7 1z"
+                              fill="var(--gold)"
+                            />
+                          </svg>
+                        )}
+                        <span className="notif-bell-msg">{n.message}</span>
+                        <button
+                          type="button"
+                          className="notif-bell-dismiss"
+                          onClick={() => onDismiss(n.id)}
+                          aria-label="Dismiss"
+                        >
+                          ×
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
               ))}
-            </ul>
+            </div>
           )}
         </div>
       )}

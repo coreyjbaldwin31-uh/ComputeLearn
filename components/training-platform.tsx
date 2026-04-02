@@ -656,6 +656,14 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     setDismissedNotifs((prev) => new Set(prev).add(id));
   }
 
+  function dismissAllNotifications() {
+    setDismissedNotifs((prev) => {
+      const next = new Set(prev);
+      notifications.forEach((n) => next.add(n.id));
+      return next;
+    });
+  }
+
   useKeyboardShortcuts({
     navigateNext: nextEntry ? () => navigateToEntry(nextEntry) : null,
     navigatePrev: prevEntry ? () => navigateToEntry(prevEntry) : null,
@@ -709,15 +717,15 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
           <h1>{curriculum.productTitle}</h1>
           <p>{curriculum.productVision}</p>
           <div className="skeleton-row">
-            <span className="skeleton-block" />
-            <span className="skeleton-block" />
-            <span className="skeleton-block" />
+            <span className="skeleton-block skeleton-block--1" />
+            <span className="skeleton-block skeleton-block--2" />
+            <span className="skeleton-block skeleton-block--3" />
           </div>
         </section>
         <div className="skeleton-grid">
-          <div className="skeleton-panel" />
-          <div className="skeleton-panel skeleton-panel--wide" />
-          <div className="skeleton-panel" />
+          <div className="skeleton-panel skeleton-panel--1" />
+          <div className="skeleton-panel skeleton-panel--wide skeleton-panel--2" />
+          <div className="skeleton-panel skeleton-panel--3" />
         </div>
       </main>
     );
@@ -774,6 +782,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
         onGoHome={() => setViewMode("home")}
         onToggleSearch={() => setShowGlobalSearch(true)}
         onDismissNotification={dismissNotification}
+        onDismissAllNotifications={dismissAllNotifications}
         onToggleTheme={toggleTheme}
       />
 
