@@ -115,9 +115,10 @@ export function LessonValidation({
             null ? (
               <div className="hint-layer">
                 <div className="hint-header">
-                  <span className="hint-icon" aria-hidden="true">
-                    💡
-                  </span>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" className="hint-icon">
+                    <path d="M8 1a4.5 4.5 0 0 0-2.5 8.2V11h5V9.2A4.5 4.5 0 0 0 8 1z" stroke="currentColor" strokeWidth="1.3" fill="none" />
+                    <path d="M6 13h4M6.5 11v1.5h3V11" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+                  </svg>
                   <span className="hint-dots">
                     <span
                       className={`hint-dot ${(currentHintLevels[exercise.id] ?? 0) >= 1 ? "active" : ""}`}

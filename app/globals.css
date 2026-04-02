@@ -2307,9 +2307,10 @@ button[disabled] {
 }
 
 .phase-advance-icon {
-  font-size: 2rem;
+  width: 20px;
+  height: 20px;
   flex-shrink: 0;
-  line-height: 1;
+  color: var(--gold);
 }
 
 .phase-advance-content h3 {
@@ -4174,8 +4175,10 @@ button[disabled] {
 }
 
 .hint-icon {
-  font-size: 1rem;
-  line-height: 1;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--gold);
 }
 
 .hint-dots {
