@@ -83,14 +83,25 @@ type HistoryEntry = {
 
 export function TerminalSimulator({
   prompt = "PS C:\\Users\\learner>",
-  welcomeMessage = "ComputeLearn Training Terminal — Type commands to practice. Type 'help' for available commands.",
+  welcomeMessage,
   commands: extraCommands = [],
   filesystem = defaultFilesystem,
   onCommandExecuted,
   fileContents,
 }: TerminalSimulatorProps) {
+  const defaultWelcome = [
+    "╔══════════════════════════════════════════════════╗",
+    "║        ComputeLearn Training Terminal            ║",
+    "║  Safe sandbox — nothing modifies your system.    ║",
+    "╚══════════════════════════════════════════════════╝",
+    "",
+    "  Type  help           list all commands",
+    "  Type  help <command>  learn about a specific command",
+    "",
+  ].join("\n");
+
   const [history, setHistory] = useState<HistoryEntry[]>([
-    { id: 0, type: "system", text: welcomeMessage },
+    { id: 0, type: "system", text: welcomeMessage ?? defaultWelcome },
   ]);
   const [input, setInput] = useState("");
   const [cwd, setCwd] = useState("C:\\Users\\learner");
@@ -166,26 +177,84 @@ export function TerminalSimulator({
       // Built-in commands
       switch (cmd) {
         case "help": {
+          if (args[0]) {
+            const topic = args[0].toLowerCase();
+            const helpTopics: Record<string, string> = {
+              pwd: "pwd / Get-Location\n  Print the full path of the current working directory.\n  Example: pwd",
+              "get-location":
+                "Get-Location\n  PowerShell cmdlet that returns the current directory.\n  Alias: pwd",
+              ls: "ls / dir / Get-ChildItem [path]\n  List files and folders in the current or given directory.\n  -a--- = file, d---- = directory\n  Example: ls Projects",
+              dir: "dir / ls / Get-ChildItem [path]\n  List directory contents. Same as ls.\n  Example: dir Downloads",
+              "get-childitem":
+                "Get-ChildItem [path]\n  PowerShell cmdlet to list directory contents.\n  Aliases: ls, dir",
+              cd: "cd / Set-Location <path>\n  Change the working directory.\n  Use .. to go up, ~ to go home.\n  Example: cd Projects\\hello-world",
+              "set-location":
+                "Set-Location <path>\n  PowerShell cmdlet to change directory.\n  Alias: cd",
+              cat: "cat / Get-Content <file>\n  Display the contents of a file.\n  Example: cat README.md",
+              "get-content":
+                "Get-Content <file>\n  PowerShell cmdlet to read file contents.\n  Alias: cat",
+              echo: "echo / Write-Output <text>\n  Print text to the terminal.\n  Example: echo Hello world",
+              "write-output":
+                "Write-Output <text>\n  PowerShell cmdlet to output text.\n  Alias: echo",
+              mkdir:
+                "mkdir / New-Item <name>\n  Create a new directory.\n  Example: mkdir my-project",
+              "new-item":
+                "New-Item <name>\n  PowerShell cmdlet to create a directory.\n  Alias: mkdir",
+              clear:
+                "clear / cls\n  Clear all terminal history.\n  Keyboard shortcut: Ctrl+L",
+              cls: "cls / clear\n  Clear the terminal screen.\n  Keyboard shortcut: Ctrl+L",
+              whoami:
+                "whoami\n  Display the current logged-in user name.",
+              hostname:
+                "hostname\n  Display the name of the machine.",
+              date: "date / Get-Date\n  Show the current date and time.",
+              "get-date":
+                "Get-Date\n  PowerShell cmdlet to get the current date.\n  Alias: date",
+              history:
+                "history\n  Show all commands typed this session.\n  Tip: Use Arrow Up/Down to cycle through previous commands.",
+              tree: "tree\n  Show a visual tree of the current directory and one level of subdirectories.",
+              git: "git <subcommand>\n  Simulated Git commands: status, log, branch, init.\n  Example: git status",
+            };
+            const detail = helpTopics[topic];
+            if (detail) {
+              addEntry("output", detail);
+            } else {
+              addEntry(
+                "error",
+                `No help topic for '${args[0]}'.\nType 'help' to see all available commands.`,
+              );
+            }
+            return;
+          }
           addEntry(
             "output",
             [
-              "Available commands:",
-              "  help                Show this help message",
-              "  pwd / Get-Location  Print current directory",
-              "  ls / dir / Get-ChildItem  List directory contents",
-              "  cd / Set-Location   Change directory",
-              "  cat / Get-Content   Show file contents (simulated)",
-              "  echo / Write-Output Print text to terminal",
-              "  mkdir / New-Item    Create a directory (simulated)",
-              "  clear / cls         Clear terminal history",
-              "  whoami              Show current user",
-              "  hostname            Show machine name",
-              "  date / Get-Date     Show current date",
-              "  history             Show command history",
-              "  tree                Show directory tree",
-              "  $env:PATH           Show PATH variable (simulated)",
+              "┌─ Navigation ──────────────────────────────────┐",
+              "  pwd / Get-Location    Print current directory",
+              "  ls / Get-ChildItem    List directory contents",
+              "  cd / Set-Location     Change directory",
+              "  tree                  Show directory tree",
               "",
-              "Try navigating: cd Projects\\hello-world",
+              "┌─ Files ────────────────────────────────────────┐",
+              "  cat / Get-Content     Show file contents",
+              "  echo / Write-Output   Print text to terminal",
+              "  mkdir / New-Item      Create a directory",
+              "",
+              "┌─ System ───────────────────────────────────────┐",
+              "  whoami                Show current user",
+              "  hostname              Show machine name",
+              "  date / Get-Date       Show current date",
+              "  history               Show command history",
+              "  clear / cls           Clear terminal  (Ctrl+L)",
+              "  $env:PATH             Show PATH variable",
+              "",
+              "┌─ Developer Tools ──────────────────────────────┐",
+              "  git <cmd>             Git (status, log, branch, init)",
+              "  npm / node            Node.js commands (simulated)",
+              "  docker                Docker commands (simulated)",
+              "",
+              "  Type  help <command>  for detailed usage.",
+              "  Try:  cd Projects\\hello-world",
             ].join("\n"),
           );
           return;

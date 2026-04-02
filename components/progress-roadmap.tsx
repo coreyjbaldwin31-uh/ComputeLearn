@@ -62,7 +62,7 @@ export function ProgressRoadmap({
                 disabled={isLocked}
               >
                 <span className="roadmap-dot">
-                  {isLocked && (
+                  {isLocked ? (
                     <svg
                       width="10"
                       height="10"
@@ -88,7 +88,50 @@ export function ProgressRoadmap({
                         strokeLinecap="round"
                       />
                     </svg>
-                  )}
+                  ) : isDone ? (
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                      className="roadmap-check-icon"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  ) : pct > 0 ? (
+                    <svg
+                      width="22"
+                      height="22"
+                      viewBox="0 0 22 22"
+                      aria-hidden="true"
+                      className="roadmap-ring"
+                    >
+                      <circle
+                        cx="11"
+                        cy="11"
+                        r="9"
+                        fill="none"
+                        stroke="var(--border)"
+                        strokeWidth="2"
+                      />
+                      <circle
+                        cx="11"
+                        cy="11"
+                        r="9"
+                        fill="none"
+                        stroke="var(--accent)"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeDasharray={`${(pct / 100) * 56.55} 56.55`}
+                        transform="rotate(-90 11 11)"
+                      />
+                    </svg>
+                  ) : null}
                 </span>
                 <span className="roadmap-label">{phase.level}</span>
                 <span className="roadmap-pct">{pct}%</span>
@@ -140,7 +183,11 @@ export function ProgressRoadmap({
                   )}
                 </ul>
               )}
-              {i < phases.length - 1 && <span className="roadmap-connector" />}
+              {i < phases.length - 1 && (
+                <span
+                  className={`roadmap-connector ${isDone ? "roadmap-connector--done" : pct > 0 ? "roadmap-connector--partial" : ""}`}
+                />
+              )}
             </li>
           );
         })}

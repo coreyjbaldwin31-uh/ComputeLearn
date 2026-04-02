@@ -665,6 +665,30 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       setShowKeyboardHelp(false);
       setShowResetConfirm(false);
     },
+    openSearch: () => setShowGlobalSearch(true),
+    goHome: viewMode === "lesson" ? () => setViewMode("home") : null,
+    toggleCompletion:
+      viewMode === "lesson" && selectedLesson
+        ? () =>
+            setLessonCompletion(
+              selectedLesson.id,
+              !progress[selectedLesson.id],
+            )
+        : null,
+    scrollToNotes:
+      viewMode === "lesson"
+        ? () =>
+            document
+              .getElementById("section-notes")
+              ?.scrollIntoView({ behavior: "smooth" })
+        : null,
+    scrollToExercises:
+      viewMode === "lesson"
+        ? () =>
+            document
+              .getElementById("section-exercises")
+              ?.scrollIntoView({ behavior: "smooth" })
+        : null,
   });
 
   // Scroll content into view when lesson changes
