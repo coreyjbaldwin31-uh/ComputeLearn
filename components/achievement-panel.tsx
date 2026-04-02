@@ -114,28 +114,40 @@ export function AchievementPanel({
   totalCompleted,
   totalLessons,
 }: AchievementPanelProps) {
+  const overallPct =
+    totalLessons > 0 ? Math.round((totalCompleted / totalLessons) * 100) : 0;
+
   return (
     <section className="achievement-panel">
-      <h3 className="achievement-title">Achievements</h3>
+      <h3 className="achievement-title">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 18 18"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M9 1l2.2 4.5 5 .7-3.6 3.5.85 5L9 12.5 4.55 14.7l.85-5L1.8 6.2l5-.7L9 1z"
+            fill="var(--gold)"
+          />
+        </svg>
+        Achievements
+      </h3>
 
-      <div className="achievement-summary">
-        <div className="achievement-stat">
+      <div className="achievement-stats-row">
+        <div className="achievement-stat-card">
           <span className="achievement-stat-value">{totalCompleted}</span>
           <span className="achievement-stat-label">Lessons done</span>
         </div>
-        <div className="achievement-stat">
+        <div className="achievement-stat-card">
           <span className="achievement-stat-value">
-            {phaseBadges.filter((b) => b.earned).length}
+            {phaseBadges.filter((b) => b.earned).length}/{phaseBadges.length}
           </span>
           <span className="achievement-stat-label">Phases cleared</span>
         </div>
-        <div className="achievement-stat">
-          <span className="achievement-stat-value">
-            {totalLessons > 0
-              ? Math.round((totalCompleted / totalLessons) * 100)
-              : 0}
-            %
-          </span>
+        <div className="achievement-stat-card achievement-stat-card--accent">
+          <span className="achievement-stat-value">{overallPct}%</span>
           <span className="achievement-stat-label">Overall</span>
         </div>
       </div>

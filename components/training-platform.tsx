@@ -29,8 +29,8 @@ import {
 } from "@/lib/reinforcement-engine";
 import { evaluateLessonEvidenceGate } from "@/lib/validation-engine";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ActionBar } from "./action-bar";
 import { AchievementPanel } from "./achievement-panel";
+import { ActionBar } from "./action-bar";
 import { FaqSection } from "./faq-section";
 import { FeatureHighlights } from "./feature-highlights";
 import { GlobalSearch } from "./global-search";
@@ -56,12 +56,10 @@ import { LessonTerminal } from "./lesson-terminal";
 import { LessonTransfer } from "./lesson-transfer";
 import { LessonValidation } from "./lesson-validation";
 import { NotesSection } from "./notes-section";
-import {
-  type Notification,
-  NotificationBell,
-} from "./notification-bell";
+import type { Notification } from "./notification-bell";
 import { OnboardingCard } from "./onboarding-card";
 import { PageFooter } from "./page-footer";
+import { PlatformNavbar } from "./platform-navbar";
 import { PricingCallout } from "./pricing-callout";
 import { ProgressRoadmap } from "./progress-roadmap";
 import { RailPanels } from "./rail-panels";
@@ -69,7 +67,6 @@ import { SaveToast } from "./save-toast";
 import { SidebarPanels } from "./sidebar-panels";
 import { SkipLink } from "./skip-link";
 import { SocialProof } from "./social-proof";
-import { ThemeToggle } from "./theme-toggle";
 
 type ProgressState = Record<string, true>;
 type NotesState = Record<string, string>;
@@ -735,38 +732,26 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     <main className="shell">
       <SkipLink href="#lesson-content">Skip to lesson content</SkipLink>
 
-      <div className="top-bar">
-        <button
-          type="button"
-          className={`top-bar-home ${viewMode === "home" ? "active" : ""}`}
-          onClick={() => setViewMode("home")}
-          aria-label="Home dashboard"
-        >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M2 8.5L8 3l6 5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M3.5 9.5V14h3.25v-3h2.5v3H12.5V9.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
-
-        <button
-          type="button"
-          className="top-bar-search"
-          onClick={() => setShowGlobalSearch(true)}
-          aria-label="Search lessons"
-        >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <circle cx="7" cy="7" r="5" stroke="currentColor" strokeWidth="1.5" fill="none" />
-            <path d="M11 11l3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
-        </button>
-
-        <NotificationBell
-          notifications={notifications}
-          onDismiss={dismissNotification}
-        />
-
-        <ThemeToggle theme={theme} onToggle={toggleTheme} />
-      </div>
+      <PlatformNavbar
+        productTitle={curriculum.productTitle}
+        percentComplete={percentComplete}
+        viewMode={viewMode}
+        breadcrumb={
+          viewMode === "lesson"
+            ? {
+                phase: selectedPhase.title,
+                course: selectedCourse.title,
+                lesson: selectedLesson.title,
+              }
+            : null
+        }
+        notifications={notifications}
+        theme={theme}
+        onGoHome={() => setViewMode("home")}
+        onToggleSearch={() => setShowGlobalSearch(true)}
+        onDismissNotification={dismissNotification}
+        onToggleTheme={toggleTheme}
+      />
 
       <HeroSection
         productTitle={curriculum.productTitle}
@@ -778,7 +763,6 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
         isCurriculumComplete={isCurriculumComplete}
         isNewUser={isNewUser}
         nextUnfinishedEntry={nextUnfinishedEntry}
-        selectedLessonTitle={selectedLesson.title}
         onBeginLesson={() => {
           if (nextUnfinishedEntry) {
             setSelectedPhaseId(nextUnfinishedEntry.phase.id);
@@ -838,199 +822,205 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
           />
         </>
       ) : (
-      <section className="main-grid">
-        <SidebarPanels
-          curriculum={curriculum}
-          selectedPhase={selectedPhase}
-          percentComplete={percentComplete}
-          progress={progress}
-          completedWithinPhase={completedWithinPhase}
-          totalWithinPhase={totalWithinPhase}
-          phaseStatuses={phaseStatuses}
-          competencyDashboard={competencyDashboard}
-          phaseTransferAnalytics={phaseTransferAnalytics}
-          milestonePassRateSummary={milestonePassRateSummary}
-          outcomesDashboardSummary={outcomesDashboardSummary}
-          independentReadiness={independentReadiness}
-          independentLabSummary={independentLabSummary}
-          selectPhase={selectPhase}
-        />
+        <section className="main-grid">
+          <SidebarPanels
+            curriculum={curriculum}
+            selectedPhase={selectedPhase}
+            percentComplete={percentComplete}
+            progress={progress}
+            completedWithinPhase={completedWithinPhase}
+            totalWithinPhase={totalWithinPhase}
+            phaseStatuses={phaseStatuses}
+            competencyDashboard={competencyDashboard}
+            phaseTransferAnalytics={phaseTransferAnalytics}
+            milestonePassRateSummary={milestonePassRateSummary}
+            outcomesDashboardSummary={outcomesDashboardSummary}
+            independentReadiness={independentReadiness}
+            independentLabSummary={independentLabSummary}
+            selectPhase={selectPhase}
+          />
 
-        <section className="content" ref={contentRef} id="lesson-content">
-          {isNewUser && (
-            <OnboardingCard
-              onStartFirstLesson={() => {
-                contentRef.current?.scrollIntoView({ behavior: "smooth" });
-              }}
+          <section className="content" ref={contentRef} id="lesson-content">
+            {isNewUser && (
+              <OnboardingCard
+                onStartFirstLesson={() => {
+                  contentRef.current?.scrollIntoView({ behavior: "smooth" });
+                }}
+              />
+            )}
+            <LessonHeader
+              selectedPhase={selectedPhase}
+              selectedCourse={selectedCourse}
+              selectedLesson={selectedLesson}
+              progress={progress}
+              showCompletedOnly={showCompletedOnly}
+              showResetConfirm={showResetConfirm}
+              lessonGateFeedback={lessonGateFeedback}
+              onSelectPhase={selectPhase}
+              onSelectCourse={selectCourse}
+              onToggleCompletedOnly={() =>
+                setShowCompletedOnly((current) => !current)
+              }
+              onToggleLessonCompletion={setLessonCompletion}
+              onResetLab={() => setShowResetConfirm(true)}
+              onCancelReset={() => setShowResetConfirm(false)}
+              onConfirmReset={confirmResetLab}
+              showTerminal={showTerminal}
             />
-          )}
-          <LessonHeader
+
+            <ActionBar
+              lesson={selectedLesson}
+              isComplete={Boolean(progress[selectedLesson.id])}
+              lessonProgress={{
+                current: selectedLesson.exercises.filter((e) =>
+                  answers[e.id]?.trim(),
+                ).length,
+                total: selectedLesson.exercises.length,
+              }}
+              onToggleCompletion={() =>
+                setLessonCompletion(
+                  selectedLesson.id,
+                  !progress[selectedLesson.id],
+                )
+              }
+              onScrollToNotes={() =>
+                document
+                  .getElementById("section-notes")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
+              onScrollToExercises={() =>
+                document
+                  .getElementById("section-exercises")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
+            />
+
+            <LessonExplanation lesson={selectedLesson} />
+
+            <LessonExercises lesson={selectedLesson} />
+
+            {selectedLesson.exercises.length > 0 && (
+              <LessonValidation
+                lesson={selectedLesson}
+                answers={answers}
+                feedback={feedback}
+                currentHintLevels={currentHintLevels}
+                inspectionOpenStates={inspectionOpen}
+                onUpdateAnswer={updateAnswer}
+                onValidateExercise={validateExercise}
+                onAdvanceHint={advanceHint}
+                onToggleInspection={toggleInspection}
+              />
+            )}
+
+            {selectedLesson.transferTask && (
+              <LessonTransfer
+                lesson={selectedLesson}
+                transferAnswers={transferAnswers}
+                transferFeedback={transferFeedback}
+                currentHintLevels={currentHintLevels}
+                inspectionOpenStates={inspectionOpen}
+                selectedLessonTransferPassed={selectedLessonTransferPassed}
+                onUpdateTransferAnswer={(lessonId, answer) =>
+                  setTransferAnswers((current) => ({
+                    ...current,
+                    [lessonId]: answer,
+                  }))
+                }
+                onValidateTransferTask={validateTransferTask}
+                onAdvanceHint={advanceHint}
+                onToggleInspection={toggleInspection}
+              />
+            )}
+
+            <LessonCodeExercises
+              lesson={selectedLesson}
+              onAttempt={(record) =>
+                setAttempts((current) => [record, ...current].slice(0, 500))
+              }
+              onAddArtifact={addArtifact}
+            />
+
+            {currentLabTemplate ? (
+              <section className="lab-section">
+                <LabPanel
+                  template={currentLabTemplate}
+                  instance={currentLabInstance}
+                  onStart={startLab}
+                  onValidate={validateLab}
+                  onReset={resetCurrentLab}
+                  onHint={requestLabHint}
+                  onFileChange={updateLabFile}
+                  onCodeSubmit={updateCodeSubmission}
+                  onTestOutput={updateTestOutput}
+                  completionSummary={labCompletionSummary}
+                />
+              </section>
+            ) : null}
+
+            <NotesSection
+              lessonId={selectedLesson.id}
+              notesPrompt={selectedLesson.notesPrompt}
+              retention={selectedLesson.retention}
+              noteValue={notes[selectedLesson.id] ?? ""}
+              reflectionValue={reflections[selectedLesson.id] ?? ""}
+              reviewRecord={reviews[selectedLesson.id]}
+              recentArtifactCount={recentArtifacts.length}
+              reflectionPrompts={reflectionPrompts}
+              weakTracks={selectedLessonWeakTracks}
+              onNoteChange={updateNote}
+              onReflectionChange={updateReflection}
+              onMarkReviewed={markReviewed}
+              onSaveNote={saveNoteArtifact}
+              onSaveReflection={saveReflectionArtifact}
+            />
+
+            <LessonTerminal
+              showTerminal={showTerminal}
+              currentLabTemplate={currentLabTemplate}
+              currentLabInstance={currentLabInstance}
+              labTerminalFilesystem={labTerminalFilesystem}
+              labFileContents={labFileContents}
+              onCommandExecuted={handleTerminalCommand}
+            />
+
+            <LessonNavigation
+              prevEntry={prevEntry}
+              nextEntry={nextEntry}
+              onNavigateToEntry={navigateToEntry}
+            />
+          </section>
+
+          <RailPanels
+            learnerProfile={learnerProfile}
+            updateLearnerProfile={updateLearnerProfile}
+            onResetAll={resetAllProgress}
             selectedPhase={selectedPhase}
             selectedCourse={selectedCourse}
             selectedLesson={selectedLesson}
             progress={progress}
-            showCompletedOnly={showCompletedOnly}
-            showResetConfirm={showResetConfirm}
-            lessonGateFeedback={lessonGateFeedback}
-            onSelectPhase={selectPhase}
-            onSelectCourse={selectCourse}
-            onToggleCompletedOnly={() =>
-              setShowCompletedOnly((current) => !current)
-            }
-            onToggleLessonCompletion={setLessonCompletion}
-            onResetLab={() => setShowResetConfirm(true)}
-            onCancelReset={() => setShowResetConfirm(false)}
-            onConfirmReset={confirmResetLab}
-            showTerminal={showTerminal}
-          />
-
-          <ActionBar
-            lesson={selectedLesson}
-            isComplete={Boolean(progress[selectedLesson.id])}
-            onToggleCompletion={() =>
-              setLessonCompletion(
-                selectedLesson.id,
-                !progress[selectedLesson.id],
-              )
-            }
-            onScrollToNotes={() =>
-              document
-                .getElementById("section-notes")
-                ?.scrollIntoView({ behavior: "smooth" })
-            }
-            onScrollToExercises={() =>
-              document
-                .getElementById("section-exercises")
-                ?.scrollIntoView({ behavior: "smooth" })
-            }
-          />
-
-          <LessonExplanation lesson={selectedLesson} />
-
-          <LessonExercises lesson={selectedLesson} />
-
-          {selectedLesson.exercises.length > 0 && (
-            <LessonValidation
-              lesson={selectedLesson}
-              answers={answers}
-              feedback={feedback}
-              currentHintLevels={currentHintLevels}
-              inspectionOpenStates={inspectionOpen}
-              onUpdateAnswer={updateAnswer}
-              onValidateExercise={validateExercise}
-              onAdvanceHint={advanceHint}
-              onToggleInspection={toggleInspection}
-            />
-          )}
-
-          {selectedLesson.transferTask && (
-            <LessonTransfer
-              lesson={selectedLesson}
-              transferAnswers={transferAnswers}
-              transferFeedback={transferFeedback}
-              currentHintLevels={currentHintLevels}
-              inspectionOpenStates={inspectionOpen}
-              selectedLessonTransferPassed={selectedLessonTransferPassed}
-              onUpdateTransferAnswer={(lessonId, answer) =>
-                setTransferAnswers((current) => ({
-                  ...current,
-                  [lessonId]: answer,
-                }))
-              }
-              onValidateTransferTask={validateTransferTask}
-              onAdvanceHint={advanceHint}
-              onToggleInspection={toggleInspection}
-            />
-          )}
-
-          <LessonCodeExercises
-            lesson={selectedLesson}
-            onAttempt={(record) =>
-              setAttempts((current) => [record, ...current].slice(0, 500))
-            }
-            onAddArtifact={addArtifact}
-          />
-
-          {currentLabTemplate ? (
-            <section className="lab-section">
-              <LabPanel
-                template={currentLabTemplate}
-                instance={currentLabInstance}
-                onStart={startLab}
-                onValidate={validateLab}
-                onReset={resetCurrentLab}
-                onHint={requestLabHint}
-                onFileChange={updateLabFile}
-                onCodeSubmit={updateCodeSubmission}
-                onTestOutput={updateTestOutput}
-                completionSummary={labCompletionSummary}
-              />
-            </section>
-          ) : null}
-
-          <NotesSection
-            lessonId={selectedLesson.id}
-            notesPrompt={selectedLesson.notesPrompt}
-            retention={selectedLesson.retention}
-            noteValue={notes[selectedLesson.id] ?? ""}
-            reflectionValue={reflections[selectedLesson.id] ?? ""}
-            reviewRecord={reviews[selectedLesson.id]}
-            recentArtifactCount={recentArtifacts.length}
-            reflectionPrompts={reflectionPrompts}
-            weakTracks={selectedLessonWeakTracks}
-            onNoteChange={updateNote}
-            onReflectionChange={updateReflection}
-            onMarkReviewed={markReviewed}
-            onSaveNote={saveNoteArtifact}
-            onSaveReflection={saveReflectionArtifact}
-          />
-
-          <LessonTerminal
-            showTerminal={showTerminal}
-            currentLabTemplate={currentLabTemplate}
-            currentLabInstance={currentLabInstance}
-            labTerminalFilesystem={labTerminalFilesystem}
-            labFileContents={labFileContents}
-            onCommandExecuted={handleTerminalCommand}
-          />
-
-          <LessonNavigation
-            prevEntry={prevEntry}
-            nextEntry={nextEntry}
-            onNavigateToEntry={navigateToEntry}
+            reviews={reviews}
+            visibleLessons={visibleLessons}
+            setSelectedLessonId={setSelectedLessonId}
+            exportArtifacts={exportArtifacts}
+            recentAttempts={recentAttempts}
+            lessonArtifactSummary={lessonArtifactSummary}
+            artifactCompletionSummary={artifactCompletionSummary}
+            attemptAnalytics={attemptAnalytics}
+            lessonAttemptAnalytics={lessonAttemptAnalytics}
+            transferEvidenceWithinPhase={transferEvidenceWithinPhase}
+            transferLessonsCount={transferLessonsCount}
+            competencyLevels={competencyLevels}
+            weakCompetencyTracks={weakCompetencyTracks}
+            reinforcementQueue={reinforcementQueue}
+            phaseReinforcementQueue={phaseReinforcementQueue}
+            reviewQueue={reviewQueue}
+            navigateToEntry={navigateToEntry}
+            selectPhase={selectPhase}
+            phaseExitStatus={phaseExitStatus}
+            phaseMilestoneStatus={phaseMilestoneStatus}
           />
         </section>
-
-        <RailPanels
-          learnerProfile={learnerProfile}
-          updateLearnerProfile={updateLearnerProfile}
-          onResetAll={resetAllProgress}
-          selectedPhase={selectedPhase}
-          selectedCourse={selectedCourse}
-          selectedLesson={selectedLesson}
-          progress={progress}
-          reviews={reviews}
-          visibleLessons={visibleLessons}
-          setSelectedLessonId={setSelectedLessonId}
-          exportArtifacts={exportArtifacts}
-          recentAttempts={recentAttempts}
-          lessonArtifactSummary={lessonArtifactSummary}
-          artifactCompletionSummary={artifactCompletionSummary}
-          attemptAnalytics={attemptAnalytics}
-          lessonAttemptAnalytics={lessonAttemptAnalytics}
-          transferEvidenceWithinPhase={transferEvidenceWithinPhase}
-          transferLessonsCount={transferLessonsCount}
-          competencyLevels={competencyLevels}
-          weakCompetencyTracks={weakCompetencyTracks}
-          reinforcementQueue={reinforcementQueue}
-          phaseReinforcementQueue={phaseReinforcementQueue}
-          reviewQueue={reviewQueue}
-          navigateToEntry={navigateToEntry}
-          selectPhase={selectPhase}
-          phaseExitStatus={phaseExitStatus}
-          phaseMilestoneStatus={phaseMilestoneStatus}
-        />
-      </section>
       )}
 
       <hr className="section-divider" />

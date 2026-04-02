@@ -3,6 +3,7 @@ import type { Lesson } from "@/data/curriculum";
 type ActionBarProps = {
   lesson: Lesson;
   isComplete: boolean;
+  lessonProgress: { current: number; total: number };
   onToggleCompletion: () => void;
   onScrollToNotes: () => void;
   onScrollToExercises: () => void;
@@ -11,10 +12,16 @@ type ActionBarProps = {
 export function ActionBar({
   lesson,
   isComplete,
+  lessonProgress,
   onToggleCompletion,
   onScrollToNotes,
   onScrollToExercises,
 }: ActionBarProps) {
+  const progressPct =
+    lessonProgress.total > 0
+      ? Math.round((lessonProgress.current / lessonProgress.total) * 100)
+      : 0;
+
   return (
     <div className="action-bar" role="toolbar" aria-label="Lesson actions">
       <div className="action-bar-left">
@@ -43,7 +50,24 @@ export function ActionBar({
           </svg>
           {lesson.duration}
         </span>
-        <span className="action-bar-diff">{lesson.difficulty}</span>
+        <span
+          className={`action-bar-diff action-bar-diff--${lesson.difficulty.toLowerCase()}`}
+        >
+          {lesson.difficulty}
+        </span>
+        {lessonProgress.total > 0 && (
+          <span className="action-bar-progress">
+            <span className="action-bar-progress-track">
+              <span
+                className="action-bar-progress-fill"
+                style={{ width: `${progressPct}%` }}
+              />
+            </span>
+            <span className="action-bar-progress-label">
+              {lessonProgress.current}/{lessonProgress.total}
+            </span>
+          </span>
+        )}
       </div>
 
       <div className="action-bar-right">

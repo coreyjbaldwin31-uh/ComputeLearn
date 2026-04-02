@@ -16,7 +16,6 @@ type HeroSectionProps = {
   isCurriculumComplete: boolean;
   isNewUser: boolean;
   nextUnfinishedEntry: LessonEntry | undefined;
-  selectedLessonTitle: string;
   onBeginLesson: () => void;
 };
 
@@ -30,113 +29,230 @@ export function HeroSection({
   isCurriculumComplete,
   isNewUser,
   nextUnfinishedEntry,
-  selectedLessonTitle,
   onBeginLesson,
 }: HeroSectionProps) {
+  /* ── Returning user: compact welcome-back bar (Coursera/Khan pattern) ── */
+  if (!isNewUser && !isCurriculumComplete) {
+    return (
+      <section className="hero hero--compact">
+        <div className="hero-compact-inner">
+          <div className="hero-compact-left">
+            <span className="eyebrow eyebrow--small">Welcome back</span>
+            <h2 className="hero-compact-title">{productTitle}</h2>
+            <p className="hero-compact-vision">{productVision}</p>
+          </div>
+          <div className="hero-compact-right">
+            <div className="hero-compact-stats">
+              <div className="hero-compact-stat">
+                <span className="hero-compact-stat-value">
+                  {percentComplete}%
+                </span>
+                <span className="hero-compact-stat-label">complete</span>
+              </div>
+              {activityStreak > 0 && (
+                <div className="hero-compact-stat hero-compact-stat--streak">
+                  <span className="hero-compact-stat-value">
+                    {activityStreak}d
+                  </span>
+                  <span className="hero-compact-stat-label">streak</span>
+                </div>
+              )}
+              <div className="hero-compact-stat">
+                <span className="hero-compact-stat-value">{phasesCount}</span>
+                <span className="hero-compact-stat-label">phases</span>
+              </div>
+            </div>
+            {nextUnfinishedEntry && (
+              <button
+                type="button"
+                className="hero-compact-cta"
+                onClick={onBeginLesson}
+              >
+                Continue: {nextUnfinishedEntry.lesson.title}
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 14 14"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M5 3l4 4-4 4"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+            )}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  /* ── Completed curriculum: celebration banner ── */
+  if (isCurriculumComplete) {
+    return (
+      <section className="hero hero--compact hero--complete">
+        <div className="hero-compact-inner">
+          <div className="hero-compact-left">
+            <h2 className="hero-compact-title">Curriculum complete!</h2>
+            <p className="hero-compact-vision">
+              You have finished all {allLessonsCount} lessons across{" "}
+              {phasesCount} phases. Revisit any lesson to review or explore
+              independent labs.
+            </p>
+          </div>
+          <div className="hero-compact-right">
+            <div className="hero-compact-stats">
+              <div className="hero-compact-stat">
+                <span className="hero-compact-stat-value">100%</span>
+                <span className="hero-compact-stat-label">complete</span>
+              </div>
+              {activityStreak > 0 && (
+                <div className="hero-compact-stat hero-compact-stat--streak">
+                  <span className="hero-compact-stat-value">
+                    {activityStreak}d
+                  </span>
+                  <span className="hero-compact-stat-label">streak</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  /* ── New user: full onboarding hero ── */
   return (
     <section className="hero">
       <span className="eyebrow">Interactive software engineering training</span>
       <h1>{productTitle}</h1>
-      <p>{productVision}</p>
+      <p className="hero-vision">{productVision}</p>
 
       <div className="consumer-cta-row" aria-label="Consumer value highlights">
-        <span className="plan-chip">Self-paced curriculum</span>
-        <span className="plan-chip">Hands-on validation labs</span>
-        <span className="plan-chip">Exportable learning artifacts</span>
+        <span className="plan-chip">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M7 1v12M1 7h12"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+          </svg>
+          Self-paced curriculum
+        </span>
+        <span className="plan-chip">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
+            fill="none"
+            aria-hidden="true"
+          >
+            <rect
+              x="1.5"
+              y="3"
+              width="11"
+              height="8"
+              rx="1.5"
+              stroke="currentColor"
+              strokeWidth="1.3"
+              fill="none"
+            />
+            <path
+              d="M5 7l1.5 1.5L9 6"
+              stroke="currentColor"
+              strokeWidth="1.3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          Hands-on validation labs
+        </span>
+        <span className="plan-chip">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M2 10l3-6 3 4 4-7"
+              stroke="currentColor"
+              strokeWidth="1.3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          Exportable learning artifacts
+        </span>
       </div>
 
-      {isCurriculumComplete ? (
-        <div className="welcome-banner completion-banner">
-          <h3>🎓 Curriculum complete!</h3>
+      <div className="hero-onboarding">
+        <div className="hero-onboarding-card">
+          <h3>Start your learning journey</h3>
           <p>
-            You have finished all {allLessonsCount} lessons across {phasesCount}{" "}
-            phases. Revisit any lesson to strengthen weak competencies, or
-            explore independent labs to sharpen your skills further.
+            {phasesCount} phases · {allLessonsCount} lessons · Progress saves
+            automatically
           </p>
-        </div>
-      ) : isNewUser ? (
-        <div className="welcome-banner">
-          <h3>Welcome — start your first lesson</h3>
-          <p>
-            Pick a phase from the sidebar, read the lesson, then work through
-            the exercises and validation checks below. Your progress saves
-            automatically.
-          </p>
-          <button type="button" className="welcome-cta" onClick={onBeginLesson}>
-            Begin lesson:{" "}
-            {nextUnfinishedEntry?.lesson.title ?? selectedLessonTitle} →
+          <button
+            type="button"
+            className="hero-onboarding-cta"
+            onClick={onBeginLesson}
+          >
+            Begin first lesson
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M6 3l5 5-5 5"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </button>
         </div>
-      ) : (
-        <div className="hero-grid">
-          <div className="stats stats--four-column">
-            <article className="stat-card">
-              <span>Progression model</span>
-              <div className="stat-value">{phasesCount} phases</div>
-              <p>
-                Computer mastery, engineering foundations, and modern
-                AI-assisted delivery.
-              </p>
-            </article>
-            <article className="stat-card">
-              <span>Tracked completion</span>
-              <div className="stat-value">{percentComplete}%</div>
-              <p>
-                Local progress persistence across lessons, notes, and validation
-                exercises.
-              </p>
-            </article>
-            <article className="stat-card">
-              <span>Core promise</span>
-              <div className="stat-value">Learn by doing</div>
-              <p>
-                Operational confidence first, programming understanding second,
-                disciplined engineering execution third.
-              </p>
-            </article>
-            <article className="stat-card">
-              <span>Activity streak</span>
-              <div className="stat-value streak-value">
-                {activityStreak > 0 ? `${activityStreak}d` : "—"}
-              </div>
-              <p>
-                {activityStreak > 1
-                  ? `${activityStreak} consecutive days of activity.`
-                  : activityStreak === 1
-                    ? "Active today. Keep building the habit."
-                    : "Complete your first lesson to start a streak."}
-              </p>
-            </article>
+        <div className="hero-onboarding-features">
+          <div className="hero-feature-item">
+            <span className="hero-feature-num">1</span>
+            <div>
+              <strong>Read &amp; understand</strong>
+              <p>Clear explanations with operational focus</p>
+            </div>
           </div>
-          <div className="hero-offer-grid">
-            <article className="timeline-card offer-card">
-              <h4>How the system trains</h4>
-              <ul className="retention-list">
-                <li>Explain the concept with operational clarity.</li>
-                <li>Demonstrate the workflow in a guided environment.</li>
-                <li>Require hands-on action and validate the response.</li>
-                <li>Retain notes, outputs, and completion state for review.</li>
-              </ul>
-            </article>
-            <article className="timeline-card offer-card">
-              <h4>What paying users get</h4>
-              <ul className="retention-list">
-                <li>Structured progression from fundamentals to delivery.</li>
-                <li>Evidence-based completion with transfer gating.</li>
-                <li>Analytics for readiness, gaps, and reinforcement.</li>
-                <li>Portable artifacts for coaching and portfolio proof.</li>
-              </ul>
-              <button
-                type="button"
-                className="welcome-cta"
-                onClick={onBeginLesson}
-              >
-                Continue learning path →
-              </button>
-            </article>
+          <div className="hero-feature-item">
+            <span className="hero-feature-num">2</span>
+            <div>
+              <strong>Practice &amp; validate</strong>
+              <p>Hands-on exercises with instant feedback</p>
+            </div>
+          </div>
+          <div className="hero-feature-item">
+            <span className="hero-feature-num">3</span>
+            <div>
+              <strong>Retain &amp; transfer</strong>
+              <p>Notes, reflections, and portfolio artifacts</p>
+            </div>
           </div>
         </div>
-      )}
+      </div>
 
       <div
         className="trust-strip"
