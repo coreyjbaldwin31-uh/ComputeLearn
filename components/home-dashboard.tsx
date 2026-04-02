@@ -123,12 +123,12 @@ export function HomeDashboard({
           </div>
 
           <div className="dashboard-progress-bar-wrap">
-            <div className="dashboard-progress-track">
-              <div
-                className="dashboard-progress-fill"
-                style={{ width: `${percentComplete}%` }}
-              />
-            </div>
+            <progress
+              className="dashboard-progress-track"
+              value={percentComplete}
+              max={100}
+              aria-label="Overall progress"
+            />
             <span className="dashboard-progress-pct">{percentComplete}%</span>
           </div>
 
@@ -393,12 +393,12 @@ export function HomeDashboard({
                 </div>
                 <p className="dashboard-phase-desc">{s.phase.strapline}</p>
                 <div className="dashboard-phase-bar-wrap">
-                  <div className="dashboard-phase-bar">
-                    <div
-                      className="dashboard-phase-bar-fill"
-                      style={{ width: `${s.pct}%` }}
-                    />
-                  </div>
+                  <progress
+                    className="dashboard-phase-bar"
+                    value={s.pct}
+                    max={100}
+                    aria-label={`${s.phase.title} progress`}
+                  />
                   <span className="dashboard-phase-pct">
                     {s.completed}/{s.total}
                   </span>

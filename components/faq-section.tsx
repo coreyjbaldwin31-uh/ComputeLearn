@@ -54,16 +54,15 @@ export function FaqSection() {
       <p className="faq-subheading">
         Everything you need to know before getting started.
       </p>
-      <dl className="faq-list">
+      <div className="faq-list">
         {FAQ_ITEMS.map((item, index) => {
           const isOpen = openIndex === index;
           return (
             <div key={index} className={`faq-item ${isOpen ? "open" : ""}`}>
-              <dt>
+              <h3 className="faq-question-heading">
                 <button
                   type="button"
                   className="faq-question"
-                  aria-expanded={isOpen}
                   onClick={() => setOpenIndex(isOpen ? null : index)}
                 >
                   <span>{item.question}</span>
@@ -71,16 +70,16 @@ export function FaqSection() {
                     {isOpen ? "−" : "+"}
                   </span>
                 </button>
-              </dt>
-              <dd className="faq-answer" data-open={isOpen} role="region">
+              </h3>
+              <div className="faq-answer" data-open={isOpen} role="region">
                 <div className="faq-answer-inner">
                   <p>{item.answer}</p>
                 </div>
-              </dd>
+              </div>
             </div>
           );
         })}
-      </dl>
+      </div>
     </section>
   );
 }

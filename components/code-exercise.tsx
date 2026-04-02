@@ -131,7 +131,6 @@ export function CodeExercise({
             type="button"
             className="ghost-button"
             onClick={() => setShowHint((v) => !v)}
-            aria-expanded={showHint}
           >
             {showHint ? "Hide hint" : "Show hint"}
           </button>

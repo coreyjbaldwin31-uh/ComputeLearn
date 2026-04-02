@@ -211,15 +211,13 @@ export function PlatformNavbar({
       {/* Thin progress bar along the bottom */}
       <div
         className="navbar-progress"
-        role="progressbar"
-        aria-valuenow={percentComplete}
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-label="Overall course progress"
+        aria-hidden="true"
       >
-        <div
+        <progress
           className="navbar-progress-fill"
-          style={{ width: `${percentComplete}%` }}
+          value={percentComplete}
+          max={100}
+          aria-label="Overall course progress"
         />
       </div>
     </header>

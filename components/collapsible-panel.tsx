@@ -17,24 +17,16 @@ export function CollapsiblePanel({
 
   return (
     <section className="panel">
-      <div
+      <button
+        type="button"
         className="collapsible-header"
-        role="button"
-        tabIndex={0}
-        aria-expanded={open}
         onClick={() => setOpen((prev) => !prev)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            setOpen((prev) => !prev);
-          }
-        }}
       >
         <h3>{title}</h3>
         <span className="collapsible-chevron" aria-hidden="true">
           ▸
         </span>
-      </div>
+      </button>
       <div className="collapsible-body" data-open={open}>
         <div className="collapsible-inner">{children}</div>
       </div>

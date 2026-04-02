@@ -57,12 +57,12 @@ export function ActionBar({
         </span>
         {lessonProgress.total > 0 && (
           <span className="action-bar-progress">
-            <span className="action-bar-progress-track">
-              <span
-                className="action-bar-progress-fill"
-                style={{ width: `${progressPct}%` }}
-              />
-            </span>
+            <progress
+              className="action-bar-progress-track"
+              value={progressPct}
+              max={100}
+              aria-label="Lesson exercise completion"
+            />
             <span className="action-bar-progress-label">
               {lessonProgress.current}/{lessonProgress.total}
             </span>

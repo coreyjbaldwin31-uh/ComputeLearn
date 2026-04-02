@@ -142,7 +142,6 @@ export function ProgressRoadmap({
                   type="button"
                   className="roadmap-expand"
                   onClick={() => setExpandedPhase(isExpanded ? null : phase.id)}
-                  aria-expanded={isExpanded}
                   aria-label={`${isExpanded ? "Collapse" : "Expand"} ${phase.title} lessons`}
                 >
                   <svg

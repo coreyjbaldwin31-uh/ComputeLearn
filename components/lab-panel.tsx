@@ -76,7 +76,7 @@ export function LabPanel({
     }
   }
 
-  // Not started — show lab intro and start button
+  // Not started ΓÇö show lab intro and start button
   if (!instance) {
     return (
       <section className="lab-panel">
@@ -109,7 +109,7 @@ export function LabPanel({
     );
   }
 
-  // Completed — show celebration
+  // Completed ΓÇö show celebration
   if (instance.status === "completed" && completionSummary) {
     return (
       <section className="lab-panel">
@@ -130,7 +130,7 @@ export function LabPanel({
             </svg>
           </div>
           <div className="lab-completion-text">
-            <h4>Lab complete — {template.title}</h4>
+            <h4>Lab complete ΓÇö {template.title}</h4>
             <p>All validation checks passed. Great work!</p>
           </div>
         </div>
@@ -140,7 +140,7 @@ export function LabPanel({
           className="ghost-button"
           onClick={() => setShowResetConfirm(true)}
         >
-          ↺ Reset and try again
+          Γå║ Reset and try again
         </button>
         {showResetConfirm ? (
           <div
@@ -183,7 +183,7 @@ export function LabPanel({
     );
   }
 
-  // Active — full lab workspace
+  // Active ΓÇö full lab workspace
   return (
     <section className="lab-panel">
       <div className="lab-panel-header">
@@ -212,7 +212,7 @@ export function LabPanel({
         </div>
       </div>
 
-      {/* Code submissions — one editor per code-behavior rule */}
+      {/* Code submissions ΓÇö one editor per code-behavior rule */}
       {template.rules.some((r) => r.kind === "code-behavior") ? (
         <div className="lab-workspace">
           <h5>Code submissions</h5>
@@ -231,7 +231,7 @@ export function LabPanel({
         </div>
       ) : null}
 
-      {/* Test output — one editor per test-pass rule */}
+      {/* Test output ΓÇö one editor per test-pass rule */}
       {template.rules.some((r) => r.kind === "test-pass") ? (
         <div className="lab-workspace">
           <h5>Test output</h5>
@@ -264,7 +264,7 @@ export function LabPanel({
           className="ghost-button"
           onClick={() => setShowResetConfirm(true)}
         >
-          ↺ Reset lab
+          Γå║ Reset lab
         </button>
       </div>
 
@@ -313,7 +313,7 @@ export function LabPanel({
         >
           <h5>
             {validationResult.passed
-              ? "🎉 All checks passed!"
+              ? "≡ƒÄë All checks passed!"
               : `${validationResult.failedResults.length} of ${validationResult.results.length} checks failed`}
           </h5>
           <ul className="lab-rule-list">
@@ -366,7 +366,7 @@ function LabFileCard({
       ) : (
         <pre className="lab-file-preview">
           {file.content.length > 200
-            ? `${file.content.slice(0, 200)}…`
+            ? `${file.content.slice(0, 200)}ΓÇª`
             : file.content}
         </pre>
       )}
@@ -385,7 +385,7 @@ function LabRuleResultRow({
 }) {
   return (
     <li className={`lab-rule-row ${result.passed ? "passed" : "failed"}`}>
-      <span className="lab-rule-status">{result.passed ? "✓" : "✗"}</span>
+      <span className="lab-rule-status">{result.passed ? "Γ£ô" : "Γ£ù"}</span>
       <span className="lab-rule-message">{result.message}</span>
       {!result.passed && result.probableSkillGap ? (
         <span className="lab-rule-gap">
@@ -397,7 +397,6 @@ function LabRuleResultRow({
           type="button"
           className="ghost-button"
           onClick={onHint}
-          aria-expanded={!!hintText}
         >
           {hintText ? "More help" : "Need a hint?"}
         </button>
@@ -420,7 +419,7 @@ function CodeSubmissionCard({
     <div className="lab-file-card">
       <div className="lab-file-header">
         <code className="lab-file-path">
-          Rule {ruleIndex + 1} — code submission
+          Rule {ruleIndex + 1} ΓÇö code submission
         </code>
       </div>
       <textarea
@@ -429,7 +428,7 @@ function CodeSubmissionCard({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         rows={Math.max(6, value.split("\n").length + 1)}
-        placeholder="Write your code here…"
+        placeholder="Write your code hereΓÇª"
       />
     </div>
   );
@@ -455,7 +454,7 @@ function TestOutputCard({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         rows={Math.max(4, value.split("\n").length + 1)}
-        placeholder="Paste your test output here…"
+        placeholder="Paste your test output hereΓÇª"
       />
     </div>
   );

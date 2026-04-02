@@ -301,11 +301,7 @@ export function RailPanels({
             placeholder="Search lessons by title or summary"
             aria-label="Search lessons"
           />
-          <div
-            className="lesson-filter-row"
-            role="tablist"
-            aria-label="Lesson status filter"
-          >
+          <div className="lesson-filter-row" aria-label="Lesson status filter">
             <button
               type="button"
               className={`toggle-chip ${lessonFilter === "all" ? "active" : ""}`}
@@ -658,8 +654,7 @@ export function RailPanels({
         </p>
         <button
           type="button"
-          className="confirm-destructive"
-          style={{ width: "100%" }}
+          className="confirm-destructive rail-danger-full"
           onClick={() => setShowResetAllConfirm(true)}
         >
           Reset all progress
