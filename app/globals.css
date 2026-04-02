@@ -886,6 +886,12 @@ select {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .sidebar,
+  .rail {
+    position: static;
+    max-height: none;
+  }
+
   .stats--four-column {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1713,6 +1719,8 @@ button[disabled] {
 
 .sidebar,
 .rail {
+  position: sticky;
+  top: 60px;
   max-height: calc(100vh - 60px);
   overflow-y: auto;
   scrollbar-width: thin;
