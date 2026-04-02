@@ -24,7 +24,9 @@ export function LessonTerminal({
 
   return (
     <section className="lesson-terminal-section panel" id="section-terminal">
-      <div className="section-label"><span className="section-label-icon">🖥️</span> Terminal</div>
+      <div className="section-label">
+        <span className="section-label-icon">🖥️</span> Terminal
+      </div>
       <h4>Practice terminal</h4>
       <p className="terminal-intro-text">
         Try the commands from this lesson in a safe, simulated environment. Type{" "}

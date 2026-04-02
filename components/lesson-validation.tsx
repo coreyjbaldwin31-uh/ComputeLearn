@@ -35,7 +35,9 @@ export function LessonValidation({
 }: LessonValidationProps) {
   return (
     <section className="validation-grid" id="section-validation">
-      <div className="section-label"><span className="section-label-icon">✅</span> Validation</div>
+      <div className="section-label">
+        <span className="section-label-icon">✅</span> Validation
+      </div>
       {lesson.exercises.map((exercise) => {
         const exerciseAnswer = answers[exercise.id] ?? "";
         const exerciseFeedback = feedback[exercise.id];
@@ -110,10 +112,16 @@ export function LessonValidation({
             null ? (
               <div className="hint-layer">
                 <div className="hint-header">
-                  <span className="hint-icon" aria-hidden="true">💡</span>
+                  <span className="hint-icon" aria-hidden="true">
+                    💡
+                  </span>
                   <span className="hint-dots">
-                    <span className={`hint-dot ${(currentHintLevels[exercise.id] ?? 0) >= 1 ? "active" : ""}`} />
-                    <span className={`hint-dot ${(currentHintLevels[exercise.id] ?? 0) >= 2 ? "active" : ""}`} />
+                    <span
+                      className={`hint-dot ${(currentHintLevels[exercise.id] ?? 0) >= 1 ? "active" : ""}`}
+                    />
+                    <span
+                      className={`hint-dot ${(currentHintLevels[exercise.id] ?? 0) >= 2 ? "active" : ""}`}
+                    />
                   </span>
                 </div>
                 {getHintText(

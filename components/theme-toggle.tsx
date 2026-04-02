@@ -61,9 +61,7 @@ export function ThemeToggle({ theme, onToggle }: ThemeToggleProps) {
       <span className="theme-icon" aria-hidden="true">
         {theme === "dark" ? <SunIcon /> : <MoonIcon />}
       </span>
-      <span className="theme-label">
-        {theme === "dark" ? "Light" : "Dark"}
-      </span>
+      <span className="theme-label">{theme === "dark" ? "Light" : "Dark"}</span>
     </button>
   );
 }

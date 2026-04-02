@@ -27,7 +27,9 @@ export function LessonCodeExercises({
 
   return (
     <section className="code-exercises-section" id="section-code">
-      <div className="section-label"><span className="section-label-icon">💻</span> Code</div>
+      <div className="section-label">
+        <span className="section-label-icon">💻</span> Code
+      </div>
       {lesson.codeExercises.map((ex) => (
         <CodeExercise
           key={ex.id}

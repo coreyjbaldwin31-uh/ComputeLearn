@@ -36,7 +36,9 @@ export function NotesSection({
 }: NotesSectionProps) {
   return (
     <section className="notes-grid" id="section-notes">
-      <div className="section-label"><span className="section-label-icon">📝</span> Notes</div>
+      <div className="section-label">
+        <span className="section-label-icon">📝</span> Notes
+      </div>
       <article className="note-card">
         <h4>Saved notes</h4>
         <p>{notesPrompt}</p>
@@ -104,9 +106,7 @@ export function NotesSection({
         <textarea
           aria-label="Lesson reflection"
           value={reflectionValue}
-          onChange={(event) =>
-            onReflectionChange(lessonId, event.target.value)
-          }
+          onChange={(event) => onReflectionChange(lessonId, event.target.value)}
           placeholder="Write a short reflection: what you verified, what was weak, and what you will do differently next time."
         />
         <div className="notes-review-row">

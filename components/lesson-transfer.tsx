@@ -45,7 +45,9 @@ export function LessonTransfer({
 
   return (
     <section className="validation-grid" id="section-transfer">
-      <div className="section-label"><span className="section-label-icon">🎯</span> Transfer</div>
+      <div className="section-label">
+        <span className="section-label-icon">🎯</span> Transfer
+      </div>
       <article className="exercise-card transfer-task-card">
         <div className="exercise-card-header">
           <h4>{transferTask.title}</h4>
@@ -108,10 +110,16 @@ export function LessonTransfer({
         ) !== null ? (
           <div className="hint-layer">
             <div className="hint-header">
-              <span className="hint-icon" aria-hidden="true">💡</span>
+              <span className="hint-icon" aria-hidden="true">
+                💡
+              </span>
               <span className="hint-dots">
-                <span className={`hint-dot ${(currentHintLevels[transferTask.id] ?? 0) >= 1 ? "active" : ""}`} />
-                <span className={`hint-dot ${(currentHintLevels[transferTask.id] ?? 0) >= 2 ? "active" : ""}`} />
+                <span
+                  className={`hint-dot ${(currentHintLevels[transferTask.id] ?? 0) >= 1 ? "active" : ""}`}
+                />
+                <span
+                  className={`hint-dot ${(currentHintLevels[transferTask.id] ?? 0) >= 2 ? "active" : ""}`}
+                />
               </span>
             </div>
             {getHintText(

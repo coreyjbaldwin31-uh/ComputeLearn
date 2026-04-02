@@ -29,9 +29,13 @@ import {
 } from "@/lib/reinforcement-engine";
 import { evaluateLessonEvidenceGate } from "@/lib/validation-engine";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { FeatureHighlights } from "./feature-highlights";
+import { ActionBar } from "./action-bar";
+import { AchievementPanel } from "./achievement-panel";
 import { FaqSection } from "./faq-section";
+import { FeatureHighlights } from "./feature-highlights";
+import { GlobalSearch } from "./global-search";
 import { HeroSection } from "./hero-section";
+import { HomeDashboard } from "./home-dashboard";
 import { useAnalyticsDashboards } from "./hooks/use-analytics-dashboards";
 import { useArtifactManager } from "./hooks/use-artifact-manager";
 import { useExerciseValidation } from "./hooks/use-exercise-validation";
@@ -52,6 +56,10 @@ import { LessonTerminal } from "./lesson-terminal";
 import { LessonTransfer } from "./lesson-transfer";
 import { LessonValidation } from "./lesson-validation";
 import { NotesSection } from "./notes-section";
+import {
+  type Notification,
+  NotificationBell,
+} from "./notification-bell";
 import { OnboardingCard } from "./onboarding-card";
 import { PageFooter } from "./page-footer";
 import { PricingCallout } from "./pricing-callout";
@@ -126,6 +134,11 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const [showCompletedOnly, setShowCompletedOnly] = useState(false);
   const [showKeyboardHelp, setShowKeyboardHelp] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [viewMode, setViewMode] = useState<"home" | "lesson">("home");
+  const [showGlobalSearch, setShowGlobalSearch] = useState(false);
+  const [dismissedNotifs, setDismissedNotifs] = useState<Set<string>>(
+    () => new Set(),
+  );
   const [reviews, setReviews] = useLocalStorageState<ReviewState>(
     reviewsStorageKey,
     emptyReviews,
@@ -588,6 +601,64 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     [curriculum.phases, progress],
   );
 
+  const notifications: Notification[] = useMemo(() => {
+    const items: Notification[] = [];
+    if (reviewQueue.length > 0) {
+      items.push({
+        id: "review-due",
+        type: "review",
+        message: `${reviewQueue.length} lesson${reviewQueue.length !== 1 ? "s" : ""} due for review`,
+      });
+    }
+    for (const phase of curriculum.phases) {
+      const lessons = phase.courses.flatMap((c) => c.lessons);
+      if (lessons.length > 0 && lessons.every((l) => progress[l.id])) {
+        items.push({
+          id: `milestone-${phase.id}`,
+          type: "milestone",
+          message: `Phase complete: ${phase.title}`,
+        });
+      }
+    }
+    if (activityStreak >= 7) {
+      items.push({
+        id: `streak-${activityStreak}`,
+        type: "streak",
+        message: `${activityStreak}-day activity streak!`,
+      });
+    }
+    return items.filter((n) => !dismissedNotifs.has(n.id));
+  }, [
+    reviewQueue.length,
+    curriculum.phases,
+    activityStreak,
+    progress,
+    dismissedNotifs,
+  ]);
+
+  const phaseBadges = useMemo(
+    () =>
+      curriculum.phases.map((phase) => {
+        const lessons = phase.courses.flatMap((c) => c.lessons);
+        return {
+          phaseId: phase.id,
+          phaseTitle: phase.title,
+          phaseLevel: phase.level,
+          earned: lessons.length > 0 && lessons.every((l) => progress[l.id]),
+        };
+      }),
+    [curriculum.phases, progress],
+  );
+
+  const totalCompletedLessons = useMemo(
+    () => allLessonsFlat.filter((e) => progress[e.lesson.id]).length,
+    [allLessonsFlat, progress],
+  );
+
+  function dismissNotification(id: string) {
+    setDismissedNotifs((prev) => new Set(prev).add(id));
+  }
+
   useKeyboardShortcuts({
     navigateNext: nextEntry ? () => navigateToEntry(nextEntry) : null,
     navigatePrev: prevEntry ? () => navigateToEntry(prevEntry) : null,
@@ -663,7 +734,39 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   return (
     <main className="shell">
       <SkipLink href="#lesson-content">Skip to lesson content</SkipLink>
-      <ThemeToggle theme={theme} onToggle={toggleTheme} />
+
+      <div className="top-bar">
+        <button
+          type="button"
+          className={`top-bar-home ${viewMode === "home" ? "active" : ""}`}
+          onClick={() => setViewMode("home")}
+          aria-label="Home dashboard"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M2 8.5L8 3l6 5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M3.5 9.5V14h3.25v-3h2.5v3H12.5V9.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+
+        <button
+          type="button"
+          className="top-bar-search"
+          onClick={() => setShowGlobalSearch(true)}
+          aria-label="Search lessons"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="7" cy="7" r="5" stroke="currentColor" strokeWidth="1.5" fill="none" />
+            <path d="M11 11l3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+        </button>
+
+        <NotificationBell
+          notifications={notifications}
+          onDismiss={dismissNotification}
+        />
+
+        <ThemeToggle theme={theme} onToggle={toggleTheme} />
+      </div>
 
       <HeroSection
         productTitle={curriculum.productTitle}
@@ -681,6 +784,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
             setSelectedPhaseId(nextUnfinishedEntry.phase.id);
             setSelectedLessonId(nextUnfinishedEntry.lesson.id);
           }
+          setViewMode("lesson");
           contentRef.current?.scrollIntoView({ behavior: "smooth" });
         }}
       />
@@ -690,9 +794,50 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
         selectedPhaseId={selectedPhase.id}
         progress={progress}
         phaseLessonCounts={phaseLessonCounts}
-        onSelectPhase={selectPhase}
+        onSelectPhase={(phaseId) => {
+          selectPhase(phaseId);
+          setViewMode("lesson");
+        }}
       />
 
+      {viewMode === "home" ? (
+        <>
+          <HomeDashboard
+            curriculum={curriculum}
+            percentComplete={percentComplete}
+            activityStreak={activityStreak}
+            progress={progress}
+            reviews={reviews}
+            allLessonsFlat={allLessonsFlat}
+            nextUnfinishedEntry={nextUnfinishedEntry}
+            reviewQueueCount={reviewQueue.length}
+            phaseLessonCounts={phaseLessonCounts}
+            onContinueCourse={() => {
+              if (nextUnfinishedEntry) {
+                setSelectedPhaseId(nextUnfinishedEntry.phase.id);
+                setSelectedLessonId(nextUnfinishedEntry.lesson.id);
+              }
+              setViewMode("lesson");
+              contentRef.current?.scrollIntoView({ behavior: "smooth" });
+            }}
+            onSelectPhase={(phaseId) => {
+              selectPhase(phaseId);
+              setViewMode("lesson");
+            }}
+            onNavigateToEntry={(entry) => {
+              navigateToEntry(entry);
+              setViewMode("lesson");
+            }}
+          />
+
+          <AchievementPanel
+            phaseBadges={phaseBadges}
+            activityStreak={activityStreak}
+            totalCompleted={totalCompletedLessons}
+            totalLessons={allLessonsFlat.length}
+          />
+        </>
+      ) : (
       <section className="main-grid">
         <SidebarPanels
           curriculum={curriculum}
@@ -737,6 +882,27 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
             onCancelReset={() => setShowResetConfirm(false)}
             onConfirmReset={confirmResetLab}
             showTerminal={showTerminal}
+          />
+
+          <ActionBar
+            lesson={selectedLesson}
+            isComplete={Boolean(progress[selectedLesson.id])}
+            onToggleCompletion={() =>
+              setLessonCompletion(
+                selectedLesson.id,
+                !progress[selectedLesson.id],
+              )
+            }
+            onScrollToNotes={() =>
+              document
+                .getElementById("section-notes")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
+            onScrollToExercises={() =>
+              document
+                .getElementById("section-exercises")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
           />
 
           <LessonExplanation lesson={selectedLesson} />
@@ -865,6 +1031,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
           phaseMilestoneStatus={phaseMilestoneStatus}
         />
       </section>
+      )}
 
       <hr className="section-divider" />
 
@@ -884,6 +1051,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
             setSelectedPhaseId(nextUnfinishedEntry.phase.id);
             setSelectedLessonId(nextUnfinishedEntry.lesson.id);
           }
+          setViewMode("lesson");
           contentRef.current?.scrollIntoView({ behavior: "smooth" });
         }}
       />
@@ -898,6 +1066,18 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
         isOpen={showKeyboardHelp}
         onClose={() => setShowKeyboardHelp(false)}
       />
+
+      {showGlobalSearch && (
+        <GlobalSearch
+          allLessonsFlat={allLessonsFlat}
+          progress={progress}
+          onNavigateToEntry={(entry) => {
+            navigateToEntry(entry);
+            setViewMode("lesson");
+          }}
+          onClose={() => setShowGlobalSearch(false)}
+        />
+      )}
     </main>
   );
 }

@@ -21,7 +21,9 @@ export function LessonNavigation({
           className="lesson-nav-button lesson-nav-prev"
           onClick={() => onNavigateToEntry(prevEntry)}
         >
-          <span className="lesson-nav-arrow" aria-hidden="true">←</span>
+          <span className="lesson-nav-arrow" aria-hidden="true">
+            ←
+          </span>
           <span className="lesson-nav-label">
             <span className="lesson-nav-kicker">Previous lesson</span>
             <span className="lesson-nav-title">{prevEntry.lesson.title}</span>
@@ -40,7 +42,9 @@ export function LessonNavigation({
             <span className="lesson-nav-kicker">Next lesson</span>
             <span className="lesson-nav-title">{nextEntry.lesson.title}</span>
           </span>
-          <span className="lesson-nav-arrow" aria-hidden="true">→</span>
+          <span className="lesson-nav-arrow" aria-hidden="true">
+            →
+          </span>
         </button>
       ) : (
         <span className="nav-spacer" />
