@@ -10,6 +10,19 @@ type GlobalSearchProps = {
   onClose: () => void;
 };
 
+function highlightMatch(text: string, query: string): React.ReactNode {
+  if (!query) return text;
+  const idx = text.toLowerCase().indexOf(query.toLowerCase());
+  if (idx === -1) return text;
+  return (
+    <>
+      {text.slice(0, idx)}
+      <mark className="search-highlight">{text.slice(idx, idx + query.length)}</mark>
+      {text.slice(idx + query.length)}
+    </>
+  );
+}
+
 export function GlobalSearch({
   allLessonsFlat,
   progress,
@@ -18,20 +31,14 @@ export function GlobalSearch({
 }: GlobalSearchProps) {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<"all" | "pending" | "complete">("all");
+  const [selectedIndex, setSelectedIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
-
-  useEffect(() => {
-    function handleEsc(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
-    }
-    document.addEventListener("keydown", handleEsc);
-    return () => document.removeEventListener("keydown", handleEsc);
-  }, [onClose]);
 
   const normalizedQuery = query.trim().toLowerCase();
   const results = allLessonsFlat.filter((entry) => {
@@ -50,6 +57,39 @@ export function GlobalSearch({
     return true;
   });
 
+  const visibleResults = results.slice(0, 20);
+
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === "Escape") {
+      onClose();
+      return;
+    }
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setSelectedIndex((prev) =>
+        prev < visibleResults.length - 1 ? prev + 1 : prev,
+      );
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setSelectedIndex((prev) => (prev > 0 ? prev - 1 : -1));
+    } else if (e.key === "Enter" && selectedIndex >= 0) {
+      e.preventDefault();
+      const entry = visibleResults[selectedIndex];
+      if (entry) {
+        onNavigateToEntry(entry);
+        onClose();
+      }
+    }
+  }
+
+  // Scroll selected result into view
+  useEffect(() => {
+    if (selectedIndex >= 0 && listRef.current) {
+      const items = listRef.current.querySelectorAll(".global-search-result");
+      items[selectedIndex]?.scrollIntoView({ block: "nearest" });
+    }
+  }, [selectedIndex]);
+
   return (
     <div
       className="global-search-backdrop"
@@ -62,6 +102,7 @@ export function GlobalSearch({
         className="global-search-panel"
         role="dialog"
         aria-label="Search lessons"
+        onKeyDown={handleKeyDown}
       >
         <div className="global-search-header">
           <svg
@@ -93,7 +134,10 @@ export function GlobalSearch({
             type="search"
             placeholder="Search lessons, topics, phases…"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setSelectedIndex(-1);
+            }}
             aria-label="Search lessons"
           />
           <button
@@ -125,7 +169,10 @@ export function GlobalSearch({
               key={f}
               type="button"
               className={`global-search-filter ${filter === f ? "active" : ""}`}
-              onClick={() => setFilter(f)}
+              onClick={() => {
+                setFilter(f);
+                setSelectedIndex(-1);
+              }}
             >
               {f === "all"
                 ? "All"
@@ -139,20 +186,21 @@ export function GlobalSearch({
           </span>
         </div>
 
-        <ul className="global-search-results">
-          {results.slice(0, 20).map((entry) => (
+        <ul className="global-search-results" ref={listRef}>
+          {visibleResults.map((entry, i) => (
             <li key={entry.lesson.id}>
               <button
                 type="button"
-                className="global-search-result"
+                className={`global-search-result${i === selectedIndex ? " global-search-result--selected" : ""}`}
                 onClick={() => {
                   onNavigateToEntry(entry);
                   onClose();
                 }}
+                onMouseEnter={() => setSelectedIndex(i)}
               >
                 <div className="global-search-result-top">
                   <span className="global-search-result-title">
-                    {entry.lesson.title}
+                    {highlightMatch(entry.lesson.title, normalizedQuery)}
                   </span>
                   <span
                     className={`status-pill ${progress[entry.lesson.id] ? "complete" : "pending"}`}
@@ -161,7 +209,8 @@ export function GlobalSearch({
                   </span>
                 </div>
                 <span className="global-search-result-path">
-                  {entry.phase.title} › {entry.course.title}
+                  {highlightMatch(entry.phase.title, normalizedQuery)} ›{" "}
+                  {highlightMatch(entry.course.title, normalizedQuery)}
                 </span>
                 <span className="global-search-result-meta">
                   {entry.lesson.duration} · {entry.lesson.difficulty}
