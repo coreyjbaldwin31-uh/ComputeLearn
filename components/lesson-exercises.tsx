@@ -10,8 +10,20 @@ export function LessonExercises({ lesson }: LessonExercisesProps) {
   return (
     <section className="exercise-grid" id="section-exercises">
       <div className="section-label">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" className="section-label-icon">
-          <path d="M3 8h10M5 5v6M11 5v6M2 7v2M14 7v2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+          aria-hidden="true"
+          className="section-label-icon"
+        >
+          <path
+            d="M3 8h10M5 5v6M11 5v6M2 7v2M14 7v2"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
         </svg>
         Practice
       </div>

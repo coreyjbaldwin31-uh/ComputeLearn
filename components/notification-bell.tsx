@@ -24,27 +24,29 @@ export function NotificationBell({
   const [isOpen, setIsOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  const groupedNotifications = ([
-    {
-      type: "milestone",
-      label: "Milestones",
-      items: notifications.filter((n) => n.type === "milestone"),
-    },
-    {
-      type: "review",
-      label: "Review",
-      items: notifications.filter((n) => n.type === "review"),
-    },
-    {
-      type: "streak",
-      label: "Streak",
-      items: notifications.filter((n) => n.type === "streak"),
-    },
-  ] satisfies Array<{
-    type: Notification["type"];
-    label: string;
-    items: Notification[];
-  }>).filter((group) => group.items.length > 0);
+  const groupedNotifications = (
+    [
+      {
+        type: "milestone",
+        label: "Milestones",
+        items: notifications.filter((n) => n.type === "milestone"),
+      },
+      {
+        type: "review",
+        label: "Review",
+        items: notifications.filter((n) => n.type === "review"),
+      },
+      {
+        type: "streak",
+        label: "Streak",
+        items: notifications.filter((n) => n.type === "streak"),
+      },
+    ] satisfies Array<{
+      type: Notification["type"];
+      label: string;
+      items: Notification[];
+    }>
+  ).filter((group) => group.items.length > 0);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -118,7 +120,9 @@ export function NotificationBell({
             )}
           </div>
           {notifications.length === 0 ? (
-            <p className="notif-bell-empty">All caught up. Keep your streak alive.</p>
+            <p className="notif-bell-empty">
+              All caught up. Keep your streak alive.
+            </p>
           ) : (
             <div className="notif-bell-groups">
               {groupedNotifications.map((group) => (

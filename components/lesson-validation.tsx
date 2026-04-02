@@ -36,8 +36,21 @@ export function LessonValidation({
   return (
     <section className="validation-grid" id="section-validation">
       <div className="section-label">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" className="section-label-icon">
-          <path d="M4 8.5l3 3 5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+          aria-hidden="true"
+          className="section-label-icon"
+        >
+          <path
+            d="M4 8.5l3 3 5-5"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
         Validation
       </div>
@@ -115,9 +128,26 @@ export function LessonValidation({
             null ? (
               <div className="hint-layer">
                 <div className="hint-header">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" className="hint-icon">
-                    <path d="M8 1a4.5 4.5 0 0 0-2.5 8.2V11h5V9.2A4.5 4.5 0 0 0 8 1z" stroke="currentColor" strokeWidth="1.3" fill="none" />
-                    <path d="M6 13h4M6.5 11v1.5h3V11" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    aria-hidden="true"
+                    className="hint-icon"
+                  >
+                    <path
+                      d="M8 1a4.5 4.5 0 0 0-2.5 8.2V11h5V9.2A4.5 4.5 0 0 0 8 1z"
+                      stroke="currentColor"
+                      strokeWidth="1.3"
+                      fill="none"
+                    />
+                    <path
+                      d="M6 13h4M6.5 11v1.5h3V11"
+                      stroke="currentColor"
+                      strokeWidth="1.2"
+                      strokeLinecap="round"
+                    />
                   </svg>
                   <span className="hint-dots">
                     <span

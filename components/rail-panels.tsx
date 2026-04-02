@@ -604,10 +604,32 @@ export function RailPanels({
           {phaseMilestoneStatus?.allPassed && phaseExitStatus.nextPhase ? (
             <section className="panel phase-advance-panel">
               <div className="phase-advance-content">
-                <svg width="20" height="20" viewBox="0 0 16 16" fill="none" aria-hidden="true" className="phase-advance-icon">
-                  <path d="M4 2h8v3a4 4 0 0 1-8 0V2z" stroke="currentColor" strokeWidth="1.3" fill="none" />
-                  <path d="M8 9v2M6 14h4M8 11a2 2 0 0 0 2-2" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-                  <path d="M3 2h10" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  aria-hidden="true"
+                  className="phase-advance-icon"
+                >
+                  <path
+                    d="M4 2h8v3a4 4 0 0 1-8 0V2z"
+                    stroke="currentColor"
+                    strokeWidth="1.3"
+                    fill="none"
+                  />
+                  <path
+                    d="M8 9v2M6 14h4M8 11a2 2 0 0 0 2-2"
+                    stroke="currentColor"
+                    strokeWidth="1.2"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M3 2h10"
+                    stroke="currentColor"
+                    strokeWidth="1.3"
+                    strokeLinecap="round"
+                  />
                 </svg>
                 <div>
                   <h3>Phase complete!</h3>

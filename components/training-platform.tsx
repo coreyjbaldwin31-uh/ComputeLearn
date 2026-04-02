@@ -678,10 +678,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     toggleCompletion:
       viewMode === "lesson" && selectedLesson
         ? () =>
-            setLessonCompletion(
-              selectedLesson.id,
-              !progress[selectedLesson.id],
-            )
+            setLessonCompletion(selectedLesson.id, !progress[selectedLesson.id])
         : null,
     scrollToNotes:
       viewMode === "lesson"

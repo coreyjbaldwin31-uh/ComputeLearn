@@ -203,10 +203,8 @@ export function TerminalSimulator({
               clear:
                 "clear / cls\n  Clear all terminal history.\n  Keyboard shortcut: Ctrl+L",
               cls: "cls / clear\n  Clear the terminal screen.\n  Keyboard shortcut: Ctrl+L",
-              whoami:
-                "whoami\n  Display the current logged-in user name.",
-              hostname:
-                "hostname\n  Display the name of the machine.",
+              whoami: "whoami\n  Display the current logged-in user name.",
+              hostname: "hostname\n  Display the name of the machine.",
               date: "date / Get-Date\n  Show the current date and time.",
               "get-date":
                 "Get-Date\n  PowerShell cmdlet to get the current date.\n  Alias: date",
