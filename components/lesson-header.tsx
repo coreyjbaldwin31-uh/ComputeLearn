@@ -10,10 +10,8 @@ type LessonHeaderProps = {
   showCompletedOnly: boolean;
   showResetConfirm: boolean;
   lessonGateFeedback: string | null;
-  onSelectPhase: (phaseId: string) => void;
   onSelectCourse: (courseId: string) => void;
   onToggleCompletedOnly: () => void;
-  onToggleLessonCompletion: (lessonId: string, completed: boolean) => void;
   onResetLab: () => void;
   onCancelReset: () => void;
   onConfirmReset: () => void;
@@ -28,46 +26,23 @@ export function LessonHeader({
   showCompletedOnly,
   showResetConfirm,
   lessonGateFeedback,
-  onSelectPhase,
   onSelectCourse,
   onToggleCompletedOnly,
-  onToggleLessonCompletion,
   onResetLab,
   onCancelReset,
   onConfirmReset,
   showTerminal,
 }: LessonHeaderProps) {
   return (
-    <section className="panel">
-      <nav className="breadcrumbs" aria-label="Breadcrumb">
-        <button
-          type="button"
-          className="breadcrumb-link"
-          onClick={() => onSelectPhase(selectedPhase.id)}
-        >
-          {selectedPhase.title}
-        </button>
-        <span>›</span>
-        <button
-          type="button"
-          className="breadcrumb-link"
-          onClick={() => onSelectCourse(selectedCourse.id)}
-        >
-          {selectedCourse.title}
-        </button>
-        <span>›</span>
-        <span>{selectedLesson.title}</span>
-      </nav>
-
+    <section className="panel lesson-header-panel">
       <div className="lesson-headline">
-        <span className="eyebrow">Current lesson</span>
+        <h2>{selectedLesson.title}</h2>
         <span
           className={`status-pill ${progress[selectedLesson.id] ? "complete" : "pending"}`}
         >
           {progress[selectedLesson.id] ? "Completed" : "In progress"}
         </span>
       </div>
-      <h2>{selectedLesson.title}</h2>
       <p className="lesson-overview">{selectedLesson.summary}</p>
 
       <div className="lesson-actions">
@@ -87,20 +62,6 @@ export function LessonHeader({
           onClick={onToggleCompletedOnly}
         >
           {showCompletedOnly ? "Showing completed only" : "Show completed only"}
-        </button>
-        <button
-          type="button"
-          className={`mark-complete-button ${progress[selectedLesson.id] ? "completed" : ""}`}
-          onClick={() =>
-            onToggleLessonCompletion(
-              selectedLesson.id,
-              !progress[selectedLesson.id],
-            )
-          }
-        >
-          {progress[selectedLesson.id]
-            ? "✓ Completed — mark incomplete"
-            : "Mark complete ✓"}
         </button>
         <button
           type="button"
@@ -152,8 +113,6 @@ export function LessonHeader({
       ) : null}
 
       <div className="lesson-meta">
-        <span className="metric-pill">{selectedLesson.duration}</span>
-        <span className="metric-pill">{selectedLesson.difficulty}</span>
         {selectedLesson.scaffoldingLevel ? (
           <span
             className={`scaffolding-badge scaffolding-${selectedLesson.scaffoldingLevel}`}

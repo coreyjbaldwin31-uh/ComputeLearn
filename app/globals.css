@@ -2876,7 +2876,7 @@ button[disabled] {
 /* ── Social proof section ────────────────────────────────── */
 
 .social-proof {
-  margin-top: 32px;
+  margin-top: 48px;
   display: grid;
   gap: 28px;
 }
@@ -3064,7 +3064,7 @@ button[disabled] {
 
 .faq-section {
   max-width: 800px;
-  margin: 0 auto;
+  margin: 48px auto 0;
   padding: 0 16px;
 }
 
@@ -3580,7 +3580,7 @@ button[disabled] {
 /* ── Feature highlights section ──────────────────────────── */
 
 .feature-highlights {
-  margin-top: 40px;
+  margin-top: 56px;
   text-align: center;
 }
 
@@ -3639,7 +3639,7 @@ button[disabled] {
   height: 44px;
   border-radius: 12px;
   background: var(--accent-soft);
-  font-size: 1.3rem;
+  color: var(--accent);
   margin-bottom: 14px;
 }
 
@@ -3659,7 +3659,8 @@ button[disabled] {
 /* ── Pricing callout section ─────────────────────────────── */
 
 .pricing-callout {
-  margin-top: 40px;
+  margin-top: 56px;
+  margin-bottom: 40px;
   display: flex;
   justify-content: center;
 }
@@ -5818,4 +5819,64 @@ button[disabled] {
     justify-content: space-around;
   }
 }
+
+/* ===========================================================================
+   Lesson Header Panel — cleaner layout (breadcrumbs removed, inlined title)
+   =========================================================================== */
+
+.lesson-header-panel {
+  padding: 18px 22px;
+}
+
+.lesson-header-panel .lesson-headline {
+  margin-bottom: 8px;
+}
+
+.lesson-header-panel .lesson-headline h2 {
+  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+  line-height: 1.2;
+  margin: 0;
+}
+
+.lesson-header-panel .lesson-overview {
+  margin-bottom: 14px;
+  font-size: 0.94rem;
+}
+
+.lesson-header-panel .lesson-actions {
+  margin-bottom: 10px;
+}
+
+.lesson-header-panel .lesson-meta {
+  margin-bottom: 6px;
+}
+
+/* Hide breadcrumbs inside lesson header — navbar has them */
+.lesson-header-panel .breadcrumbs {
+  display: none;
+}
+
+/* ===========================================================================
+   View-mode transitions
+   =========================================================================== */
+
+.main-grid {
+  animation: viewFadeIn 250ms ease;
+}
+
+@keyframes viewFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Home sections get a stagger fade */
+.home-dashboard,
+.achievement-panel,
+.progress-roadmap {
+  animation: viewFadeIn 300ms ease both;
+}
+
+.progress-roadmap { animation-delay: 50ms; }
+.home-dashboard { animation-delay: 100ms; }
+.achievement-panel { animation-delay: 200ms; }
 

@@ -753,39 +753,39 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
         onToggleTheme={toggleTheme}
       />
 
-      <HeroSection
-        productTitle={curriculum.productTitle}
-        productVision={curriculum.productVision}
-        phasesCount={curriculum.phases.length}
-        allLessonsCount={allLessonsFlat.length}
-        percentComplete={percentComplete}
-        activityStreak={activityStreak}
-        isCurriculumComplete={isCurriculumComplete}
-        isNewUser={isNewUser}
-        nextUnfinishedEntry={nextUnfinishedEntry}
-        onBeginLesson={() => {
-          if (nextUnfinishedEntry) {
-            setSelectedPhaseId(nextUnfinishedEntry.phase.id);
-            setSelectedLessonId(nextUnfinishedEntry.lesson.id);
-          }
-          setViewMode("lesson");
-          contentRef.current?.scrollIntoView({ behavior: "smooth" });
-        }}
-      />
-
-      <ProgressRoadmap
-        phases={curriculum.phases}
-        selectedPhaseId={selectedPhase.id}
-        progress={progress}
-        phaseLessonCounts={phaseLessonCounts}
-        onSelectPhase={(phaseId) => {
-          selectPhase(phaseId);
-          setViewMode("lesson");
-        }}
-      />
-
       {viewMode === "home" ? (
         <>
+          <HeroSection
+            productTitle={curriculum.productTitle}
+            productVision={curriculum.productVision}
+            phasesCount={curriculum.phases.length}
+            allLessonsCount={allLessonsFlat.length}
+            percentComplete={percentComplete}
+            activityStreak={activityStreak}
+            isCurriculumComplete={isCurriculumComplete}
+            isNewUser={isNewUser}
+            nextUnfinishedEntry={nextUnfinishedEntry}
+            onBeginLesson={() => {
+              if (nextUnfinishedEntry) {
+                setSelectedPhaseId(nextUnfinishedEntry.phase.id);
+                setSelectedLessonId(nextUnfinishedEntry.lesson.id);
+              }
+              setViewMode("lesson");
+              contentRef.current?.scrollIntoView({ behavior: "smooth" });
+            }}
+          />
+
+          <ProgressRoadmap
+            phases={curriculum.phases}
+            selectedPhaseId={selectedPhase.id}
+            progress={progress}
+            phaseLessonCounts={phaseLessonCounts}
+            onSelectPhase={(phaseId) => {
+              selectPhase(phaseId);
+              setViewMode("lesson");
+            }}
+          />
+
           <HomeDashboard
             curriculum={curriculum}
             percentComplete={percentComplete}
@@ -856,12 +856,10 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
               showCompletedOnly={showCompletedOnly}
               showResetConfirm={showResetConfirm}
               lessonGateFeedback={lessonGateFeedback}
-              onSelectPhase={selectPhase}
               onSelectCourse={selectCourse}
               onToggleCompletedOnly={() =>
                 setShowCompletedOnly((current) => !current)
               }
-              onToggleLessonCompletion={setLessonCompletion}
               onResetLab={() => setShowResetConfirm(true)}
               onCancelReset={() => setShowResetConfirm(false)}
               onConfirmReset={confirmResetLab}
@@ -1023,28 +1021,28 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
         </section>
       )}
 
-      <hr className="section-divider" />
+      {viewMode === "home" && (
+        <>
+          {isNewUser && (
+            <>
+              <FeatureHighlights />
+              <SocialProof />
+              <FaqSection />
+            </>
+          )}
 
-      <FeatureHighlights />
-
-      <SocialProof />
-
-      <hr className="section-divider" />
-
-      <FaqSection />
-
-      <hr className="section-divider" />
-
-      <PricingCallout
-        onBeginLesson={() => {
-          if (nextUnfinishedEntry) {
-            setSelectedPhaseId(nextUnfinishedEntry.phase.id);
-            setSelectedLessonId(nextUnfinishedEntry.lesson.id);
-          }
-          setViewMode("lesson");
-          contentRef.current?.scrollIntoView({ behavior: "smooth" });
-        }}
-      />
+          <PricingCallout
+            onBeginLesson={() => {
+              if (nextUnfinishedEntry) {
+                setSelectedPhaseId(nextUnfinishedEntry.phase.id);
+                setSelectedLessonId(nextUnfinishedEntry.lesson.id);
+              }
+              setViewMode("lesson");
+              contentRef.current?.scrollIntoView({ behavior: "smooth" });
+            }}
+          />
+        </>
+      )}
 
       <PageFooter />
 
