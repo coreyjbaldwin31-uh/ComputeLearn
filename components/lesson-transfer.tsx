@@ -107,6 +107,13 @@ export function LessonTransfer({
           transferTask.hint,
         ) !== null ? (
           <div className="hint-layer">
+            <div className="hint-header">
+              <span className="hint-icon" aria-hidden="true">💡</span>
+              <span className="hint-dots">
+                <span className={`hint-dot ${(currentHintLevels[transferTask.id] ?? 0) >= 1 ? "active" : ""}`} />
+                <span className={`hint-dot ${(currentHintLevels[transferTask.id] ?? 0) >= 2 ? "active" : ""}`} />
+              </span>
+            </div>
             {getHintText(
               currentHintLevels[transferTask.id] ?? 0,
               transferTask.hint,

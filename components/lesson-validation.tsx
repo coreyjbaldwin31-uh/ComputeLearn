@@ -109,6 +109,13 @@ export function LessonValidation({
             {getHintText(currentHintLevels[exercise.id] ?? 0, exercise.hint) !==
             null ? (
               <div className="hint-layer">
+                <div className="hint-header">
+                  <span className="hint-icon" aria-hidden="true">💡</span>
+                  <span className="hint-dots">
+                    <span className={`hint-dot ${(currentHintLevels[exercise.id] ?? 0) >= 1 ? "active" : ""}`} />
+                    <span className={`hint-dot ${(currentHintLevels[exercise.id] ?? 0) >= 2 ? "active" : ""}`} />
+                  </span>
+                </div>
                 {getHintText(
                   currentHintLevels[exercise.id] ?? 0,
                   exercise.hint,
