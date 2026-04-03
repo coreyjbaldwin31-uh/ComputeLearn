@@ -343,6 +343,9 @@ export function RailPanels({
                 type="button"
                 className={`lesson-button ${lesson.id === selectedLesson.id ? "active" : ""}`}
                 onClick={() => setSelectedLessonId(lesson.id)}
+                aria-current={
+                  lesson.id === selectedLesson.id ? "page" : undefined
+                }
               >
                 <span className="lesson-kicker">{lesson.duration}</span>
                 <span className="lesson-title">{lesson.title}</span>
