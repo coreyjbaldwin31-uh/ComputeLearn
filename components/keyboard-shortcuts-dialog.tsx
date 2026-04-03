@@ -142,7 +142,7 @@ const shortcutGroups = [
     label: "Tools",
     shortcuts: [
       {
-        action: "Open search",
+        action: "Open search (/ or Ctrl+K)",
         keys: ["/"],
         icon: (
           <svg

@@ -75,6 +75,20 @@ describe("useKeyboardShortcuts", () => {
     expect(openSearch).toHaveBeenCalledOnce();
   });
 
+  it("opens search on Ctrl+K", () => {
+    const openSearch = vi.fn();
+    renderHook(() => useKeyboardShortcuts(defaults({ openSearch })));
+    fire("k", { ctrlKey: true });
+    expect(openSearch).toHaveBeenCalledOnce();
+  });
+
+  it("opens search on Cmd+K", () => {
+    const openSearch = vi.fn();
+    renderHook(() => useKeyboardShortcuts(defaults({ openSearch })));
+    fire("k", { metaKey: true });
+    expect(openSearch).toHaveBeenCalledOnce();
+  });
+
   it("calls goHome on h key", () => {
     const goHome = vi.fn();
     renderHook(() => useKeyboardShortcuts(defaults({ goHome })));

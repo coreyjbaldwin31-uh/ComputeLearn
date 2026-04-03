@@ -209,10 +209,7 @@ export function PlatformNavbar({
       </div>
 
       {/* Thin progress bar along the bottom */}
-      <div
-        className="navbar-progress"
-        aria-hidden="true"
-      >
+      <div className="navbar-progress" aria-hidden="true">
         <progress
           className="navbar-progress-fill"
           value={percentComplete}

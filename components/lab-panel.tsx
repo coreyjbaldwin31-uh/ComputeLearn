@@ -393,11 +393,7 @@ function LabRuleResultRow({
         </span>
       ) : null}
       {!result.passed ? (
-        <button
-          type="button"
-          className="ghost-button"
-          onClick={onHint}
-        >
+        <button type="button" className="ghost-button" onClick={onHint}>
           {hintText ? "More help" : "Need a hint?"}
         </button>
       ) : null}

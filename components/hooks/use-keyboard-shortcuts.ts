@@ -30,7 +30,11 @@ export function useKeyboardShortcuts({
       const tag = (e.target as HTMLElement)?.tagName;
       if (tag === "INPUT" || tag === "TEXTAREA") return;
 
-      if (e.key === "/" && !e.ctrlKey && !e.metaKey && openSearch) {
+      if (
+        openSearch &&
+        ((e.key === "/" && !e.ctrlKey && !e.metaKey) ||
+          (e.key.toLowerCase() === "k" && (e.ctrlKey || e.metaKey)))
+      ) {
         e.preventDefault();
         openSearch();
       } else if (e.key === "j" && navigateNext) {
