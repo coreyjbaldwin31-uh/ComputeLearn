@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { useFocusTrap } from "./hooks/use-focus-trap";
 
 type KeyboardShortcutsDialogProps = {
@@ -8,7 +8,19 @@ type KeyboardShortcutsDialogProps = {
   onClose: () => void;
 };
 
-const shortcutGroups = [
+type ShortcutItem = {
+  action: string;
+  keys: readonly string[];
+  icon: ReactNode;
+  alternateKeySets?: readonly (readonly string[])[];
+};
+
+type ShortcutGroup = {
+  label: string;
+  shortcuts: readonly ShortcutItem[];
+};
+
+const shortcutGroups: readonly ShortcutGroup[] = [
   {
     label: "Navigation",
     shortcuts: [
@@ -142,8 +154,9 @@ const shortcutGroups = [
     label: "Tools",
     shortcuts: [
       {
-        action: "Open search (/ or Ctrl+K)",
+        action: "Open search",
         keys: ["/"],
+        alternateKeySets: [["Ctrl", "K"], ["Cmd", "K"]],
         icon: (
           <svg
             width="14"
@@ -164,6 +177,7 @@ const shortcutGroups = [
       {
         action: "Toggle dark mode",
         keys: ["Ctrl", "Shift", "D"],
+        alternateKeySets: [["Cmd", "Shift", "D"]],
         icon: (
           <svg
             width="14"
@@ -298,9 +312,20 @@ export function KeyboardShortcutsDialog({
                     </span>
                     <span className="shortcut-keys">
                       {shortcut.keys.map((key, i) => (
-                        <span key={key}>
+                        <span key={`primary-${key}`}>
                           {i > 0 && "+"}
                           <kbd className="kbd-hint">{key}</kbd>
+                        </span>
+                      ))}
+                      {shortcut.alternateKeySets?.map((set, setIndex) => (
+                        <span key={`alt-${setIndex}`}>
+                          <span className="shortcut-key-separator">or</span>
+                          {set.map((key, keyIndex) => (
+                            <span key={`${setIndex}-${key}`}>
+                              {keyIndex > 0 && "+"}
+                              <kbd className="kbd-hint">{key}</kbd>
+                            </span>
+                          ))}
                         </span>
                       ))}
                     </span>

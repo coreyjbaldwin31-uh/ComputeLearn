@@ -126,7 +126,7 @@ export function PlatformNavbar({
             className="navbar-icon-btn"
             onClick={onToggleSearch}
             aria-label="Search lessons"
-            title="Search (Ctrl+K)"
+            title="Search (Ctrl/Cmd+K)"
           >
             <svg
               width="16"

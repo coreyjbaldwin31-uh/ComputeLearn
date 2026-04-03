@@ -1529,6 +1529,12 @@ button[disabled] {
   align-items: center;
 }
 
+.shortcut-key-separator {
+  margin: 0 4px;
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
 /* ── Confirmation dialog ─────────────────────────────────── */
 
 .confirm-backdrop {
