@@ -4129,6 +4129,16 @@ button[disabled] {
   padding: 0.72rem 0.9rem;
 }
 
+.storage-health-banner--stable {
+  border-color: rgba(13, 107, 87, 0.26);
+  background: rgba(13, 107, 87, 0.06);
+}
+
+.storage-health-banner--stale {
+  border-color: rgba(185, 96, 0, 0.42);
+  background: rgba(185, 96, 0, 0.12);
+}
+
 .storage-health-banner--degraded {
   border-color: rgba(163, 28, 28, 0.4);
   background: rgba(163, 28, 28, 0.08);

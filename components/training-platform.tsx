@@ -105,6 +105,8 @@ const emptyTransfer: TransferState = {};
 
 type StorageHealthMode = "stable" | "degraded" | "recovered";
 
+const staleSaveThresholdMs = 90_000;
+
 export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const [selectedPhaseId, setSelectedPhaseId] = useState(
     curriculum.phases[0]?.id ?? "",
@@ -180,6 +182,10 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const [lastStorageFailureKey, setLastStorageFailureKey] = useState<
     string | null
   >(null);
+  const [lastSuccessfulSaveAt, setLastSuccessfulSaveAt] = useState<
+    number | null
+  >(null);
+  const [saveClockTick, setSaveClockTick] = useState(() => Date.now());
   const storageErrorTimerRef = useRef<number | null>(null);
   const systemFlashTimerRef = useRef<number | null>(null);
   const storageHealthTimerRef = useRef<number | null>(null);
@@ -187,6 +193,81 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const contentRef = useRef<HTMLElement>(null);
 
   const [todayKey, setTodayKey] = useState(() => new Date().toDateString());
+
+  useEffect(() => {
+    function handleStorageWriteSuccess() {
+      const now = Date.now();
+      setLastSuccessfulSaveAt(now);
+      setSaveClockTick(now);
+
+      setStorageHealthMode((current) => {
+        if (current === "degraded") {
+          return "recovered";
+        }
+        return current;
+      });
+
+      setStorageErrorFlash(null);
+      setLastStorageError(null);
+      setStorageErrorCount(0);
+      setLastStorageFailureKey(null);
+
+      if (storageHealthTimerRef.current != null) {
+        window.clearTimeout(storageHealthTimerRef.current);
+      }
+      storageHealthTimerRef.current = window.setTimeout(() => {
+        setStorageHealthMode("stable");
+      }, 7000);
+    }
+
+    window.addEventListener("ls-write", handleStorageWriteSuccess);
+
+    return () => {
+      window.removeEventListener("ls-write", handleStorageWriteSuccess);
+    };
+  }, []);
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setSaveClockTick(Date.now());
+    }, 15_000);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, []);
+
+  const lastSuccessfulSaveLabel = useMemo(() => {
+    if (!lastSuccessfulSaveAt) {
+      return null;
+    }
+
+    const deltaMs = Math.max(0, saveClockTick - lastSuccessfulSaveAt);
+    const deltaSeconds = Math.floor(deltaMs / 1000);
+
+    if (deltaSeconds < 8) {
+      return "just now";
+    }
+
+    if (deltaSeconds < 60) {
+      return `${deltaSeconds}s ago`;
+    }
+
+    const deltaMinutes = Math.floor(deltaSeconds / 60);
+    if (deltaMinutes < 60) {
+      return `${deltaMinutes}m ago`;
+    }
+
+    const deltaHours = Math.floor(deltaMinutes / 60);
+    return `${deltaHours}h ago`;
+  }, [lastSuccessfulSaveAt, saveClockTick]);
+
+  const isSaveStale = useMemo(() => {
+    if (!lastSuccessfulSaveAt) {
+      return false;
+    }
+    return saveClockTick - lastSuccessfulSaveAt >= staleSaveThresholdMs;
+  }, [lastSuccessfulSaveAt, saveClockTick]);
 
   useEffect(() => {
     function handleStorageWriteError(event: Event) {
@@ -919,6 +1000,8 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
         mode={storageHealthMode}
         failureCount={storageErrorCount}
         lastFailureKey={lastStorageFailureKey}
+        lastSuccessfulSaveLabel={lastSuccessfulSaveLabel}
+        isSaveStale={isSaveStale}
         onOpenRecovery={() => setShowStorageRecoveryDialog(true)}
         onDismissRecovered={() => setStorageHealthMode("stable")}
       />

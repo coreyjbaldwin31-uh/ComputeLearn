@@ -14,6 +14,8 @@ describe("StorageHealthBanner", () => {
         mode="degraded"
         failureCount={2}
         lastFailureKey="computelearn-notes"
+        lastSuccessfulSaveLabel="42s ago"
+        isSaveStale={false}
         onOpenRecovery={onOpenRecovery}
         onDismissRecovered={vi.fn()}
       />,
@@ -39,6 +41,8 @@ describe("StorageHealthBanner", () => {
         mode="recovered"
         failureCount={0}
         lastFailureKey={null}
+        lastSuccessfulSaveLabel="just now"
+        isSaveStale={false}
         onOpenRecovery={vi.fn()}
         onDismissRecovered={onDismissRecovered}
       />,
@@ -51,12 +55,59 @@ describe("StorageHealthBanner", () => {
     expect(onDismissRecovered).toHaveBeenCalledTimes(1);
   });
 
-  it("renders nothing when mode is stable", () => {
+  it("renders stable freshness indicator when recent save exists", () => {
+    render(
+      <StorageHealthBanner
+        mode="stable"
+        failureCount={0}
+        lastFailureKey={null}
+        lastSuccessfulSaveLabel="12s ago"
+        isSaveStale={false}
+        onOpenRecovery={vi.fn()}
+        onDismissRecovered={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText("Save reliability healthy")).toBeInTheDocument();
+    expect(
+      screen.getByText(/Last successful save: 12s ago/i),
+    ).toBeInTheDocument();
+  });
+
+  it("renders stale indicator and recovery action in stable mode", async () => {
+    const onOpenRecovery = vi.fn();
+
+    render(
+      <StorageHealthBanner
+        mode="stable"
+        failureCount={0}
+        lastFailureKey={null}
+        lastSuccessfulSaveLabel="3m ago"
+        isSaveStale
+        onOpenRecovery={onOpenRecovery}
+        onDismissRecovered={vi.fn()}
+      />,
+    );
+
+    expect(
+      screen.getByText("Save freshness needs attention"),
+    ).toBeInTheDocument();
+
+    await userEvent.click(
+      screen.getByRole("button", { name: "Recovery options" }),
+    );
+
+    expect(onOpenRecovery).toHaveBeenCalledTimes(1);
+  });
+
+  it("renders nothing when mode is stable without save timestamp", () => {
     const { container } = render(
       <StorageHealthBanner
         mode="stable"
         failureCount={0}
         lastFailureKey={null}
+        lastSuccessfulSaveLabel={null}
+        isSaveStale={false}
         onOpenRecovery={vi.fn()}
         onDismissRecovered={vi.fn()}
       />,
