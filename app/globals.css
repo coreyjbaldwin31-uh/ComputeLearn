@@ -4097,6 +4097,30 @@ button[disabled] {
   outline-offset: 2px;
 }
 
+.storage-recovery-dialog {
+  max-width: 620px;
+}
+
+.storage-recovery-list {
+  margin: 0 0 0.9rem;
+  padding-left: 1.2rem;
+  color: var(--text-muted);
+  display: grid;
+  gap: 0.3rem;
+}
+
+.storage-recovery-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+@media (max-width: 760px) {
+  .storage-recovery-actions button {
+    width: 100%;
+  }
+}
+
 @keyframes toastSlideIn {
   from {
     opacity: 0;

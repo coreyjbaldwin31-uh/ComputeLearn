@@ -67,6 +67,7 @@ import { SaveToast } from "./save-toast";
 import { SidebarPanels } from "./sidebar-panels";
 import { SkipLink } from "./skip-link";
 import { SocialProof } from "./social-proof";
+import { StorageRecoveryDialog } from "./storage-recovery-dialog";
 
 type ProgressState = Record<string, true>;
 type NotesState = Record<string, string>;
@@ -167,7 +168,10 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   );
   const [lastStorageError, setLastStorageError] =
     useState<LocalStorageWriteErrorDetail | null>(null);
+  const [storageErrorCount, setStorageErrorCount] = useState(0);
   const [systemFlash, setSystemFlash] = useState<string | null>(null);
+  const [showStorageRecoveryDialog, setShowStorageRecoveryDialog] =
+    useState(false);
   const storageErrorTimerRef = useRef<number | null>(null);
   const systemFlashTimerRef = useRef<number | null>(null);
 
@@ -180,6 +184,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       const detail = (event as CustomEvent<LocalStorageWriteErrorDetail>)
         .detail;
       setLastStorageError(detail ?? null);
+      setStorageErrorCount((current) => current + 1);
       const context = detail?.key ? ` (${detail.key})` : "";
       const message = detail?.message ?? "Storage write failed";
       setStorageErrorFlash(
@@ -217,6 +222,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       window.dispatchEvent(new Event("ls-write"));
       setStorageErrorFlash(null);
       setLastStorageError(null);
+      setStorageErrorCount(0);
       setSystemFlash("Save recovered successfully");
 
       if (systemFlashTimerRef.current != null) {
@@ -232,6 +238,35 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
         `Retry failed for ${lastStorageError.key}. ${message}.`,
       );
     }
+  }
+
+  function handleExportRecoveryBackup() {
+    exportArtifacts();
+    setSystemFlash("Artifact backup exported");
+    setShowStorageRecoveryDialog(false);
+
+    if (systemFlashTimerRef.current != null) {
+      window.clearTimeout(systemFlashTimerRef.current);
+    }
+    systemFlashTimerRef.current = window.setTimeout(() => {
+      setSystemFlash(null);
+    }, 2200);
+  }
+
+  function handleResetAfterStorageFailure() {
+    resetAllProgress();
+    setStorageErrorFlash(null);
+    setLastStorageError(null);
+    setStorageErrorCount(0);
+    setSystemFlash("Local learning data reset");
+    setShowStorageRecoveryDialog(false);
+
+    if (systemFlashTimerRef.current != null) {
+      window.clearTimeout(systemFlashTimerRef.current);
+    }
+    systemFlashTimerRef.current = window.setTimeout(() => {
+      setSystemFlash(null);
+    }, 2200);
   }
 
   useEffect(() => {
@@ -1152,8 +1187,31 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       <SaveToast
         message={storageErrorFlash ?? systemFlash ?? saveFlash}
         variant={storageErrorFlash ? "error" : "success"}
-        actionLabel={storageErrorFlash ? "Retry save" : undefined}
-        onAction={storageErrorFlash ? retryFailedStorageWrite : undefined}
+        actionLabel={
+          storageErrorFlash
+            ? storageErrorCount >= 2
+              ? "Recovery options"
+              : "Retry save"
+            : undefined
+        }
+        onAction={
+          storageErrorFlash
+            ? storageErrorCount >= 2
+              ? () => setShowStorageRecoveryDialog(true)
+              : retryFailedStorageWrite
+            : undefined
+        }
+      />
+
+      <StorageRecoveryDialog
+        isOpen={showStorageRecoveryDialog}
+        onClose={() => setShowStorageRecoveryDialog(false)}
+        onRetry={() => {
+          retryFailedStorageWrite();
+          setShowStorageRecoveryDialog(false);
+        }}
+        onExportBackup={handleExportRecoveryBackup}
+        onResetLocalData={handleResetAfterStorageFailure}
       />
 
       <KeyboardHelpTrigger onClick={() => setShowKeyboardHelp(true)} />
