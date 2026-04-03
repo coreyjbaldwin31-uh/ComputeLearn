@@ -111,6 +111,7 @@ export function TerminalSimulator({
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const activeCommandRef = useRef<string | null>(null);
+  const draftInputRef = useRef("");
 
   const scrollToBottom = useCallback(() => {
     if (scrollRef.current) {
@@ -468,9 +469,13 @@ export function TerminalSimulator({
     if (e.key === "Enter") {
       processCommand(input);
       setInput("");
+      draftInputRef.current = "";
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       if (commandHistory.length === 0) return;
+      if (historyIndex === -1) {
+        draftInputRef.current = input;
+      }
       const newIndex =
         historyIndex === -1
           ? commandHistory.length - 1
@@ -483,7 +488,7 @@ export function TerminalSimulator({
       const newIndex = historyIndex + 1;
       if (newIndex >= commandHistory.length) {
         setHistoryIndex(-1);
-        setInput("");
+        setInput(draftInputRef.current);
       } else {
         setHistoryIndex(newIndex);
         setInput(commandHistory[newIndex]);
