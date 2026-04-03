@@ -84,5 +84,27 @@ describe("StorageSurfaceChip", () => {
     expect(
       screen.getByText(/Critical - 3 failed attempts - Storage blocked/i),
     ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Browser storage access is blocked/i),
+    ).toBeInTheDocument();
+  });
+
+  it("shows quota-specific guidance when storage is full", () => {
+    render(
+      <StorageSurfaceChip
+        label="Notes save"
+        mode="degraded"
+        lastSuccessfulSaveLabel="2m ago"
+        isSaveStale={false}
+        isDirty={false}
+        failedCount={1}
+        lastErrorReason="Quota exceeded"
+        onOpenRecovery={vi.fn()}
+      />,
+    );
+
+    expect(
+      screen.getByText(/Storage appears full. Export backup and clear old browser data./i),
+    ).toBeInTheDocument();
   });
 });

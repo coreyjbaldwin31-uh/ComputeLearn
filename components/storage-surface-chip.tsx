@@ -24,6 +24,16 @@ export function StorageSurfaceChip({
   const hasFailure = failedCount > 0;
   const failureSeverity =
     failedCount >= 3 ? "critical" : failedCount >= 1 ? "warning" : null;
+  const normalizedError = lastErrorReason?.toLowerCase() ?? "";
+
+  const recoveryGuidance = normalizedError.includes("quota")
+    ? "Storage appears full. Export backup and clear old browser data."
+    : normalizedError.includes("security") ||
+        normalizedError.includes("blocked")
+      ? "Browser storage access is blocked. Check privacy settings or site permissions."
+      : normalizedError
+        ? "Retry after checking browser storage settings and available space."
+        : null;
 
   const descriptor =
     mode === "degraded" && hasFailure
@@ -62,6 +72,9 @@ export function StorageSurfaceChip({
           {failedCount} failed attempt{failedCount === 1 ? "" : "s"}
           {lastErrorReason ? ` - ${lastErrorReason}` : ""}
         </span>
+      ) : null}
+      {mode === "degraded" && hasFailure && recoveryGuidance ? (
+        <span className="storage-surface-chip-hint">{recoveryGuidance}</span>
       ) : null}
       {((mode === "degraded" && hasFailure) || isSaveStale) && (
         <button type="button" className="chip-link" onClick={onOpenRecovery}>
