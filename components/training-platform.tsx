@@ -79,6 +79,7 @@ type TransferState = Record<string, true>;
 type LocalStorageWriteErrorDetail = {
   key: string;
   message: string;
+  raw: string | null;
 };
 
 type TrainingPlatformProps = {
@@ -164,7 +165,11 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const [storageErrorFlash, setStorageErrorFlash] = useState<string | null>(
     null,
   );
+  const [lastStorageError, setLastStorageError] =
+    useState<LocalStorageWriteErrorDetail | null>(null);
+  const [systemFlash, setSystemFlash] = useState<string | null>(null);
   const storageErrorTimerRef = useRef<number | null>(null);
+  const systemFlashTimerRef = useRef<number | null>(null);
 
   const contentRef = useRef<HTMLElement>(null);
 
@@ -174,10 +179,11 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     function handleStorageWriteError(event: Event) {
       const detail = (event as CustomEvent<LocalStorageWriteErrorDetail>)
         .detail;
+      setLastStorageError(detail ?? null);
       const context = detail?.key ? ` (${detail.key})` : "";
       const message = detail?.message ?? "Storage write failed";
       setStorageErrorFlash(
-        `Could not save your latest changes${context}. ${message}. Check browser storage settings and free up space.`,
+        `Could not save your latest changes${context}. ${message}. Retry after checking browser storage settings and free space.`,
       );
 
       if (storageErrorTimerRef.current != null) {
@@ -195,8 +201,38 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       if (storageErrorTimerRef.current != null) {
         window.clearTimeout(storageErrorTimerRef.current);
       }
+      if (systemFlashTimerRef.current != null) {
+        window.clearTimeout(systemFlashTimerRef.current);
+      }
     };
   }, []);
+
+  function retryFailedStorageWrite() {
+    if (!lastStorageError?.key || lastStorageError.raw == null) {
+      return;
+    }
+
+    try {
+      localStorage.setItem(lastStorageError.key, lastStorageError.raw);
+      window.dispatchEvent(new Event("ls-write"));
+      setStorageErrorFlash(null);
+      setLastStorageError(null);
+      setSystemFlash("Save recovered successfully");
+
+      if (systemFlashTimerRef.current != null) {
+        window.clearTimeout(systemFlashTimerRef.current);
+      }
+      systemFlashTimerRef.current = window.setTimeout(() => {
+        setSystemFlash(null);
+      }, 2200);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Storage write failed";
+      setStorageErrorFlash(
+        `Retry failed for ${lastStorageError.key}. ${message}.`,
+      );
+    }
+  }
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -1114,8 +1150,10 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       <PageFooter />
 
       <SaveToast
-        message={storageErrorFlash ?? saveFlash}
+        message={storageErrorFlash ?? systemFlash ?? saveFlash}
         variant={storageErrorFlash ? "error" : "success"}
+        actionLabel={storageErrorFlash ? "Retry save" : undefined}
+        onAction={storageErrorFlash ? retryFailedStorageWrite : undefined}
       />
 
       <KeyboardHelpTrigger onClick={() => setShowKeyboardHelp(true)} />

@@ -109,9 +109,11 @@ describe("useLearnerProfile", () => {
     const customEvent = listener.mock.calls[0]?.[0] as CustomEvent<{
       key: string;
       message: string;
+      raw: string | null;
     }>;
     expect(customEvent.detail.key).toBe(PROFILE_KEY);
     expect(customEvent.detail.message).toBe("Storage write failed");
+    expect(customEvent.detail.raw).toContain('"displayName":"Blocked"');
     expect(result.current.profile.displayName).toBe("");
 
     window.removeEventListener("ls-write-error", listener);

@@ -3,9 +3,16 @@
 type SaveToastProps = {
   message: string | null;
   variant?: "success" | "error";
+  actionLabel?: string;
+  onAction?: () => void;
 };
 
-export function SaveToast({ message, variant = "success" }: SaveToastProps) {
+export function SaveToast({
+  message,
+  variant = "success",
+  actionLabel,
+  onAction,
+}: SaveToastProps) {
   if (!message) return null;
 
   const isError = variant === "error";
@@ -34,6 +41,15 @@ export function SaveToast({ message, variant = "success" }: SaveToastProps) {
           <path d="m6 6 12 12" />
         </svg>
         <span>{message}</span>
+        {actionLabel && onAction ? (
+          <button
+            type="button"
+            className="save-toast-action"
+            onClick={onAction}
+          >
+            {actionLabel}
+          </button>
+        ) : null}
       </div>
     );
   }

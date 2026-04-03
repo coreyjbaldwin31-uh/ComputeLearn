@@ -5,6 +5,7 @@ import { useCallback, useRef, useSyncExternalStore } from "react";
 type LocalStorageWriteErrorDetail = {
   key: string;
   message: string;
+  raw: string | null;
 };
 
 export type LearnerProfile = {
@@ -58,6 +59,7 @@ function useLocalStorageValue<T>(key: string, initial: T) {
 
   const set = useCallback(
     (fn: T | ((prev: T) => T)) => {
+      let attemptedRaw: string | null = null;
       try {
         const cur = (() => {
           const r = localStorage.getItem(key);
@@ -70,13 +72,18 @@ function useLocalStorageValue<T>(key: string, initial: T) {
         const next =
           typeof fn === "function" ? (fn as (p: T) => T)(cur) : fn;
         const raw = JSON.stringify(next);
+        attemptedRaw = raw;
         localStorage.setItem(key, raw);
         cached.current = { raw, value: next };
         window.dispatchEvent(new Event("ls-write"));
       } catch (error) {
         const message =
           error instanceof Error ? error.message : "Storage write failed";
-        const detail: LocalStorageWriteErrorDetail = { key, message };
+        const detail: LocalStorageWriteErrorDetail = {
+          key,
+          message,
+          raw: attemptedRaw,
+        };
         window.dispatchEvent(new CustomEvent("ls-write-error", { detail }));
       }
     },

@@ -1,5 +1,7 @@
 import { cleanup, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it } from "vitest";
+import { vi } from "vitest";
 import { SaveToast } from "./save-toast";
 
 afterEach(cleanup);
@@ -26,5 +28,26 @@ describe("SaveToast", () => {
   it("renders nothing when message is null", () => {
     const { container } = render(<SaveToast message={null} />);
     expect(container).toBeEmptyDOMElement();
+  });
+
+  it("renders retry action and fires callback in error state", async () => {
+    const onAction = vi.fn();
+
+    render(
+      <SaveToast
+        message="Storage unavailable"
+        variant="error"
+        actionLabel="Retry save"
+        onAction={onAction}
+      />,
+    );
+
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: "Retry save",
+      }),
+    );
+
+    expect(onAction).toHaveBeenCalledTimes(1);
   });
 });

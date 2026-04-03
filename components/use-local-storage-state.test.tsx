@@ -97,9 +97,11 @@ describe("useLocalStorageState", () => {
     const customEvent = listener.mock.calls[0]?.[0] as CustomEvent<{
       key: string;
       message: string;
+      raw: string | null;
     }>;
     expect(customEvent.detail.key).toBe(TEST_KEY);
     expect(customEvent.detail.message).toBe("Storage write failed");
+    expect(customEvent.detail.raw).toBe(JSON.stringify({ count: 1 }));
 
     window.removeEventListener("ls-write-error", listener);
     setItemSpy.mockRestore();
