@@ -61,8 +61,15 @@ export function GlobalSearch({
   });
 
   const visibleResults = results.slice(0, 20);
+  const clampedSelectedIndex =
+    selectedIndex < 0 || visibleResults.length === 0
+      ? -1
+      : Math.min(selectedIndex, visibleResults.length - 1);
+
   const activeEntry =
-    selectedIndex >= 0 ? (visibleResults[selectedIndex] ?? null) : null;
+    clampedSelectedIndex >= 0
+      ? (visibleResults[clampedSelectedIndex] ?? null)
+      : null;
   const activeOptionId = activeEntry
     ? `${listboxId}-option-${activeEntry.lesson.id}`
     : undefined;
@@ -74,16 +81,29 @@ export function GlobalSearch({
     }
     if (e.key === "ArrowDown") {
       e.preventDefault();
+      if (visibleResults.length === 0) return;
       setSelectedIndex((prev) =>
-        prev < visibleResults.length - 1 ? prev + 1 : prev,
+        prev < visibleResults.length - 1 ? prev + 1 : 0,
       );
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setSelectedIndex((prev) => (prev > 0 ? prev - 1 : -1));
+      if (visibleResults.length === 0) return;
+      setSelectedIndex((prev) =>
+        prev === -1 ? visibleResults.length - 1 : prev > 0 ? prev - 1 : visibleResults.length - 1,
+      );
+    } else if (e.key === "Home") {
+      e.preventDefault();
+      if (visibleResults.length > 0) setSelectedIndex(0);
+    } else if (e.key === "End") {
+      e.preventDefault();
+      if (visibleResults.length > 0) {
+        setSelectedIndex(visibleResults.length - 1);
+      }
     } else if (e.key === "Enter") {
       e.preventDefault();
       const entry =
-        visibleResults[selectedIndex >= 0 ? selectedIndex : 0] ?? null;
+        visibleResults[clampedSelectedIndex >= 0 ? clampedSelectedIndex : 0] ??
+        null;
       if (entry) {
         onNavigateToEntry(entry);
         onClose();
@@ -93,9 +113,9 @@ export function GlobalSearch({
 
   // Scroll selected result into view
   useEffect(() => {
-    if (selectedIndex >= 0 && listRef.current) {
+    if (clampedSelectedIndex >= 0 && listRef.current) {
       const items = listRef.current.querySelectorAll(".global-search-result");
-      const selectedItem = items[selectedIndex];
+      const selectedItem = items[clampedSelectedIndex];
       if (
         selectedItem &&
         "scrollIntoView" in selectedItem &&
@@ -104,7 +124,7 @@ export function GlobalSearch({
         selectedItem.scrollIntoView({ block: "nearest" });
       }
     }
-  }, [selectedIndex]);
+  }, [clampedSelectedIndex]);
 
   return (
     <div
@@ -212,6 +232,7 @@ export function GlobalSearch({
             ? `Selected: ${activeEntry.lesson.title}`
             : `${results.length} result${results.length !== 1 ? "s" : ""} available`}
         </p>
+        <p className="sr-only">Use up and down arrows to move. Press Home or End for first or last result.</p>
 
         <div
           id={listboxId}
@@ -219,8 +240,8 @@ export function GlobalSearch({
           ref={listRef}
           role="listbox"
         >
-          {visibleResults.map((entry, i) => (
-            i === selectedIndex ? (
+          {visibleResults.map((entry, i) =>
+            i === clampedSelectedIndex ? (
               <div
                 key={entry.lesson.id}
                 id={`${listboxId}-option-${entry.lesson.id}`}
@@ -284,8 +305,8 @@ export function GlobalSearch({
                   {entry.lesson.duration} · {entry.lesson.difficulty}
                 </span>
               </div>
-            )
-          ))}
+            ),
+          )}
         </div>
         {results.length === 0 && normalizedQuery.length > 0 && (
           <div className="global-search-empty" role="status">

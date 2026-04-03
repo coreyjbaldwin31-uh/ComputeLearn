@@ -21,7 +21,9 @@ describe("StorageHealthBanner", () => {
       />,
     );
 
-    expect(screen.getByText("Save reliability is degraded")).toBeInTheDocument();
+    expect(
+      screen.getByText("Save reliability is degraded"),
+    ).toBeInTheDocument();
     expect(
       screen.getByText(/2 save attempts failed for computelearn-notes/i),
     ).toBeInTheDocument();

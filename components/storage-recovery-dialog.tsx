@@ -56,16 +56,29 @@ export function StorageRecoveryDialog({
         </ul>
 
         <div className="confirm-actions storage-recovery-actions">
-          <button type="button" className="ghost-button" autoFocus onClick={onClose}>
+          <button
+            type="button"
+            className="ghost-button"
+            autoFocus
+            onClick={onClose}
+          >
             Cancel
           </button>
           <button type="button" className="ghost-button" onClick={onRetry}>
             Retry save
           </button>
-          <button type="button" className="ghost-button" onClick={onExportBackup}>
+          <button
+            type="button"
+            className="ghost-button"
+            onClick={onExportBackup}
+          >
             Export backup
           </button>
-          <button type="button" className="confirm-destructive" onClick={onResetLocalData}>
+          <button
+            type="button"
+            className="confirm-destructive"
+            onClick={onResetLocalData}
+          >
             Reset local data
           </button>
         </div>

@@ -34,7 +34,9 @@ describe("StorageRecoveryLog", () => {
 
     expect(screen.getByText("Recent storage incidents")).toBeInTheDocument();
     expect(screen.getByText("Write failed")).toBeInTheDocument();
-    expect(screen.getByText(/just now - computelearn-notes/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/just now - computelearn-notes/i),
+    ).toBeInTheDocument();
     expect(screen.getByText("Quota exceeded")).toBeInTheDocument();
     expect(screen.getByText("Backup exported")).toBeInTheDocument();
   });

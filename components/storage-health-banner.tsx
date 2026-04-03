@@ -32,15 +32,23 @@ export function StorageHealthBanner({
       >
         <div className="storage-health-content">
           <strong>
-            {isSaveStale ? "Save freshness needs attention" : "Save reliability healthy"}
+            {isSaveStale
+              ? "Save freshness needs attention"
+              : "Save reliability healthy"}
           </strong>
           <span>
             Last successful save: {lastSuccessfulSaveLabel}
-            {isSaveStale ? ". Open recovery options if saving appears delayed." : "."}
+            {isSaveStale
+              ? ". Open recovery options if saving appears delayed."
+              : "."}
           </span>
         </div>
         {isSaveStale ? (
-          <button type="button" className="ghost-button" onClick={onOpenRecovery}>
+          <button
+            type="button"
+            className="ghost-button"
+            onClick={onOpenRecovery}
+          >
             Recovery options
           </button>
         ) : null}
@@ -50,7 +58,11 @@ export function StorageHealthBanner({
 
   if (mode === "degraded") {
     return (
-      <section className="storage-health-banner storage-health-banner--degraded" role="status" aria-live="polite">
+      <section
+        className="storage-health-banner storage-health-banner--degraded"
+        role="status"
+        aria-live="polite"
+      >
         <div className="storage-health-content">
           <strong>Save reliability is degraded</strong>
           <span>
@@ -70,7 +82,11 @@ export function StorageHealthBanner({
   }
 
   return (
-    <section className="storage-health-banner storage-health-banner--recovered" role="status" aria-live="polite">
+    <section
+      className="storage-health-banner storage-health-banner--recovered"
+      role="status"
+      aria-live="polite"
+    >
       <div className="storage-health-content">
         <strong>Save reliability recovered</strong>
         <span>
@@ -80,7 +96,11 @@ export function StorageHealthBanner({
             : ""}
         </span>
       </div>
-      <button type="button" className="ghost-button" onClick={onDismissRecovered}>
+      <button
+        type="button"
+        className="ghost-button"
+        onClick={onDismissRecovered}
+      >
         Dismiss
       </button>
     </section>

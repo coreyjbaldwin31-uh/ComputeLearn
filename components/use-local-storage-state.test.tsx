@@ -1,5 +1,5 @@
-import { renderHook, act } from "@testing-library/react";
-import { describe, expect, it, beforeEach, afterEach, vi } from "vitest";
+import { act, renderHook } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useLocalStorageState } from "./hooks/use-local-storage-state";
 
 const TEST_KEY = "test-ls-state";
@@ -42,9 +42,7 @@ describe("useLocalStorageState", () => {
   });
 
   it("updates localStorage when set is called with a function", () => {
-    const { result } = renderHook(() =>
-      useLocalStorageState(TEST_KEY, 10),
-    );
+    const { result } = renderHook(() => useLocalStorageState(TEST_KEY, 10));
 
     act(() => {
       result.current[1]((prev) => prev + 5);

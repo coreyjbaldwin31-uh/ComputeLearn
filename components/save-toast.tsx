@@ -55,7 +55,12 @@ export function SaveToast({
   }
 
   return (
-    <div className="save-toast" role="status" aria-live="polite" aria-atomic="true">
+    <div
+      className="save-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    >
       <svg
         className="save-toast-icon"
         width="18"

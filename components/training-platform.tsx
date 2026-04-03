@@ -41,8 +41,10 @@ import { useArtifactManager } from "./hooks/use-artifact-manager";
 import { useExerciseValidation } from "./hooks/use-exercise-validation";
 import { useKeyboardShortcuts } from "./hooks/use-keyboard-shortcuts";
 import { useLabLifecycle } from "./hooks/use-lab-lifecycle";
-import { learnerProfileStorageKey } from "./hooks/use-learner-profile";
-import { useLearnerProfile } from "./hooks/use-learner-profile";
+import {
+  learnerProfileStorageKey,
+  useLearnerProfile,
+} from "./hooks/use-learner-profile";
 import { useLocalStorageState } from "./hooks/use-local-storage-state";
 import { useTheme } from "./hooks/use-theme";
 import { KeyboardHelpTrigger } from "./keyboard-help-trigger";
@@ -69,11 +71,11 @@ import { SidebarPanels } from "./sidebar-panels";
 import { SkipLink } from "./skip-link";
 import { SocialProof } from "./social-proof";
 import { StorageHealthBanner } from "./storage-health-banner";
+import { StorageRecoveryDialog } from "./storage-recovery-dialog";
 import {
   StorageRecoveryLog,
   type StorageRecoveryLogEntry,
 } from "./storage-recovery-log";
-import { StorageRecoveryDialog } from "./storage-recovery-dialog";
 
 type ProgressState = Record<string, true>;
 type NotesState = Record<string, string>;
@@ -394,7 +396,9 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       localStorage.setItem(lastStorageError.key, lastStorageError.raw);
       window.dispatchEvent(
         new CustomEvent("ls-write", {
-          detail: { key: lastStorageError.key } satisfies LocalStorageWriteDetail,
+          detail: {
+            key: lastStorageError.key,
+          } satisfies LocalStorageWriteDetail,
         }),
       );
       setStorageErrorFlash(null);
@@ -858,7 +862,9 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     setReflections((current) => ({ ...current, [lessonId]: value }));
   }
 
-  function updateLearnerProfileTracked(changes: Partial<typeof learnerProfile>) {
+  function updateLearnerProfileTracked(
+    changes: Partial<typeof learnerProfile>,
+  ) {
     setProfileDirty(true);
     updateLearnerProfile(changes);
   }
@@ -1341,7 +1347,8 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                 noteDirty,
                 reflectionDirty,
                 noteFailureCount: surfaceFailures[notesStorageKey]?.count ?? 0,
-                noteFailureReason: surfaceFailures[notesStorageKey]?.message ?? null,
+                noteFailureReason:
+                  surfaceFailures[notesStorageKey]?.message ?? null,
                 reflectionFailureCount:
                   surfaceFailures[reflectionsStorageKey]?.count ?? 0,
                 reflectionFailureReason:

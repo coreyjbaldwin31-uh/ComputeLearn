@@ -4,7 +4,12 @@ export type StorageRecoveryLogEntry = {
   id: string;
   atLabel: string;
   key: string | null;
-  outcome: "error" | "retry-success" | "retry-failed" | "backup-exported" | "local-reset";
+  outcome:
+    | "error"
+    | "retry-success"
+    | "retry-failed"
+    | "backup-exported"
+    | "local-reset";
   message: string;
 };
 
@@ -26,7 +31,10 @@ export function StorageRecoveryLog({ entries }: StorageRecoveryLogProps) {
   }
 
   return (
-    <section className="storage-recovery-log panel" aria-label="Recent storage incidents">
+    <section
+      className="storage-recovery-log panel"
+      aria-label="Recent storage incidents"
+    >
       <h3>Recent storage incidents</h3>
       <p className="panel-subtext">
         Latest persistence events for quick diagnosis and confidence checks.
@@ -41,7 +49,9 @@ export function StorageRecoveryLog({ entries }: StorageRecoveryLogProps) {
               {entry.atLabel}
               {entry.key ? ` - ${entry.key}` : ""}
             </span>
-            <span className="storage-recovery-log-message">{entry.message}</span>
+            <span className="storage-recovery-log-message">
+              {entry.message}
+            </span>
           </li>
         ))}
       </ul>

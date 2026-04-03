@@ -1,7 +1,7 @@
 "use client";
 
-import { useId } from "react";
 import type { Course, Lesson, Phase } from "@/data/curriculum";
+import { useId } from "react";
 import { useFocusTrap } from "./hooks/use-focus-trap";
 
 type LessonHeaderProps = {
