@@ -6,6 +6,8 @@ type StorageStatus = {
   mode: "stable" | "degraded" | "recovered";
   lastSuccessfulSaveLabel: string | null;
   isSaveStale: boolean;
+  noteDirty: boolean;
+  reflectionDirty: boolean;
 };
 
 type NotesSectionProps = {
@@ -79,6 +81,7 @@ export function NotesSection({
           mode={storageStatus.mode}
           lastSuccessfulSaveLabel={storageStatus.lastSuccessfulSaveLabel}
           isSaveStale={storageStatus.isSaveStale}
+          isDirty={storageStatus.noteDirty}
           onOpenRecovery={onOpenRecovery}
         />
         <p>{notesPrompt}</p>
@@ -139,6 +142,7 @@ export function NotesSection({
           mode={storageStatus.mode}
           lastSuccessfulSaveLabel={storageStatus.lastSuccessfulSaveLabel}
           isSaveStale={storageStatus.isSaveStale}
+          isDirty={storageStatus.reflectionDirty}
           onOpenRecovery={onOpenRecovery}
         />
         <p className="microcopy">

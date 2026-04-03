@@ -13,6 +13,7 @@ describe("StorageSurfaceChip", () => {
         mode="stable"
         lastSuccessfulSaveLabel="15s ago"
         isSaveStale={false}
+        isDirty={false}
         onOpenRecovery={vi.fn()}
       />,
     );
@@ -31,6 +32,7 @@ describe("StorageSurfaceChip", () => {
         mode="degraded"
         lastSuccessfulSaveLabel="2m ago"
         isSaveStale={false}
+        isDirty={false}
         onOpenRecovery={onOpenRecovery}
       />,
     );
@@ -38,5 +40,20 @@ describe("StorageSurfaceChip", () => {
     await userEvent.click(screen.getByRole("button", { name: "Recovery" }));
 
     expect(onOpenRecovery).toHaveBeenCalledTimes(1);
+  });
+
+  it("shows saving state while local edits are pending", () => {
+    render(
+      <StorageSurfaceChip
+        label="Reflection save"
+        mode="stable"
+        lastSuccessfulSaveLabel="just now"
+        isSaveStale={false}
+        isDirty
+        onOpenRecovery={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText("Saving...")).toBeInTheDocument();
   });
 });

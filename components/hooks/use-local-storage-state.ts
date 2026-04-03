@@ -8,6 +8,10 @@ type LocalStorageWriteErrorDetail = {
   raw: string | null;
 };
 
+type LocalStorageWriteDetail = {
+  key: string;
+};
+
 const volatileFallback = new Map<string, unknown>();
 
 export function useLocalStorageState<T>(key: string, initial: T) {
@@ -71,12 +75,18 @@ export function useLocalStorageState<T>(key: string, initial: T) {
         localStorage.setItem(key, raw);
         volatileFallback.delete(key);
         cached.current = { raw, value: next };
-        window.dispatchEvent(new Event("ls-write"));
+        const successDetail: LocalStorageWriteDetail = { key };
+        window.dispatchEvent(
+          new CustomEvent("ls-write", { detail: successDetail }),
+        );
       } catch (error) {
         if (nextValue !== null) {
           volatileFallback.set(key, nextValue);
           cached.current = { raw: undefined, value: nextValue };
-          window.dispatchEvent(new Event("ls-write"));
+          const successDetail: LocalStorageWriteDetail = { key };
+          window.dispatchEvent(
+            new CustomEvent("ls-write", { detail: successDetail }),
+          );
         }
 
         const message =

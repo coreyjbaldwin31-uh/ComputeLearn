@@ -41,6 +41,7 @@ import { useArtifactManager } from "./hooks/use-artifact-manager";
 import { useExerciseValidation } from "./hooks/use-exercise-validation";
 import { useKeyboardShortcuts } from "./hooks/use-keyboard-shortcuts";
 import { useLabLifecycle } from "./hooks/use-lab-lifecycle";
+import { learnerProfileStorageKey } from "./hooks/use-learner-profile";
 import { useLearnerProfile } from "./hooks/use-learner-profile";
 import { useLocalStorageState } from "./hooks/use-local-storage-state";
 import { useTheme } from "./hooks/use-theme";
@@ -82,6 +83,10 @@ type LocalStorageWriteErrorDetail = {
   key: string;
   message: string;
   raw: string | null;
+};
+
+type LocalStorageWriteDetail = {
+  key: string;
 };
 
 type TrainingPlatformProps = {
@@ -185,6 +190,9 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const [lastSuccessfulSaveAt, setLastSuccessfulSaveAt] = useState<
     number | null
   >(null);
+  const [noteDirty, setNoteDirty] = useState(false);
+  const [reflectionDirty, setReflectionDirty] = useState(false);
+  const [profileDirty, setProfileDirty] = useState(false);
   const [saveClockTick, setSaveClockTick] = useState(() => Date.now());
   const storageErrorTimerRef = useRef<number | null>(null);
   const systemFlashTimerRef = useRef<number | null>(null);
@@ -195,7 +203,18 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const [todayKey, setTodayKey] = useState(() => new Date().toDateString());
 
   useEffect(() => {
-    function handleStorageWriteSuccess() {
+    function handleStorageWriteSuccess(event: Event) {
+      const detail = (event as CustomEvent<LocalStorageWriteDetail>).detail;
+      if (detail?.key === notesStorageKey) {
+        setNoteDirty(false);
+      }
+      if (detail?.key === reflectionsStorageKey) {
+        setReflectionDirty(false);
+      }
+      if (detail?.key === learnerProfileStorageKey) {
+        setProfileDirty(false);
+      }
+
       const now = Date.now();
       setLastSuccessfulSaveAt(now);
       setSaveClockTick(now);
@@ -314,7 +333,11 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
 
     try {
       localStorage.setItem(lastStorageError.key, lastStorageError.raw);
-      window.dispatchEvent(new Event("ls-write"));
+      window.dispatchEvent(
+        new CustomEvent("ls-write", {
+          detail: { key: lastStorageError.key } satisfies LocalStorageWriteDetail,
+        }),
+      );
       setStorageErrorFlash(null);
       setLastStorageError(null);
       setStorageErrorCount(0);
@@ -363,6 +386,9 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     setStorageErrorCount(0);
     setStorageHealthMode("stable");
     setLastStorageFailureKey(null);
+    setNoteDirty(false);
+    setReflectionDirty(false);
+    setProfileDirty(false);
     setSystemFlash("Local learning data reset");
     setShowStorageRecoveryDialog(false);
 
@@ -743,11 +769,18 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   }
 
   function updateNote(lessonId: string, value: string) {
+    setNoteDirty(true);
     setNotes((current) => ({ ...current, [lessonId]: value }));
   }
 
   function updateReflection(lessonId: string, value: string) {
+    setReflectionDirty(true);
     setReflections((current) => ({ ...current, [lessonId]: value }));
+  }
+
+  function updateLearnerProfileTracked(changes: Partial<typeof learnerProfile>) {
+    setProfileDirty(true);
+    updateLearnerProfile(changes);
   }
 
   function updateAnswer(exerciseId: string, value: string) {
@@ -1223,6 +1256,8 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                 mode: storageHealthMode,
                 lastSuccessfulSaveLabel,
                 isSaveStale,
+                noteDirty,
+                reflectionDirty,
               }}
               onOpenRecovery={() => setShowStorageRecoveryDialog(true)}
               onNoteChange={updateNote}
@@ -1250,11 +1285,12 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
 
           <RailPanels
             learnerProfile={learnerProfile}
-            updateLearnerProfile={updateLearnerProfile}
+            updateLearnerProfile={updateLearnerProfileTracked}
             storageStatus={{
               mode: storageHealthMode,
               lastSuccessfulSaveLabel,
               isSaveStale,
+              profileDirty,
             }}
             onOpenRecovery={() => setShowStorageRecoveryDialog(true)}
             onResetAll={resetAllProgress}

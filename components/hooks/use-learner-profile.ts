@@ -8,6 +8,10 @@ type LocalStorageWriteErrorDetail = {
   raw: string | null;
 };
 
+type LocalStorageWriteDetail = {
+  key: string;
+};
+
 const volatileFallback = new Map<string, unknown>();
 
 export type LearnerProfile = {
@@ -17,7 +21,7 @@ export type LearnerProfile = {
   createdAt: string | null;
 };
 
-const storageKey = "computelearn-learner-profile";
+export const learnerProfileStorageKey = "computelearn-learner-profile";
 
 const emptyProfile: LearnerProfile = {
   displayName: "",
@@ -87,12 +91,18 @@ function useLocalStorageValue<T>(key: string, initial: T) {
         localStorage.setItem(key, raw);
         volatileFallback.delete(key);
         cached.current = { raw, value: next };
-        window.dispatchEvent(new Event("ls-write"));
+        const successDetail: LocalStorageWriteDetail = { key };
+        window.dispatchEvent(
+          new CustomEvent("ls-write", { detail: successDetail }),
+        );
       } catch (error) {
         if (nextValue !== null) {
           volatileFallback.set(key, nextValue);
           cached.current = { raw: undefined, value: nextValue };
-          window.dispatchEvent(new Event("ls-write"));
+          const successDetail: LocalStorageWriteDetail = { key };
+          window.dispatchEvent(
+            new CustomEvent("ls-write", { detail: successDetail }),
+          );
         }
 
         const message =
@@ -113,7 +123,7 @@ function useLocalStorageValue<T>(key: string, initial: T) {
 
 export function useLearnerProfile() {
   const [profile, setProfile] = useLocalStorageValue<LearnerProfile>(
-    storageKey,
+    learnerProfileStorageKey,
     emptyProfile,
   );
 
