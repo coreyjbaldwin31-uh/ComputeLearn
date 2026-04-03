@@ -2,6 +2,11 @@
 
 import { useCallback, useRef, useSyncExternalStore } from "react";
 
+type LocalStorageWriteErrorDetail = {
+  key: string;
+  message: string;
+};
+
 export type LearnerProfile = {
   displayName: string;
   goal: string;
@@ -53,19 +58,27 @@ function useLocalStorageValue<T>(key: string, initial: T) {
 
   const set = useCallback(
     (fn: T | ((prev: T) => T)) => {
-      const cur = (() => {
-        const r = localStorage.getItem(key);
-        try {
-          return r != null ? (JSON.parse(r) as T) : initialRef.current;
-        } catch {
-          return initialRef.current;
-        }
-      })();
-      const next = typeof fn === "function" ? (fn as (p: T) => T)(cur) : fn;
-      const raw = JSON.stringify(next);
-      localStorage.setItem(key, raw);
-      cached.current = { raw, value: next };
-      window.dispatchEvent(new Event("ls-write"));
+      try {
+        const cur = (() => {
+          const r = localStorage.getItem(key);
+          try {
+            return r != null ? (JSON.parse(r) as T) : initialRef.current;
+          } catch {
+            return initialRef.current;
+          }
+        })();
+        const next =
+          typeof fn === "function" ? (fn as (p: T) => T)(cur) : fn;
+        const raw = JSON.stringify(next);
+        localStorage.setItem(key, raw);
+        cached.current = { raw, value: next };
+        window.dispatchEvent(new Event("ls-write"));
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Storage write failed";
+        const detail: LocalStorageWriteErrorDetail = { key, message };
+        window.dispatchEvent(new CustomEvent("ls-write-error", { detail }));
+      }
     },
     [key],
   );

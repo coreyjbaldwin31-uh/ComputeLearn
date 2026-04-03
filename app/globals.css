@@ -4071,6 +4071,11 @@ button[disabled] {
   animation: toastCheck 400ms ease 200ms both;
 }
 
+.save-toast--error {
+  background: linear-gradient(135deg, #a31c1c, #7f1d1d);
+  box-shadow: 0 8px 28px rgba(127, 29, 29, 0.34);
+}
+
 @keyframes toastSlideIn {
   from {
     opacity: 0;

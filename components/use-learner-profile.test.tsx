@@ -1,5 +1,5 @@
 import { renderHook, act } from "@testing-library/react";
-import { describe, expect, it, beforeEach, afterEach } from "vitest";
+import { describe, expect, it, beforeEach, afterEach, vi } from "vitest";
 import { useLearnerProfile } from "./hooks/use-learner-profile";
 
 const PROFILE_KEY = "computelearn-learner-profile";
@@ -88,5 +88,33 @@ describe("useLearnerProfile", () => {
     });
     expect(result.current.profile.displayName).toBe("Frank");
     expect(result.current.profile.goal).toBe("Ship software");
+  });
+
+  it("dispatches ls-write-error when profile write fails", () => {
+    const listener = vi.fn();
+    window.addEventListener("ls-write-error", listener);
+    const setItemSpy = vi
+      .spyOn(Storage.prototype, "setItem")
+      .mockImplementation(() => {
+        throw new DOMException("Storage blocked", "SecurityError");
+      });
+
+    const { result } = renderHook(() => useLearnerProfile());
+
+    act(() => {
+      result.current.update({ displayName: "Blocked" });
+    });
+
+    expect(listener).toHaveBeenCalledTimes(1);
+    const customEvent = listener.mock.calls[0]?.[0] as CustomEvent<{
+      key: string;
+      message: string;
+    }>;
+    expect(customEvent.detail.key).toBe(PROFILE_KEY);
+    expect(customEvent.detail.message).toBe("Storage write failed");
+    expect(result.current.profile.displayName).toBe("");
+
+    window.removeEventListener("ls-write-error", listener);
+    setItemSpy.mockRestore();
   });
 });

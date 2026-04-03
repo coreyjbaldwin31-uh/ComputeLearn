@@ -1,5 +1,5 @@
 import { renderHook, act } from "@testing-library/react";
-import { describe, expect, it, beforeEach, afterEach } from "vitest";
+import { describe, expect, it, beforeEach, afterEach, vi } from "vitest";
 import { useLocalStorageState } from "./hooks/use-local-storage-state";
 
 const TEST_KEY = "test-ls-state";
@@ -74,5 +74,34 @@ describe("useLocalStorageState", () => {
     const firstSetter = result.current[1];
     rerender();
     expect(result.current[1]).toBe(firstSetter);
+  });
+
+  it("dispatches ls-write-error when localStorage write fails", () => {
+    const listener = vi.fn();
+    window.addEventListener("ls-write-error", listener);
+    const setItemSpy = vi
+      .spyOn(Storage.prototype, "setItem")
+      .mockImplementation(() => {
+        throw new DOMException("Quota exceeded", "QuotaExceededError");
+      });
+
+    const { result } = renderHook(() =>
+      useLocalStorageState(TEST_KEY, { count: 0 }),
+    );
+
+    act(() => {
+      result.current[1]({ count: 1 });
+    });
+
+    expect(listener).toHaveBeenCalledTimes(1);
+    const customEvent = listener.mock.calls[0]?.[0] as CustomEvent<{
+      key: string;
+      message: string;
+    }>;
+    expect(customEvent.detail.key).toBe(TEST_KEY);
+    expect(customEvent.detail.message).toBe("Storage write failed");
+
+    window.removeEventListener("ls-write-error", listener);
+    setItemSpy.mockRestore();
   });
 });

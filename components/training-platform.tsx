@@ -76,6 +76,11 @@ type ReflectionState = Record<string, string>;
 type ReviewState = Record<string, ReviewRecord>;
 type TransferState = Record<string, true>;
 
+type LocalStorageWriteErrorDetail = {
+  key: string;
+  message: string;
+};
+
 type TrainingPlatformProps = {
   curriculum: Curriculum;
 };
@@ -156,10 +161,42 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     Record<string, LabInstance>
   >(labInstancesStorageKey, {});
   const { theme, toggle: toggleTheme } = useTheme();
+  const [storageErrorFlash, setStorageErrorFlash] = useState<string | null>(
+    null,
+  );
+  const storageErrorTimerRef = useRef<number | null>(null);
 
   const contentRef = useRef<HTMLElement>(null);
 
   const [todayKey, setTodayKey] = useState(() => new Date().toDateString());
+
+  useEffect(() => {
+    function handleStorageWriteError(event: Event) {
+      const detail = (event as CustomEvent<LocalStorageWriteErrorDetail>)
+        .detail;
+      const context = detail?.key ? ` (${detail.key})` : "";
+      const message = detail?.message ?? "Storage write failed";
+      setStorageErrorFlash(
+        `Could not save your latest changes${context}. ${message}. Check browser storage settings and free up space.`,
+      );
+
+      if (storageErrorTimerRef.current != null) {
+        window.clearTimeout(storageErrorTimerRef.current);
+      }
+      storageErrorTimerRef.current = window.setTimeout(() => {
+        setStorageErrorFlash(null);
+      }, 4500);
+    }
+
+    window.addEventListener("ls-write-error", handleStorageWriteError);
+
+    return () => {
+      window.removeEventListener("ls-write-error", handleStorageWriteError);
+      if (storageErrorTimerRef.current != null) {
+        window.clearTimeout(storageErrorTimerRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -1076,7 +1113,10 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
 
       <PageFooter />
 
-      <SaveToast message={saveFlash} />
+      <SaveToast
+        message={storageErrorFlash ?? saveFlash}
+        variant={storageErrorFlash ? "error" : "success"}
+      />
 
       <KeyboardHelpTrigger onClick={() => setShowKeyboardHelp(true)} />
 
