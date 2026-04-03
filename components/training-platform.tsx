@@ -69,6 +69,10 @@ import { SidebarPanels } from "./sidebar-panels";
 import { SkipLink } from "./skip-link";
 import { SocialProof } from "./social-proof";
 import { StorageHealthBanner } from "./storage-health-banner";
+import {
+  StorageRecoveryLog,
+  type StorageRecoveryLogEntry,
+} from "./storage-recovery-log";
 import { StorageRecoveryDialog } from "./storage-recovery-dialog";
 
 type ProgressState = Record<string, true>;
@@ -201,6 +205,9 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const [surfaceFailures, setSurfaceFailures] = useState<
     Record<string, SurfaceFailureState>
   >({});
+  const [storageRecoveryLog, setStorageRecoveryLog] = useState<
+    StorageRecoveryLogEntry[]
+  >([]);
   const [saveClockTick, setSaveClockTick] = useState(() => Date.now());
   const storageErrorTimerRef = useRef<number | null>(null);
   const systemFlashTimerRef = useRef<number | null>(null);
@@ -209,6 +216,26 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const contentRef = useRef<HTMLElement>(null);
 
   const [todayKey, setTodayKey] = useState(() => new Date().toDateString());
+
+  const getNowLabel = useCallback(() => {
+    return new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+  }, []);
+
+  const pushRecoveryLog = useCallback(
+    (entry: Omit<StorageRecoveryLogEntry, "id" | "atLabel">) => {
+      const next: StorageRecoveryLogEntry = {
+        ...entry,
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        atLabel: getNowLabel(),
+      };
+      setStorageRecoveryLog((current) => [next, ...current].slice(0, 3));
+    },
+    [getNowLabel],
+  );
 
   useEffect(() => {
     function handleStorageWriteSuccess(event: Event) {
@@ -317,6 +344,12 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
             message: detail.message ?? "Storage write failed",
           },
         }));
+
+        pushRecoveryLog({
+          key: detail.key,
+          outcome: "error",
+          message: detail.message ?? "Storage write failed",
+        });
       }
       setLastStorageError(detail ?? null);
       setStorageErrorCount((current) => current + 1);
@@ -350,7 +383,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
         window.clearTimeout(storageHealthTimerRef.current);
       }
     };
-  }, []);
+  }, [pushRecoveryLog]);
 
   function retryFailedStorageWrite() {
     if (!lastStorageError?.key || lastStorageError.raw == null) {
@@ -370,6 +403,11 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       setStorageHealthMode("recovered");
       setLastStorageFailureKey(null);
       setSystemFlash("Save recovered successfully");
+      pushRecoveryLog({
+        key: lastStorageError.key,
+        outcome: "retry-success",
+        message: "Retry save succeeded",
+      });
 
       if (systemFlashTimerRef.current != null) {
         window.clearTimeout(systemFlashTimerRef.current);
@@ -386,6 +424,11 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Storage write failed";
+      pushRecoveryLog({
+        key: lastStorageError.key,
+        outcome: "retry-failed",
+        message,
+      });
       setStorageErrorFlash(
         `Retry failed for ${lastStorageError.key}. ${message}.`,
       );
@@ -394,6 +437,11 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
 
   function handleExportRecoveryBackup() {
     exportArtifacts();
+    pushRecoveryLog({
+      key: null,
+      outcome: "backup-exported",
+      message: "Artifact backup exported",
+    });
     setSystemFlash("Artifact backup exported");
     setShowStorageRecoveryDialog(false);
 
@@ -416,6 +464,11 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     setReflectionDirty(false);
     setProfileDirty(false);
     setSurfaceFailures({});
+    pushRecoveryLog({
+      key: null,
+      outcome: "local-reset",
+      message: "Local learning data reset",
+    });
     setSystemFlash("Local learning data reset");
     setShowStorageRecoveryDialog(false);
 
@@ -1065,6 +1118,8 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
         onOpenRecovery={() => setShowStorageRecoveryDialog(true)}
         onDismissRecovered={() => setStorageHealthMode("stable")}
       />
+
+      <StorageRecoveryLog entries={storageRecoveryLog} />
 
       {viewMode === "home" ? (
         <>

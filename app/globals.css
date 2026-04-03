@@ -4228,6 +4228,42 @@ button[disabled] {
   outline-offset: 2px;
 }
 
+.storage-recovery-log {
+  margin: 0.85rem auto 0;
+  width: min(1200px, calc(100% - 2rem));
+}
+
+.storage-recovery-log-list {
+  list-style: none;
+  margin: 0.65rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.storage-recovery-log-item {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.55rem 0.65rem;
+  background: var(--surface-soft);
+  display: grid;
+  gap: 0.15rem;
+}
+
+.storage-recovery-log-outcome {
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.storage-recovery-log-meta {
+  font-size: 0.73rem;
+  color: var(--text-muted);
+}
+
+.storage-recovery-log-message {
+  font-size: 0.78rem;
+}
+
 @media (max-width: 760px) {
   .storage-health-banner {
     flex-direction: column;
