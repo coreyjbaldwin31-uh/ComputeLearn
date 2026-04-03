@@ -67,6 +67,7 @@ import { SaveToast } from "./save-toast";
 import { SidebarPanels } from "./sidebar-panels";
 import { SkipLink } from "./skip-link";
 import { SocialProof } from "./social-proof";
+import { StorageHealthBanner } from "./storage-health-banner";
 import { StorageRecoveryDialog } from "./storage-recovery-dialog";
 
 type ProgressState = Record<string, true>;
@@ -101,6 +102,8 @@ const emptyNotes: NotesState = {};
 const emptyReflections: ReflectionState = {};
 const emptyReviews: ReviewState = {};
 const emptyTransfer: TransferState = {};
+
+type StorageHealthMode = "stable" | "degraded" | "recovered";
 
 export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const [selectedPhaseId, setSelectedPhaseId] = useState(
@@ -172,8 +175,14 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const [systemFlash, setSystemFlash] = useState<string | null>(null);
   const [showStorageRecoveryDialog, setShowStorageRecoveryDialog] =
     useState(false);
+  const [storageHealthMode, setStorageHealthMode] =
+    useState<StorageHealthMode>("stable");
+  const [lastStorageFailureKey, setLastStorageFailureKey] = useState<
+    string | null
+  >(null);
   const storageErrorTimerRef = useRef<number | null>(null);
   const systemFlashTimerRef = useRef<number | null>(null);
+  const storageHealthTimerRef = useRef<number | null>(null);
 
   const contentRef = useRef<HTMLElement>(null);
 
@@ -185,6 +194,8 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
         .detail;
       setLastStorageError(detail ?? null);
       setStorageErrorCount((current) => current + 1);
+      setStorageHealthMode("degraded");
+      setLastStorageFailureKey(detail?.key ?? null);
       const context = detail?.key ? ` (${detail.key})` : "";
       const message = detail?.message ?? "Storage write failed";
       setStorageErrorFlash(
@@ -209,6 +220,9 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       if (systemFlashTimerRef.current != null) {
         window.clearTimeout(systemFlashTimerRef.current);
       }
+      if (storageHealthTimerRef.current != null) {
+        window.clearTimeout(storageHealthTimerRef.current);
+      }
     };
   }, []);
 
@@ -223,6 +237,8 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       setStorageErrorFlash(null);
       setLastStorageError(null);
       setStorageErrorCount(0);
+      setStorageHealthMode("recovered");
+      setLastStorageFailureKey(null);
       setSystemFlash("Save recovered successfully");
 
       if (systemFlashTimerRef.current != null) {
@@ -231,6 +247,12 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       systemFlashTimerRef.current = window.setTimeout(() => {
         setSystemFlash(null);
       }, 2200);
+      if (storageHealthTimerRef.current != null) {
+        window.clearTimeout(storageHealthTimerRef.current);
+      }
+      storageHealthTimerRef.current = window.setTimeout(() => {
+        setStorageHealthMode("stable");
+      }, 7000);
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Storage write failed";
@@ -258,6 +280,8 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     setStorageErrorFlash(null);
     setLastStorageError(null);
     setStorageErrorCount(0);
+    setStorageHealthMode("stable");
+    setLastStorageFailureKey(null);
     setSystemFlash("Local learning data reset");
     setShowStorageRecoveryDialog(false);
 
@@ -889,6 +913,14 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
         onDismissNotification={dismissNotification}
         onDismissAllNotifications={dismissAllNotifications}
         onToggleTheme={toggleTheme}
+      />
+
+      <StorageHealthBanner
+        mode={storageHealthMode}
+        failureCount={storageErrorCount}
+        lastFailureKey={lastStorageFailureKey}
+        onOpenRecovery={() => setShowStorageRecoveryDialog(true)}
+        onDismissRecovered={() => setStorageHealthMode("stable")}
       />
 
       {viewMode === "home" ? (

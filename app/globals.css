@@ -4115,7 +4115,54 @@ button[disabled] {
   gap: 0.55rem;
 }
 
+.storage-health-banner {
+  margin: 0.75rem auto 0;
+  width: min(1200px, calc(100% - 2rem));
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--surface-soft);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 0.72rem 0.9rem;
+}
+
+.storage-health-banner--degraded {
+  border-color: rgba(163, 28, 28, 0.4);
+  background: rgba(163, 28, 28, 0.08);
+}
+
+.storage-health-banner--recovered {
+  border-color: rgba(13, 107, 87, 0.4);
+  background: rgba(13, 107, 87, 0.08);
+}
+
+.storage-health-content {
+  display: grid;
+  gap: 0.16rem;
+}
+
+.storage-health-content strong {
+  font-size: 0.9rem;
+}
+
+.storage-health-content span {
+  color: var(--text-muted);
+  font-size: 0.84rem;
+}
+
 @media (max-width: 760px) {
+  .storage-health-banner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .storage-health-banner .ghost-button {
+    width: 100%;
+  }
+
   .storage-recovery-actions button {
     width: 100%;
   }
