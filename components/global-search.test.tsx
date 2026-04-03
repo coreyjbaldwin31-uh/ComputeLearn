@@ -61,7 +61,7 @@ describe("GlobalSearch", () => {
       />,
     );
 
-    const input = screen.getByRole("searchbox", { name: /search lessons/i });
+    const input = screen.getByRole("combobox", { name: /search lessons/i });
     await userEvent.type(input, "git");
     await userEvent.keyboard("{Enter}");
 
@@ -82,11 +82,41 @@ describe("GlobalSearch", () => {
       />,
     );
 
-    const input = screen.getByRole("searchbox", { name: /search lessons/i });
+    const input = screen.getByRole("combobox", { name: /search lessons/i });
     await userEvent.type(input, "nonexistent");
     await userEvent.keyboard("{Enter}");
 
     expect(onNavigateToEntry).not.toHaveBeenCalled();
     expect(onClose).not.toHaveBeenCalled();
+  });
+
+  it("exposes combobox and listbox semantics with active option updates", async () => {
+    const entries = [
+      makeEntry("l1", "Git Basics"),
+      makeEntry("l2", "HTTP Basics"),
+    ];
+
+    render(
+      <GlobalSearch
+        allLessonsFlat={entries}
+        progress={{}}
+        onNavigateToEntry={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
+
+    const input = screen.getByRole("combobox", { name: /search lessons/i });
+    expect(input).toHaveAttribute("aria-controls");
+
+    await userEvent.type(input, "basics");
+    await userEvent.keyboard("{ArrowDown}");
+
+    const options = screen.getAllByRole("option");
+    expect(options.length).toBeGreaterThan(0);
+    expect(options[0]).toHaveAttribute("aria-selected", "true");
+
+    const activeId = input.getAttribute("aria-activedescendant");
+    expect(activeId).toBeTruthy();
+    expect(document.getElementById(activeId as string)).toBe(options[0]);
   });
 });

@@ -1,7 +1,7 @@
 "use client";
 
 import type { LessonEntry } from "@/lib/progression-engine";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 type GlobalSearchProps = {
   allLessonsFlat: LessonEntry[];
@@ -36,7 +36,8 @@ export function GlobalSearch({
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
-  const listRef = useRef<HTMLUListElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+  const listboxId = useId();
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -60,6 +61,11 @@ export function GlobalSearch({
   });
 
   const visibleResults = results.slice(0, 20);
+  const activeEntry =
+    selectedIndex >= 0 ? (visibleResults[selectedIndex] ?? null) : null;
+  const activeOptionId = activeEntry
+    ? `${listboxId}-option-${activeEntry.lesson.id}`
+    : undefined;
 
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === "Escape") {
@@ -89,7 +95,14 @@ export function GlobalSearch({
   useEffect(() => {
     if (selectedIndex >= 0 && listRef.current) {
       const items = listRef.current.querySelectorAll(".global-search-result");
-      items[selectedIndex]?.scrollIntoView({ block: "nearest" });
+      const selectedItem = items[selectedIndex];
+      if (
+        selectedItem &&
+        "scrollIntoView" in selectedItem &&
+        typeof selectedItem.scrollIntoView === "function"
+      ) {
+        selectedItem.scrollIntoView({ block: "nearest" });
+      }
     }
   }, [selectedIndex]);
 
@@ -135,6 +148,11 @@ export function GlobalSearch({
             ref={inputRef}
             className="global-search-input"
             type="search"
+            role="combobox"
+            aria-expanded="true"
+            aria-autocomplete="list"
+            aria-controls={listboxId}
+            aria-activedescendant={activeOptionId}
             placeholder="Search lessons, topics, phases…"
             value={query}
             onChange={(e) => {
@@ -189,12 +207,27 @@ export function GlobalSearch({
           </span>
         </div>
 
-        <ul className="global-search-results" ref={listRef}>
+        <p className="sr-only" aria-live="polite" aria-atomic="true">
+          {activeEntry
+            ? `Selected: ${activeEntry.lesson.title}`
+            : `${results.length} result${results.length !== 1 ? "s" : ""} available`}
+        </p>
+
+        <div
+          id={listboxId}
+          className="global-search-results"
+          ref={listRef}
+          role="listbox"
+        >
           {visibleResults.map((entry, i) => (
-            <li key={entry.lesson.id}>
-              <button
-                type="button"
-                className={`global-search-result${i === selectedIndex ? " global-search-result--selected" : ""}`}
+            i === selectedIndex ? (
+              <div
+                key={entry.lesson.id}
+                id={`${listboxId}-option-${entry.lesson.id}`}
+                role="option"
+                aria-selected="true"
+                tabIndex={-1}
+                className="global-search-result global-search-result--selected"
                 onClick={() => {
                   onNavigateToEntry(entry);
                   onClose();
@@ -218,20 +251,52 @@ export function GlobalSearch({
                 <span className="global-search-result-meta">
                   {entry.lesson.duration} · {entry.lesson.difficulty}
                 </span>
-              </button>
-            </li>
+              </div>
+            ) : (
+              <div
+                key={entry.lesson.id}
+                id={`${listboxId}-option-${entry.lesson.id}`}
+                role="option"
+                aria-selected="false"
+                tabIndex={-1}
+                className="global-search-result"
+                onClick={() => {
+                  onNavigateToEntry(entry);
+                  onClose();
+                }}
+                onMouseEnter={() => setSelectedIndex(i)}
+              >
+                <div className="global-search-result-top">
+                  <span className="global-search-result-title">
+                    {highlightMatch(entry.lesson.title, normalizedQuery)}
+                  </span>
+                  <span
+                    className={`status-pill ${progress[entry.lesson.id] ? "complete" : "pending"}`}
+                  >
+                    {progress[entry.lesson.id] ? "Done" : "Pending"}
+                  </span>
+                </div>
+                <span className="global-search-result-path">
+                  {highlightMatch(entry.phase.title, normalizedQuery)} ›{" "}
+                  {highlightMatch(entry.course.title, normalizedQuery)}
+                </span>
+                <span className="global-search-result-meta">
+                  {entry.lesson.duration} · {entry.lesson.difficulty}
+                </span>
+              </div>
+            )
           ))}
-          {results.length === 0 && normalizedQuery.length > 0 && (
-            <li className="global-search-empty">
-              No lessons match &quot;{query}&quot;
-            </li>
-          )}
-          {results.length > 20 && (
-            <li className="global-search-more">
-              Showing 20 of {results.length} results — refine your search
-            </li>
-          )}
-        </ul>
+        </div>
+        {results.length === 0 && normalizedQuery.length > 0 && (
+          <div className="global-search-empty" role="status">
+            No lessons match &quot;{query}&quot;
+          </div>
+        )}
+        {results.length > 20 && (
+          <div className="global-search-more" role="status">
+            Showing 20 of {results.length} results — refine your search
+          </div>
+        )}
       </div>
     </div>
   );
