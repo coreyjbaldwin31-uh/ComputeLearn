@@ -74,9 +74,10 @@ export function GlobalSearch({
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setSelectedIndex((prev) => (prev > 0 ? prev - 1 : -1));
-    } else if (e.key === "Enter" && selectedIndex >= 0) {
+    } else if (e.key === "Enter") {
       e.preventDefault();
-      const entry = visibleResults[selectedIndex];
+      const entry =
+        visibleResults[selectedIndex >= 0 ? selectedIndex : 0] ?? null;
       if (entry) {
         onNavigateToEntry(entry);
         onClose();

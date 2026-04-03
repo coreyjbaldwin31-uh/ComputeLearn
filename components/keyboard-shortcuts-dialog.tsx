@@ -156,7 +156,10 @@ const shortcutGroups: readonly ShortcutGroup[] = [
       {
         action: "Open search",
         keys: ["/"],
-        alternateKeySets: [["Ctrl", "K"], ["Cmd", "K"]],
+        alternateKeySets: [
+          ["Ctrl", "K"],
+          ["Cmd", "K"],
+        ],
         icon: (
           <svg
             width="14"
