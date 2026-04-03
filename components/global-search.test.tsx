@@ -1,7 +1,7 @@
+import type { LessonEntry } from "@/lib/progression-engine";
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { LessonEntry } from "@/lib/progression-engine";
 import { GlobalSearch } from "./global-search";
 
 afterEach(cleanup);
@@ -47,7 +47,10 @@ describe("GlobalSearch", () => {
   it("opens the first result when pressing Enter without arrow selection", async () => {
     const onNavigateToEntry = vi.fn();
     const onClose = vi.fn();
-    const entries = [makeEntry("l1", "Git Basics"), makeEntry("l2", "HTTP Basics")];
+    const entries = [
+      makeEntry("l1", "Git Basics"),
+      makeEntry("l2", "HTTP Basics"),
+    ];
 
     render(
       <GlobalSearch
