@@ -41,7 +41,9 @@ describe("StorageSurfaceChip", () => {
       />,
     );
 
-    expect(screen.getByText(/2 failed attempts - Quota exceeded/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Warning - 2 failed attempts - Quota exceeded/i),
+    ).toBeInTheDocument();
 
     await userEvent.click(screen.getByRole("button", { name: "Recovery" }));
 
@@ -63,5 +65,24 @@ describe("StorageSurfaceChip", () => {
     );
 
     expect(screen.getByText("Saving...")).toBeInTheDocument();
+  });
+
+  it("shows critical severity when failures cross threshold", () => {
+    render(
+      <StorageSurfaceChip
+        label="Notes save"
+        mode="degraded"
+        lastSuccessfulSaveLabel="1m ago"
+        isSaveStale={false}
+        isDirty={false}
+        failedCount={3}
+        lastErrorReason="Storage blocked"
+        onOpenRecovery={vi.fn()}
+      />,
+    );
+
+    expect(
+      screen.getByText(/Critical - 3 failed attempts - Storage blocked/i),
+    ).toBeInTheDocument();
   });
 });

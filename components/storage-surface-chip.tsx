@@ -22,10 +22,12 @@ export function StorageSurfaceChip({
   onOpenRecovery,
 }: StorageSurfaceChipProps) {
   const hasFailure = failedCount > 0;
+  const failureSeverity =
+    failedCount >= 3 ? "critical" : failedCount >= 1 ? "warning" : null;
 
   const descriptor =
     mode === "degraded" && hasFailure
-      ? "degraded"
+      ? `degraded-${failureSeverity}`
       : mode === "recovered"
         ? "recovered"
         : isSaveStale
@@ -56,6 +58,7 @@ export function StorageSurfaceChip({
       ) : null}
       {mode === "degraded" && hasFailure ? (
         <span className="storage-surface-chip-error">
+          {failureSeverity === "critical" ? "Critical" : "Warning"} -{" "}
           {failedCount} failed attempt{failedCount === 1 ? "" : "s"}
           {lastErrorReason ? ` - ${lastErrorReason}` : ""}
         </span>

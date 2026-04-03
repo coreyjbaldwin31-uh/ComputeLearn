@@ -4196,9 +4196,23 @@ button[disabled] {
   color: #9a1b1b;
 }
 
-.storage-surface-chip--degraded {
+.storage-surface-chip--degraded-warning {
   border-color: rgba(163, 28, 28, 0.35);
   background: rgba(163, 28, 28, 0.08);
+}
+
+.storage-surface-chip--degraded-critical {
+  border-color: rgba(145, 22, 22, 0.58);
+  background: rgba(145, 22, 22, 0.16);
+  box-shadow: 0 0 0 1px rgba(145, 22, 22, 0.2);
+}
+
+.storage-surface-chip--degraded-warning .storage-surface-chip-error {
+  color: #9a1b1b;
+}
+
+.storage-surface-chip--degraded-critical .storage-surface-chip-error {
+  color: #7d0f0f;
 }
 
 .storage-surface-chip--recovered,
