@@ -89,6 +89,11 @@ type LocalStorageWriteDetail = {
   key: string;
 };
 
+type SurfaceFailureState = {
+  count: number;
+  message: string | null;
+};
+
 type TrainingPlatformProps = {
   curriculum: Curriculum;
 };
@@ -193,6 +198,9 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const [noteDirty, setNoteDirty] = useState(false);
   const [reflectionDirty, setReflectionDirty] = useState(false);
   const [profileDirty, setProfileDirty] = useState(false);
+  const [surfaceFailures, setSurfaceFailures] = useState<
+    Record<string, SurfaceFailureState>
+  >({});
   const [saveClockTick, setSaveClockTick] = useState(() => Date.now());
   const storageErrorTimerRef = useRef<number | null>(null);
   const systemFlashTimerRef = useRef<number | null>(null);
@@ -205,6 +213,15 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   useEffect(() => {
     function handleStorageWriteSuccess(event: Event) {
       const detail = (event as CustomEvent<LocalStorageWriteDetail>).detail;
+      if (detail?.key) {
+        setSurfaceFailures((current) => {
+          if (!current[detail.key]) return current;
+          const next = { ...current };
+          delete next[detail.key];
+          return next;
+        });
+      }
+
       if (detail?.key === notesStorageKey) {
         setNoteDirty(false);
       }
@@ -292,6 +309,15 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     function handleStorageWriteError(event: Event) {
       const detail = (event as CustomEvent<LocalStorageWriteErrorDetail>)
         .detail;
+      if (detail?.key) {
+        setSurfaceFailures((current) => ({
+          ...current,
+          [detail.key]: {
+            count: (current[detail.key]?.count ?? 0) + 1,
+            message: detail.message ?? "Storage write failed",
+          },
+        }));
+      }
       setLastStorageError(detail ?? null);
       setStorageErrorCount((current) => current + 1);
       setStorageHealthMode("degraded");
@@ -389,6 +415,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     setNoteDirty(false);
     setReflectionDirty(false);
     setProfileDirty(false);
+    setSurfaceFailures({});
     setSystemFlash("Local learning data reset");
     setShowStorageRecoveryDialog(false);
 
@@ -1258,6 +1285,12 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
                 isSaveStale,
                 noteDirty,
                 reflectionDirty,
+                noteFailureCount: surfaceFailures[notesStorageKey]?.count ?? 0,
+                noteFailureReason: surfaceFailures[notesStorageKey]?.message ?? null,
+                reflectionFailureCount:
+                  surfaceFailures[reflectionsStorageKey]?.count ?? 0,
+                reflectionFailureReason:
+                  surfaceFailures[reflectionsStorageKey]?.message ?? null,
               }}
               onOpenRecovery={() => setShowStorageRecoveryDialog(true)}
               onNoteChange={updateNote}
@@ -1291,6 +1324,10 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
               lastSuccessfulSaveLabel,
               isSaveStale,
               profileDirty,
+              profileFailureCount:
+                surfaceFailures[learnerProfileStorageKey]?.count ?? 0,
+              profileFailureReason:
+                surfaceFailures[learnerProfileStorageKey]?.message ?? null,
             }}
             onOpenRecovery={() => setShowStorageRecoveryDialog(true)}
             onResetAll={resetAllProgress}

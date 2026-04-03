@@ -27,6 +27,8 @@ type StorageStatus = {
   lastSuccessfulSaveLabel: string | null;
   isSaveStale: boolean;
   profileDirty: boolean;
+  profileFailureCount: number;
+  profileFailureReason: string | null;
 };
 
 type RailPanelsProps = {
@@ -147,6 +149,8 @@ export function RailPanels({
           lastSuccessfulSaveLabel={storageStatus.lastSuccessfulSaveLabel}
           isSaveStale={storageStatus.isSaveStale}
           isDirty={storageStatus.profileDirty}
+          failedCount={storageStatus.profileFailureCount}
+          lastErrorReason={storageStatus.profileFailureReason}
           onOpenRecovery={onOpenRecovery}
         />
         <div className="profile-grid">

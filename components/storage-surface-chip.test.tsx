@@ -14,6 +14,8 @@ describe("StorageSurfaceChip", () => {
         lastSuccessfulSaveLabel="15s ago"
         isSaveStale={false}
         isDirty={false}
+        failedCount={0}
+        lastErrorReason={null}
         onOpenRecovery={vi.fn()}
       />,
     );
@@ -33,9 +35,13 @@ describe("StorageSurfaceChip", () => {
         lastSuccessfulSaveLabel="2m ago"
         isSaveStale={false}
         isDirty={false}
+        failedCount={2}
+        lastErrorReason="Quota exceeded"
         onOpenRecovery={onOpenRecovery}
       />,
     );
+
+    expect(screen.getByText(/2 failed attempts - Quota exceeded/i)).toBeInTheDocument();
 
     await userEvent.click(screen.getByRole("button", { name: "Recovery" }));
 
@@ -50,6 +56,8 @@ describe("StorageSurfaceChip", () => {
         lastSuccessfulSaveLabel="just now"
         isSaveStale={false}
         isDirty
+        failedCount={0}
+        lastErrorReason={null}
         onOpenRecovery={vi.fn()}
       />,
     );

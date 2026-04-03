@@ -4190,6 +4190,12 @@ button[disabled] {
   color: var(--text-muted);
 }
 
+.storage-surface-chip-error {
+  width: 100%;
+  font-size: 0.74rem;
+  color: #9a1b1b;
+}
+
 .storage-surface-chip--degraded {
   border-color: rgba(163, 28, 28, 0.35);
   background: rgba(163, 28, 28, 0.08);

@@ -6,6 +6,8 @@ type StorageSurfaceChipProps = {
   lastSuccessfulSaveLabel: string | null;
   isSaveStale: boolean;
   isDirty: boolean;
+  failedCount: number;
+  lastErrorReason: string | null;
   onOpenRecovery: () => void;
 };
 
@@ -15,10 +17,14 @@ export function StorageSurfaceChip({
   lastSuccessfulSaveLabel,
   isSaveStale,
   isDirty,
+  failedCount,
+  lastErrorReason,
   onOpenRecovery,
 }: StorageSurfaceChipProps) {
+  const hasFailure = failedCount > 0;
+
   const descriptor =
-    mode === "degraded"
+    mode === "degraded" && hasFailure
       ? "degraded"
       : mode === "recovered"
         ? "recovered"
@@ -27,7 +33,7 @@ export function StorageSurfaceChip({
           : "healthy";
 
   const statusText =
-    mode === "degraded"
+    mode === "degraded" && hasFailure
       ? isDirty
         ? "Pending write"
         : "Save issue"
@@ -48,7 +54,13 @@ export function StorageSurfaceChip({
           Last save: {lastSuccessfulSaveLabel}
         </span>
       ) : null}
-      {(mode === "degraded" || isSaveStale) && (
+      {mode === "degraded" && hasFailure ? (
+        <span className="storage-surface-chip-error">
+          {failedCount} failed attempt{failedCount === 1 ? "" : "s"}
+          {lastErrorReason ? ` - ${lastErrorReason}` : ""}
+        </span>
+      ) : null}
+      {((mode === "degraded" && hasFailure) || isSaveStale) && (
         <button type="button" className="chip-link" onClick={onOpenRecovery}>
           Recovery
         </button>
