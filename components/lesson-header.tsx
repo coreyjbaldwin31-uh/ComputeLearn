@@ -1,6 +1,8 @@
 "use client";
 
+import { useId } from "react";
 import type { Course, Lesson, Phase } from "@/data/curriculum";
+import { useFocusTrap } from "./hooks/use-focus-trap";
 
 type LessonHeaderProps = {
   selectedPhase: Phase;
@@ -33,6 +35,10 @@ export function LessonHeader({
   onConfirmReset,
   showTerminal,
 }: LessonHeaderProps) {
+  const resetDialogRef = useFocusTrap(showResetConfirm);
+  const resetDialogTitleId = useId();
+  const resetDialogDescriptionId = useId();
+
   return (
     <section className="panel lesson-header-panel">
       <div className="lesson-headline">
@@ -75,14 +81,22 @@ export function LessonHeader({
       {showResetConfirm ? (
         <div className="confirm-backdrop" onClick={onCancelReset}>
           <div
+            ref={resetDialogRef}
             className="confirm-dialog"
             role="dialog"
             aria-modal="true"
-            aria-label="Confirm reset"
+            aria-labelledby={resetDialogTitleId}
+            aria-describedby={resetDialogDescriptionId}
             onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                e.preventDefault();
+                onCancelReset();
+              }
+            }}
           >
-            <h4>Reset all exercise data?</h4>
-            <p>
+            <h4 id={resetDialogTitleId}>Reset all exercise data?</h4>
+            <p id={resetDialogDescriptionId}>
               This will clear your answers, hints, feedback, and transfer
               progress for this lesson.
             </p>
@@ -90,6 +104,7 @@ export function LessonHeader({
               <button
                 type="button"
                 className="ghost-button"
+                autoFocus
                 onClick={onCancelReset}
               >
                 Cancel
