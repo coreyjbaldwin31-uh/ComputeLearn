@@ -102,8 +102,34 @@ describe("useLocalStorageState", () => {
     expect(customEvent.detail.key).toBe(TEST_KEY);
     expect(customEvent.detail.message).toBe("Storage write failed");
     expect(customEvent.detail.raw).toBe(JSON.stringify({ count: 1 }));
+    expect(result.current[0]).toEqual({ count: 1 });
 
     window.removeEventListener("ls-write-error", listener);
+    setItemSpy.mockRestore();
+  });
+
+  it("uses volatile fallback state for subsequent updates after write failure", () => {
+    const setItemSpy = vi
+      .spyOn(Storage.prototype, "setItem")
+      .mockImplementation(() => {
+        throw new DOMException("Quota exceeded", "QuotaExceededError");
+      });
+
+    const { result } = renderHook(() =>
+      useLocalStorageState(TEST_KEY, { count: 0 }),
+    );
+
+    act(() => {
+      result.current[1]({ count: 2 });
+    });
+
+    act(() => {
+      result.current[1]((prev) => ({ count: prev.count + 1 }));
+    });
+
+    expect(result.current[0]).toEqual({ count: 3 });
+    expect(localStorage.getItem(TEST_KEY)).toBeNull();
+
     setItemSpy.mockRestore();
   });
 });

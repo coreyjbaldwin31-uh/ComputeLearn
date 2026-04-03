@@ -8,6 +8,8 @@ type LocalStorageWriteErrorDetail = {
   raw: string | null;
 };
 
+const volatileFallback = new Map<string, unknown>();
+
 export function useLocalStorageState<T>(key: string, initial: T) {
   const initialRef = useRef(initial);
   const cached = useRef({
@@ -25,6 +27,10 @@ export function useLocalStorageState<T>(key: string, initial: T) {
   }, []);
 
   const getSnapshot = useCallback(() => {
+    if (volatileFallback.has(key)) {
+      return volatileFallback.get(key) as T;
+    }
+
     const raw = localStorage.getItem(key) ?? undefined;
     if (raw === cached.current.raw) return cached.current.value;
     let val: T;
@@ -44,8 +50,13 @@ export function useLocalStorageState<T>(key: string, initial: T) {
   const set = useCallback(
     (fn: T | ((prev: T) => T)) => {
       let attemptedRaw: string | null = null;
+      let nextValue: T | null = null;
       try {
         const cur = (() => {
+          if (volatileFallback.has(key)) {
+            return volatileFallback.get(key) as T;
+          }
+
           const r = localStorage.getItem(key);
           try {
             return r != null ? (JSON.parse(r) as T) : initialRef.current;
@@ -53,14 +64,21 @@ export function useLocalStorageState<T>(key: string, initial: T) {
             return initialRef.current;
           }
         })();
-        const next =
-          typeof fn === "function" ? (fn as (p: T) => T)(cur) : fn;
+        const next = typeof fn === "function" ? (fn as (p: T) => T)(cur) : fn;
+        nextValue = next;
         const raw = JSON.stringify(next);
         attemptedRaw = raw;
         localStorage.setItem(key, raw);
+        volatileFallback.delete(key);
         cached.current = { raw, value: next };
         window.dispatchEvent(new Event("ls-write"));
       } catch (error) {
+        if (nextValue !== null) {
+          volatileFallback.set(key, nextValue);
+          cached.current = { raw: undefined, value: nextValue };
+          window.dispatchEvent(new Event("ls-write"));
+        }
+
         const message =
           error instanceof Error ? error.message : "Storage write failed";
         const detail: LocalStorageWriteErrorDetail = {

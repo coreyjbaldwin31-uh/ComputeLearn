@@ -114,9 +114,32 @@ describe("useLearnerProfile", () => {
     expect(customEvent.detail.key).toBe(PROFILE_KEY);
     expect(customEvent.detail.message).toBe("Storage write failed");
     expect(customEvent.detail.raw).toContain('"displayName":"Blocked"');
-    expect(result.current.profile.displayName).toBe("");
+    expect(result.current.profile.displayName).toBe("Blocked");
 
     window.removeEventListener("ls-write-error", listener);
+    setItemSpy.mockRestore();
+  });
+
+  it("applies consecutive updates from volatile fallback state", () => {
+    const setItemSpy = vi
+      .spyOn(Storage.prototype, "setItem")
+      .mockImplementation(() => {
+        throw new DOMException("Storage blocked", "SecurityError");
+      });
+
+    const { result } = renderHook(() => useLearnerProfile());
+
+    act(() => {
+      result.current.update({ displayName: "Alex" });
+    });
+    act(() => {
+      result.current.update({ goal: "Ship confidently" });
+    });
+
+    expect(result.current.profile.displayName).toBe("Alex");
+    expect(result.current.profile.goal).toBe("Ship confidently");
+    expect(localStorage.getItem(PROFILE_KEY)).toBeNull();
+
     setItemSpy.mockRestore();
   });
 });
