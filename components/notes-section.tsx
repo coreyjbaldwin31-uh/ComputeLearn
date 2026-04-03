@@ -1,5 +1,12 @@
 import type { ReviewRecord } from "@/lib/progression-engine";
 import { formatTrackName, isDueForReview } from "@/lib/progression-engine";
+import { StorageSurfaceChip } from "./storage-surface-chip";
+
+type StorageStatus = {
+  mode: "stable" | "degraded" | "recovered";
+  lastSuccessfulSaveLabel: string | null;
+  isSaveStale: boolean;
+};
 
 type NotesSectionProps = {
   lessonId: string;
@@ -11,6 +18,8 @@ type NotesSectionProps = {
   recentArtifactCount: number;
   reflectionPrompts: string[];
   weakTracks: string[];
+  storageStatus: StorageStatus;
+  onOpenRecovery: () => void;
   onNoteChange: (lessonId: string, value: string) => void;
   onReflectionChange: (lessonId: string, value: string) => void;
   onMarkReviewed: (lessonId: string) => void;
@@ -28,6 +37,8 @@ export function NotesSection({
   recentArtifactCount,
   reflectionPrompts,
   weakTracks,
+  storageStatus,
+  onOpenRecovery,
   onNoteChange,
   onReflectionChange,
   onMarkReviewed,
@@ -63,6 +74,13 @@ export function NotesSection({
       </div>
       <article className="note-card">
         <h4>Saved notes</h4>
+        <StorageSurfaceChip
+          label="Notes save"
+          mode={storageStatus.mode}
+          lastSuccessfulSaveLabel={storageStatus.lastSuccessfulSaveLabel}
+          isSaveStale={storageStatus.isSaveStale}
+          onOpenRecovery={onOpenRecovery}
+        />
         <p>{notesPrompt}</p>
         <textarea
           aria-label="Lesson notes"
@@ -116,6 +134,13 @@ export function NotesSection({
 
       <article className="note-card">
         <h4>Reflection checkpoint</h4>
+        <StorageSurfaceChip
+          label="Reflection save"
+          mode={storageStatus.mode}
+          lastSuccessfulSaveLabel={storageStatus.lastSuccessfulSaveLabel}
+          isSaveStale={storageStatus.isSaveStale}
+          onOpenRecovery={onOpenRecovery}
+        />
         <p className="microcopy">
           Capture what changed, what still feels weak, and what signal you will
           reuse next time.

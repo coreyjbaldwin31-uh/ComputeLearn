@@ -20,10 +20,19 @@ import { useEffect, useMemo, useState } from "react";
 import { CollapsiblePanel } from "./collapsible-panel";
 import { useFocusTrap } from "./hooks/use-focus-trap";
 import type { LearnerProfile } from "./hooks/use-learner-profile";
+import { StorageSurfaceChip } from "./storage-surface-chip";
+
+type StorageStatus = {
+  mode: "stable" | "degraded" | "recovered";
+  lastSuccessfulSaveLabel: string | null;
+  isSaveStale: boolean;
+};
 
 type RailPanelsProps = {
   learnerProfile: LearnerProfile;
   updateLearnerProfile: (changes: Partial<LearnerProfile>) => void;
+  storageStatus: StorageStatus;
+  onOpenRecovery: () => void;
   onResetAll: () => void;
   selectedPhase: Phase;
   selectedCourse: Course;
@@ -54,6 +63,8 @@ type RailPanelsProps = {
 export function RailPanels({
   learnerProfile,
   updateLearnerProfile,
+  storageStatus,
+  onOpenRecovery,
   onResetAll,
   selectedPhase,
   selectedCourse,
@@ -129,6 +140,13 @@ export function RailPanels({
     <aside className="rail">
       <section className="panel">
         <h3>Learner profile</h3>
+        <StorageSurfaceChip
+          label="Profile save"
+          mode={storageStatus.mode}
+          lastSuccessfulSaveLabel={storageStatus.lastSuccessfulSaveLabel}
+          isSaveStale={storageStatus.isSaveStale}
+          onOpenRecovery={onOpenRecovery}
+        />
         <div className="profile-grid">
           <label className="profile-field">
             <span>Name</span>

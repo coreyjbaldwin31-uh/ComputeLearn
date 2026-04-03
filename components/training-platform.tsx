@@ -1219,6 +1219,12 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
               recentArtifactCount={recentArtifacts.length}
               reflectionPrompts={reflectionPrompts}
               weakTracks={selectedLessonWeakTracks}
+              storageStatus={{
+                mode: storageHealthMode,
+                lastSuccessfulSaveLabel,
+                isSaveStale,
+              }}
+              onOpenRecovery={() => setShowStorageRecoveryDialog(true)}
               onNoteChange={updateNote}
               onReflectionChange={updateReflection}
               onMarkReviewed={markReviewed}
@@ -1245,6 +1251,12 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
           <RailPanels
             learnerProfile={learnerProfile}
             updateLearnerProfile={updateLearnerProfile}
+            storageStatus={{
+              mode: storageHealthMode,
+              lastSuccessfulSaveLabel,
+              isSaveStale,
+            }}
+            onOpenRecovery={() => setShowStorageRecoveryDialog(true)}
             onResetAll={resetAllProgress}
             selectedPhase={selectedPhase}
             selectedCourse={selectedCourse}
