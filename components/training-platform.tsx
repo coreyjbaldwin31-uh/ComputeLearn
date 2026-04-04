@@ -47,6 +47,7 @@ import {
 } from "./hooks/use-learner-profile";
 import { useLocalStorageState } from "./hooks/use-local-storage-state";
 import { usePrefersReducedMotion } from "./hooks/use-prefers-reduced-motion";
+import { useStorageHealth } from "./hooks/use-storage-health";
 import { useTheme } from "./hooks/use-theme";
 import { KeyboardHelpTrigger } from "./keyboard-help-trigger";
 import { KeyboardShortcutsDialog } from "./keyboard-shortcuts-dialog";
@@ -74,10 +75,7 @@ import { SkipLink } from "./skip-link";
 import { SocialProof } from "./social-proof";
 import { StorageHealthBanner } from "./storage-health-banner";
 import { StorageRecoveryDialog } from "./storage-recovery-dialog";
-import {
-  StorageRecoveryLog,
-  type StorageRecoveryLogEntry,
-} from "./storage-recovery-log";
+import { StorageRecoveryLog } from "./storage-recovery-log";
 
 type ProgressState = Record<string, true>;
 type NotesState = Record<string, string>;
@@ -86,21 +84,6 @@ type ReflectionState = Record<string, string>;
 
 type ReviewState = Record<string, ReviewRecord>;
 type TransferState = Record<string, true>;
-
-type LocalStorageWriteErrorDetail = {
-  key: string;
-  message: string;
-  raw: string | null;
-};
-
-type LocalStorageWriteDetail = {
-  key: string;
-};
-
-type SurfaceFailureState = {
-  count: number;
-  message: string | null;
-};
 
 type TrainingPlatformProps = {
   curriculum: Curriculum;
@@ -120,10 +103,6 @@ const emptyNotes: NotesState = {};
 const emptyReflections: ReflectionState = {};
 const emptyReviews: ReviewState = {};
 const emptyTransfer: TransferState = {};
-
-type StorageHealthMode = "stable" | "degraded" | "recovered";
-
-const staleSaveThresholdMs = 90_000;
 
 export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const [selectedPhaseId, setSelectedPhaseId] = useState(
@@ -187,37 +166,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   >(labInstancesStorageKey, {});
   const { theme, toggle: toggleTheme } = useTheme();
   const prefersReducedMotion = usePrefersReducedMotion();
-  const [storageErrorFlash, setStorageErrorFlash] = useState<string | null>(
-    null,
-  );
-  const [lastStorageError, setLastStorageError] =
-    useState<LocalStorageWriteErrorDetail | null>(null);
-  const [storageErrorCount, setStorageErrorCount] = useState(0);
-  const [systemFlash, setSystemFlash] = useState<string | null>(null);
   const [lessonEntryCue, setLessonEntryCue] = useState<string | null>(null);
-  const [showStorageRecoveryDialog, setShowStorageRecoveryDialog] =
-    useState(false);
-  const [storageHealthMode, setStorageHealthMode] =
-    useState<StorageHealthMode>("stable");
-  const [lastStorageFailureKey, setLastStorageFailureKey] = useState<
-    string | null
-  >(null);
-  const [lastSuccessfulSaveAt, setLastSuccessfulSaveAt] = useState<
-    number | null
-  >(null);
-  const [noteDirty, setNoteDirty] = useState(false);
-  const [reflectionDirty, setReflectionDirty] = useState(false);
-  const [profileDirty, setProfileDirty] = useState(false);
-  const [surfaceFailures, setSurfaceFailures] = useState<
-    Record<string, SurfaceFailureState>
-  >({});
-  const [storageRecoveryLog, setStorageRecoveryLog] = useState<
-    StorageRecoveryLogEntry[]
-  >([]);
-  const [saveClockTick, setSaveClockTick] = useState(() => Date.now());
-  const storageErrorTimerRef = useRef<number | null>(null);
-  const systemFlashTimerRef = useRef<number | null>(null);
-  const storageHealthTimerRef = useRef<number | null>(null);
   const lessonEntryCueTimerRef = useRef<number | null>(null);
   const scrollBehavior: ScrollBehavior = prefersReducedMotion
     ? "auto"
@@ -226,174 +175,6 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const contentRef = useRef<HTMLElement>(null);
 
   const [todayKey, setTodayKey] = useState(() => new Date().toDateString());
-
-  const getNowLabel = useCallback(() => {
-    return new Date().toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    });
-  }, []);
-
-  const pushRecoveryLog = useCallback(
-    (entry: Omit<StorageRecoveryLogEntry, "id" | "atLabel">) => {
-      const next: StorageRecoveryLogEntry = {
-        ...entry,
-        id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-        atLabel: getNowLabel(),
-      };
-      setStorageRecoveryLog((current) => [next, ...current].slice(0, 3));
-    },
-    [getNowLabel],
-  );
-
-  useEffect(() => {
-    function handleStorageWriteSuccess(event: Event) {
-      const detail = (event as CustomEvent<LocalStorageWriteDetail>).detail;
-      if (detail?.key) {
-        setSurfaceFailures((current) => {
-          if (!current[detail.key]) return current;
-          const next = { ...current };
-          delete next[detail.key];
-          return next;
-        });
-      }
-
-      if (detail?.key === notesStorageKey) {
-        setNoteDirty(false);
-      }
-      if (detail?.key === reflectionsStorageKey) {
-        setReflectionDirty(false);
-      }
-      if (detail?.key === learnerProfileStorageKey) {
-        setProfileDirty(false);
-      }
-
-      const now = Date.now();
-      setLastSuccessfulSaveAt(now);
-      setSaveClockTick(now);
-
-      setStorageHealthMode((current) => {
-        if (current === "degraded") {
-          return "recovered";
-        }
-        return current;
-      });
-
-      setStorageErrorFlash(null);
-      setLastStorageError(null);
-      setStorageErrorCount(0);
-      setLastStorageFailureKey(null);
-
-      if (storageHealthTimerRef.current != null) {
-        window.clearTimeout(storageHealthTimerRef.current);
-      }
-      storageHealthTimerRef.current = window.setTimeout(() => {
-        setStorageHealthMode("stable");
-      }, 7000);
-    }
-
-    window.addEventListener("ls-write", handleStorageWriteSuccess);
-
-    return () => {
-      window.removeEventListener("ls-write", handleStorageWriteSuccess);
-    };
-  }, []);
-
-  useEffect(() => {
-    const intervalId = window.setInterval(() => {
-      setSaveClockTick(Date.now());
-    }, 15_000);
-
-    return () => {
-      window.clearInterval(intervalId);
-    };
-  }, []);
-
-  const lastSuccessfulSaveLabel = useMemo(() => {
-    if (!lastSuccessfulSaveAt) {
-      return null;
-    }
-
-    const deltaMs = Math.max(0, saveClockTick - lastSuccessfulSaveAt);
-    const deltaSeconds = Math.floor(deltaMs / 1000);
-
-    if (deltaSeconds < 8) {
-      return "just now";
-    }
-
-    if (deltaSeconds < 60) {
-      return `${deltaSeconds}s ago`;
-    }
-
-    const deltaMinutes = Math.floor(deltaSeconds / 60);
-    if (deltaMinutes < 60) {
-      return `${deltaMinutes}m ago`;
-    }
-
-    const deltaHours = Math.floor(deltaMinutes / 60);
-    return `${deltaHours}h ago`;
-  }, [lastSuccessfulSaveAt, saveClockTick]);
-
-  const isSaveStale = useMemo(() => {
-    if (!lastSuccessfulSaveAt) {
-      return false;
-    }
-    return saveClockTick - lastSuccessfulSaveAt >= staleSaveThresholdMs;
-  }, [lastSuccessfulSaveAt, saveClockTick]);
-
-  useEffect(() => {
-    function handleStorageWriteError(event: Event) {
-      const detail = (event as CustomEvent<LocalStorageWriteErrorDetail>)
-        .detail;
-      if (detail?.key) {
-        setSurfaceFailures((current) => ({
-          ...current,
-          [detail.key]: {
-            count: (current[detail.key]?.count ?? 0) + 1,
-            message: detail.message ?? "Storage write failed",
-          },
-        }));
-
-        pushRecoveryLog({
-          key: detail.key,
-          outcome: "error",
-          message: detail.message ?? "Storage write failed",
-        });
-      }
-      setLastStorageError(detail ?? null);
-      setStorageErrorCount((current) => current + 1);
-      setStorageHealthMode("degraded");
-      setLastStorageFailureKey(detail?.key ?? null);
-      const context = detail?.key ? ` (${detail.key})` : "";
-      const message = detail?.message ?? "Storage write failed";
-      setStorageErrorFlash(
-        `Could not save your latest changes${context}. ${message}. Retry after checking browser storage settings and free space.`,
-      );
-
-      if (storageErrorTimerRef.current != null) {
-        window.clearTimeout(storageErrorTimerRef.current);
-      }
-      storageErrorTimerRef.current = window.setTimeout(() => {
-        setStorageErrorFlash(null);
-      }, 4500);
-    }
-
-    window.addEventListener("ls-write-error", handleStorageWriteError);
-
-    return () => {
-      window.removeEventListener("ls-write-error", handleStorageWriteError);
-      if (storageErrorTimerRef.current != null) {
-        window.clearTimeout(storageErrorTimerRef.current);
-      }
-      if (systemFlashTimerRef.current != null) {
-        window.clearTimeout(systemFlashTimerRef.current);
-      }
-      if (storageHealthTimerRef.current != null) {
-        window.clearTimeout(storageHealthTimerRef.current);
-      }
-    };
-  }, [pushRecoveryLog]);
 
   useEffect(() => {
     return () => {
@@ -414,103 +195,6 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     lessonEntryCueTimerRef.current = window.setTimeout(() => {
       setLessonEntryCue(null);
     }, 2600);
-  }
-
-  function retryFailedStorageWrite() {
-    if (!lastStorageError?.key || lastStorageError.raw == null) {
-      return;
-    }
-
-    try {
-      localStorage.setItem(lastStorageError.key, lastStorageError.raw);
-      window.dispatchEvent(
-        new CustomEvent("ls-write", {
-          detail: {
-            key: lastStorageError.key,
-          } satisfies LocalStorageWriteDetail,
-        }),
-      );
-      setStorageErrorFlash(null);
-      setLastStorageError(null);
-      setStorageErrorCount(0);
-      setStorageHealthMode("recovered");
-      setLastStorageFailureKey(null);
-      setSystemFlash("Save recovered successfully");
-      pushRecoveryLog({
-        key: lastStorageError.key,
-        outcome: "retry-success",
-        message: "Retry save succeeded",
-      });
-
-      if (systemFlashTimerRef.current != null) {
-        window.clearTimeout(systemFlashTimerRef.current);
-      }
-      systemFlashTimerRef.current = window.setTimeout(() => {
-        setSystemFlash(null);
-      }, 2200);
-      if (storageHealthTimerRef.current != null) {
-        window.clearTimeout(storageHealthTimerRef.current);
-      }
-      storageHealthTimerRef.current = window.setTimeout(() => {
-        setStorageHealthMode("stable");
-      }, 7000);
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Storage write failed";
-      pushRecoveryLog({
-        key: lastStorageError.key,
-        outcome: "retry-failed",
-        message,
-      });
-      setStorageErrorFlash(
-        `Retry failed for ${lastStorageError.key}. ${message}.`,
-      );
-    }
-  }
-
-  function handleExportRecoveryBackup() {
-    exportArtifacts();
-    pushRecoveryLog({
-      key: null,
-      outcome: "backup-exported",
-      message: "Artifact backup exported",
-    });
-    setSystemFlash("Artifact backup exported");
-    setShowStorageRecoveryDialog(false);
-
-    if (systemFlashTimerRef.current != null) {
-      window.clearTimeout(systemFlashTimerRef.current);
-    }
-    systemFlashTimerRef.current = window.setTimeout(() => {
-      setSystemFlash(null);
-    }, 2200);
-  }
-
-  function handleResetAfterStorageFailure() {
-    resetAllProgress();
-    setStorageErrorFlash(null);
-    setLastStorageError(null);
-    setStorageErrorCount(0);
-    setStorageHealthMode("stable");
-    setLastStorageFailureKey(null);
-    setNoteDirty(false);
-    setReflectionDirty(false);
-    setProfileDirty(false);
-    setSurfaceFailures({});
-    pushRecoveryLog({
-      key: null,
-      outcome: "local-reset",
-      message: "Local learning data reset",
-    });
-    setSystemFlash("Local learning data reset");
-    setShowStorageRecoveryDialog(false);
-
-    if (systemFlashTimerRef.current != null) {
-      window.clearTimeout(systemFlashTimerRef.current);
-    }
-    systemFlashTimerRef.current = window.setTimeout(() => {
-      setSystemFlash(null);
-    }, 2200);
   }
 
   useEffect(() => {
@@ -689,6 +373,11 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     reflectionPrompts,
     selectedLessonWeakTracks,
     allLessonsFlat,
+  });
+
+  const [storageHealth, storageActions] = useStorageHealth({
+    onExportArtifacts: exportArtifacts,
+    onResetAllProgress: resetAllProgress,
   });
 
   const navigateToEntry = useCallback(
@@ -882,19 +571,19 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   }
 
   function updateNote(lessonId: string, value: string) {
-    setNoteDirty(true);
+    storageActions.markNoteDirty();
     setNotes((current) => ({ ...current, [lessonId]: value }));
   }
 
   function updateReflection(lessonId: string, value: string) {
-    setReflectionDirty(true);
+    storageActions.markReflectionDirty();
     setReflections((current) => ({ ...current, [lessonId]: value }));
   }
 
   function updateLearnerProfileTracked(
     changes: Partial<typeof learnerProfile>,
   ) {
-    setProfileDirty(true);
+    storageActions.markProfileDirty();
     updateLearnerProfile(changes);
   }
 
@@ -1148,16 +837,16 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       />
 
       <StorageHealthBanner
-        mode={storageHealthMode}
-        failureCount={storageErrorCount}
-        lastFailureKey={lastStorageFailureKey}
-        lastSuccessfulSaveLabel={lastSuccessfulSaveLabel}
-        isSaveStale={isSaveStale}
-        onOpenRecovery={() => setShowStorageRecoveryDialog(true)}
-        onDismissRecovered={() => setStorageHealthMode("stable")}
+        mode={storageHealth.mode}
+        failureCount={storageHealth.errorCount}
+        lastFailureKey={storageHealth.lastFailureKey}
+        lastSuccessfulSaveLabel={storageHealth.lastSuccessfulSaveLabel}
+        isSaveStale={storageHealth.isSaveStale}
+        onOpenRecovery={storageActions.openRecoveryDialog}
+        onDismissRecovered={storageActions.dismissRecovered}
       />
 
-      <StorageRecoveryLog entries={storageRecoveryLog} />
+      <StorageRecoveryLog entries={storageHealth.recoveryLog} />
 
       {viewMode === "home" ? (
         <>
@@ -1403,20 +1092,24 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
               reflectionPrompts={reflectionPrompts}
               weakTracks={selectedLessonWeakTracks}
               storageStatus={{
-                mode: storageHealthMode,
-                lastSuccessfulSaveLabel,
-                isSaveStale,
-                noteDirty,
-                reflectionDirty,
-                noteFailureCount: surfaceFailures[notesStorageKey]?.count ?? 0,
+                mode: storageHealth.mode,
+                lastSuccessfulSaveLabel: storageHealth.lastSuccessfulSaveLabel,
+                isSaveStale: storageHealth.isSaveStale,
+                noteDirty: storageHealth.noteDirty,
+                reflectionDirty: storageHealth.reflectionDirty,
+                noteFailureCount:
+                  storageHealth.surfaceFailures[notesStorageKey]?.count ?? 0,
                 noteFailureReason:
-                  surfaceFailures[notesStorageKey]?.message ?? null,
+                  storageHealth.surfaceFailures[notesStorageKey]?.message ??
+                  null,
                 reflectionFailureCount:
-                  surfaceFailures[reflectionsStorageKey]?.count ?? 0,
+                  storageHealth.surfaceFailures[reflectionsStorageKey]?.count ??
+                  0,
                 reflectionFailureReason:
-                  surfaceFailures[reflectionsStorageKey]?.message ?? null,
+                  storageHealth.surfaceFailures[reflectionsStorageKey]
+                    ?.message ?? null,
               }}
-              onOpenRecovery={() => setShowStorageRecoveryDialog(true)}
+              onOpenRecovery={storageActions.openRecoveryDialog}
               onNoteChange={updateNote}
               onReflectionChange={updateReflection}
               onMarkReviewed={markReviewed}
@@ -1444,16 +1137,18 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
             learnerProfile={learnerProfile}
             updateLearnerProfile={updateLearnerProfileTracked}
             storageStatus={{
-              mode: storageHealthMode,
-              lastSuccessfulSaveLabel,
-              isSaveStale,
-              profileDirty,
+              mode: storageHealth.mode,
+              lastSuccessfulSaveLabel: storageHealth.lastSuccessfulSaveLabel,
+              isSaveStale: storageHealth.isSaveStale,
+              profileDirty: storageHealth.profileDirty,
               profileFailureCount:
-                surfaceFailures[learnerProfileStorageKey]?.count ?? 0,
+                storageHealth.surfaceFailures[learnerProfileStorageKey]
+                  ?.count ?? 0,
               profileFailureReason:
-                surfaceFailures[learnerProfileStorageKey]?.message ?? null,
+                storageHealth.surfaceFailures[learnerProfileStorageKey]
+                  ?.message ?? null,
             }}
-            onOpenRecovery={() => setShowStorageRecoveryDialog(true)}
+            onOpenRecovery={storageActions.openRecoveryDialog}
             onResetAll={resetAllProgress}
             selectedPhase={selectedPhase}
             selectedCourse={selectedCourse}
@@ -1512,33 +1207,35 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       <PageFooter />
 
       <SaveToast
-        message={storageErrorFlash ?? systemFlash ?? saveFlash}
-        variant={storageErrorFlash ? "error" : "success"}
+        message={
+          storageHealth.errorFlash ?? storageHealth.systemFlash ?? saveFlash
+        }
+        variant={storageHealth.errorFlash ? "error" : "success"}
         actionLabel={
-          storageErrorFlash
-            ? storageErrorCount >= 2
+          storageHealth.errorFlash
+            ? storageHealth.errorCount >= 2
               ? "Recovery options"
               : "Retry save"
             : undefined
         }
         onAction={
-          storageErrorFlash
-            ? storageErrorCount >= 2
-              ? () => setShowStorageRecoveryDialog(true)
-              : retryFailedStorageWrite
+          storageHealth.errorFlash
+            ? storageHealth.errorCount >= 2
+              ? storageActions.openRecoveryDialog
+              : storageActions.retryFailedWrite
             : undefined
         }
       />
 
       <StorageRecoveryDialog
-        isOpen={showStorageRecoveryDialog}
-        onClose={() => setShowStorageRecoveryDialog(false)}
+        isOpen={storageHealth.showRecoveryDialog}
+        onClose={storageActions.closeRecoveryDialog}
         onRetry={() => {
-          retryFailedStorageWrite();
-          setShowStorageRecoveryDialog(false);
+          storageActions.retryFailedWrite();
+          storageActions.closeRecoveryDialog();
         }}
-        onExportBackup={handleExportRecoveryBackup}
-        onResetLocalData={handleResetAfterStorageFailure}
+        onExportBackup={storageActions.exportRecoveryBackup}
+        onResetLocalData={storageActions.resetAfterFailure}
       />
 
       <KeyboardHelpTrigger onClick={() => setShowKeyboardHelp(true)} />
