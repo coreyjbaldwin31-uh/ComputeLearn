@@ -11,9 +11,7 @@ function makeOptions(overrides: Record<string, unknown> = {}) {
 }
 
 function fireWriteSuccess(key: string) {
-  window.dispatchEvent(
-    new CustomEvent("ls-write", { detail: { key } }),
-  );
+  window.dispatchEvent(new CustomEvent("ls-write", { detail: { key } }));
 }
 
 function fireWriteError(
@@ -223,9 +221,9 @@ describe("useStorageHealth", () => {
     expect(state.mode).toBe("degraded");
     expect(state.errorFlash).toContain("Retry failed");
     // Error + original + retry fail = at least 2 log entries
-    expect(
-      state.recoveryLog.some((e) => e.outcome === "retry-failed"),
-    ).toBe(true);
+    expect(state.recoveryLog.some((e) => e.outcome === "retry-failed")).toBe(
+      true,
+    );
 
     setItemSpy.mockRestore();
   });
