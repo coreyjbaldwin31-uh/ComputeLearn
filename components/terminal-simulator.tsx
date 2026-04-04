@@ -37,6 +37,25 @@ const CANONICAL_COMMANDS: Record<string, string> = {
   "new-item": "New-Item",
   date: "Get-Date",
   "get-date": "Get-Date",
+  ps: "Get-Process",
+  "get-process": "Get-Process",
+  "get-volume": "Get-Volume",
+  "copy-item": "Copy-Item",
+  cp: "Copy-Item",
+  "move-item": "Move-Item",
+  mv: "Move-Item",
+  "remove-item": "Remove-Item",
+  rm: "Remove-Item",
+  del: "Remove-Item",
+  "rename-item": "Rename-Item",
+  ren: "Rename-Item",
+  sls: "Select-String",
+  "select-string": "Select-String",
+  "sort-object": "Sort-Object",
+  "where-object": "Where-Object",
+  where: "Where-Object",
+  "select-object": "Select-Object",
+  select: "Select-Object",
 };
 
 const defaultFilesystem: Record<string, string[]> = {
@@ -112,6 +131,7 @@ export function TerminalSimulator({
   const inputRef = useRef<HTMLInputElement>(null);
   const activeCommandRef = useRef<string | null>(null);
   const draftInputRef = useRef("");
+  const variablesRef = useRef<Record<string, string>>({});
 
   const scrollToBottom = useCallback(() => {
     if (scrollRef.current) {
@@ -213,6 +233,32 @@ export function TerminalSimulator({
                 "history\n  Show all commands typed this session.\n  Tip: Use Arrow Up/Down to cycle through previous commands.",
               tree: "tree\n  Show a visual tree of the current directory and one level of subdirectories.",
               git: "git <subcommand>\n  Simulated Git commands: status, log, branch, init.\n  Example: git status",
+              ps: "ps / Get-Process\n  Show running processes with resource usage.\n  Example: ps",
+              "get-process":
+                "Get-Process\n  PowerShell cmdlet to list running processes.\n  Alias: ps\n  Example: Get-Process",
+              "get-volume":
+                "Get-Volume\n  Show disk volume info: drive letter, filesystem type, health, size.\n  Example: Get-Volume",
+              "copy-item":
+                "Copy-Item <source> <destination> [-WhatIf]\n  Copy a file or folder to a new location.\n  Use -WhatIf to preview without copying.\n  Example: Copy-Item file.txt backup.txt",
+              cp: "cp / Copy-Item <source> <destination>\n  Copy a file or folder. Alias for Copy-Item.\n  Example: cp file.txt backup.txt",
+              "move-item":
+                "Move-Item <source> <destination> [-WhatIf]\n  Move or rename a file or folder.\n  Use -WhatIf to preview without moving.\n  Example: Move-Item old.txt new-folder\\",
+              "remove-item":
+                "Remove-Item <path> [-WhatIf]\n  Delete a file or folder.\n  Use -WhatIf to preview without deleting.\n  Example: Remove-Item temp.txt",
+              rm: "rm / Remove-Item <path>\n  Delete a file or folder. Alias for Remove-Item.\n  Example: rm temp.txt",
+              del: "del / Remove-Item <path>\n  Delete a file or folder. Alias for Remove-Item.\n  Example: del temp.txt",
+              "rename-item":
+                "Rename-Item <path> <newName> [-WhatIf]\n  Rename a file or folder.\n  Use -WhatIf to preview without renaming.\n  Example: Rename-Item old.txt new.txt",
+              ren: "ren / Rename-Item <path> <newName>\n  Rename a file or folder. Alias for Rename-Item.\n  Example: ren old.txt new.txt",
+              sls: "sls / Select-String <pattern> [path]\n  Search for text patterns in files.\n  Example: sls \"error\" log.txt",
+              "select-string":
+                "Select-String <pattern> [path]\n  PowerShell cmdlet to search text in files.\n  Alias: sls\n  Example: Select-String \"TODO\" .\\src\\*.js",
+              "sort-object":
+                "Sort-Object [-Property <name>] [-Descending]\n  Sort pipeline input by a property.\n  Example: Get-Process | Sort-Object CPU",
+              "where-object":
+                "Where-Object { <condition> }\n  Filter pipeline input by a condition.\n  Alias: where\n  Example: Get-Process | Where-Object { $_.CPU -gt 10 }",
+              "select-object":
+                "Select-Object [-Property <names>] [-First <n>]\n  Choose specific properties or limit results.\n  Alias: select\n  Example: Get-Process | Select-Object Name, CPU",
             };
             const detail = helpTopics[topic];
             if (detail) {
@@ -238,11 +284,23 @@ export function TerminalSimulator({
               "  cat / Get-Content     Show file contents",
               "  echo / Write-Output   Print text to terminal",
               "  mkdir / New-Item      Create a directory",
+              "  copy-item / cp        Copy a file or folder",
+              "  move-item / mv        Move a file or folder",
+              "  remove-item / rm      Delete a file or folder",
+              "  rename-item / ren     Rename a file or folder",
+              "",
+              "┌─ Search & Pipeline ────────────────────────────┐",
+              "  select-string / sls   Search text in files",
+              "  sort-object           Sort pipeline input",
+              "  where-object / where  Filter pipeline input",
+              "  select-object / select  Select properties",
               "",
               "┌─ System ───────────────────────────────────────┐",
               "  whoami                Show current user",
               "  hostname              Show machine name",
               "  date / Get-Date       Show current date",
+              "  get-process / ps      Show running processes",
+              "  get-volume            Show disk volumes",
               "  history               Show command history",
               "  clear / cls           Clear terminal  (Ctrl+L)",
               "  $env:PATH             Show PATH variable",
@@ -396,7 +454,180 @@ export function TerminalSimulator({
           return;
         }
 
+        case "get-process":
+        case "ps": {
+          const procTable = [
+            "",
+            "Handles  NPM(K)    PM(K)      WS(K)   CPU(s)     Id  ProcessName",
+            "-------  ------    -----      -----   ------     --  -----------",
+            "    542      23    58204      72108   312.45   4892  chrome",
+            "    387      19    42156      51240   108.33   6720  Code",
+            "    198      12    31048      38456    72.17  10384  node",
+            "    312      15    18920      26340    45.89   3156  WindowsTerminal",
+            "    624       8     8412      14280    22.56   1044  explorer",
+            "    156       6     4820       8640    11.23   8512  powershell",
+            "   1842      10     3208       6120     8.41    784  svchost",
+            "    248       4     1024       4096     0.00      4  System",
+            "",
+          ];
+          addEntry("output", procTable.join("\n"));
+          return;
+        }
+
+        case "get-volume": {
+          const volTable = [
+            "",
+            "DriveLetter  FileSystemType  HealthStatus  SizeRemaining      Size",
+            "-----------  --------------  ------------  -------------      ----",
+            "C            NTFS            Healthy         50.12 GB    256.00 GB",
+            "D            NTFS            Healthy        120.45 GB    500.00 GB",
+            "",
+          ];
+          addEntry("output", volTable.join("\n"));
+          return;
+        }
+
+        case "copy-item":
+        case "cp": {
+          const whatIf = args.some((a) => a.toLowerCase() === "-whatif");
+          const cleanArgs = args.filter((a) => a.toLowerCase() !== "-whatif");
+          if (cleanArgs.length < 2) {
+            addEntry("error", "Copy-Item: You must specify a source and destination.");
+            return;
+          }
+          if (whatIf) {
+            addEntry("output", `What if: Performing the operation "Copy File" on target "Item: ${cleanArgs[0]} Destination: ${cleanArgs[1]}".`);
+          } else {
+            addEntry("output", `[Simulated] Copied ${cleanArgs[0]} to ${cleanArgs[1]}`);
+          }
+          return;
+        }
+
+        case "move-item":
+        case "mv": {
+          const whatIf = args.some((a) => a.toLowerCase() === "-whatif");
+          const cleanArgs = args.filter((a) => a.toLowerCase() !== "-whatif");
+          if (cleanArgs.length < 2) {
+            addEntry("error", "Move-Item: You must specify a source and destination.");
+            return;
+          }
+          if (whatIf) {
+            addEntry("output", `What if: Performing the operation "Move File" on target "Item: ${cleanArgs[0]} Destination: ${cleanArgs[1]}".`);
+          } else {
+            addEntry("output", `[Simulated] Moved ${cleanArgs[0]} to ${cleanArgs[1]}`);
+          }
+          return;
+        }
+
+        case "remove-item":
+        case "rm":
+        case "del": {
+          const whatIf = args.some((a) => a.toLowerCase() === "-whatif");
+          const cleanArgs = args.filter((a) => a.toLowerCase() !== "-whatif");
+          if (cleanArgs.length < 1) {
+            addEntry("error", "Remove-Item: You must specify a path.");
+            return;
+          }
+          if (whatIf) {
+            addEntry("output", `What if: Performing the operation "Remove File" on target "${cleanArgs[0]}".`);
+          } else {
+            addEntry("output", `[Simulated] Removed ${cleanArgs[0]}`);
+          }
+          return;
+        }
+
+        case "rename-item":
+        case "ren": {
+          const whatIf = args.some((a) => a.toLowerCase() === "-whatif");
+          const cleanArgs = args.filter((a) => a.toLowerCase() !== "-whatif");
+          if (cleanArgs.length < 2) {
+            addEntry("error", "Rename-Item: You must specify a path and a new name.");
+            return;
+          }
+          if (whatIf) {
+            addEntry("output", `What if: Performing the operation "Rename File" on target "Item: ${cleanArgs[0]} NewName: ${cleanArgs[1]}".`);
+          } else {
+            addEntry("output", `[Simulated] Renamed ${cleanArgs[0]} to ${cleanArgs[1]}`);
+          }
+          return;
+        }
+
+        case "select-string":
+        case "sls": {
+          if (args.length < 1) {
+            addEntry("error", "Select-String: You must specify a pattern.");
+            return;
+          }
+          const pattern = args[0].replace(/^["']|["']$/g, "");
+          const file = args[1] || "example.txt";
+          addEntry(
+            "output",
+            [
+              "",
+              `${file}:3:  Found match for "${pattern}" in this line`,
+              `${file}:17: Another occurrence of "${pattern}" appears here`,
+              `${file}:42: Final match for "${pattern}" in the file`,
+              "",
+              "[Simulated] 3 matches found.",
+            ].join("\n"),
+          );
+          return;
+        }
+
+        case "sort-object": {
+          const prop = args.find((a) => !a.startsWith("-")) || "default";
+          const desc = args.some((a) => a.toLowerCase() === "-descending");
+          addEntry(
+            "output",
+            `[Simulated] Sort-Object: Sorting input by ${prop}${desc ? " (descending)" : ""}\n\nIn a pipeline, this would reorder objects by the specified property.\nExample: Get-Process | Sort-Object CPU -Descending`,
+          );
+          return;
+        }
+
+        case "where-object":
+        case "where": {
+          addEntry(
+            "output",
+            `[Simulated] Where-Object: Filtering input by condition\n\nIn a pipeline, this would keep only objects matching the condition.\nExample: Get-Process | Where-Object { $_.CPU -gt 10 }`,
+          );
+          return;
+        }
+
+        case "select-object":
+        case "select": {
+          const props = args.filter((a) => !a.startsWith("-")).join(", ") || "all properties";
+          const first = args.find((_, i) => args[i - 1]?.toLowerCase() === "-first");
+          let msg = `[Simulated] Select-Object: Selecting ${props}`;
+          if (first) msg += ` (first ${first})`;
+          msg += `\n\nIn a pipeline, this would pick specific properties from objects.\nExample: Get-Process | Select-Object Name, CPU -First 5`;
+          addEntry("output", msg);
+          return;
+        }
+
         default: {
+          // Variable assignment: $name = "value"
+          const assignMatch = trimmed.match(/^\$(\w+)\s*=\s*(.+)$/);
+          if (assignMatch) {
+            const varName = assignMatch[1];
+            const varValue = assignMatch[2].replace(/^["']|["']$/g, "");
+            variablesRef.current[varName] = varValue;
+            addEntry("output", varValue);
+            return;
+          }
+
+          // Variable read: $name
+          const readMatch = trimmed.match(/^\$(\w+)$/);
+          if (readMatch && !lower.startsWith("$env:")) {
+            const varName = readMatch[1];
+            const value = variablesRef.current[varName];
+            if (value !== undefined) {
+              addEntry("output", value);
+            } else {
+              addEntry("output", "");
+            }
+            return;
+          }
+
           if (lower.startsWith("$env:")) {
             addEntry(
               "output",

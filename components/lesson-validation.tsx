@@ -1,6 +1,7 @@
 "use client";
 
 import type { Exercise, Lesson } from "@/data/curriculum";
+import { RichText } from "./rich-text";
 import {
   buildExerciseInspection,
   evaluateExerciseAnswer,
@@ -74,7 +75,7 @@ export function LessonValidation({
                 </span>
               ) : null}
             </div>
-            <p>{exercise.prompt}</p>
+            <div className="exercise-prompt"><RichText content={exercise.prompt} /></div>
             <input
               aria-label={exercise.title}
               value={exerciseAnswer}

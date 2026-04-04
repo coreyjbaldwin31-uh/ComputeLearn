@@ -18,6 +18,7 @@ import { LessonTerminal } from "./lesson-terminal";
 import { LabPanel } from "./lab-panel";
 import { GuidedNotes } from "./guided-notes";
 import { LessonReviewPanel } from "./lesson-review-panel";
+import { RichText } from "./rich-text";
 import { buildReflectionPrompts } from "@/lib/reflection-engine";
 import { getWeakCompetencyTracks } from "@/lib/competency-engine";
 import { getWeakTrackHits } from "@/lib/reinforcement-engine";
@@ -458,7 +459,7 @@ export function LessonFlow({ lesson }: { lesson: Lesson }) {
               {lesson.demonstration.map((demo, i) => (
                 <div key={i} className="lf-demo-card">
                   <span className="lf-demo-number">{i + 1}</span>
-                  <p>{demo}</p>
+                  <div className="lf-demo-text"><RichText content={demo} /></div>
                 </div>
               ))}
             </div>
@@ -514,7 +515,7 @@ export function LessonFlow({ lesson }: { lesson: Lesson }) {
             <h3 className="lf-subsection-title">What You Will Do</h3>
             <ol className="lf-step-list">
               {lesson.exerciseSteps.map((step, i) => (
-                <li key={i}>{step}</li>
+                <li key={i}><RichText content={step} /></li>
               ))}
             </ol>
           </div>
@@ -576,7 +577,7 @@ export function LessonFlow({ lesson }: { lesson: Lesson }) {
             <h3 className="lf-subsection-title">Quick Review</h3>
             <ul className="lf-retention-list">
               {lesson.retention.map((cue, i) => (
-                <li key={i}>{cue}</li>
+                <li key={i}><RichText content={cue} /></li>
               ))}
             </ul>
           </div>

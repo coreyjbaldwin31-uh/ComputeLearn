@@ -1,6 +1,7 @@
 "use client";
 
 import type { Lesson } from "@/data/curriculum";
+import { RichText } from "./rich-text";
 import {
   buildExerciseInspection,
   getHintButtonLabel,
@@ -78,7 +79,7 @@ export function LessonTransfer({
           <h4>{transferTask.title}</h4>
           <span className="assessment-badge assessment-transfer">transfer</span>
         </div>
-        <p>{transferTask.prompt}</p>
+        <div className="exercise-prompt"><RichText content={transferTask.prompt} /></div>
         <textarea
           aria-label={transferTask.title}
           value={transferAnswers[lesson.id] ?? ""}

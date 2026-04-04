@@ -109,7 +109,12 @@ export function CompetencyTracker() {
           <div className="ct-progress-bar">
             <div
               className="ct-progress-fill"
-              ref={useCallback((el: HTMLDivElement | null) => { if (el) el.style.width = `${percent}%`; }, [percent])}
+              ref={useCallback(
+                (el: HTMLDivElement | null) => {
+                  if (el) el.style.width = `${percent}%`;
+                },
+                [percent],
+              )}
             />
           </div>
           <span className="ct-progress-pct">{percent}%</span>
@@ -155,7 +160,9 @@ export function CompetencyTracker() {
                 <div className="ct-comp-bar">
                   <div
                     className="ct-comp-bar-fill"
-                    ref={(el) => { if (el) el.style.width = `${Math.min(score * 10, 100)}%`; }}
+                    ref={(el) => {
+                      if (el) el.style.width = `${Math.min(score * 10, 100)}%`;
+                    }}
                   />
                 </div>
                 <span className="ct-comp-score">{score}</span>

@@ -48,7 +48,25 @@ export default async function LessonPage({ params }: LessonPageProps) {
         <div className="academy-lesson-meta">
           <span className="academy-lesson-meta-item">{lesson.duration}</span>
           <span className="academy-lesson-meta-item">{lesson.difficulty}</span>
+          {lesson.scaffoldingLevel && (
+            <span className="academy-lesson-meta-item academy-lesson-meta-scaffolding">
+              {lesson.scaffoldingLevel === "step-by-step"
+                ? "Guided"
+                : lesson.scaffoldingLevel === "goal-driven"
+                  ? "Goal-driven"
+                  : "Independent"}
+            </span>
+          )}
         </div>
+        {lesson.competencies && lesson.competencies.length > 0 && (
+          <div className="academy-competency-badges">
+            {lesson.competencies.map((c) => (
+              <span key={c.track} className="academy-competency-badge">
+                {c.track.replace(/([A-Z])/g, " $1").trim()} → {c.targetLevel}
+              </span>
+            ))}
+          </div>
+        )}
       </header>
 
       {/* Lesson objective */}

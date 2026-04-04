@@ -410,10 +410,26 @@ export function RailPanels({
             role="group"
             aria-label="Lesson status filter"
           >
-            <FilterChip label="All" active={lessonFilter === "all"} onPress={() => setLessonFilter("all")} />
-            <FilterChip label="Pending" active={lessonFilter === "pending"} onPress={() => setLessonFilter("pending")} />
-            <FilterChip label="Complete" active={lessonFilter === "complete"} onPress={() => setLessonFilter("complete")} />
-            <FilterChip label="Due" active={lessonFilter === "due"} onPress={() => setLessonFilter("due")} />
+            <FilterChip
+              label="All"
+              active={lessonFilter === "all"}
+              onPress={() => setLessonFilter("all")}
+            />
+            <FilterChip
+              label="Pending"
+              active={lessonFilter === "pending"}
+              onPress={() => setLessonFilter("pending")}
+            />
+            <FilterChip
+              label="Complete"
+              active={lessonFilter === "complete"}
+              onPress={() => setLessonFilter("complete")}
+            />
+            <FilterChip
+              label="Due"
+              active={lessonFilter === "due"}
+              onPress={() => setLessonFilter("due")}
+            />
           </div>
           <p className="microcopy">
             Showing {filteredLessons.length} of {visibleLessons.length} lesson

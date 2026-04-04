@@ -121,7 +121,12 @@ export function LearnerDashboard() {
       {/* Progress bar */}
       <div className="ld-progress-wrap">
         <div className="ld-progress-bar">
-          <div className="ld-progress-fill" ref={(el) => { if (el) el.style.width = `${percent}%`; }} />
+          <div
+            className="ld-progress-fill"
+            ref={(el) => {
+              if (el) el.style.width = `${percent}%`;
+            }}
+          />
         </div>
       </div>
 
@@ -202,7 +207,9 @@ export function LearnerDashboard() {
                 <div className="ld-phase-bar">
                   <div
                     className="ld-phase-fill"
-                    ref={(el) => { if (el) el.style.width = `${phasePct}%`; }}
+                    ref={(el) => {
+                      if (el) el.style.width = `${phasePct}%`;
+                    }}
                   />
                 </div>
                 <span className="ld-phase-frac">

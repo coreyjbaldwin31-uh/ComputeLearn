@@ -1,6 +1,7 @@
 "use client";
 
 import type { Lesson } from "@/data/curriculum";
+import { RichText } from "./rich-text";
 
 type GuidedNotesProps = {
   lesson: Lesson;
@@ -33,7 +34,7 @@ export function GuidedNotes({
           >
             <div className="gn-card-header">
               <span className="gn-concept-number">{i + 1}</span>
-              <p className="gn-concept-text">{concept}</p>
+              <div className="gn-concept-text"><RichText content={concept} /></div>
             </div>
 
             <div className="gn-card-body">
