@@ -22,6 +22,39 @@ import { useFocusTrap } from "./hooks/use-focus-trap";
 import type { LearnerProfile } from "./hooks/use-learner-profile";
 import { StorageSurfaceChip } from "./storage-surface-chip";
 
+function FilterChip({
+  label,
+  active,
+  onPress,
+}: {
+  label: string;
+  active: boolean;
+  onPress: () => void;
+}) {
+  if (active) {
+    return (
+      <button
+        type="button"
+        className="toggle-chip active"
+        onClick={onPress}
+        aria-pressed="true"
+      >
+        {label}
+      </button>
+    );
+  }
+  return (
+    <button
+      type="button"
+      className="toggle-chip"
+      onClick={onPress}
+      aria-pressed="false"
+    >
+      {label}
+    </button>
+  );
+}
+
 type StorageStatus = {
   mode: "stable" | "degraded" | "recovered";
   lastSuccessfulSaveLabel: string | null;
@@ -377,38 +410,10 @@ export function RailPanels({
             role="group"
             aria-label="Lesson status filter"
           >
-            <button
-              type="button"
-              className={`toggle-chip ${lessonFilter === "all" ? "active" : ""}`}
-              onClick={() => setLessonFilter("all")}
-              aria-pressed={lessonFilter === "all"}
-            >
-              All
-            </button>
-            <button
-              type="button"
-              className={`toggle-chip ${lessonFilter === "pending" ? "active" : ""}`}
-              onClick={() => setLessonFilter("pending")}
-              aria-pressed={lessonFilter === "pending"}
-            >
-              Pending
-            </button>
-            <button
-              type="button"
-              className={`toggle-chip ${lessonFilter === "complete" ? "active" : ""}`}
-              onClick={() => setLessonFilter("complete")}
-              aria-pressed={lessonFilter === "complete"}
-            >
-              Complete
-            </button>
-            <button
-              type="button"
-              className={`toggle-chip ${lessonFilter === "due" ? "active" : ""}`}
-              onClick={() => setLessonFilter("due")}
-              aria-pressed={lessonFilter === "due"}
-            >
-              Due
-            </button>
+            <FilterChip label="All" active={lessonFilter === "all"} onPress={() => setLessonFilter("all")} />
+            <FilterChip label="Pending" active={lessonFilter === "pending"} onPress={() => setLessonFilter("pending")} />
+            <FilterChip label="Complete" active={lessonFilter === "complete"} onPress={() => setLessonFilter("complete")} />
+            <FilterChip label="Due" active={lessonFilter === "due"} onPress={() => setLessonFilter("due")} />
           </div>
           <p className="microcopy">
             Showing {filteredLessons.length} of {visibleLessons.length} lesson

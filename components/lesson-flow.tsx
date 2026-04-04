@@ -409,8 +409,12 @@ export function LessonFlow({ lesson }: { lesson: Lesson }) {
         ))}
         <div
           className="lf-stepper-track"
-          style={{
-            ["--progress" as string]: `${(currentStepIndex / (FLOW_STEPS.length - 1)) * 100}%`,
+          ref={(el) => {
+            if (el)
+              el.style.setProperty(
+                "--progress",
+                `${(currentStepIndex / (FLOW_STEPS.length - 1)) * 100}%`,
+              );
           }}
         />
       </nav>

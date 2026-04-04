@@ -2309,7 +2309,7 @@ button[disabled] {
 }
 
 .review-queue-item:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--gold) 45%, #fff);
+  outline: 3px solid rgba(198, 139, 44, 0.45);
   outline-offset: 2px;
   border-color: var(--gold);
   background: rgba(198, 139, 44, 0.1);
@@ -2970,7 +2970,7 @@ button[disabled] {
 }
 
 .roadmap-node:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--accent) 45%, #fff);
+  outline: 3px solid rgba(13, 107, 87, 0.45);
   outline-offset: 2px;
   border-color: var(--accent-strong);
 }
@@ -5469,7 +5469,7 @@ button[disabled] {
 }
 
 .dashboard-phase-card:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--accent) 42%, #fff);
+  outline: 3px solid rgba(13, 107, 87, 0.42);
   outline-offset: 3px;
   border-color: var(--accent-strong);
 }
@@ -5823,7 +5823,7 @@ button[disabled] {
 
 .action-bar-btn:focus-visible,
 .action-bar-complete:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--accent) 40%, #fff);
+  outline: 3px solid rgba(13, 107, 87, 0.4);
   outline-offset: 2px;
   border-color: var(--accent-strong);
   box-shadow: 0 0 0 4px var(--accent-soft);
@@ -6239,7 +6239,7 @@ button[disabled] {
 }
 
 .roadmap-expand:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--accent) 40%, #fff);
+  outline: 3px solid rgba(13, 107, 87, 0.4);
   outline-offset: 2px;
   border-color: var(--accent-strong);
 }
@@ -6479,9 +6479,9 @@ button[disabled] {
   gap: 10px;
   margin-bottom: 12px;
   padding: 10px 12px;
-  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+  border: 1px solid var(--border);
   border-radius: 12px;
-  background: color-mix(in srgb, var(--accent-soft) 72%, var(--surface));
+  background: var(--accent-soft);
   color: var(--accent-strong);
   animation: fadeSlideIn 200ms ease both;
 }
@@ -6642,8 +6642,13 @@ button[disabled] {
   border-right: 1px solid var(--ac-sidebar-border);
   z-index: 50;
   overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
+}
+
+@supports (scrollbar-width: thin) {
+  .academy-sidebar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
+  }
 }
 
 .academy-sidebar-brand {
@@ -8447,6 +8452,7 @@ button[disabled] {
   font-size: 0.8125rem;
   color: var(--ac-text-muted, #94a3b8);
   cursor: pointer;
+  -webkit-user-select: none;
   user-select: none;
 }
 

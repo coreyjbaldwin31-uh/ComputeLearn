@@ -70,8 +70,9 @@ export function GuidedNotes({
         <div className="gn-progress-bar">
           <div
             className="gn-progress-fill"
-            style={{
-              width: `${(Object.values(understood).filter(Boolean).length / Math.max(lesson.explanation.length, 1)) * 100}%`,
+            ref={(el) => {
+              if (el)
+                el.style.width = `${(Object.values(understood).filter(Boolean).length / Math.max(lesson.explanation.length, 1)) * 100}%`;
             }}
           />
         </div>

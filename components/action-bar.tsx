@@ -139,57 +139,59 @@ export function ActionBar({
           Notes
         </button>
 
-        <button
-          type="button"
-          className={`action-bar-complete ${isComplete ? "action-bar-complete--done" : ""}`}
-          onClick={onToggleCompletion}
-          aria-pressed={isComplete}
-          aria-label={
-            isComplete ? "Mark lesson as incomplete" : "Mark lesson as complete"
-          }
-        >
-          {isComplete ? (
-            <>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 14 14"
+        {isComplete ? (
+          <button
+            type="button"
+            className="action-bar-complete action-bar-complete--done"
+            onClick={onToggleCompletion}
+            aria-pressed="true"
+            aria-label="Mark lesson as incomplete"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              aria-hidden="true"
+            >
+              <circle cx="7" cy="7" r="6" fill="var(--accent)" />
+              <path
+                d="M4.5 7.5l2 2 3.5-3.5"
+                stroke="#fff"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            Completed
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="action-bar-complete"
+            onClick={onToggleCompletion}
+            aria-pressed="false"
+            aria-label="Mark lesson as complete"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              aria-hidden="true"
+            >
+              <circle
+                cx="7"
+                cy="7"
+                r="6"
+                stroke="currentColor"
+                strokeWidth="1.5"
                 fill="none"
-                aria-hidden="true"
-              >
-                <circle cx="7" cy="7" r="6" fill="var(--accent)" />
-                <path
-                  d="M4.5 7.5l2 2 3.5-3.5"
-                  stroke="#fff"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              Completed
-            </>
-          ) : (
-            <>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 14 14"
-                fill="none"
-                aria-hidden="true"
-              >
-                <circle
-                  cx="7"
-                  cy="7"
-                  r="6"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  fill="none"
-                />
-              </svg>
-              Mark complete
-            </>
-          )}
-        </button>
+              />
+            </svg>
+            Mark complete
+          </button>
+        )}
       </div>
     </div>
   );

@@ -12,7 +12,7 @@ import {
   getPhaseProgressSnapshot,
   formatTrackName,
 } from "@/lib/progression-engine";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 
 type ProgressState = Record<string, true>;
 type TransferState = Record<string, true>;
@@ -109,7 +109,7 @@ export function CompetencyTracker() {
           <div className="ct-progress-bar">
             <div
               className="ct-progress-fill"
-              style={{ width: `${percent}%` }}
+              ref={useCallback((el: HTMLDivElement | null) => { if (el) el.style.width = `${percent}%`; }, [percent])}
             />
           </div>
           <span className="ct-progress-pct">{percent}%</span>
@@ -155,7 +155,7 @@ export function CompetencyTracker() {
                 <div className="ct-comp-bar">
                   <div
                     className="ct-comp-bar-fill"
-                    style={{ width: `${Math.min(score * 10, 100)}%` }}
+                    ref={(el) => { if (el) el.style.width = `${Math.min(score * 10, 100)}%`; }}
                   />
                 </div>
                 <span className="ct-comp-score">{score}</span>
@@ -187,16 +187,17 @@ export function CompetencyTracker() {
               <div className="ct-phase-bar">
                 <div
                   className="ct-phase-fill"
-                  style={{
-                    width: `${
-                      snapshot.totalLessons > 0
-                        ? Math.round(
-                            (snapshot.completedLessons /
-                              snapshot.totalLessons) *
-                              100,
-                          )
-                        : 0
-                    }%`,
+                  ref={(el) => {
+                    if (el)
+                      el.style.width = `${
+                        snapshot.totalLessons > 0
+                          ? Math.round(
+                              (snapshot.completedLessons /
+                                snapshot.totalLessons) *
+                                100,
+                            )
+                          : 0
+                      }%`;
                   }}
                 />
               </div>
