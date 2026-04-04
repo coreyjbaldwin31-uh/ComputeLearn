@@ -26,7 +26,7 @@ Version 1.0 | Prepared for product planning and implementation alignment
 | **Product** | Mastery-based learning platform for turning everyday computer users into technically fluent builders. |
 | **Core promise** | Learners progress by operating real tools inside safe, reversible labs instead of consuming passive lessons. |
 | **Primary outcome** | Practical entry-level software engineering competence across system use, coding, debugging, Git, testing, and delivery workflow. |
-| **Current baseline** | Next.js App Router, React 19, TypeScript, component-based UI, local persistence, curriculum shell, and lightweight validation. |
+| **Current baseline** | Next.js 16 App Router, React 19, TypeScript 5, multi-page academy shell with 14 routes, 4-step lesson flow, 15 domain engines, 38 lab templates, 55 test files (471 tests), Docker build, Sentry + OTel instrumentation, localStorage persistence. |
 
 > **Executive framing:** The current concept is strong, but it becomes significantly more investable and buildable once the end state, competency gates, lab engine, and capstone path are made explicit. This document reframes ComputeLearn as a training system for engineering behavior, not only a content platform.
 
@@ -190,10 +190,18 @@ The MVP should prove that ComputeLearn materially improves learner capability th
 | **Must** | Core platform shell | Curriculum navigation, learner profile, local progress persistence, notes, and milestone gating | ✅ Done |
 | **Must** | Lab engine | Workspace template model, reset/replay, validation rules, and completion evidence | ✅ Done |
 | **Must** | Phase 1 excellence | Filesystem, terminal, search/filtering, automation basics, and workflow efficiency | ✅ Done — curriculum, lab templates, lab UI, terminal integration, code-behavior and test-pass UI all wired |
+| **Must** | Academy platform architecture | Multi-page App Router shell with sidebar navigation, breadcrumbs, per-page routes, and dark-sidebar design system | ✅ Done |
+| **Must** | Guided lesson flow | 4-step stepper (Learn → Practice → Apply → Reflect & Download) with concept gating and guided notes | ✅ Done |
 | **Should** | Guided debugging | Error-focused labs, inspect mode, diff view, and layered hints | ✅ Done |
 | **Should** | Retention system | Reflection prompts and spaced repetition tied to weak competencies | ✅ Done |
+| **Should** | Cumulative review | Prerequisite review panel with weak-competency overlap detection and previous-lesson linking | ✅ Done |
+| **Should** | Download & study | Markdown notes export and lab artifact export for offline study | ✅ Done |
+| **Should** | Accessibility hardening | aria-pressed, aria-current, aria-label, role=group, prefers-reduced-motion support | ✅ Done |
+| **Should** | Open learning model | Phases previewable without hard locks; "upcoming" label replaces "locked" state | ✅ Done |
 | **Later** | AI review loop | Bounded support for explanation, critique, and next-step guidance | ⬚ Not started |
 | **Later** | Advanced templates | More realistic bug sets, project scaffolds, and saved transcripts | ⬚ Not started |
+| **Later** | Durable persistence | Server-backed or IndexedDB persistence with cross-device sync | ⬚ Not started |
+| **Later** | Content quality pass | Deep lesson enrichment, pedagogical review, demonstration quality | ⬚ Not started |
 
 ### Recommended First-Release Modules
 
@@ -208,31 +216,63 @@ The MVP should prove that ComputeLearn materially improves learner capability th
 
 ### What the MVP Should Prove
 
-> A new learner can enter the platform with limited terminal confidence, complete a structured Phase 1 path, pass validation-driven labs, succeed on at least one reduced-guidance transfer task, and leave with demonstrably stronger operational fluency.
+> A new learner can enter the platform with limited terminal confidence, navigate the multi-page academy, complete a structured Phase 1 path through the Learn → Practice → Apply → Reflect flow, pass validation-driven labs, export their study notes, succeed on at least one reduced-guidance transfer task, and leave with demonstrably stronger operational fluency.
 
 ---
 
 ## 8. Technical Architecture Direction
 
-The stated stack is appropriate for the current product direction: Next.js App Router, React 19, TypeScript, component-based UI, and local persistence. The next architectural step is to formalize the domain model around curriculum, competencies, labs, attempts, and artifacts.
+### Stack Summary
 
-### Recommended Application Layers
+| Layer | Technology |
+| --- | --- |
+| **Framework** | Next.js 16.2.1 (App Router, Turbopack) |
+| **UI** | React 19, TypeScript 5 |
+| **Testing** | Vitest 3.2.4, Testing Library, jsdom |
+| **Observability** | Sentry SDK 10, OpenTelemetry via @vercel/otel |
+| **Container** | Docker multi-stage build, Compose for local dev |
+| **Persistence** | Browser localStorage (9 keys) |
+
+### Application Layers
 
 | Layer | Responsibility |
 | --- | --- |
-| **Application layer** | Routing, orchestration, learner state, navigation flow, and gating decisions |
-| **Curriculum layer** | Phases, courses, lessons, competencies, milestones, and assessment rules |
-| **Lab engine layer** | Workspace templates, resets, replays, validation, hints, artifacts, and attempt tracking |
-| **Persistence layer** | Local storage or indexed persistence for progress, notes, attempts, competencies, and artifacts |
-| **Review layer** | Feedback presentation, reflections, and optional AI-assisted critique |
+| **Application layer** | App Router routing, `(academy)` layout shell, learner state, navigation flow, and gating decisions |
+| **Curriculum layer** | `data/curriculum.ts` — Phases, courses, lessons, competencies, milestones, and assessment rules |
+| **Catalog layer** | `lib/learning-catalog.ts` — Course/lesson record lookups, assignment extraction |
+| **Lab engine layer** | `lib/lab-engine.ts` — Workspace templates, resets, replays, validation, hints, artifacts, attempt tracking |
+| **Engine library** | `lib/` — 15 engines covering progression, competency, reflection, reinforcement, artifacts, analytics, inspection, hints, milestones, outcomes, independent readiness |
+| **Persistence layer** | `useLocalStorageState` hook — progress, notes, reflections, transfer, attempts, artifacts, lab instances, reviews, guided notes |
+| **Lesson flow layer** | `components/lesson-flow.tsx` — 4-step guided stepper orchestrating all lesson subsystems |
+| **Review layer** | Feedback presentation, reflections, and prerequisite review panel |
+
+### Academy Platform Architecture
+
+The platform uses a multi-page architecture via the `(academy)` route group:
+
+| Route | Component | Purpose |
+| --- | --- | --- |
+| `/dashboard` | `LearnerDashboard` | Live stats, continue learning, due reviews, phase progress |
+| `/courses` | Catalog page | Phase-grouped course listing |
+| `/courses/[courseId]` | `AcademyBreadcrumbs` | Course detail with lesson sequence |
+| `/lessons` | Library page | Full lesson listing with phase tags |
+| `/lessons/[lessonId]` | `LessonFlow` | 4-step lesson experience (Learn → Practice → Apply → Reflect) |
+| `/assignments` | Assignments page | Transfer task listing with source-lesson links |
+| `/modules` | Module directory | Course-level module cards |
+| `/modules/[courseId]` | Module detail | Per-module lesson path |
+| `/progress` | `CompetencyTracker` | Competency levels, phase gates, assessment activity |
+
+**Academy shell** (`academy-shell.tsx`): Persistent dark sidebar (#0c111d) with brand, `AcademyNav` (active state detection via `usePathname`), and program phase listing. Main content area beside sidebar.
+
+**Lesson flow** (`lesson-flow.tsx`): Replaces old tabbed `LessonWorkspace`. Four sequential steps with stepper UI, concept gating (all concepts must be marked "understood" before Practice), guided notes persistence, download/export, and cumulative review.
 
 ### Minimum Data Model
 
-At minimum, the platform should represent **Learner**, **Phase**, **Course**, **Lesson**, **Lab**, **Attempt**, **CompetencyRecord**, and **Artifact** as first-class entities. That creates the backbone for gating, reflection, saved work, and later analytics.
+At minimum, the platform represents **Learner**, **Phase**, **Course**, **Lesson**, **Lab**, **Attempt**, **CompetencyRecord**, and **Artifact** as first-class entities. That creates the backbone for gating, reflection, saved work, and later analytics.
 
 ### Validation Engine Contract
 
-The validator should be able to check file presence, directory structure, file content, command output, code behavior, and test pass conditions. Each result should return:
+The validator checks file presence, directory structure, file content, command output, code behavior, and test pass conditions. Each result returns:
 
 - pass or fail
 - failed criteria
@@ -241,11 +281,21 @@ The validator should be able to check file presence, directory structure, file c
 
 **Implementation status:** All six validation rule kinds are implemented in `lib/lab-engine.ts` — `file-presence`, `directory-structure`, `content-match`, `command-output`, `code-behavior`, and `test-pass`. Each returns pass/fail, a human-readable message, and a probable skill gap string. Hint access is provided via `getLabHint()` with layered escalation.
 
+### Design System
+
+CSS design system in `globals.css` using `--ac-*` custom properties:
+
+- Dark sidebar: `#0c111d`, content bg: `#f6f8fa`
+- Accent: `#2563eb` (electric blue)
+- Border radius: `3px` (sharp, not rounded)
+- Component class namespaces: `lw-*`, `ld-*`, `ct-*`, `lf-*`, `gn-*`, `rp-*`
+- `prefers-reduced-motion` respected via `usePrefersReducedMotion` hook
+
 ---
 
 ## 9. Roadmap, Metrics, and Risks
 
-### Roadmap Recommendation
+### Roadmap
 
 > Status markers: ✅ done · 🔧 in progress · ⬚ not started
 
@@ -255,8 +305,23 @@ The validator should be able to check file presence, directory structure, file c
 4. ✅ Create the first 10 high-value Phase 1 labs — 10 authored templates in `data/lab-templates.ts` covering all 9 lessons with 26 structural tests
 5. ✅ Add milestone gating, reflections, and artifact saving — milestone-engine, reflection-engine, artifact-engine, export, and browser
 6. ✅ Introduce guided debugging labs and inspect mode — inspection-engine, layered hints, diff-style output
-7. ✅ Smoke-test full lab flow end to end — 4 end-to-end smoke tests added covering file-edit→validate round-trip, multi-attempt progression, full lifecycle (create→edit→fail→hint→reset→pass→completion), and file-edit isolation (23 files, 199 tests)
-8. ✅ Expand into Phase 2–4 once Phase 1 outcomes are visibly strong — Phase 2–4 curriculum authored; lab UI wired, terminal connected with alias normalisation; 38 lab templates across all 4 phases (10 Phase 1 + 15 Phase 2 + 9 Phase 3 + 4 Phase 4); code-behavior and test-pass submission UI wired; all 15 engines implemented and wired to training platform; 288 tests passing across 23 test files
+7. ✅ Smoke-test full lab flow end to end — 4 end-to-end smoke tests added covering file-edit→validate round-trip, multi-attempt progression, full lifecycle, and file-edit isolation
+8. ✅ Expand into Phase 2–4 once Phase 1 outcomes are visibly strong — Phase 2–4 curriculum authored; 38 lab templates across all 4 phases; all 15 engines wired
+9. ✅ Build academy platform architecture — multi-page App Router with `(academy)` route group, sidebar shell, breadcrumbs, academy nav with active state, 14 routes compiling
+10. ✅ Redesign lesson flow with pedagogical progression — 4-step stepper (Learn → Practice → Apply → Reflect & Download), guided notes with concept gating, cumulative review panel, download/export
+11. ✅ Remove phase locking in favor of open learning model — "locked" state replaced with "upcoming" preview; all phases browsable
+12. ✅ Accessibility hardening pass — aria-pressed, aria-current="step", aria-label on interactive controls, role="group" on filter rows, prefers-reduced-motion hook with scroll behavior
+13. ✅ Add lesson entry cue and navigation polish — LessonEntryCue component, smooth scroll with motion preference, contextual messages on lesson transitions
+14. ✅ Add new component and hook tests — action-bar, home-dashboard, progress-roadmap, rail-panels, sidebar-panels, lesson-entry-cue, use-prefers-reduced-motion test suites
+15. ✅ Test coverage for new academy components — lesson-flow, guided-notes, lesson-review-panel, learning-catalog
+16. ✅ Dead code cleanup — remove lesson-workspace.tsx (superseded by lesson-flow.tsx)
+17. ⬚ Content quality pass — enrich lesson explanations, demonstrations, retention cues, and exercise prompts for pedagogical depth
+18. ⬚ AI review loop — bounded support for explanation, critique, and next-step guidance (scoped to reflection step)
+19. ⬚ Durable persistence — server-backed or IndexedDB persistence with backup/restore and cross-device sync
+20. ⬚ CSS modularization — extract globals.css class-system namespaces into CSS modules or co-located files
+21. ⬚ Independent readiness UI — dedicated route and wizard for the independent-readiness-engine assessment
+22. ⬚ Advanced lab templates — realistic bug sets, seeded project scaffolds, saved transcripts
+23. ⬚ Real workspace runtime — move from in-memory lab-engine to sandboxed runtime with real file I/O
 
 ### Primary Product Metrics
 
@@ -267,6 +332,8 @@ The validator should be able to check file presence, directory structure, file c
 | **Repeated error reduction** | Shows whether the platform actually repairs foundational weaknesses |
 | **Milestone pass rate** | Tracks progression quality through gated curriculum |
 | **Artifact completion rate** | Indicates whether learners leave with saved evidence of work |
+| **Guided-notes completion rate** | Shows concept-level engagement before practice begins |
+| **Download rate** | Indicates learner investment in studying offline |
 
 ### Key Risks and Mitigation
 
@@ -277,12 +344,49 @@ The validator should be able to check file presence, directory structure, file c
 | Progress becomes completion-based | Require transfer evidence and competency gates |
 | AI makes learners dependent | Constrain AI to guidance, critique, and reflection support |
 | Scope expands too early | Make Phase 1 and the lab engine excellent before broad expansion |
+| localStorage limitations | Implement export/backup as interim; plan IndexedDB or server persistence |
+| CSS maintenance burden | Plan CSS module extraction as the class-system count grows |
+| Dead code accumulation | Schedule cleanup of superseded components |
+
+---
+
+## 10. Forward Task Plan
+
+### Immediate Priority
+
+| ID | Task | Status |
+| --- | --- | --- |
+| T1 | Add tests for `lesson-flow.tsx` — step navigation, concept gating, download triggers | ✅ |
+| T2 | Add tests for `guided-notes.tsx` — note input, checkbox, progress bar | ✅ |
+| T3 | Add tests for `lesson-review-panel.tsx` — incomplete display, weak-track badge, null return | ✅ |
+| T4 | Add tests for `learning-catalog.ts` — all 4 exports with edge cases | ✅ |
+| T5 | Remove dead code `lesson-workspace.tsx` — no imports remain | ✅ |
+| T6 | Evaluate `training-platform.tsx` scope — document which features still rely on SPA shell | ⬚ |
+
+### Short-Term
+
+| ID | Task | Status |
+| --- | --- | --- |
+| T7 | Content quality pass — Phase 1 lessons (explanation, demo, retention depth) | ⬚ |
+| T8 | Content quality pass — Phase 2–4 lessons | ⬚ |
+| T9 | CSS modularization — extract component class-system namespaces from globals.css | ⬚ |
+| T10 | Independent readiness UI route — `/readiness` page with assessment wizard | ⬚ |
+| T11 | Export/backup dialog for localStorage — JSON download/import for data portability | ⬚ |
+
+### Medium-Term
+
+| ID | Task | Status |
+| --- | --- | --- |
+| T12 | AI review loop — bounded LLM integration scoped to reflection step | ⬚ |
+| T13 | Durable persistence layer — IndexedDB or server-backed with migration from localStorage | ⬚ |
+| T14 | Advanced lab templates — realistic bug-set labs and project scaffolds | ⬚ |
+| T15 | Real workspace runtime — sandboxed runtime with real file I/O | ⬚ |
 
 ---
 
 ## Final Recommendation
 
-> Treat ComputeLearn as a training platform for engineering execution. Build the competency graph, the lab engine, and the first ten excellent labs before expanding into heavier AI, analytics, or broad curriculum surface area.
+> Treat ComputeLearn as a training platform for engineering execution. The structural foundation is strong — academy shell, lesson flow, 15 engines, 471 tests. The next value multiplier is content quality, followed by persistence durability and the AI review loop.
 
 ---
 

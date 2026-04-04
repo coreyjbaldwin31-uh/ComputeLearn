@@ -208,14 +208,61 @@ export function RailPanels({
             className="ghost-button"
             onClick={() => exportArtifacts(selectedLesson.id)}
           >
-            📄 Export lesson
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M2 2h7l3 3v7H2V2z"
+                stroke="currentColor"
+                strokeWidth="1.3"
+                fill="none"
+              />
+              <path
+                d="M9 2v3h3"
+                stroke="currentColor"
+                strokeWidth="1.3"
+                strokeLinecap="round"
+              />
+              <path
+                d="M5 7.5h4M5 9.5h4"
+                stroke="currentColor"
+                strokeWidth="1.3"
+                strokeLinecap="round"
+              />
+            </svg>
+            Export lesson
           </button>
           <button
             type="button"
             className="validate-button"
             onClick={() => exportArtifacts()}
           >
-            📦 Export all
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M2 5.5 7 2l5 3.5v5L7 14l-5-3.5v-5z"
+                stroke="currentColor"
+                strokeWidth="1.3"
+                fill="none"
+              />
+              <path
+                d="M7 2v12M2 5.5l5 3 5-3"
+                stroke="currentColor"
+                strokeWidth="1.3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            Export all
           </button>
         </div>
         <div className="phase-metrics">
@@ -325,11 +372,16 @@ export function RailPanels({
             placeholder="Search lessons by title or summary"
             aria-label="Search lessons"
           />
-          <div className="lesson-filter-row" aria-label="Lesson status filter">
+          <div
+            className="lesson-filter-row"
+            role="group"
+            aria-label="Lesson status filter"
+          >
             <button
               type="button"
               className={`toggle-chip ${lessonFilter === "all" ? "active" : ""}`}
               onClick={() => setLessonFilter("all")}
+              aria-pressed={lessonFilter === "all"}
             >
               All
             </button>
@@ -337,6 +389,7 @@ export function RailPanels({
               type="button"
               className={`toggle-chip ${lessonFilter === "pending" ? "active" : ""}`}
               onClick={() => setLessonFilter("pending")}
+              aria-pressed={lessonFilter === "pending"}
             >
               Pending
             </button>
@@ -344,6 +397,7 @@ export function RailPanels({
               type="button"
               className={`toggle-chip ${lessonFilter === "complete" ? "active" : ""}`}
               onClick={() => setLessonFilter("complete")}
+              aria-pressed={lessonFilter === "complete"}
             >
               Complete
             </button>
@@ -351,6 +405,7 @@ export function RailPanels({
               type="button"
               className={`toggle-chip ${lessonFilter === "due" ? "active" : ""}`}
               onClick={() => setLessonFilter("due")}
+              aria-pressed={lessonFilter === "due"}
             >
               Due
             </button>
@@ -370,6 +425,7 @@ export function RailPanels({
                 aria-current={
                   lesson.id === selectedLesson.id ? "page" : undefined
                 }
+                aria-label={`Open lesson: ${lesson.title} (${progress[lesson.id] ? "complete" : "pending"})`}
               >
                 <span className="lesson-kicker">{lesson.duration}</span>
                 <span className="lesson-title">{lesson.title}</span>
@@ -412,6 +468,7 @@ export function RailPanels({
                   type="button"
                   className="review-queue-item"
                   onClick={() => navigateToEntry(item.entry)}
+                  aria-label={`Open reinforcement lesson: ${item.entry.lesson.title} in ${item.entry.course.title}`}
                 >
                   <span className="review-course">
                     {item.entry.course.title}
@@ -447,6 +504,7 @@ export function RailPanels({
                   type="button"
                   className="review-queue-item"
                   onClick={() => navigateToEntry({ phase, course, lesson })}
+                  aria-label={`Open review lesson: ${lesson.title} in ${course.title}`}
                 >
                   <span className="review-course">{course.title}</span>
                   <span className="review-lesson">{lesson.title}</span>

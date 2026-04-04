@@ -75,6 +75,7 @@ export function ActionBar({
           type="button"
           className="action-bar-btn"
           onClick={onScrollToExercises}
+          aria-label="Jump to exercises section"
         >
           <svg
             width="14"
@@ -107,6 +108,7 @@ export function ActionBar({
           type="button"
           className="action-bar-btn"
           onClick={onScrollToNotes}
+          aria-label="Jump to notes section"
         >
           <svg
             width="14"
@@ -141,6 +143,10 @@ export function ActionBar({
           type="button"
           className={`action-bar-complete ${isComplete ? "action-bar-complete--done" : ""}`}
           onClick={onToggleCompletion}
+          aria-pressed={isComplete}
+          aria-label={
+            isComplete ? "Mark lesson as incomplete" : "Mark lesson as complete"
+          }
         >
           {isComplete ? (
             <>

@@ -86,7 +86,7 @@ export function SidebarPanels({
                   className={`phase-button ${phase.id === selectedPhase.id ? "active" : ""}`}
                   onClick={() => selectPhase(phase.id)}
                   aria-current={
-                    phase.id === selectedPhase.id ? "true" : undefined
+                    phase.id === selectedPhase.id ? "step" : undefined
                   }
                 >
                   <span className="phase-kicker">{phase.level}</span>

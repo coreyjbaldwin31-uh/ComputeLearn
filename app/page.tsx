@@ -1,11 +1,5 @@
-import { ErrorBoundary } from "@/components/error-boundary";
-import { TrainingPlatform } from "@/components/training-platform";
-import { curriculum } from "@/data/curriculum";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return (
-    <ErrorBoundary>
-      <TrainingPlatform curriculum={curriculum} />
-    </ErrorBoundary>
-  );
+  redirect("/dashboard");
 }

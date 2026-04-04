@@ -12,6 +12,7 @@ type PhaseSummary = {
 
 type HomeDashboardProps = {
   curriculum: Curriculum;
+  selectedPhaseId: string;
   percentComplete: number;
   activityStreak: number;
   progress: Record<string, true>;
@@ -28,16 +29,17 @@ type HomeDashboardProps = {
 function getPhaseStatus(
   index: number,
   summaries: PhaseSummary[],
-): "done" | "active" | "locked" {
+): "done" | "current" | "upcoming" {
   if (summaries[index].pct === 100) return "done";
-  if (index === 0) return "active";
-  if (summaries[index - 1].pct === 100) return "active";
-  if (summaries[index].completed > 0) return "active";
-  return "locked";
+  if (summaries[index].completed > 0) return "current";
+  if (index === 0) return "current";
+  if (summaries[index - 1].pct === 100) return "current";
+  return "upcoming";
 }
 
 export function HomeDashboard({
   curriculum,
+  selectedPhaseId,
   percentComplete,
   activityStreak,
   progress,
@@ -329,11 +331,11 @@ export function HomeDashboard({
               <button
                 key={s.phase.id}
                 type="button"
-                className={`dashboard-phase-card dashboard-phase-card--${status}`}
-                onClick={() =>
-                  status !== "locked" ? onSelectPhase(s.phase.id) : undefined
+                className={`dashboard-phase-card dashboard-phase-card--${status} ${s.phase.id === selectedPhaseId ? "dashboard-phase-card--selected" : ""}`}
+                onClick={() => onSelectPhase(s.phase.id)}
+                aria-current={
+                  s.phase.id === selectedPhaseId ? "step" : undefined
                 }
-                disabled={status === "locked"}
               >
                 <div className="dashboard-phase-top">
                   <span
@@ -353,31 +355,6 @@ export function HomeDashboard({
                           strokeWidth="2"
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                        />
-                      </svg>
-                    ) : status === "locked" ? (
-                      <svg
-                        width="14"
-                        height="14"
-                        viewBox="0 0 14 14"
-                        fill="none"
-                        aria-hidden="true"
-                      >
-                        <rect
-                          x="3"
-                          y="6.5"
-                          width="8"
-                          height="5.5"
-                          rx="1.5"
-                          stroke="currentColor"
-                          strokeWidth="1.3"
-                          fill="none"
-                        />
-                        <path
-                          d="M5 6.5V5a2 2 0 014 0v1.5"
-                          stroke="currentColor"
-                          strokeWidth="1.3"
-                          strokeLinecap="round"
                         />
                       </svg>
                     ) : (
@@ -429,14 +406,14 @@ export function HomeDashboard({
                     </svg>
                     {s.phase.duration}
                   </span>
-                  {status === "active" && nextLessonInPhase && (
+                  {status === "current" && nextLessonInPhase && (
                     <span className="dashboard-phase-next">
                       Next: {nextLessonInPhase.lesson.title}
                     </span>
                   )}
-                  {status === "locked" && (
-                    <span className="dashboard-phase-locked-label">
-                      Complete previous phase to unlock
+                  {status === "upcoming" && (
+                    <span className="dashboard-phase-upcoming-label">
+                      Preview available now
                     </span>
                   )}
                   {status === "done" && (

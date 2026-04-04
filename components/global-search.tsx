@@ -89,7 +89,11 @@ export function GlobalSearch({
       e.preventDefault();
       if (visibleResults.length === 0) return;
       setSelectedIndex((prev) =>
-        prev === -1 ? visibleResults.length - 1 : prev > 0 ? prev - 1 : visibleResults.length - 1,
+        prev === -1
+          ? visibleResults.length - 1
+          : prev > 0
+            ? prev - 1
+            : visibleResults.length - 1,
       );
     } else if (e.key === "Home") {
       e.preventDefault();
@@ -232,7 +236,10 @@ export function GlobalSearch({
             ? `Selected: ${activeEntry.lesson.title}`
             : `${results.length} result${results.length !== 1 ? "s" : ""} available`}
         </p>
-        <p className="sr-only">Use up and down arrows to move. Press Home or End for first or last result.</p>
+        <p className="sr-only">
+          Use up and down arrows to move. Press Home or End for first or last
+          result.
+        </p>
 
         <div
           id={listboxId}

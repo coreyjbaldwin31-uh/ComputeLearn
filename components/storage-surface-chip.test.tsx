@@ -104,7 +104,9 @@ describe("StorageSurfaceChip", () => {
     );
 
     expect(
-      screen.getByText(/Storage appears full. Export backup and clear old browser data./i),
+      screen.getByText(
+        /Storage appears full. Export backup and clear old browser data./i,
+      ),
     ).toBeInTheDocument();
   });
 });

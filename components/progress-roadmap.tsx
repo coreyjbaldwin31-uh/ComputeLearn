@@ -40,55 +40,26 @@ export function ProgressRoadmap({
               : 0;
           const isActive = phase.id === selectedPhaseId;
           const isDone = pct === 100;
-          const isLocked =
+          const previousCounts = phaseLessonCounts[i - 1];
+          const isUpcoming =
             i > 0 &&
-            phaseLessonCounts[i - 1] &&
-            phaseLessonCounts[i - 1].total > 0 &&
-            phaseLessonCounts[i - 1].completed === 0 &&
-            counts &&
-            counts.completed === 0;
+            pct === 0 &&
+            previousCounts != null &&
+            previousCounts.total > 0 &&
+            previousCounts.completed < previousCounts.total;
           const isExpanded = expandedPhase === phase.id;
 
           return (
             <li key={phase.id} className="roadmap-step">
               <button
                 type="button"
-                className={`roadmap-node ${isActive ? "roadmap-node--active" : ""} ${isDone ? "roadmap-node--done" : ""} ${isLocked ? "roadmap-node--locked" : ""}`}
-                onClick={() => {
-                  if (!isLocked) onSelectPhase(phase.id);
-                }}
+                className={`roadmap-node ${isActive ? "roadmap-node--active" : ""} ${isDone ? "roadmap-node--done" : ""} ${isUpcoming ? "roadmap-node--upcoming" : ""}`}
+                onClick={() => onSelectPhase(phase.id)}
                 aria-current={isActive ? "step" : undefined}
-                title={`${phase.title} — ${pct}% complete${isLocked ? " (locked)" : ""}`}
-                disabled={isLocked}
+                title={`${phase.title} — ${pct}% complete${isUpcoming ? " (upcoming)" : ""}`}
               >
                 <span className="roadmap-dot">
-                  {isLocked ? (
-                    <svg
-                      width="10"
-                      height="10"
-                      viewBox="0 0 10 10"
-                      fill="none"
-                      aria-hidden="true"
-                      className="roadmap-lock-icon"
-                    >
-                      <rect
-                        x="2"
-                        y="5"
-                        width="6"
-                        height="4"
-                        rx="1"
-                        stroke="currentColor"
-                        strokeWidth="1"
-                        fill="none"
-                      />
-                      <path
-                        d="M3.5 5V3.5a1.5 1.5 0 013 0V5"
-                        stroke="currentColor"
-                        strokeWidth="1"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  ) : isDone ? (
+                  {isDone ? (
                     <svg
                       width="12"
                       height="12"
@@ -137,31 +108,29 @@ export function ProgressRoadmap({
                 <span className="roadmap-pct">{pct}%</span>
                 <span className="roadmap-est">{phase.duration}</span>
               </button>
-              {!isLocked && (
-                <button
-                  type="button"
-                  className="roadmap-expand"
-                  onClick={() => setExpandedPhase(isExpanded ? null : phase.id)}
-                  aria-label={`${isExpanded ? "Collapse" : "Expand"} ${phase.title} lessons`}
+              <button
+                type="button"
+                className="roadmap-expand"
+                onClick={() => setExpandedPhase(isExpanded ? null : phase.id)}
+                aria-label={`${isExpanded ? "Collapse" : "Expand"} ${phase.title} lessons`}
+              >
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  aria-hidden="true"
+                  className={isExpanded ? "roadmap-chevron--open" : ""}
                 >
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 12 12"
-                    fill="none"
-                    aria-hidden="true"
-                    className={isExpanded ? "roadmap-chevron--open" : ""}
-                  >
-                    <path
-                      d="M3 4.5l3 3 3-3"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </button>
-              )}
+                  <path
+                    d="M3 4.5l3 3 3-3"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
               {isExpanded && (
                 <ul className="roadmap-lessons">
                   {phase.courses.flatMap((course) =>

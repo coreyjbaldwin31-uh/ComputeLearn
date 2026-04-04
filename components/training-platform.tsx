@@ -46,11 +46,13 @@ import {
   useLearnerProfile,
 } from "./hooks/use-learner-profile";
 import { useLocalStorageState } from "./hooks/use-local-storage-state";
+import { usePrefersReducedMotion } from "./hooks/use-prefers-reduced-motion";
 import { useTheme } from "./hooks/use-theme";
 import { KeyboardHelpTrigger } from "./keyboard-help-trigger";
 import { KeyboardShortcutsDialog } from "./keyboard-shortcuts-dialog";
 import { LabPanel } from "./lab-panel";
 import { LessonCodeExercises } from "./lesson-code-exercises";
+import { LessonEntryCue } from "./lesson-entry-cue";
 import { LessonExercises } from "./lesson-exercises";
 import { LessonExplanation } from "./lesson-explanation";
 import { LessonHeader } from "./lesson-header";
@@ -184,6 +186,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     Record<string, LabInstance>
   >(labInstancesStorageKey, {});
   const { theme, toggle: toggleTheme } = useTheme();
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [storageErrorFlash, setStorageErrorFlash] = useState<string | null>(
     null,
   );
@@ -191,6 +194,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
     useState<LocalStorageWriteErrorDetail | null>(null);
   const [storageErrorCount, setStorageErrorCount] = useState(0);
   const [systemFlash, setSystemFlash] = useState<string | null>(null);
+  const [lessonEntryCue, setLessonEntryCue] = useState<string | null>(null);
   const [showStorageRecoveryDialog, setShowStorageRecoveryDialog] =
     useState(false);
   const [storageHealthMode, setStorageHealthMode] =
@@ -214,6 +218,10 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
   const storageErrorTimerRef = useRef<number | null>(null);
   const systemFlashTimerRef = useRef<number | null>(null);
   const storageHealthTimerRef = useRef<number | null>(null);
+  const lessonEntryCueTimerRef = useRef<number | null>(null);
+  const scrollBehavior: ScrollBehavior = prefersReducedMotion
+    ? "auto"
+    : "smooth";
 
   const contentRef = useRef<HTMLElement>(null);
 
@@ -386,6 +394,27 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
       }
     };
   }, [pushRecoveryLog]);
+
+  useEffect(() => {
+    return () => {
+      if (lessonEntryCueTimerRef.current != null) {
+        window.clearTimeout(lessonEntryCueTimerRef.current);
+      }
+    };
+  }, []);
+
+  function openLessonViewWithCue(message: string) {
+    setViewMode("lesson");
+    setLessonEntryCue(message);
+    contentRef.current?.scrollIntoView({ behavior: scrollBehavior });
+
+    if (lessonEntryCueTimerRef.current != null) {
+      window.clearTimeout(lessonEntryCueTimerRef.current);
+    }
+    lessonEntryCueTimerRef.current = window.setTimeout(() => {
+      setLessonEntryCue(null);
+    }, 2600);
+  }
 
   function retryFailedStorageWrite() {
     if (!lastStorageError?.key || lastStorageError.raw == null) {
@@ -1017,21 +1046,24 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
         ? () =>
             document
               .getElementById("section-notes")
-              ?.scrollIntoView({ behavior: "smooth" })
+              ?.scrollIntoView({ behavior: scrollBehavior })
         : null,
     scrollToExercises:
       viewMode === "lesson"
         ? () =>
             document
               .getElementById("section-exercises")
-              ?.scrollIntoView({ behavior: "smooth" })
+              ?.scrollIntoView({ behavior: scrollBehavior })
         : null,
   });
 
   // Scroll content into view when lesson changes
   useEffect(() => {
-    contentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, [selectedLessonId]);
+    contentRef.current?.scrollIntoView({
+      behavior: scrollBehavior,
+      block: "start",
+    });
+  }, [scrollBehavior, selectedLessonId]);
 
   if (
     !selectedPhase ||
@@ -1143,9 +1175,12 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
               if (nextUnfinishedEntry) {
                 setSelectedPhaseId(nextUnfinishedEntry.phase.id);
                 setSelectedLessonId(nextUnfinishedEntry.lesson.id);
+                openLessonViewWithCue(
+                  `Now studying: ${nextUnfinishedEntry.lesson.title}`,
+                );
+                return;
               }
-              setViewMode("lesson");
-              contentRef.current?.scrollIntoView({ behavior: "smooth" });
+              openLessonViewWithCue("Entering lesson workspace");
             }}
           />
 
@@ -1156,12 +1191,18 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
             phaseLessonCounts={phaseLessonCounts}
             onSelectPhase={(phaseId) => {
               selectPhase(phaseId);
-              setViewMode("lesson");
+              const phase = curriculum.phases.find(
+                (item) => item.id === phaseId,
+              );
+              openLessonViewWithCue(
+                phase ? `Entering ${phase.title}` : "Entering selected phase",
+              );
             }}
           />
 
           <HomeDashboard
             curriculum={curriculum}
+            selectedPhaseId={selectedPhase.id}
             percentComplete={percentComplete}
             activityStreak={activityStreak}
             progress={progress}
@@ -1174,17 +1215,25 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
               if (nextUnfinishedEntry) {
                 setSelectedPhaseId(nextUnfinishedEntry.phase.id);
                 setSelectedLessonId(nextUnfinishedEntry.lesson.id);
+                openLessonViewWithCue(
+                  `Now studying: ${nextUnfinishedEntry.lesson.title}`,
+                );
+                return;
               }
-              setViewMode("lesson");
-              contentRef.current?.scrollIntoView({ behavior: "smooth" });
+              openLessonViewWithCue("Resuming lesson workspace");
             }}
             onSelectPhase={(phaseId) => {
               selectPhase(phaseId);
-              setViewMode("lesson");
+              const phase = curriculum.phases.find(
+                (item) => item.id === phaseId,
+              );
+              openLessonViewWithCue(
+                phase ? `Entering ${phase.title}` : "Entering selected phase",
+              );
             }}
             onNavigateToEntry={(entry) => {
               navigateToEntry(entry);
-              setViewMode("lesson");
+              openLessonViewWithCue(`Now studying: ${entry.lesson.title}`);
             }}
           />
 
@@ -1215,10 +1264,23 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
           />
 
           <section className="content" ref={contentRef} id="lesson-content">
+            {lessonEntryCue ? (
+              <LessonEntryCue
+                message={lessonEntryCue}
+                onDismiss={() => {
+                  if (lessonEntryCueTimerRef.current != null) {
+                    window.clearTimeout(lessonEntryCueTimerRef.current);
+                  }
+                  setLessonEntryCue(null);
+                }}
+              />
+            ) : null}
             {isNewUser && (
               <OnboardingCard
                 onStartFirstLesson={() => {
-                  contentRef.current?.scrollIntoView({ behavior: "smooth" });
+                  contentRef.current?.scrollIntoView({
+                    behavior: scrollBehavior,
+                  });
                 }}
               />
             )}
@@ -1258,12 +1320,12 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
               onScrollToNotes={() =>
                 document
                   .getElementById("section-notes")
-                  ?.scrollIntoView({ behavior: "smooth" })
+                  ?.scrollIntoView({ behavior: scrollBehavior })
               }
               onScrollToExercises={() =>
                 document
                   .getElementById("section-exercises")
-                  ?.scrollIntoView({ behavior: "smooth" })
+                  ?.scrollIntoView({ behavior: scrollBehavior })
               }
             />
 
@@ -1436,9 +1498,12 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
               if (nextUnfinishedEntry) {
                 setSelectedPhaseId(nextUnfinishedEntry.phase.id);
                 setSelectedLessonId(nextUnfinishedEntry.lesson.id);
+                openLessonViewWithCue(
+                  `Now studying: ${nextUnfinishedEntry.lesson.title}`,
+                );
+                return;
               }
-              setViewMode("lesson");
-              contentRef.current?.scrollIntoView({ behavior: "smooth" });
+              openLessonViewWithCue("Entering lesson workspace");
             }}
           />
         </>
@@ -1489,7 +1554,7 @@ export function TrainingPlatform({ curriculum }: TrainingPlatformProps) {
           progress={progress}
           onNavigateToEntry={(entry) => {
             navigateToEntry(entry);
-            setViewMode("lesson");
+            openLessonViewWithCue(`Now studying: ${entry.lesson.title}`);
           }}
           onClose={() => setShowGlobalSearch(false)}
         />
