@@ -361,7 +361,61 @@ CSS design system in `globals.css` using `--ac-*` custom properties:
 | T3 | Add tests for `lesson-review-panel.tsx` — incomplete display, weak-track badge, null return | ✅ |
 | T4 | Add tests for `learning-catalog.ts` — all 4 exports with edge cases | ✅ |
 | T5 | Remove dead code `lesson-workspace.tsx` — no imports remain | ✅ |
-| T6 | Evaluate `training-platform.tsx` scope — document which features still rely on SPA shell | ⬚ |
+| T6 | Evaluate `training-platform.tsx` scope — document which features still rely on SPA shell | ✅ |
+
+### T6 Evaluation: training-platform.tsx Decomposition Plan
+
+**Current state:** 1 428 lines, zero page-level imports (root `page.tsx` redirects to `/dashboard`). Referenced only in `lab-integration.test.ts` comments and `docs/repository-map.md`.
+
+#### Features already migrated to academy shell
+
+| Feature | Academy location |
+| --- | --- |
+| Lesson display + 4-step flow | `lesson-flow.tsx` via `(academy)/lessons/[lessonId]` |
+| Guided notes (new, not in SPA) | `guided-notes.tsx` inside LessonFlow |
+| Prerequisite review (new) | `lesson-review-panel.tsx` inside LessonFlow |
+| Course / module / lesson browsing | `(academy)/courses`, `/modules`, `/lessons` pages |
+| Dashboard overview | `learner-dashboard.tsx` via `(academy)/dashboard` |
+| Competency tracker | `competency-tracker.tsx` via `(academy)/progress` |
+| Exercises, validation, hints | `useExerciseValidation` in LessonFlow |
+| Lab lifecycle | `useLabLifecycle` in LessonFlow |
+| Terminal | `LessonTerminal` in LessonFlow |
+| Code exercises | `LessonCodeExercises` in LessonFlow |
+| Artifact management + export | `useArtifactManager` in LessonFlow |
+| Breadcrumbs | `academy-breadcrumbs.tsx` |
+| Prev / next lesson nav | Prev/next links in lesson page |
+
+#### Features still exclusive to SPA shell (must migrate before retirement)
+
+| Feature | Approx lines | Migration target |
+| --- | --- | --- |
+| **Storage health UX** — banner, recovery dialog, recovery log, surface chips, dirty indicators, severity tiers, key guidance | ~250 | Academy layout provider / context |
+| **SaveToast** — error/success flash for writes | ~30 | Academy layout |
+| **PlatformNavbar** — progress bar, breadcrumbs, search trigger, notifications, theme toggle | ~40 (render) | Academy shell header |
+| **GlobalSearch** — arrow-key nav, lesson search | component | Academy shell |
+| **Keyboard shortcuts** — j/k nav, h home, m complete, n notes, e exercises, / search, ? help, Esc | hook | Academy shell |
+| **KeyboardShortcutsDialog** | component | Academy shell |
+| **Theme toggle** — `useTheme` dark mode | hook | Academy layout |
+| **Notification system** — review-due, milestone, streak notifications | ~40 | Academy shell header |
+| **Achievement panel** — phase badges, streak | component | `/dashboard` or `/progress` |
+| **Home marketing views** — HeroSection, ProgressRoadmap, HomeDashboard, PricingCallout, SocialProof, FaqSection, FeatureHighlights, PageFooter | components | `/` or `/dashboard` |
+| **Onboarding card** — first-visit guidance | component | Academy dashboard |
+| **Lesson entry cue** — orientation messages | component + timer | Already extracted; wire into academy nav |
+| **Completion gating** — `evaluateLessonEvidenceGate` before marking done | ~30 | LessonFlow |
+| **Review marking** — `markReviewed`, spaced repetition queue | ~20 | LessonFlow or `/progress` |
+| **Reset lab / reset all progress** | ~40 | LessonFlow / settings page |
+| **Analytics dashboards** — `useAnalyticsDashboards` feeding SidebarPanels | hook + panel | `/progress` page |
+
+#### Recommended decomposition order
+
+1. **Storage health provider** — extract storage event listeners, health mode, surface failures, recovery log into a React context. Mount in `(academy)/layout.tsx`. This unblocks removing the largest state block from the SPA shell.
+2. **Global UX migration** — add PlatformNavbar (or equivalent), GlobalSearch, KeyboardShortcuts, Theme toggle to `academy-shell.tsx`. This gives the academy full navigational parity.
+3. **Completion gating + review** — integrate `evaluateLessonEvidenceGate` and review marking into `lesson-flow.tsx` step 4.
+4. **Home / marketing page** — create an academy-native landing with hero, roadmap, dashboard, achievements either at `/` or `/dashboard`.
+5. **Analytics dashboards** — wire `useAnalyticsDashboards` into `(academy)/progress/page.tsx`.
+6. **Retire `training-platform.tsx`** — once all features have academy equivalents, delete the file and update `docs/repository-map.md` and `lab-integration.test.ts` comments.
+
+> **Key constraint:** Do not delete `training-platform.tsx` until every feature above has a working academy equivalent with tests. The file is safe to leave in-tree as dead code during the migration since it has no runtime import path.
 
 ### Short-Term
 

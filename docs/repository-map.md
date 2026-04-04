@@ -5,7 +5,7 @@ Quick orientation for contributors.
 ## Top-level layout
 
 ```text
-app/              Next.js App Router (single route at /)
+app/              Next.js App Router — root redirect + (academy) route group
 components/       React UI components and hooks
 data/             Curriculum data (curriculum.ts)
 lib/              Stateless domain engines with colocated tests
@@ -18,17 +18,35 @@ docs/             Contributor and process documentation
 | File | Role |
 | --- | --- |
 | `layout.tsx` | Root layout, metadata, global styles |
-| `page.tsx` | Entry page — renders `<TrainingPlatform>` inside `<ErrorBoundary>` |
+| `page.tsx` | Root redirect — `redirect("/dashboard")` |
 | `error.tsx` | App Router error boundary — captures render errors via Sentry |
 | `globals.css` | Global stylesheet |
+| `(academy)/layout.tsx` | Academy route group layout — wraps children in `<AcademyShell>` |
+| `(academy)/dashboard/page.tsx` | Learner dashboard — stats, continue learning, phase cards |
+| `(academy)/courses/page.tsx` | Phase-grouped course catalog |
+| `(academy)/courses/[courseId]/page.tsx` | Course detail with lesson sequence |
+| `(academy)/lessons/page.tsx` | Full lesson library with phase tags |
+| `(academy)/lessons/[lessonId]/page.tsx` | Lesson page — LessonFlow 4-step stepper with prev/next nav |
+| `(academy)/assignments/page.tsx` | Transfer task listing |
+| `(academy)/modules/page.tsx` | Module directory |
+| `(academy)/modules/[courseId]/page.tsx` | Module detail |
+| `(academy)/progress/page.tsx` | CompetencyTracker |
 
-Single-page app: all navigation happens client-side inside `TrainingPlatform`.
+Multi-page app: navigation happens via App Router routes. The academy route group shares a shell layout.
 
 ## components/
 
 | Component | Role |
 | --- | --- |
-| `training-platform.tsx` | Main shell — state orchestration, engine wiring, panel composition |
+| `training-platform.tsx` | **Orphaned SPA shell** — no page-level import; retained pending feature migration (see PRD T6 evaluation) |
+| `academy-shell.tsx` | Academy layout shell — sidebar nav, breadcrumbs, responsive container |
+| `academy-nav.tsx` | Academy sidebar navigation with active route state |
+| `academy-breadcrumbs.tsx` | Breadcrumb trail for academy pages |
+| `lesson-flow.tsx` | 4-step lesson stepper (Learn → Practice → Apply → Reflect & Download) |
+| `guided-notes.tsx` | Concept-by-concept note-taking with understanding checkboxes |
+| `lesson-review-panel.tsx` | Prerequisite review panel for incomplete/weak-track lessons |
+| `learner-dashboard.tsx` | Dashboard widgets — stats, continue learning, phase cards |
+| `competency-tracker.tsx` | Competency progress visualization |
 | `code-exercise.tsx` | Code editor for exercises with validation, hints, and attempt tracking |
 | `lab-panel.tsx` | Lab UI — start, validate, reset, hint escalation, file editing, completion summary |
 | `terminal-simulator.tsx` | Simulated CLI with command matching, alias normalisation, and filesystem simulation |
