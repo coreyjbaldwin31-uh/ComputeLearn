@@ -75,7 +75,9 @@ export function LessonValidation({
                 </span>
               ) : null}
             </div>
-            <div className="exercise-prompt"><RichText content={exercise.prompt} /></div>
+            <div className="exercise-prompt">
+              <RichText content={exercise.prompt} />
+            </div>
             <input
               aria-label={exercise.title}
               value={exerciseAnswer}

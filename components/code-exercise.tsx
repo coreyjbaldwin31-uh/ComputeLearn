@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type CodeExerciseProps = {
   title: string;
@@ -50,11 +50,19 @@ export function CodeExercise({
   } | null>(null);
   const [showHint, setShowHint] = useState(false);
   const [copyLabel, setCopyLabel] = useState("Copy");
+  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    };
+  }, []);
 
   function handleCopy() {
     navigator.clipboard.writeText(code).then(() => {
       setCopyLabel("Copied!");
-      setTimeout(() => setCopyLabel("Copy"), 1500);
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+      copyTimerRef.current = setTimeout(() => setCopyLabel("Copy"), 1500);
     });
   }
 

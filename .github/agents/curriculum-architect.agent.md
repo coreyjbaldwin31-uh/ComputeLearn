@@ -17,6 +17,7 @@ Curriculum → Phase[] → Course[] → Lesson[]
 ```
 
 Each Lesson contains:
+
 - `explanation[]` — teach concepts, commands, and mental models
 - `demonstration[]` — show concrete examples with expected output
 - `exerciseSteps[]` — guided practice instructions
@@ -75,18 +76,18 @@ Run this checklist before making any changes:
 
 Build a complete map of what is taught and what is tested across every lesson. For each lesson, record:
 
-| Check | Question |
-|-------|----------|
-| **Teach-before-test** | Does every exercise/transfer task only use concepts explicitly covered in explanation[] or demonstration[] of this lesson or a confirmed prerequisite? |
-| **Prerequisite chain** | Does this lesson assume knowledge from a lesson that comes AFTER it in the ordering? |
-| **Explanation quality** | Are explanations concrete and actionable, or vague and hand-wavy? Do they include syntax examples? |
-| **Demonstration quality** | Do demonstrations show real command/code examples with expected output? Are code blocks properly fenced? |
-| **Exercise alignment** | Do exercises test what was taught, at the appropriate difficulty level? |
-| **Transfer task quality** | Does the transfer task genuinely test independent capability, or is it just another guided exercise? |
-| **Competency mapping** | Are the competency targets accurate for what's actually taught? |
-| **Scaffolding progression** | Does scaffolding decrease over the course (step-by-step → goal-driven → ticket-style)? |
-| **Rich text formatting** | Are commands in backticks, key terms bolded, code examples in fenced blocks? |
-| **Logical ordering** | Does this lesson build naturally on the previous one? |
+| Check                       | Question                                                                                                                                               |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Teach-before-test**       | Does every exercise/transfer task only use concepts explicitly covered in explanation[] or demonstration[] of this lesson or a confirmed prerequisite? |
+| **Prerequisite chain**      | Does this lesson assume knowledge from a lesson that comes AFTER it in the ordering?                                                                   |
+| **Explanation quality**     | Are explanations concrete and actionable, or vague and hand-wavy? Do they include syntax examples?                                                     |
+| **Demonstration quality**   | Do demonstrations show real command/code examples with expected output? Are code blocks properly fenced?                                               |
+| **Exercise alignment**      | Do exercises test what was taught, at the appropriate difficulty level?                                                                                |
+| **Transfer task quality**   | Does the transfer task genuinely test independent capability, or is it just another guided exercise?                                                   |
+| **Competency mapping**      | Are the competency targets accurate for what's actually taught?                                                                                        |
+| **Scaffolding progression** | Does scaffolding decrease over the course (step-by-step → goal-driven → ticket-style)?                                                                 |
+| **Rich text formatting**    | Are commands in backticks, key terms bolded, code examples in fenced blocks?                                                                           |
+| **Logical ordering**        | Does this lesson build naturally on the previous one?                                                                                                  |
 
 Record findings in a structured format using the todo list tool.
 
@@ -128,6 +129,7 @@ After each batch of changes:
 ## Quality Standards
 
 ### Explanation Quality Bar
+
 - Every new concept is introduced with a brief definition and rationale
 - Every command is shown with its exact syntax in backticks: `Get-ChildItem -Path C:\Users`
 - Key terms are **bolded** on first introduction
@@ -135,12 +137,14 @@ After each batch of changes:
 - No unexplained jargon — if a term is used, it was defined here or in a prerequisite
 
 ### Demonstration Quality Bar
+
 - Fenced code blocks with realistic output
 - Shows both the command AND the expected result
 - Includes at least one "what if it goes wrong" example per lesson where relevant
 - Progressive complexity: simple case first, then variations
 
 ### Exercise Quality Bar
+
 - Every exercise tests a specific skill from the explanation
 - Accepted answers are comprehensive (include common aliases, case variations)
 - Hints reference the specific explanation section that covers the answer
@@ -148,6 +152,7 @@ After each batch of changes:
 - Exercise difficulty progresses within a lesson (warm-up → core → stretch)
 
 ### Transfer Task Quality Bar
+
 - Genuinely reduces scaffolding compared to exercises
 - Combines multiple skills from the lesson
 - Cannot be solved by memorizing a single command

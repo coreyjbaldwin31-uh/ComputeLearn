@@ -79,7 +79,9 @@ export function LessonTransfer({
           <h4>{transferTask.title}</h4>
           <span className="assessment-badge assessment-transfer">transfer</span>
         </div>
-        <div className="exercise-prompt"><RichText content={transferTask.prompt} /></div>
+        <div className="exercise-prompt">
+          <RichText content={transferTask.prompt} />
+        </div>
         <textarea
           aria-label={transferTask.title}
           value={transferAnswers[lesson.id] ?? ""}

@@ -459,7 +459,9 @@ export function LessonFlow({ lesson }: { lesson: Lesson }) {
               {lesson.demonstration.map((demo, i) => (
                 <div key={i} className="lf-demo-card">
                   <span className="lf-demo-number">{i + 1}</span>
-                  <div className="lf-demo-text"><RichText content={demo} /></div>
+                  <div className="lf-demo-text">
+                    <RichText content={demo} />
+                  </div>
                 </div>
               ))}
             </div>
@@ -515,7 +517,9 @@ export function LessonFlow({ lesson }: { lesson: Lesson }) {
             <h3 className="lf-subsection-title">What You Will Do</h3>
             <ol className="lf-step-list">
               {lesson.exerciseSteps.map((step, i) => (
-                <li key={i}><RichText content={step} /></li>
+                <li key={i}>
+                  <RichText content={step} />
+                </li>
               ))}
             </ol>
           </div>
@@ -577,7 +581,9 @@ export function LessonFlow({ lesson }: { lesson: Lesson }) {
             <h3 className="lf-subsection-title">Quick Review</h3>
             <ul className="lf-retention-list">
               {lesson.retention.map((cue, i) => (
-                <li key={i}><RichText content={cue} /></li>
+                <li key={i}>
+                  <RichText content={cue} />
+                </li>
               ))}
             </ul>
           </div>

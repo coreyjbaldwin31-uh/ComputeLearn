@@ -104,18 +104,28 @@ export type Curriculum = {
 
 export const curriculum: Curriculum = {
   productTitle: "ComputeLearn",
-  productVision: "ComputeLearn is a mastery-based engineering learning platform that takes learners from everyday computer use to practical software development competence through guided labs, real debugging, and project-driven progression.",
-  promise: "Rather than relying on passive lessons, learners work inside controlled, reversible environments where they practice terminal commands, filesystem operations, scripting, coding, debugging, version control, testing, and delivery workflows. Each step builds operational confidence first, programming understanding second, and disciplined engineering execution third.",
+  productVision:
+    "ComputeLearn is a mastery-based engineering learning platform that takes learners from everyday computer use to practical software development competence through guided labs, real debugging, and project-driven progression.",
+  promise:
+    "Rather than relying on passive lessons, learners work inside controlled, reversible environments where they practice terminal commands, filesystem operations, scripting, coding, debugging, version control, testing, and delivery workflows. Each step builds operational confidence first, programming understanding second, and disciplined engineering execution third.",
   phases: [
     {
       id: "phase-1",
       title: "Computer and Tooling Mastery",
       strapline: "Operate with speed, confidence, and precision.",
-      purpose: "Build operational fluency and confidence with the OS, terminal, filesystem, automation, and engineering productivity tools.",
+      purpose:
+        "Build operational fluency and confidence with the OS, terminal, filesystem, automation, and engineering productivity tools.",
       level: "Beginner",
       duration: "4–6 weeks",
-      environment: "Sandboxed workspace with resettable file trees and guided terminal history",
-      tools: ["Windows Terminal", "PowerShell", "PowerToys", "File Explorer", "Obsidian"],
+      environment:
+        "Sandboxed workspace with resettable file trees and guided terminal history",
+      tools: [
+        "Windows Terminal",
+        "PowerShell",
+        "PowerToys",
+        "File Explorer",
+        "Obsidian",
+      ],
       guardrails: [
         "Commands run against training directories, never personal folders by default.",
         "Every lab includes reset, replay, and inspect actions.",
@@ -131,14 +141,38 @@ export const curriculum: Curriculum = {
         "Create a personal command cheat sheet with saved terminal transcripts",
         "Build a folder automation workflow for recurring tasks",
       ],
-      competencyFocus: ["SystemNavigation", "TerminalOperation", "Automation", "FileManipulation"],
+      competencyFocus: [
+        "SystemNavigation",
+        "TerminalOperation",
+        "Automation",
+        "FileManipulation",
+      ],
       exitStandard: {
-        summary: "The learner can inspect, navigate, create, modify, move, search, and automate within a controlled workspace without getting lost.",
+        summary:
+          "The learner can inspect, navigate, create, modify, move, search, and automate within a controlled workspace without getting lost.",
         gates: [
-          { description: "Navigate directories and files without GUI assistance", competency: "SystemNavigation", requiredLevel: "Functional" },
-          { description: "Write and run basic PowerShell scripts safely", competency: "TerminalOperation", requiredLevel: "Functional" },
-          { description: "Build a repeatable automation for a common task", competency: "Automation", requiredLevel: "Assisted" },
-          { description: "Create, move, copy, rename, and delete files safely from the terminal", competency: "FileManipulation", requiredLevel: "Functional" },
+          {
+            description:
+              "Navigate directories and files without GUI assistance",
+            competency: "SystemNavigation",
+            requiredLevel: "Functional",
+          },
+          {
+            description: "Write and run basic PowerShell scripts safely",
+            competency: "TerminalOperation",
+            requiredLevel: "Functional",
+          },
+          {
+            description: "Build a repeatable automation for a common task",
+            competency: "Automation",
+            requiredLevel: "Assisted",
+          },
+          {
+            description:
+              "Create, move, copy, rename, and delete files safely from the terminal",
+            competency: "FileManipulation",
+            requiredLevel: "Functional",
+          },
         ],
         representativeLabs: [
           "Recover a misplaced file using search and path reasoning",
@@ -151,15 +185,18 @@ export const curriculum: Curriculum = {
           id: "course-os-navigation",
           title: "Operating System Fluency",
           focus: "Files, shortcuts, system awareness, and terminal confidence",
-          outcome: "Learners can navigate Windows efficiently, inspect system state, and work comfortably from both GUI and terminal contexts.",
+          outcome:
+            "Learners can navigate Windows efficiently, inspect system state, and work comfortably from both GUI and terminal contexts.",
           lessons: [
             {
               id: "lesson-filesystem",
               title: "Navigate the Filesystem with Intent",
-              summary: "Understand where things live, how to move through directories quickly, and how to avoid destructive mistakes.",
+              summary:
+                "Understand where things live, how to move through directories quickly, and how to avoid destructive mistakes.",
               duration: "35 min",
               difficulty: "Foundational",
-              objective: "Move through folders, inspect files, and reason about the working directory before taking action.",
+              objective:
+                "Move through folders, inspect files, and reason about the working directory before taking action.",
               explanation: [
                 "Every command you run in a terminal executes **relative to a location** called the **working directory**. If you do not know your working directory, you cannot predict what a command will affect. The first habit to build is checking where you are before doing anything else. In PowerShell, the command is `Get-Location` (alias: `pwd`). Run it, read the path, and only then proceed.",
                 "Once you know where you are, the next question is: what is here? `Get-ChildItem` (aliases: `dir`, `ls`) lists the files and folders in your current directory. Think of it as looking around the room before rearranging furniture. You will use this command constantly — before creating files, before deleting files, and before running scripts.",
@@ -187,33 +224,84 @@ export const curriculum: Curriculum = {
                 "Fast navigation comes from repetition, not memorizing a giant command list.",
               ],
               tools: ["Windows Terminal", "PowerShell", "File Explorer"],
-              notesPrompt: "Write the three commands you want to become muscle memory, and note one mistake this lesson helped you avoid.",
+              notesPrompt:
+                "Write the three commands you want to become muscle memory, and note one mistake this lesson helped you avoid.",
               exercises: [
-                { id: "pwd-check", title: "Context check", prompt: "Enter a PowerShell command that shows the current working directory.", placeholder: "Example: Get-...", validationMode: "includes", acceptedAnswers: ["get-location", "pwd"], successMessage: "Correct. The habit to build is checking location before acting.", hint: "In PowerShell, both the full cmdlet and a short alias are common.", assessmentType: "action" },
-                { id: "list-check", title: "Inspect contents", prompt: "Enter a PowerShell command that lists directory contents.", placeholder: "Example: Get-...", validationMode: "includes", acceptedAnswers: ["get-childitem", "dir", "ls"], successMessage: "Correct. Engineers inspect the terrain before making changes.", hint: "There is a full cmdlet and a couple of short aliases.", assessmentType: "action" },
-                { id: "cd-check", title: "Change directory", prompt: "What command moves you into a subfolder called Projects?", placeholder: "cd ...", validationMode: "includes", acceptedAnswers: ["cd projects", "set-location projects"], successMessage: "Correct. Deliberate navigation is the foundation of safe terminal use.", hint: "Use cd or Set-Location followed by the folder name.", assessmentType: "action" },
+                {
+                  id: "pwd-check",
+                  title: "Context check",
+                  prompt:
+                    "Enter a PowerShell command that shows the current working directory.",
+                  placeholder: "Example: Get-...",
+                  validationMode: "includes",
+                  acceptedAnswers: ["get-location", "pwd"],
+                  successMessage:
+                    "Correct. The habit to build is checking location before acting.",
+                  hint: "In PowerShell, both the full cmdlet and a short alias are common.",
+                  assessmentType: "action",
+                },
+                {
+                  id: "list-check",
+                  title: "Inspect contents",
+                  prompt:
+                    "Enter a PowerShell command that lists directory contents.",
+                  placeholder: "Example: Get-...",
+                  validationMode: "includes",
+                  acceptedAnswers: ["get-childitem", "dir", "ls"],
+                  successMessage:
+                    "Correct. Engineers inspect the terrain before making changes.",
+                  hint: "There is a full cmdlet and a couple of short aliases.",
+                  assessmentType: "action",
+                },
+                {
+                  id: "cd-check",
+                  title: "Change directory",
+                  prompt:
+                    "What command moves you into a subfolder called Projects?",
+                  placeholder: "cd ...",
+                  validationMode: "includes",
+                  acceptedAnswers: ["cd projects", "set-location projects"],
+                  successMessage:
+                    "Correct. Deliberate navigation is the foundation of safe terminal use.",
+                  hint: "Use cd or Set-Location followed by the folder name.",
+                  assessmentType: "action",
+                },
               ],
               transferTask: {
                 id: "transfer-filesystem-recovery",
                 title: "Transfer challenge: recover a misplaced file",
-                prompt: "You are in the wrong directory and need to find a misplaced file safely. Describe the command sequence you would use before moving or deleting anything.",
+                prompt:
+                  "You are in the wrong directory and need to find a misplaced file safely. Describe the command sequence you would use before moving or deleting anything.",
                 placeholder: "Describe commands and reasoning",
                 validationMode: "includes",
-                acceptedAnswers: ["get-location", "dir", "ls", "cd", "find", "where", "inspect"],
-                successMessage: "Strong transfer response. You emphasized context checks and inspection before modification.",
+                acceptedAnswers: [
+                  "get-location",
+                  "dir",
+                  "ls",
+                  "cd",
+                  "find",
+                  "where",
+                  "inspect",
+                ],
+                successMessage:
+                  "Strong transfer response. You emphasized context checks and inspection before modification.",
                 hint: "Mention at least one context check and one inspection command before any file-changing action.",
                 assessmentType: "transfer",
               },
-              competencies: [{ track: "SystemNavigation", targetLevel: "Functional" }],
+              competencies: [
+                { track: "SystemNavigation", targetLevel: "Functional" },
+              ],
               scaffoldingLevel: "step-by-step",
             },
             {
               id: "lesson-keyboard-shortcuts",
               title: "Keyboard-First Workflows",
-              summary: "Learn to operate faster by replacing mouse clicks with keyboard shortcuts across the OS and terminal.",
+              summary:
+                "Learn to operate faster by replacing mouse clicks with keyboard shortcuts across the OS and terminal.",
               duration: "30 min",
               difficulty: "Foundational",
-              objective: "Identify and use keyboard shortcuts that eliminate friction in daily computer use.",
+              objective:
+                "Identify and use keyboard shortcuts that eliminate friction in daily computer use.",
               explanation: [
                 "Speed on a computer is not about typing fast — it is about **reducing the gap between what you want to do and doing it**. Every time you reach for the mouse to switch windows, open a folder, or re-type a command, you lose seconds. Those seconds compound into hours over a week. Keyboard shortcuts let you stay in flow.",
                 "The most important OS shortcuts to internalize: `Alt+Tab` switches between open windows instantly. `Win+E` opens **File Explorer** without touching the Start menu. `Ctrl+Shift+Esc` opens **Task Manager** directly — critical when you need to investigate a frozen or slow application. These three shortcuts alone eliminate the majority of mouse-driven OS navigation.",
@@ -241,32 +329,62 @@ export const curriculum: Curriculum = {
                 "Every shortcut you learn compounds over thousands of uses.",
               ],
               tools: ["Windows Terminal", "PowerShell", "File Explorer"],
-              notesPrompt: "List five keyboard shortcuts you plan to use every day. Note which ones feel unnatural \u2014 those need the most practice.",
+              notesPrompt:
+                "List five keyboard shortcuts you plan to use every day. Note which ones feel unnatural \u2014 those need the most practice.",
               exercises: [
-                { id: "shortcut-switch", title: "Window switching", prompt: "What keyboard shortcut switches between open windows?", placeholder: "Key combination", validationMode: "includes", acceptedAnswers: ["alt+tab", "alt tab"], successMessage: "Correct. Alt+Tab is the single most used shortcut in professional work.", hint: "It involves the Alt key and another key.", assessmentType: "action" },
-                { id: "shortcut-explorer", title: "Quick launch", prompt: "What shortcut opens File Explorer instantly?", placeholder: "Key combination", validationMode: "includes", acceptedAnswers: ["win+e", "windows+e"], successMessage: "Correct. Win+E bypasses the Start menu entirely.", hint: "It uses the Windows key combined with a letter.", assessmentType: "action" },
+                {
+                  id: "shortcut-switch",
+                  title: "Window switching",
+                  prompt:
+                    "What keyboard shortcut switches between open windows?",
+                  placeholder: "Key combination",
+                  validationMode: "includes",
+                  acceptedAnswers: ["alt+tab", "alt tab"],
+                  successMessage:
+                    "Correct. Alt+Tab is the single most used shortcut in professional work.",
+                  hint: "It involves the Alt key and another key.",
+                  assessmentType: "action",
+                },
+                {
+                  id: "shortcut-explorer",
+                  title: "Quick launch",
+                  prompt: "What shortcut opens File Explorer instantly?",
+                  placeholder: "Key combination",
+                  validationMode: "includes",
+                  acceptedAnswers: ["win+e", "windows+e"],
+                  successMessage:
+                    "Correct. Win+E bypasses the Start menu entirely.",
+                  hint: "It uses the Windows key combined with a letter.",
+                  assessmentType: "action",
+                },
               ],
               transferTask: {
                 id: "transfer-keyboard-workflow",
                 title: "Transfer challenge: keyboard-only task",
-                prompt: "Describe how you would open a terminal, navigate to a project folder, check Git status, and switch to your editor — using only keyboard shortcuts. List each shortcut.",
+                prompt:
+                  "Describe how you would open a terminal, navigate to a project folder, check Git status, and switch to your editor — using only keyboard shortcuts. List each shortcut.",
                 placeholder: "Shortcut sequence",
                 validationMode: "includes",
                 acceptedAnswers: ["alt+tab", "cd", "git status", "win", "ctrl"],
-                successMessage: "Transfer evidence accepted. You mapped a full workflow to keyboard shortcuts.",
+                successMessage:
+                  "Transfer evidence accepted. You mapped a full workflow to keyboard shortcuts.",
                 hint: "Walk through the workflow step by step: launch, navigate, command, switch.",
                 assessmentType: "transfer",
               },
-              competencies: [{ track: "SystemNavigation", targetLevel: "Functional" }],
+              competencies: [
+                { track: "SystemNavigation", targetLevel: "Functional" },
+              ],
               scaffoldingLevel: "step-by-step",
             },
             {
               id: "lesson-system-inspection",
               title: "Understand Your Machine",
-              summary: "Learn to inspect system state so you can reason about performance, storage, and running processes.",
+              summary:
+                "Learn to inspect system state so you can reason about performance, storage, and running processes.",
               duration: "40 min",
               difficulty: "Foundational",
-              objective: "Check CPU, memory, disk usage, and running processes using both GUI and terminal tools.",
+              objective:
+                "Check CPU, memory, disk usage, and running processes using both GUI and terminal tools.",
               explanation: [
                 "A computer is not a black box — it is a system with measurable state. Engineers check what is running, what is consuming resources, and what is filling storage **before** guessing at problems. When a machine feels slow, you do not restart and hope — you investigate. This lesson gives you the tools to do exactly that.",
                 "The GUI starting point is **Task Manager**, which you can open instantly with `Ctrl+Shift+Esc`. It shows every running process, sorted by CPU, memory, disk, or network usage. Click the column headers to sort — the process consuming the most CPU floats to the top. Task Manager is your first stop whenever something feels wrong.",
@@ -288,35 +406,96 @@ export const curriculum: Curriculum = {
                 "User demonstrates sorting or filtering processes by resource usage using `Sort-Object`.",
                 "User runs `Get-Volume` to check available disk space and can read the output.",
               ],
-              retention: [ "Know your machine before blaming your code.", "Task Manager is the first stop for performance investigation.", "Get-Process and Get-Volume replace guessing with data." ],
+              retention: [
+                "Know your machine before blaming your code.",
+                "Task Manager is the first stop for performance investigation.",
+                "Get-Process and Get-Volume replace guessing with data.",
+              ],
               tools: ["Windows Terminal", "PowerShell", "Task Manager"],
-              notesPrompt: "Write down the commands to check CPU, memory, and disk space. Note anything surprising you found about your system.",
+              notesPrompt:
+                "Write down the commands to check CPU, memory, and disk space. Note anything surprising you found about your system.",
               exercises: [
-                { id: "process-list", title: "List processes", prompt: "Enter a PowerShell command that shows running processes.", placeholder: "Get-...", validationMode: "includes", acceptedAnswers: ["get-process", "ps"], successMessage: "Correct. Knowing what is running is the first step to understanding system behavior.", hint: "The cmdlet name describes exactly what it does \u2014 it gets processes.", assessmentType: "action" },
-                { id: "disk-space", title: "Check disk space", prompt: "What PowerShell cmdlet shows disk volume information including free space?", placeholder: "Get-...", validationMode: "includes", acceptedAnswers: ["get-volume"], successMessage: "Correct. Get-Volume shows drive letters, sizes, and free space so you can assess storage before it becomes a problem.", hint: "The cmdlet gets information about storage volumes.", assessmentType: "action" },
-                { id: "high-cpu-reasoning", title: "Investigate high CPU", prompt: "A machine feels slow. You open Task Manager and see one process using 95% CPU. What should you do before killing it?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["identify", "what it is", "name", "research", "check", "look up"], successMessage: "Correct. Always identify the process first \u2014 it could be a critical system service or an active operation you do not want to interrupt.", hint: "Killing an unknown process can cause data loss or system instability.", assessmentType: "reasoning" },
+                {
+                  id: "process-list",
+                  title: "List processes",
+                  prompt:
+                    "Enter a PowerShell command that shows running processes.",
+                  placeholder: "Get-...",
+                  validationMode: "includes",
+                  acceptedAnswers: ["get-process", "ps"],
+                  successMessage:
+                    "Correct. Knowing what is running is the first step to understanding system behavior.",
+                  hint: "The cmdlet name describes exactly what it does \u2014 it gets processes.",
+                  assessmentType: "action",
+                },
+                {
+                  id: "disk-space",
+                  title: "Check disk space",
+                  prompt:
+                    "What PowerShell cmdlet shows disk volume information including free space?",
+                  placeholder: "Get-...",
+                  validationMode: "includes",
+                  acceptedAnswers: ["get-volume"],
+                  successMessage:
+                    "Correct. Get-Volume shows drive letters, sizes, and free space so you can assess storage before it becomes a problem.",
+                  hint: "The cmdlet gets information about storage volumes.",
+                  assessmentType: "action",
+                },
+                {
+                  id: "high-cpu-reasoning",
+                  title: "Investigate high CPU",
+                  prompt:
+                    "A machine feels slow. You open Task Manager and see one process using 95% CPU. What should you do before killing it?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "identify",
+                    "what it is",
+                    "name",
+                    "research",
+                    "check",
+                    "look up",
+                  ],
+                  successMessage:
+                    "Correct. Always identify the process first \u2014 it could be a critical system service or an active operation you do not want to interrupt.",
+                  hint: "Killing an unknown process can cause data loss or system instability.",
+                  assessmentType: "reasoning",
+                },
               ],
               transferTask: {
                 id: "transfer-system-triage",
                 title: "Transfer challenge: diagnose a slow machine",
-                prompt: "A colleague says their computer is running slowly. Describe the commands or tools you would use to identify the cause, in the order you would run them.",
+                prompt:
+                  "A colleague says their computer is running slowly. Describe the commands or tools you would use to identify the cause, in the order you would run them.",
                 placeholder: "Diagnostic steps",
                 validationMode: "includes",
-                acceptedAnswers: ["get-process", "task manager", "cpu", "memory", "disk", "sort"],
-                successMessage: "Transfer evidence accepted. You demonstrated systematic performance triage.",
+                acceptedAnswers: [
+                  "get-process",
+                  "task manager",
+                  "cpu",
+                  "memory",
+                  "disk",
+                  "sort",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. You demonstrated systematic performance triage.",
                 hint: "Start with what is consuming the most resources, then narrow down.",
                 assessmentType: "transfer",
               },
-              competencies: [{ track: "SystemNavigation", targetLevel: "Functional" }],
+              competencies: [
+                { track: "SystemNavigation", targetLevel: "Functional" },
+              ],
               scaffoldingLevel: "step-by-step",
             },
             {
               id: "lesson-file-operations",
               title: "Create, Move, Copy, and Delete Files Safely",
-              summary: "Master the core file operations: create, rename, copy, move, and delete — with the discipline to avoid catastrophic mistakes.",
+              summary:
+                "Master the core file operations: create, rename, copy, move, and delete — with the discipline to avoid catastrophic mistakes.",
               duration: "40 min",
               difficulty: "Foundational",
-              objective: "Execute file CRUD operations from the terminal, reason about their scope, and apply safety checks before destructive actions.",
+              objective:
+                "Execute file CRUD operations from the terminal, reason about their scope, and apply safety checks before destructive actions.",
               explanation: [
                 "File operations are the most common actions in any engineering workflow: creating configuration files, organizing output, moving assets, and cleaning up waste. The terminal versions are faster, scriptable, and composable — you can batch-create, batch-move, or batch-rename files in seconds. This lesson teaches the five core PowerShell cmdlets for file manipulation.",
                 "`New-Item` creates files and folders. To create a file: `New-Item -Path notes.txt -ItemType File`. To create a folder: `New-Item -Path backup -ItemType Directory`. The `-ItemType` parameter tells PowerShell what kind of item to make. You can also use the alias `ni`.",
@@ -326,7 +505,7 @@ export const curriculum: Curriculum = {
               demonstration: [
                 "Start in the sandbox directory. Run `New-Item -Path notes.txt -ItemType File` to create a file. Run `dir` to confirm it exists. Now run `Copy-Item notes.txt backup-notes.txt` to make a copy. Run `dir` again — you now see both `notes.txt` and `backup-notes.txt`.",
                 "Rename the original with `Rename-Item notes.txt meeting-notes.txt`. Run `dir` to verify the name changed. Now move the backup into a subdirectory: `Move-Item backup-notes.txt archive/` (create the archive folder first with `New-Item -Path archive -ItemType Directory` if needed). Run `dir archive/` to confirm the file landed in the right place.",
-                "Finally, preview a cleanup operation: run `Remove-Item *.txt -WhatIf`. PowerShell prints lines like `What if: Performing the operation \"Remove File\" on target \"C:\\...\\meeting-notes.txt\"` — but nothing is actually deleted. Only after reviewing that output should you remove the `-WhatIf` flag and run the real command. This preview habit is the difference between safe engineering and accidental data loss.",
+                'Finally, preview a cleanup operation: run `Remove-Item *.txt -WhatIf`. PowerShell prints lines like `What if: Performing the operation "Remove File" on target "C:\\...\\meeting-notes.txt"` — but nothing is actually deleted. Only after reviewing that output should you remove the `-WhatIf` flag and run the real command. This preview habit is the difference between safe engineering and accidental data loss.',
               ],
               exerciseSteps: [
                 "Run `New-Item -Path notes.txt -ItemType File` to create a new file in the sandbox directory.",
@@ -344,38 +523,53 @@ export const curriculum: Curriculum = {
                 "File operations are composable — combine them in scripts.",
               ],
               tools: ["PowerShell", "Windows Terminal", "File Explorer"],
-              notesPrompt: "Write a command reference for the five file operations in this lesson. Add a -WhatIf example next to Remove-Item.",
+              notesPrompt:
+                "Write a command reference for the five file operations in this lesson. Add a -WhatIf example next to Remove-Item.",
               exercises: [
                 {
                   id: "new-item",
                   title: "Create a file",
-                  prompt: "What PowerShell cmdlet creates a new file or folder?",
+                  prompt:
+                    "What PowerShell cmdlet creates a new file or folder?",
                   placeholder: "Cmdlet name",
                   validationMode: "includes",
                   acceptedAnswers: ["new-item", "ni"],
-                  successMessage: "Correct. New-Item creates files, folders, and other items in the filesystem.",
+                  successMessage:
+                    "Correct. New-Item creates files, folders, and other items in the filesystem.",
                   hint: "The cmdlet name starts with New-.",
                   assessmentType: "action",
                 },
                 {
                   id: "whatif-flag",
                   title: "Safe deletion preview",
-                  prompt: "What flag runs a PowerShell command in preview mode without making changes?",
+                  prompt:
+                    "What flag runs a PowerShell command in preview mode without making changes?",
                   placeholder: "-...",
                   validationMode: "includes",
                   acceptedAnswers: ["-whatif", "whatif"],
-                  successMessage: "Correct. -WhatIf is the single most important safety flag for destructive operations.",
+                  successMessage:
+                    "Correct. -WhatIf is the single most important safety flag for destructive operations.",
                   hint: "It tells PowerShell to describe what it would do, without doing it.",
                   assessmentType: "action",
                 },
                 {
                   id: "move-vs-copy",
                   title: "Move vs copy",
-                  prompt: "What is the key difference between Move-Item and Copy-Item?",
+                  prompt:
+                    "What is the key difference between Move-Item and Copy-Item?",
                   placeholder: "Short answer",
                   validationMode: "includes",
-                  acceptedAnswers: ["removes", "original", "source", "copy leaves", "move deletes", "stays", "gone"],
-                  successMessage: "Correct. Copy leaves the source in place. Move removes it from the original location.",
+                  acceptedAnswers: [
+                    "removes",
+                    "original",
+                    "source",
+                    "copy leaves",
+                    "move deletes",
+                    "stays",
+                    "gone",
+                  ],
+                  successMessage:
+                    "Correct. Copy leaves the source in place. Move removes it from the original location.",
                   hint: "Think about what happens to the original file after the operation.",
                   assessmentType: "reasoning",
                 },
@@ -383,33 +577,46 @@ export const curriculum: Curriculum = {
               transferTask: {
                 id: "transfer-file-cleanup",
                 title: "Transfer challenge: safe folder cleanup",
-                prompt: "You need to reorganize a folder by moving files of different types into subfolders and deleting old backups. Describe your terminal workflow, including safety steps before deletion.",
+                prompt:
+                  "You need to reorganize a folder by moving files of different types into subfolders and deleting old backups. Describe your terminal workflow, including safety steps before deletion.",
                 placeholder: "Describe commands and safety checks",
                 validationMode: "includes",
-                acceptedAnswers: ["whatif", "preview", "move-item", "get-childitem", "inspect", "filter"],
-                successMessage: "Transfer evidence accepted. Your workflow demonstrates safety-first file manipulation at scale.",
+                acceptedAnswers: [
+                  "whatif",
+                  "preview",
+                  "move-item",
+                  "get-childitem",
+                  "inspect",
+                  "filter",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. Your workflow demonstrates safety-first file manipulation at scale.",
                 hint: "Mention how you would preview the deletions before running them, and how you would filter by file type.",
                 assessmentType: "transfer",
               },
-              competencies: [{ track: "FileManipulation", targetLevel: "Functional" }],
+              competencies: [
+                { track: "FileManipulation", targetLevel: "Functional" },
+              ],
               scaffoldingLevel: "step-by-step",
             },
             {
               id: "lesson-search-files",
               title: "Search and Filter Files Like a Pro",
-              summary: "Find files by name, content, size, or date using terminal search tools — without hunting through the GUI.",
+              summary:
+                "Find files by name, content, size, or date using terminal search tools — without hunting through the GUI.",
               duration: "35 min",
               difficulty: "Foundational",
-              objective: "Use Get-ChildItem with filters, Select-String, and pipeline composition to locate files and content quickly.",
+              objective:
+                "Use Get-ChildItem with filters, Select-String, and pipeline composition to locate files and content quickly.",
               explanation: [
                 "Engineers lose enormous time digging through folders in a file manager. The terminal can find files by name pattern, filter by extension or date, and search **inside** files for specific text — all in seconds. Once you learn terminal search, you will never go back to clicking through folders.",
                 "To search for files by name, use `Get-ChildItem` with the `-Recurse` and `-Filter` flags. `-Recurse` tells PowerShell to search **all subdirectories**, not just the current folder. `-Filter` narrows results by name pattern. For example: `Get-ChildItem -Recurse -Filter *.log` finds every `.log` file in the current directory and all directories beneath it.",
-                "To search **inside** files for specific text, use `Select-String` (alias: `sls`). It works like `grep` on Linux — it reads file contents and returns lines that match your search term. For example: `Select-String -Path *.txt -Pattern \"error\"` searches all `.txt` files in the current directory for lines containing the word \"error\". Combine it with `Get-ChildItem` using a pipe for recursive content search: `Get-ChildItem -Recurse -Filter *.log | Select-String \"timeout\"`.",
+                'To search **inside** files for specific text, use `Select-String` (alias: `sls`). It works like `grep` on Linux — it reads file contents and returns lines that match your search term. For example: `Select-String -Path *.txt -Pattern "error"` searches all `.txt` files in the current directory for lines containing the word "error". Combine it with `Get-ChildItem` using a pipe for recursive content search: `Get-ChildItem -Recurse -Filter *.log | Select-String "timeout"`.',
                 "You can also filter files by properties like modification date. Pipe `Get-ChildItem` into `Where-Object` to find recently changed files — for example: `Get-ChildItem -Recurse | Where-Object { $_.LastWriteTime -gt (Get-Date).AddDays(-1) }` finds files modified in the last 24 hours. These techniques compose: find files by name, filter by date, then search inside them — all in one pipeline.",
               ],
               demonstration: [
                 "Run `Get-ChildItem -Recurse -Filter *.txt` in the sandbox. You will see a list of every `.txt` file in the entire directory tree, with full paths. Notice that `-Recurse` descended into every subfolder automatically — no need to navigate into each one manually.",
-                "Now search inside those files: run `Get-ChildItem -Recurse -Filter *.txt | Select-String \"TODO\"`. The output shows matching lines with the filename, line number, and the matched text highlighted. This is how you answer questions like \"which file contains the database port?\" in seconds instead of minutes.",
+                'Now search inside those files: run `Get-ChildItem -Recurse -Filter *.txt | Select-String "TODO"`. The output shows matching lines with the filename, line number, and the matched text highlighted. This is how you answer questions like "which file contains the database port?" in seconds instead of minutes.',
                 "To narrow by date, try `Get-ChildItem -Recurse | Where-Object { $_.LastWriteTime -gt (Get-Date).AddDays(-1) }` to see only files modified in the last 24 hours. This is invaluable when debugging — if something broke recently, the recently changed files are your primary suspects.",
               ],
               exerciseSteps: [
@@ -428,27 +635,32 @@ export const curriculum: Curriculum = {
                 "Pipelines compose search: find files, then search inside them.",
               ],
               tools: ["PowerShell", "Windows Terminal"],
-              notesPrompt: "Write the command to find all files containing the word 'TODO' in a project folder. Explain each stage of the pipeline.",
+              notesPrompt:
+                "Write the command to find all files containing the word 'TODO' in a project folder. Explain each stage of the pipeline.",
               exercises: [
                 {
                   id: "recursive-search",
                   title: "Recursive file search",
-                  prompt: "What flag makes Get-ChildItem search all subdirectories?",
+                  prompt:
+                    "What flag makes Get-ChildItem search all subdirectories?",
                   placeholder: "-...",
                   validationMode: "includes",
                   acceptedAnswers: ["-recurse", "recurse"],
-                  successMessage: "Correct. -Recurse descends into all child directories automatically.",
+                  successMessage:
+                    "Correct. -Recurse descends into all child directories automatically.",
                   hint: "Think about the word that means going through all levels.",
                   assessmentType: "action",
                 },
                 {
                   id: "content-search",
                   title: "Search inside files",
-                  prompt: "What PowerShell cmdlet searches the content of files for a specific pattern?",
+                  prompt:
+                    "What PowerShell cmdlet searches the content of files for a specific pattern?",
                   placeholder: "Cmdlet name",
                   validationMode: "includes",
                   acceptedAnswers: ["select-string", "sls"],
-                  successMessage: "Correct. Select-String is the PowerShell equivalent of grep and is essential for log analysis.",
+                  successMessage:
+                    "Correct. Select-String is the PowerShell equivalent of grep and is essential for log analysis.",
                   hint: "It selects lines from files that match a string or pattern.",
                   assessmentType: "action",
                 },
@@ -456,15 +668,25 @@ export const curriculum: Curriculum = {
               transferTask: {
                 id: "transfer-file-search",
                 title: "Transfer challenge: find a config value",
-                prompt: "A teammate asks: 'Which file sets the database port?' Describe the terminal pipeline you would use to search every file in the project for the port number. Include the cmdlets and flags.",
+                prompt:
+                  "A teammate asks: 'Which file sets the database port?' Describe the terminal pipeline you would use to search every file in the project for the port number. Include the cmdlets and flags.",
                 placeholder: "Search pipeline",
                 validationMode: "includes",
-                acceptedAnswers: ["select-string", "get-childitem", "recurse", "pipe", "|"],
-                successMessage: "Transfer evidence accepted. You built a practical search pipeline from components.",
+                acceptedAnswers: [
+                  "select-string",
+                  "get-childitem",
+                  "recurse",
+                  "pipe",
+                  "|",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. You built a practical search pipeline from components.",
                 hint: "Combine recursive file listing with content search using the pipe operator.",
                 assessmentType: "transfer",
               },
-              competencies: [{ track: "TerminalOperation", targetLevel: "Functional" }],
+              competencies: [
+                { track: "TerminalOperation", targetLevel: "Functional" },
+              ],
               scaffoldingLevel: "step-by-step",
             },
           ],
@@ -473,61 +695,145 @@ export const curriculum: Curriculum = {
           id: "course-terminal-automation",
           title: "Terminal Automation",
           focus: "Scripting basics, repeatable workflows, and safe automation",
-          outcome: "Learners can write simple scripts, batch rename files, and automate repetitive tasks inside safe environments.",
+          outcome:
+            "Learners can write simple scripts, batch rename files, and automate repetitive tasks inside safe environments.",
           lessons: [
             {
               id: "lesson-terminal-automation",
               title: "Automate Repetitive Tasks Safely",
-              summary: "Use scripts and repeatable commands to eliminate friction without turning your machine into a mess.",
+              summary:
+                "Use scripts and repeatable commands to eliminate friction without turning your machine into a mess.",
               duration: "45 min",
               difficulty: "Intermediate",
-              objective: "Recognize repetitive workflows and encode them into safe, reviewable automation steps.",
+              objective:
+                "Recognize repetitive workflows and encode them into safe, reviewable automation steps.",
               explanation: [
                 "Automation is leverage — but it cuts both ways. Good automation saves time repeatedly across hundreds of files. Bad automation makes the same destructive mistake at scale. The difference comes down to discipline: **scope it, preview it, then execute it**.",
-                "In PowerShell, you store reusable values in **variables** using the `$` prefix. For example: `$targetFolder = \"C:\\Projects\\logs\"` saves a path you can reference later as `$targetFolder` in your commands. Variables keep your automation flexible — change the value in one place instead of editing every command.",
+                'In PowerShell, you store reusable values in **variables** using the `$` prefix. For example: `$targetFolder = "C:\\Projects\\logs"` saves a path you can reference later as `$targetFolder` in your commands. Variables keep your automation flexible — change the value in one place instead of editing every command.',
                 "The **dry-run** pattern is your safety net before any bulk operation. Use `-WhatIf` on any cmdlet that supports it: `Remove-Item $targetFolder\\*.tmp -WhatIf` prints what **would** be deleted without deleting anything. For commands that do not support `-WhatIf`, build your own preview: pipe your file list into `Select-Object Name` to review which files will be affected before running the real operation.",
                 "Safe automation follows a strict sequence: (1) define the **scope** — which files, which folder, which pattern; (2) run a **dry-run** or preview to verify your scope is correct; (3) **execute** the real operation; (4) **verify** the result matches expectations. Skipping step 2 is how engineers accidentally delete production logs or overwrite config files.",
               ],
               demonstration: [
-                "Start by storing the target in a variable: `$folder = \".\\sandbox\\logs\"`. Now list what is inside: `Get-ChildItem $folder`. You can see 20 `.tmp` files that need cleanup. Before touching them, preview the operation: `Remove-Item $folder\\*.tmp -WhatIf`. PowerShell prints each file it **would** delete. Read the list — does it match your intent? Only then remove the `-WhatIf` flag.",
+                'Start by storing the target in a variable: `$folder = ".\\sandbox\\logs"`. Now list what is inside: `Get-ChildItem $folder`. You can see 20 `.tmp` files that need cleanup. Before touching them, preview the operation: `Remove-Item $folder\\*.tmp -WhatIf`. PowerShell prints each file it **would** delete. Read the list — does it match your intent? Only then remove the `-WhatIf` flag.',
                 "Now capture this as a reusable workflow. The key elements: a `$folder` variable for scope, a `Get-ChildItem` call to inspect, a `-WhatIf` pass to preview, and the actual `Remove-Item` to execute. Add a comment at the top of your script: `# Removes .tmp files from logs folder. Reverse by restoring from backup.` Documentation is part of automation quality — your future self will thank you.",
                 "To roll back, you need a plan **before** you execute. The simplest rollback is to `Copy-Item` the target files into a backup folder before the destructive step. A more advanced approach is to use `Git` to track changes. Either way: if you cannot describe how to undo your automation, you are not ready to run it.",
               ],
-              exerciseSteps: [ "Identify a repetitive task in the sandbox workspace and store the target path in a `$variable`.", "Write a command using `-WhatIf` or pipe into `Select-Object` to preview the action before making changes.", "Describe how you would roll the action back if something goes wrong." ],
-              validationChecks: [ "User defines the target scope of the automation using a `$variable`.", "User includes a `-WhatIf` preview or dry-run step in the workflow.", "User records how to reverse the operation (backup, undo plan, or version control)." ],
-              retention: [ "Automate only what you understand.", "Prefer reversible workflows and training sandboxes.", "Documentation is part of automation quality." ],
-              tools: ["PowerShell", "Windows Terminal", "PowerToys", "Obsidian"],
-              notesPrompt: "Capture one repetitive workflow from your own computer life and describe how you would sandbox it before automating it.",
+              exerciseSteps: [
+                "Identify a repetitive task in the sandbox workspace and store the target path in a `$variable`.",
+                "Write a command using `-WhatIf` or pipe into `Select-Object` to preview the action before making changes.",
+                "Describe how you would roll the action back if something goes wrong.",
+              ],
+              validationChecks: [
+                "User defines the target scope of the automation using a `$variable`.",
+                "User includes a `-WhatIf` preview or dry-run step in the workflow.",
+                "User records how to reverse the operation (backup, undo plan, or version control).",
+              ],
+              retention: [
+                "Automate only what you understand.",
+                "Prefer reversible workflows and training sandboxes.",
+                "Documentation is part of automation quality.",
+              ],
+              tools: [
+                "PowerShell",
+                "Windows Terminal",
+                "PowerToys",
+                "Obsidian",
+              ],
+              notesPrompt:
+                "Capture one repetitive workflow from your own computer life and describe how you would sandbox it before automating it.",
               exercises: [
-                { id: "safety-principle", title: "Safety first", prompt: "Type the principle that should come before writing automation that modifies many files.", placeholder: "Short phrase", validationMode: "includes", acceptedAnswers: ["dry run", "preview", "test in sandbox", "reversible"], successMessage: "Correct. Safe automation starts with previewing, isolating, and making rollback possible.", hint: "Think about what you should do before bulk edits hit real files.", assessmentType: "action" },
-                { id: "variable-store", title: "Store a value", prompt: "In PowerShell, what symbol precedes a variable name when you assign or read it?", placeholder: "Single character", validationMode: "includes", acceptedAnswers: ["$"], successMessage: "Correct. PowerShell uses $ to declare and reference variables, e.g. $fileName = 'report.txt'.", hint: "It is the same symbol used for variables in many scripting languages.", assessmentType: "action" },
-                { id: "automation-scope", title: "Scope the change", prompt: "Why is it important to define the scope of an automation before running it?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["limit", "control", "unintended", "wrong files", "boundary", "target", "only affect"], successMessage: "Correct. Without clear scope, automation can modify files or folders you did not intend to touch.", hint: "Think about what happens if a script runs against the wrong directory.", assessmentType: "reasoning" },
+                {
+                  id: "safety-principle",
+                  title: "Safety first",
+                  prompt:
+                    "Type the principle that should come before writing automation that modifies many files.",
+                  placeholder: "Short phrase",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "dry run",
+                    "preview",
+                    "test in sandbox",
+                    "reversible",
+                  ],
+                  successMessage:
+                    "Correct. Safe automation starts with previewing, isolating, and making rollback possible.",
+                  hint: "Think about what you should do before bulk edits hit real files.",
+                  assessmentType: "action",
+                },
+                {
+                  id: "variable-store",
+                  title: "Store a value",
+                  prompt:
+                    "In PowerShell, what symbol precedes a variable name when you assign or read it?",
+                  placeholder: "Single character",
+                  validationMode: "includes",
+                  acceptedAnswers: ["$"],
+                  successMessage:
+                    "Correct. PowerShell uses $ to declare and reference variables, e.g. $fileName = 'report.txt'.",
+                  hint: "It is the same symbol used for variables in many scripting languages.",
+                  assessmentType: "action",
+                },
+                {
+                  id: "automation-scope",
+                  title: "Scope the change",
+                  prompt:
+                    "Why is it important to define the scope of an automation before running it?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "limit",
+                    "control",
+                    "unintended",
+                    "wrong files",
+                    "boundary",
+                    "target",
+                    "only affect",
+                  ],
+                  successMessage:
+                    "Correct. Without clear scope, automation can modify files or folders you did not intend to touch.",
+                  hint: "Think about what happens if a script runs against the wrong directory.",
+                  assessmentType: "reasoning",
+                },
               ],
               transferTask: {
                 id: "transfer-automation-plan",
                 title: "Transfer challenge: plan a safe automation",
-                prompt: "You need to rename 200 log files from .log to .log.bak. Describe your automation plan including: how you scope the change, preview it, execute it, and roll it back if something goes wrong.",
+                prompt:
+                  "You need to rename 200 log files from .log to .log.bak. Describe your automation plan including: how you scope the change, preview it, execute it, and roll it back if something goes wrong.",
                 placeholder: "Automation plan with safety steps",
                 validationMode: "includes",
-                acceptedAnswers: ["preview", "dry run", "whatif", "rollback", "rename", "test", "scope"],
-                successMessage: "Transfer evidence accepted. Your plan demonstrates safety-first automation thinking.",
+                acceptedAnswers: [
+                  "preview",
+                  "dry run",
+                  "whatif",
+                  "rollback",
+                  "rename",
+                  "test",
+                  "scope",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. Your plan demonstrates safety-first automation thinking.",
                 hint: "Cover scope, preview, execution, and rollback — in that order.",
                 assessmentType: "transfer",
               },
-              competencies: [{ track: "Automation", targetLevel: "Functional" }],
+              competencies: [
+                { track: "Automation", targetLevel: "Functional" },
+              ],
               scaffoldingLevel: "step-by-step",
             },
             {
               id: "lesson-piping-filtering",
               title: "Piping and Filtering Output",
-              summary: "Chain commands together to transform, filter, and direct output exactly where you need it.",
+              summary:
+                "Chain commands together to transform, filter, and direct output exactly where you need it.",
               duration: "40 min",
               difficulty: "Intermediate",
-              objective: "Use pipes, Select-Object, Where-Object, and output redirection to process information efficiently.",
+              objective:
+                "Use pipes, Select-Object, Where-Object, and output redirection to process information efficiently.",
               explanation: [
                 "The **pipe operator** (`|`) is the most powerful composition tool in the terminal. It takes the output of one command and sends it directly as input to the next command. Instead of saving intermediate results to files or variables, you chain commands together in a single line — each stage transforms or filters the data flowing through.",
                 "`Sort-Object` reorders output by a property you choose. For example, `Get-Process | Sort-Object CPU -Descending` sorts all running processes from highest to lowest CPU usage. Without `-Descending`, it sorts in ascending order. You can sort by any property: `Name`, `WorkingSet` (memory), `CPU`, or file properties like `Length` and `LastWriteTime`.",
-                "`Where-Object` (alias: `where`) **filters** objects based on a condition. The syntax uses a script block: `Get-ChildItem | Where-Object { $_.Length -gt 1MB }` keeps only files larger than 1 MB. The special variable `$_` refers to the current object in the pipeline. Think of `Where-Object` as asking a yes/no question about each item — only items that answer \"yes\" pass through.",
+                '`Where-Object` (alias: `where`) **filters** objects based on a condition. The syntax uses a script block: `Get-ChildItem | Where-Object { $_.Length -gt 1MB }` keeps only files larger than 1 MB. The special variable `$_` refers to the current object in the pipeline. Think of `Where-Object` as asking a yes/no question about each item — only items that answer "yes" pass through.',
                 "`Select-Object` (alias: `select`) **chooses which properties to display** or limits the number of results. `Get-Process | Select-Object Name, CPU` shows only the name and CPU columns. `Select-Object -First 5` keeps only the first five results. Combine all three in a single pipeline: `Get-Process | Sort-Object CPU -Descending | Select-Object -First 5 | Select-Object Name, CPU` gives you a clean top-5 CPU report.",
               ],
               demonstration: [
@@ -535,45 +841,96 @@ export const curriculum: Curriculum = {
                 "Now filter files: run `Get-ChildItem | Where-Object { $_.Length -gt 1KB }` to show only files larger than 1 KB. The `$_` variable represents each file as it flows through the pipeline. Try `Get-ChildItem | Where-Object { $_.Extension -eq '.txt' }` to show only `.txt` files. `Where-Object` is your filter; `Select-Object` is your lens — use both to extract exactly the data you need.",
                 "To save pipeline output to a file, use the redirection operator `>`. For example: `Get-Process | Sort-Object CPU -Descending | Select-Object -First 10 > top-processes.txt` writes the result to a file instead of the screen. Use `>>` to **append** to an existing file instead of overwriting it. This is how you capture diagnostic output for sharing or later analysis.",
               ],
-              exerciseSteps: [ "Run `Get-Process | Sort-Object WorkingSet -Descending` to sort processes by memory usage using the `|` pipe.", "Use `Get-ChildItem | Where-Object { $_.LastWriteTime -gt (Get-Date).Date }` to filter directory contents to files modified today.", "Redirect the output of a command to a file using `>`." ],
-              validationChecks: [ "User chains at least two commands with the `|` pipe operator.", "User demonstrates filtering with `Where-Object` using a condition.", "User shows output redirection to a file using `>` or `>>`." ],
-              retention: [ "The pipe is how you compose small tools into powerful workflows.", "Where-Object is your filter. Select-Object is your lens.", "Redirect to a file when you need to save or share output." ],
+              exerciseSteps: [
+                "Run `Get-Process | Sort-Object WorkingSet -Descending` to sort processes by memory usage using the `|` pipe.",
+                "Use `Get-ChildItem | Where-Object { $_.LastWriteTime -gt (Get-Date).Date }` to filter directory contents to files modified today.",
+                "Redirect the output of a command to a file using `>`.",
+              ],
+              validationChecks: [
+                "User chains at least two commands with the `|` pipe operator.",
+                "User demonstrates filtering with `Where-Object` using a condition.",
+                "User shows output redirection to a file using `>` or `>>`.",
+              ],
+              retention: [
+                "The pipe is how you compose small tools into powerful workflows.",
+                "Where-Object is your filter. Select-Object is your lens.",
+                "Redirect to a file when you need to save or share output.",
+              ],
               tools: ["PowerShell", "Windows Terminal"],
-              notesPrompt: "Write three pipe chains you found useful. Note what each stage does.",
+              notesPrompt:
+                "Write three pipe chains you found useful. Note what each stage does.",
               exercises: [
-                { id: "pipe-basics", title: "Pipe operator", prompt: "What symbol connects the output of one command to the input of the next?", placeholder: "Single character", validationMode: "exact", acceptedAnswers: ["|"], successMessage: "Correct. The pipe is the foundation of command composition.", hint: "It is a vertical bar character on your keyboard.", assessmentType: "action" },
-                { id: "filter-command", title: "Filter results", prompt: "What PowerShell cmdlet filters objects based on a condition?", placeholder: "Cmdlet name", validationMode: "includes", acceptedAnswers: ["where-object", "where"], successMessage: "Correct. Where-Object lets you keep only what matches your criteria.", hint: "Think about WHERE you want to look in the results.", assessmentType: "action" },
+                {
+                  id: "pipe-basics",
+                  title: "Pipe operator",
+                  prompt:
+                    "What symbol connects the output of one command to the input of the next?",
+                  placeholder: "Single character",
+                  validationMode: "exact",
+                  acceptedAnswers: ["|"],
+                  successMessage:
+                    "Correct. The pipe is the foundation of command composition.",
+                  hint: "It is a vertical bar character on your keyboard.",
+                  assessmentType: "action",
+                },
+                {
+                  id: "filter-command",
+                  title: "Filter results",
+                  prompt:
+                    "What PowerShell cmdlet filters objects based on a condition?",
+                  placeholder: "Cmdlet name",
+                  validationMode: "includes",
+                  acceptedAnswers: ["where-object", "where"],
+                  successMessage:
+                    "Correct. Where-Object lets you keep only what matches your criteria.",
+                  hint: "Think about WHERE you want to look in the results.",
+                  assessmentType: "action",
+                },
               ],
               transferTask: {
                 id: "transfer-pipeline-compose",
                 title: "Transfer challenge: build a diagnostic pipeline",
-                prompt: "Write a PowerShell pipeline that finds the 5 largest files in a folder and displays only name and size. Explain what each stage of the pipe does.",
+                prompt:
+                  "Write a PowerShell pipeline that finds the 5 largest files in a folder and displays only name and size. Explain what each stage of the pipe does.",
                 placeholder: "Pipeline with explanation",
                 validationMode: "includes",
-                acceptedAnswers: ["get-childitem", "sort", "select", "|", "length", "first", "5"],
-                successMessage: "Transfer evidence accepted. You composed multiple stages into a practical pipeline.",
+                acceptedAnswers: [
+                  "get-childitem",
+                  "sort",
+                  "select",
+                  "|",
+                  "length",
+                  "first",
+                  "5",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. You composed multiple stages into a practical pipeline.",
                 hint: "List files, sort by size descending, then select the top 5 with only the properties you need.",
                 assessmentType: "transfer",
               },
-              competencies: [{ track: "TerminalOperation", targetLevel: "Functional" }],
+              competencies: [
+                { track: "TerminalOperation", targetLevel: "Functional" },
+              ],
               scaffoldingLevel: "step-by-step",
             },
             {
               id: "lesson-powershell-scripting",
               title: "Write Your First PowerShell Scripts",
-              summary: "Move from one-off commands to reusable scripts with variables, conditionals, and loops.",
+              summary:
+                "Move from one-off commands to reusable scripts with variables, conditionals, and loops.",
               duration: "50 min",
               difficulty: "Intermediate",
-              objective: "Write a PowerShell script that uses variables, an if/else block, and a loop to automate a real repetitive task.",
+              objective:
+                "Write a PowerShell script that uses variables, an if/else block, and a loop to automate a real repetitive task.",
               explanation: [
                 "A **script** is just a saved sequence of commands stored in a `.ps1` file. Everything you type in the interactive terminal works the same way inside a script — the difference is that a script can be re-run, shared, and version-controlled. This lesson teaches you the four building blocks of PowerShell scripting: **variables**, **string interpolation**, **loops**, and **conditionals**.",
-                "**Variables** in PowerShell always start with `$`. Assignment is straightforward: `$folderPath = \"C:\\Projects\"` stores a string, `$maxSize = 1024` stores a number, and `$files = Get-ChildItem $folderPath` stores command output. You reference the variable the same way: `$folderPath` anywhere in your script returns its value.",
+                '**Variables** in PowerShell always start with `$`. Assignment is straightforward: `$folderPath = "C:\\Projects"` stores a string, `$maxSize = 1024` stores a number, and `$files = Get-ChildItem $folderPath` stores command output. You reference the variable the same way: `$folderPath` anywhere in your script returns its value.',
                 "**String interpolation** lets you embed variables directly inside double-quoted strings. `\"Processing folder: $folderPath\"` outputs `Processing folder: C:\\Projects`. For property access inside strings, use `$()`: `\"Found $($files.Count) files\"`. Single-quoted strings (`'...'`) do **not** interpolate — `'$folderPath'` outputs the literal text `$folderPath`.",
-                "The **foreach** loop iterates over a collection: `foreach ($file in $files) { ... }` runs the code block once for every item in `$files`, with `$file` holding the current item each time. The **if/else** conditional branches logic: `if ($file.Length -lt 1KB) { Write-Host \"Skipping small file\" } else { Write-Host \"Processing $($file.Name)\" }`. Together, these let you write scripts that inspect every file and make decisions about each one.",
+                'The **foreach** loop iterates over a collection: `foreach ($file in $files) { ... }` runs the code block once for every item in `$files`, with `$file` holding the current item each time. The **if/else** conditional branches logic: `if ($file.Length -lt 1KB) { Write-Host "Skipping small file" } else { Write-Host "Processing $($file.Name)" }`. Together, these let you write scripts that inspect every file and make decisions about each one.',
               ],
               demonstration: [
-                "Create a new file called `organize.ps1`. Start with variables: `$folderPath = \".\\sandbox\"` and `$files = Get-ChildItem $folderPath -Filter *.txt`. Now add a loop: `foreach ($file in $files) { Write-Host \"Found: $($file.Name)\" }`. Run the script with `.\\organize.ps1` — it prints each `.txt` filename in the sandbox.",
-                "Add a conditional inside the loop to skip small files: `if ($file.Length -lt 1KB) { Write-Host \"Skipping $($file.Name) (too small)\" } else { Write-Host \"Processing $($file.Name)\" }`. This is the core pattern: loop over items, check a condition, and act accordingly. Notice the **string interpolation** — `$($file.Name)` inside double quotes inserts the file's name into the output.",
+                'Create a new file called `organize.ps1`. Start with variables: `$folderPath = ".\\sandbox"` and `$files = Get-ChildItem $folderPath -Filter *.txt`. Now add a loop: `foreach ($file in $files) { Write-Host "Found: $($file.Name)" }`. Run the script with `.\\organize.ps1` — it prints each `.txt` filename in the sandbox.',
+                'Add a conditional inside the loop to skip small files: `if ($file.Length -lt 1KB) { Write-Host "Skipping $($file.Name) (too small)" } else { Write-Host "Processing $($file.Name)" }`. This is the core pattern: loop over items, check a condition, and act accordingly. Notice the **string interpolation** — `$($file.Name)` inside double quotes inserts the file\'s name into the output.',
                 "Before adding any destructive operation (like renaming or deleting), add a `-WhatIf` preview. The safe pattern is: loop through the files, print what you **would** do, review the output, then add the real command only after confirming the preview looks correct. This is how professional automation scripts are built — incrementally, with safety checks at every stage.",
               ],
               exerciseSteps: [
@@ -592,38 +949,45 @@ export const curriculum: Curriculum = {
                 "Parameterize scripts so they work on more than one machine.",
               ],
               tools: ["PowerShell", "Windows Terminal", "Visual Studio Code"],
-              notesPrompt: "Write the skeleton of a reusable PowerShell script with a param block, a loop, and an if check. Keep it as a reference.",
+              notesPrompt:
+                "Write the skeleton of a reusable PowerShell script with a param block, a loop, and an if check. Keep it as a reference.",
               exercises: [
                 {
                   id: "ps-variable",
                   title: "Variable syntax",
-                  prompt: "How do you declare a variable called folderPath in PowerShell?",
+                  prompt:
+                    "How do you declare a variable called folderPath in PowerShell?",
                   placeholder: "$...",
                   validationMode: "includes",
                   acceptedAnswers: ["$folderpath", "$folderPath"],
-                  successMessage: "Correct. All PowerShell variables are prefixed with $.",
+                  successMessage:
+                    "Correct. All PowerShell variables are prefixed with $.",
                   hint: "PowerShell variables always start with a dollar sign.",
                   assessmentType: "action",
                 },
                 {
                   id: "ps-loop",
                   title: "Loop structure",
-                  prompt: "Complete the PowerShell foreach loop header: foreach (___ in $files)",
+                  prompt:
+                    "Complete the PowerShell foreach loop header: foreach (___ in $files)",
                   placeholder: "Variable name that refers to each item",
                   validationMode: "includes",
                   acceptedAnswers: ["$file", "$item", "$f"],
-                  successMessage: "Correct. The foreach variable receives each item in the collection on every iteration.",
+                  successMessage:
+                    "Correct. The foreach variable receives each item in the collection on every iteration.",
                   hint: "It is a new variable that holds each element of $files one at a time.",
                   assessmentType: "action",
                 },
                 {
                   id: "ps-conditional",
                   title: "Conditional logic",
-                  prompt: "What keyword begins a conditional block in PowerShell?",
+                  prompt:
+                    "What keyword begins a conditional block in PowerShell?",
                   placeholder: "Keyword",
                   validationMode: "includes",
                   acceptedAnswers: ["if"],
-                  successMessage: "Correct. if is how you branch behavior based on a condition in any language.",
+                  successMessage:
+                    "Correct. if is how you branch behavior based on a condition in any language.",
                   hint: "It is the same keyword used in nearly every programming language.",
                   assessmentType: "action",
                 },
@@ -631,15 +995,27 @@ export const curriculum: Curriculum = {
               transferTask: {
                 id: "transfer-ps-script",
                 title: "Transfer challenge: automate a file workflow",
-                prompt: "Describe a PowerShell script that scans a downloads folder, moves PDFs into a Documents/PDFs subfolder, and logs each move with the filename and timestamp. Include the key script elements you would use.",
+                prompt:
+                  "Describe a PowerShell script that scans a downloads folder, moves PDFs into a Documents/PDFs subfolder, and logs each move with the filename and timestamp. Include the key script elements you would use.",
                 placeholder: "Describe variables, loop, and logic",
                 validationMode: "includes",
-                acceptedAnswers: ["foreach", "move-item", "variable", "$", "if", "loop", "get-childitem"],
-                successMessage: "Transfer evidence accepted. Your script design shows scripting intuition applied to a real-world task.",
+                acceptedAnswers: [
+                  "foreach",
+                  "move-item",
+                  "variable",
+                  "$",
+                  "if",
+                  "loop",
+                  "get-childitem",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. Your script design shows scripting intuition applied to a real-world task.",
                 hint: "Mention the loop structure, file type check, move command, and how you would log actions.",
                 assessmentType: "transfer",
               },
-              competencies: [{ track: "Automation", targetLevel: "Functional" }],
+              competencies: [
+                { track: "Automation", targetLevel: "Functional" },
+              ],
               scaffoldingLevel: "goal-driven",
             },
           ],
@@ -647,16 +1023,20 @@ export const curriculum: Curriculum = {
         {
           id: "course-knowledge-management",
           title: "Knowledge Management with Obsidian",
-          focus: "Note-taking, linked documentation, and personal reference systems",
-          outcome: "Learners build a personal knowledge vault with structured notes, backlinks, and reusable references.",
+          focus:
+            "Note-taking, linked documentation, and personal reference systems",
+          outcome:
+            "Learners build a personal knowledge vault with structured notes, backlinks, and reusable references.",
           lessons: [
             {
               id: "lesson-obsidian-vault",
               title: "Build Your Engineering Vault",
-              summary: "Set up an Obsidian vault structured for engineering learning, command references, and project notes.",
+              summary:
+                "Set up an Obsidian vault structured for engineering learning, command references, and project notes.",
               duration: "35 min",
               difficulty: "Foundational",
-              objective: "Create a vault with folders, note templates, and a tagging strategy that supports engineering work.",
+              objective:
+                "Create a vault with folders, note templates, and a tagging strategy that supports engineering work.",
               explanation: [
                 "Engineers who retain what they learn use structured note systems — not scattered text files or bookmarks they never revisit. **Obsidian** is a note-taking app where your notes are stored as plain Markdown files in a folder called a **vault**. The vault lives on your filesystem, which means you own your data and can back it up with Git or any file sync tool.",
                 "A well-organized vault starts with **folders** that match how you think. For engineering work, a proven structure is: `Commands/` for terminal reference notes, `Concepts/` for mental models and explanations, `Projects/` for project-specific context, and `Logs/` for debugging journals and daily entries. You can add folders as your needs grow — the structure should serve retrieval, not impose bureaucracy.",
@@ -668,23 +1048,86 @@ export const curriculum: Curriculum = {
                 "Next, create a note in `Concepts/` called `File Searching.md`. In this note, write about how terminal search works and include a backlink: `See also: [[Get-ChildItem]]`. Now open the Get-ChildItem note — you will see a **Backlinks** panel showing that `File Searching` references it. This bidirectional linking is what makes Obsidian more powerful than a flat folder of files.",
                 "Open the **graph view** from the left sidebar. You will see your notes as dots with lines connecting them based on your `[[backlinks]]`. As your vault grows, this graph reveals clusters — commands that relate to the same concept, projects that share techniques, or debugging logs that reference the same tools. Add tags like `#daily` and `#debugging` to make search and filtering even faster.",
               ],
-              exerciseSteps: [ "Create a vault structure with at least four topic folders (e.g., `Commands/`, `Concepts/`, `Projects/`, `Logs/`).", "Write a note for a command you learned today, including an example and a `[[backlink]]` to a related note.", "Add `#tags` to organize the note for later retrieval and search." ],
-              validationChecks: [ "User has a vault with organized folders matching engineering knowledge categories.", "User demonstrates creating a `[[backlink]]` between two related notes.", "User applies `#tags` consistently to notes for cross-folder discovery." ],
-              retention: [ "A good vault grows with you \u2014 build the habit early.", "Backlinks create a web of understanding, not just isolated notes.", "Searchability beats perfect organization." ],
+              exerciseSteps: [
+                "Create a vault structure with at least four topic folders (e.g., `Commands/`, `Concepts/`, `Projects/`, `Logs/`).",
+                "Write a note for a command you learned today, including an example and a `[[backlink]]` to a related note.",
+                "Add `#tags` to organize the note for later retrieval and search.",
+              ],
+              validationChecks: [
+                "User has a vault with organized folders matching engineering knowledge categories.",
+                "User demonstrates creating a `[[backlink]]` between two related notes.",
+                "User applies `#tags` consistently to notes for cross-folder discovery.",
+              ],
+              retention: [
+                "A good vault grows with you \u2014 build the habit early.",
+                "Backlinks create a web of understanding, not just isolated notes.",
+                "Searchability beats perfect organization.",
+              ],
               tools: ["Obsidian"],
-              notesPrompt: "Design your ideal vault folder structure. List the categories that matter most for your learning.",
+              notesPrompt:
+                "Design your ideal vault folder structure. List the categories that matter most for your learning.",
               exercises: [
-                { id: "vault-structure", title: "Vault categories", prompt: "Name at least three folder categories you would create in an engineering knowledge vault.", placeholder: "e.g. Commands, Concepts, ...", validationMode: "includes", acceptedAnswers: ["commands", "concepts", "projects", "logs", "notes", "debugging", "references"], successMessage: "Good structure. Organized vaults make knowledge retrieval fast.", hint: "Think about the types of information an engineer needs to record.", assessmentType: "action" },
-                { id: "backlink-purpose", title: "Why backlink?", prompt: "What is the purpose of creating backlinks between notes in a knowledge vault?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["connect", "link", "relationship", "related", "discover", "navigate", "find"], successMessage: "Correct. Backlinks create a web of connections so you can discover related knowledge and navigate between topics.", hint: "Think about how one concept relates to another and how you would find those connections later.", assessmentType: "reasoning" },
+                {
+                  id: "vault-structure",
+                  title: "Vault categories",
+                  prompt:
+                    "Name at least three folder categories you would create in an engineering knowledge vault.",
+                  placeholder: "e.g. Commands, Concepts, ...",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "commands",
+                    "concepts",
+                    "projects",
+                    "logs",
+                    "notes",
+                    "debugging",
+                    "references",
+                  ],
+                  successMessage:
+                    "Good structure. Organized vaults make knowledge retrieval fast.",
+                  hint: "Think about the types of information an engineer needs to record.",
+                  assessmentType: "action",
+                },
+                {
+                  id: "backlink-purpose",
+                  title: "Why backlink?",
+                  prompt:
+                    "What is the purpose of creating backlinks between notes in a knowledge vault?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "connect",
+                    "link",
+                    "relationship",
+                    "related",
+                    "discover",
+                    "navigate",
+                    "find",
+                  ],
+                  successMessage:
+                    "Correct. Backlinks create a web of connections so you can discover related knowledge and navigate between topics.",
+                  hint: "Think about how one concept relates to another and how you would find those connections later.",
+                  assessmentType: "reasoning",
+                },
               ],
               transferTask: {
                 id: "transfer-vault-design",
                 title: "Transfer challenge: design a project vault",
-                prompt: "You are starting a new software project. Describe the vault structure you would create: folder names, what goes in each, and how you would use backlinks to connect notes across folders.",
+                prompt:
+                  "You are starting a new software project. Describe the vault structure you would create: folder names, what goes in each, and how you would use backlinks to connect notes across folders.",
                 placeholder: "Vault design with linking strategy",
                 validationMode: "includes",
-                acceptedAnswers: ["folder", "backlink", "link", "commands", "notes", "project", "tag"],
-                successMessage: "Transfer evidence accepted. You designed a knowledge system tailored to engineering work.",
+                acceptedAnswers: [
+                  "folder",
+                  "backlink",
+                  "link",
+                  "commands",
+                  "notes",
+                  "project",
+                  "tag",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. You designed a knowledge system tailored to engineering work.",
                 hint: "Name specific folders, give an example note, and explain how two notes in different folders would link.",
                 assessmentType: "transfer",
               },
@@ -693,18 +1136,27 @@ export const curriculum: Curriculum = {
             },
           ],
         },
-
       ],
     },
     {
       id: "phase-2",
       title: "Programming and Debugging Foundations",
       strapline: "Build mental models for how software behaves.",
-      purpose: "Transition from using tools to understanding how software systems work. Read code, fix bugs, handle configuration, and work with APIs and small applications.",
+      purpose:
+        "Transition from using tools to understanding how software systems work. Read code, fix bugs, handle configuration, and work with APIs and small applications.",
       level: "Intermediate",
       duration: "8–10 weeks",
-      environment: "Isolated project workspaces with seeded bugs, tests, and version history",
-      tools: ["Visual Studio Code", "Git", "GitHub", "Node.js", "npm", "Postman", "Docker"],
+      environment:
+        "Isolated project workspaces with seeded bugs, tests, and version history",
+      tools: [
+        "Visual Studio Code",
+        "Git",
+        "GitHub",
+        "Node.js",
+        "npm",
+        "Postman",
+        "Docker",
+      ],
       guardrails: [
         "Every practice repo is disposable and resettable.",
         "Broken states are intentional and recoverable to teach debugging.",
@@ -722,14 +1174,39 @@ export const curriculum: Curriculum = {
         "Build an API-backed feature through a structured Git workflow",
         "Complete an authenticated API workflow using Postman collections",
       ],
-      competencyFocus: ["CodeReading", "Debugging", "VersionControl", "ApiInteraction", "ProgrammingLogic"],
+      competencyFocus: [
+        "CodeReading",
+        "Debugging",
+        "VersionControl",
+        "ApiInteraction",
+        "ProgrammingLogic",
+      ],
       exitStandard: {
-        summary: "The learner can read small programs, modify behavior intentionally, diagnose common failures, build working features in a guided codebase, and work with external APIs.",
+        summary:
+          "The learner can read small programs, modify behavior intentionally, diagnose common failures, build working features in a guided codebase, and work with external APIs.",
         gates: [
-          { description: "Read an unfamiliar codebase and explain its data flow", competency: "CodeReading", requiredLevel: "Functional" },
-          { description: "Identify bug cause from symptoms and verify the fix", competency: "Debugging", requiredLevel: "Functional" },
-          { description: "Use Git branches, commits, and diffs safely", competency: "VersionControl", requiredLevel: "Assisted" },
-          { description: "Make HTTP requests and handle API responses correctly", competency: "ApiInteraction", requiredLevel: "Assisted" },
+          {
+            description:
+              "Read an unfamiliar codebase and explain its data flow",
+            competency: "CodeReading",
+            requiredLevel: "Functional",
+          },
+          {
+            description: "Identify bug cause from symptoms and verify the fix",
+            competency: "Debugging",
+            requiredLevel: "Functional",
+          },
+          {
+            description: "Use Git branches, commits, and diffs safely",
+            competency: "VersionControl",
+            requiredLevel: "Assisted",
+          },
+          {
+            description:
+              "Make HTTP requests and handle API responses correctly",
+            competency: "ApiInteraction",
+            requiredLevel: "Assisted",
+          },
         ],
         representativeLabs: [
           "Fix a broken form submission",
@@ -743,55 +1220,115 @@ export const curriculum: Curriculum = {
           id: "course-software-engineering",
           title: "Practical Software Engineering",
           focus: "Code, debugging, version control, and project structure",
-          outcome: "Learners can work on a real codebase, investigate failures, and make disciplined changes with version control.",
+          outcome:
+            "Learners can work on a real codebase, investigate failures, and make disciplined changes with version control.",
           lessons: [
             {
               id: "lesson-code-reading",
               title: "Read Code Before Writing Code",
-              summary: "Build the skill of reading and understanding existing code \u2014 the most common engineering activity.",
+              summary:
+                "Build the skill of reading and understanding existing code \u2014 the most common engineering activity.",
               duration: "40 min",
               difficulty: "Core",
-              objective: "Navigate an unfamiliar codebase, identify structure, trace data flow, and explain what code does before modifying it.",
+              objective:
+                "Navigate an unfamiliar codebase, identify structure, trace data flow, and explain what code does before modifying it.",
               explanation: [
                 "Engineers spend more time reading code than writing it. The ability to open an unfamiliar file and quickly understand its purpose, dependencies, and behavior is a **core professional skill**. Studies consistently show that developers spend 60–70 % of their time reading existing code, not writing new code. If you cannot read efficiently, every other skill slows down.",
-                "Systematic reading starts with the **entry point** — the file where execution begins. In a Node.js project, this is typically `index.js`, `index.ts`, `server.js`, or whatever the `\"main\"` field in `package.json` points to. Open `package.json` first and look for the `\"main\"` or `\"scripts\"` section — it tells you where the application starts.",
+                'Systematic reading starts with the **entry point** — the file where execution begins. In a Node.js project, this is typically `index.js`, `index.ts`, `server.js`, or whatever the `"main"` field in `package.json` points to. Open `package.json` first and look for the `"main"` or `"scripts"` section — it tells you where the application starts.',
                 "From the entry point, trace **imports** and **function calls** outward. Every `import` or `require()` statement is a link to another module. Follow those links to build a map of the codebase. Your goal is to understand the **data flow**: where data enters the system, how it is transformed, and where it exits (as a response, a file write, or a log).",
                 "VS Code has three navigation shortcuts you will use constantly: `F12` (**Go to Definition**) jumps to where a function or variable is declared. `Shift+F12` (**Find All References**) shows every place a symbol is used. `Ctrl+Shift+O` opens the **Outline view**, which lists all functions and classes in the current file. These tools replace scrolling and guessing with precise, instant navigation.",
               ],
               demonstration: [
-                "Open the sample project. Start with `package.json` — look at the `\"main\"` field or the `\"scripts\"` section to find the entry point. In this project, the entry point is `src/index.ts`. Open that file.",
+                'Open the sample project. Start with `package.json` — look at the `"main"` field or the `"scripts"` section to find the entry point. In this project, the entry point is `src/index.ts`. Open that file.',
                 "In `src/index.ts`, you see two `import` statements at the top pulling in `handleRequest` from `./routes` and `connectDB` from `./db`. These are the two main modules. Click on `handleRequest` and press `F12` — VS Code jumps directly to its definition in `routes.ts`. This is **Go to Definition** in action.",
                 "Inside `handleRequest`, trace the data: the function receives a `Request` object, extracts query parameters, passes them to `fetchUser()`, and returns the result as JSON. Press `Shift+F12` on `fetchUser` to see all the places it is called — this is **Find All References**. Now you have a mental map: entry point → route handler → data fetch → response.",
                 "Finally, press `Ctrl+Shift+O` to open the Outline view. It lists every function in the file, so you can see the full structure at a glance without scrolling. The pattern is always the same: **entry point → imports → data flow → behavior**. Follow this sequence and you will understand any project faster than reading it top-to-bottom.",
               ],
-              exerciseSteps: [ "Open the provided starter project and read `package.json` to find the entry point file.", "Open the entry point and use `F12` (Go to Definition) to navigate to at least two imported functions.", "Trace one data path from input to output and write a one-sentence description of what it does." ],
-              validationChecks: [ "User identifies the entry point by reading `package.json` or recognizing the conventional filename.", "User uses `F12` or `Shift+F12` to navigate between modules instead of scrolling.", "User describes a data flow path through the code in their own words." ],
-              retention: [ "Read before you write \u2014 always.", "Entry point \u2192 imports \u2192 data flow \u2192 behavior.", "VS Code navigation tools are faster than scrolling." ],
+              exerciseSteps: [
+                "Open the provided starter project and read `package.json` to find the entry point file.",
+                "Open the entry point and use `F12` (Go to Definition) to navigate to at least two imported functions.",
+                "Trace one data path from input to output and write a one-sentence description of what it does.",
+              ],
+              validationChecks: [
+                "User identifies the entry point by reading `package.json` or recognizing the conventional filename.",
+                "User uses `F12` or `Shift+F12` to navigate between modules instead of scrolling.",
+                "User describes a data flow path through the code in their own words.",
+              ],
+              retention: [
+                "Read before you write \u2014 always.",
+                "Entry point \u2192 imports \u2192 data flow \u2192 behavior.",
+                "VS Code navigation tools are faster than scrolling.",
+              ],
               tools: ["Visual Studio Code", "terminal"],
-              notesPrompt: "Describe your code reading process in three steps. Note which VS Code shortcuts helped you navigate.",
+              notesPrompt:
+                "Describe your code reading process in three steps. Note which VS Code shortcuts helped you navigate.",
               exercises: [
-                { id: "entry-point", title: "Find the entry point", prompt: "In a Node.js project, what file typically serves as the main entry point?", placeholder: "Filename", validationMode: "includes", acceptedAnswers: ["index.js", "index.ts", "server.js", "app.js", "main.js"], successMessage: "Correct. The entry point is where execution begins \u2014 always find it first.", hint: "Look at the 'main' field in package.json or common naming conventions.", assessmentType: "action" },
-                { id: "goto-def", title: "Navigate code", prompt: "What VS Code shortcut jumps to the definition of a function or variable?", placeholder: "Key combination", validationMode: "includes", acceptedAnswers: ["f12"], successMessage: "Correct. F12 (Go to Definition) is essential for code navigation.", hint: "It is a single function key.", assessmentType: "action" },
+                {
+                  id: "entry-point",
+                  title: "Find the entry point",
+                  prompt:
+                    "In a Node.js project, what file typically serves as the main entry point?",
+                  placeholder: "Filename",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "index.js",
+                    "index.ts",
+                    "server.js",
+                    "app.js",
+                    "main.js",
+                  ],
+                  successMessage:
+                    "Correct. The entry point is where execution begins \u2014 always find it first.",
+                  hint: "Look at the 'main' field in package.json or common naming conventions.",
+                  assessmentType: "action",
+                },
+                {
+                  id: "goto-def",
+                  title: "Navigate code",
+                  prompt:
+                    "What VS Code shortcut jumps to the definition of a function or variable?",
+                  placeholder: "Key combination",
+                  validationMode: "includes",
+                  acceptedAnswers: ["f12"],
+                  successMessage:
+                    "Correct. F12 (Go to Definition) is essential for code navigation.",
+                  hint: "It is a single function key.",
+                  assessmentType: "action",
+                },
               ],
               transferTask: {
                 id: "transfer-code-reading",
                 title: "Transfer challenge: navigate an unfamiliar codebase",
-                prompt: "You are handed a project you have never seen. Describe your first five steps to understand its structure and main behavior, including which files you open first and which VS Code features you use.",
+                prompt:
+                  "You are handed a project you have never seen. Describe your first five steps to understand its structure and main behavior, including which files you open first and which VS Code features you use.",
                 placeholder: "Code reading strategy",
                 validationMode: "includes",
-                acceptedAnswers: ["entry point", "package.json", "import", "definition", "f12", "structure", "trace"],
-                successMessage: "Transfer evidence accepted. You described a systematic approach to reading unfamiliar code.",
+                acceptedAnswers: [
+                  "entry point",
+                  "package.json",
+                  "import",
+                  "definition",
+                  "f12",
+                  "structure",
+                  "trace",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. You described a systematic approach to reading unfamiliar code.",
                 hint: "Start with the entry point, trace imports, use Go to Definition, and map the module structure.",
                 assessmentType: "transfer",
               },
-              competencies: [{ track: "CodeReading", targetLevel: "Functional" }],
+              competencies: [
+                { track: "CodeReading", targetLevel: "Functional" },
+              ],
               scaffoldingLevel: "step-by-step",
               codeExercises: [
                 {
                   id: "code-read-trace-flow",
                   title: "Trace data through a function chain",
-                  description: "Read the code below and fill in the missing return statement in processOrder so the pipeline produces the correct output. Trace the data from createOrder through applyDiscount to processOrder.",
-                  starterCode: "function createOrder(item, qty) {\n  return { item, qty, total: qty * 10 };\n}\n\nfunction applyDiscount(order) {\n  return { ...order, total: order.total * 0.9 };\n}\n\nfunction processOrder(item, qty) {\n  const order = createOrder(item, qty);\n  const discounted = applyDiscount(order);\n  // Return the final total\n  return discounted.total;\n}\n\nconsole.log(processOrder('Widget', 5)); // 45",
+                  description:
+                    "Read the code below and fill in the missing return statement in processOrder so the pipeline produces the correct output. Trace the data from createOrder through applyDiscount to processOrder.",
+                  starterCode:
+                    "function createOrder(item, qty) {\n  return { item, qty, total: qty * 10 };\n}\n\nfunction applyDiscount(order) {\n  return { ...order, total: order.total * 0.9 };\n}\n\nfunction processOrder(item, qty) {\n  const order = createOrder(item, qty);\n  const discounted = applyDiscount(order);\n  // Return the final total\n  return discounted.total;\n}\n\nconsole.log(processOrder('Widget', 5)); // 45",
                   language: "javascript",
                   hint: "Follow the data: createOrder builds the object, applyDiscount modifies total, processOrder should return the final total from the discounted object.",
                   acceptedPatterns: ["discounted.total", "return discounted"],
@@ -799,21 +1336,30 @@ export const curriculum: Curriculum = {
                 {
                   id: "code-read-find-bug",
                   title: "Spot the bug by reading",
-                  description: "This function should return the full name by joining first and last with a space, but it returns the wrong result. Read the code, find the bug, and fix it without running it first.",
-                  starterCode: "function getFullName(user) {\n  return user.first + user.last;\n}\n\n// Expected: 'Jane Doe'\nconsole.log(getFullName({ first: 'Jane', last: 'Doe' }));",
+                  description:
+                    "This function should return the full name by joining first and last with a space, but it returns the wrong result. Read the code, find the bug, and fix it without running it first.",
+                  starterCode:
+                    "function getFullName(user) {\n  return user.first + user.last;\n}\n\n// Expected: 'Jane Doe'\nconsole.log(getFullName({ first: 'Jane', last: 'Doe' }));",
                   language: "javascript",
                   hint: "The function joins first and last directly. What is missing between them?",
-                  acceptedPatterns: ["+ ' ' +", "+ \" \" +", "` `", "${user.first} ${user.last}"],
+                  acceptedPatterns: [
+                    "+ ' ' +",
+                    '+ " " +',
+                    "` `",
+                    "${user.first} ${user.last}",
+                  ],
                 },
               ],
             },
             {
               id: "lesson-debugging",
               title: "Debug Systems Instead of Guessing",
-              summary: "Learn the habits that separate deliberate engineering from random trial-and-error.",
+              summary:
+                "Learn the habits that separate deliberate engineering from random trial-and-error.",
               duration: "50 min",
               difficulty: "Core",
-              objective: "Observe symptoms, isolate causes, test hypotheses, and verify the fix with evidence.",
+              objective:
+                "Observe symptoms, isolate causes, test hypotheses, and verify the fix with evidence.",
               explanation: [
                 "Debugging is not a talent trick. It is **disciplined investigation**. Engineers who debug effectively follow a repeatable process instead of changing random lines hoping something sticks. The difference between junior and senior debugging is not intelligence — it is method.",
                 "The **debugging loop** has five steps: **reproduce** the failure reliably, **inspect** the actual data (logs, variables, inputs), **narrow** the scope to the smallest code area that could cause the symptom, **hypothesize** a specific cause, and **verify** both the fix and the original failure condition. Skipping any step invites wasted time.",
@@ -826,23 +1372,69 @@ export const curriculum: Curriculum = {
                 "Trace the call one level up: `handleCheckout()` calls `calculateTotal(cart.items)`. Add a log for `cart` in `handleCheckout`. The log shows `cart: {}` — the cart object exists but has no `items` property. The bug is that the cart was initialised without an `items` array. Adding `items: []` to the initial cart object fixes the crash.",
                 "After fixing, re-run the exact reproduction case: click Checkout. The TypeError is gone and the total displays correctly. This is the **verification step** — a fix is only complete when the original failure condition no longer occurs and the expected behavior works.",
               ],
-              exerciseSteps: [ "Reproduce the bug by following the exact steps described in the bug report.", "Add a `console.log()` at the function boundary to inspect the actual input and write down one hypothesis about the cause.", "Make the smallest code change that addresses your hypothesis, then re-run the reproduction case to verify the fix." ],
-              validationChecks: [ "User reproduces the bug consistently before making any code changes.", "User inspects actual data (using `console.log()` or the debugger) instead of guessing.", "User verifies the fix by re-running the original reproduction case and confirming expected behavior." ],
-              retention: [ "Reproduce before changing code.", "Evidence beats confidence.", "A fix is incomplete until verified." ],
+              exerciseSteps: [
+                "Reproduce the bug by following the exact steps described in the bug report.",
+                "Add a `console.log()` at the function boundary to inspect the actual input and write down one hypothesis about the cause.",
+                "Make the smallest code change that addresses your hypothesis, then re-run the reproduction case to verify the fix.",
+              ],
+              validationChecks: [
+                "User reproduces the bug consistently before making any code changes.",
+                "User inspects actual data (using `console.log()` or the debugger) instead of guessing.",
+                "User verifies the fix by re-running the original reproduction case and confirming expected behavior.",
+              ],
+              retention: [
+                "Reproduce before changing code.",
+                "Evidence beats confidence.",
+                "A fix is incomplete until verified.",
+              ],
               tools: ["Visual Studio Code", "terminal", "test runner", "Git"],
-              notesPrompt: "Record one debugging habit you want to adopt immediately and one anti-pattern you want to stop using.",
+              notesPrompt:
+                "Record one debugging habit you want to adopt immediately and one anti-pattern you want to stop using.",
               exercises: [
-                { id: "debug-loop", title: "First step", prompt: "What should you do before editing code when investigating a reported bug?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["reproduce", "observe", "confirm the bug"], successMessage: "Correct. Reproduction establishes a stable target for investigation.", hint: "Think about the first reliable move in a debugging loop.", assessmentType: "debugging" },
-                { id: "verification-loop", title: "Close the loop", prompt: "After making a fix, what must you do to know the work is complete?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["verify", "test", "re-run", "confirm"], successMessage: "Correct. Verification is what turns a code change into an engineering result.", hint: "The answer is not \u2018commit it\u2019.", assessmentType: "debugging" },
+                {
+                  id: "debug-loop",
+                  title: "First step",
+                  prompt:
+                    "What should you do before editing code when investigating a reported bug?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: ["reproduce", "observe", "confirm the bug"],
+                  successMessage:
+                    "Correct. Reproduction establishes a stable target for investigation.",
+                  hint: "Think about the first reliable move in a debugging loop.",
+                  assessmentType: "debugging",
+                },
+                {
+                  id: "verification-loop",
+                  title: "Close the loop",
+                  prompt:
+                    "After making a fix, what must you do to know the work is complete?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: ["verify", "test", "re-run", "confirm"],
+                  successMessage:
+                    "Correct. Verification is what turns a code change into an engineering result.",
+                  hint: "The answer is not \u2018commit it\u2019.",
+                  assessmentType: "debugging",
+                },
               ],
               transferTask: {
                 id: "transfer-debug-triage",
                 title: "Transfer challenge: triage an unknown bug",
-                prompt: "A teammate says: 'Checkout fails for some users.' Outline the first three debugging steps you would run and what evidence each step should produce.",
+                prompt:
+                  "A teammate says: 'Checkout fails for some users.' Outline the first three debugging steps you would run and what evidence each step should produce.",
                 placeholder: "Step 1..., Step 2..., Step 3...",
                 validationMode: "includes",
-                acceptedAnswers: ["reproduce", "logs", "hypothesis", "verify", "test", "evidence"],
-                successMessage: "Transfer evidence accepted. Your plan follows a reproducible debugging loop.",
+                acceptedAnswers: [
+                  "reproduce",
+                  "logs",
+                  "hypothesis",
+                  "verify",
+                  "test",
+                  "evidence",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. Your plan follows a reproducible debugging loop.",
                 hint: "Start with reproduction, then gather evidence, then verify the fix criteria.",
                 assessmentType: "transfer",
               },
@@ -852,58 +1444,127 @@ export const curriculum: Curriculum = {
                 {
                   id: "debug-null-dereference",
                   title: "Fix a null dereference crash",
-                  description: "This function crashes with 'TypeError: Cannot read properties of null (reading \\'name\\')'. Add a guard so the function returns 'Unknown' when user is null instead of crashing.",
-                  starterCode: "function getDisplayName(user) {\n  return user.name.toUpperCase();\n}\n\nconsole.log(getDisplayName(null)); // should print 'Unknown'",
+                  description:
+                    "This function crashes with 'TypeError: Cannot read properties of null (reading \\'name\\')'. Add a guard so the function returns 'Unknown' when user is null instead of crashing.",
+                  starterCode:
+                    "function getDisplayName(user) {\n  return user.name.toUpperCase();\n}\n\nconsole.log(getDisplayName(null)); // should print 'Unknown'",
                   language: "javascript",
                   hint: "Add an if check at the top of the function. If user is null or undefined, return a safe default.",
-                  acceptedPatterns: ["if (!user)", "if (user === null)", "user?.", "Unknown"],
+                  acceptedPatterns: [
+                    "if (!user)",
+                    "if (user === null)",
+                    "user?.",
+                    "Unknown",
+                  ],
                 },
                 {
                   id: "debug-off-by-one",
                   title: "Fix an off-by-one error",
-                  description: "This loop skips the last item in the array. Fix the condition so all four elements are processed and the output is ['A', 'B', 'C', 'D'].",
-                  starterCode: "const items = ['a', 'b', 'c', 'd'];\nconst result = [];\nfor (let i = 0; i < items.length - 1; i++) {\n  result.push(items[i].toUpperCase());\n}\nconsole.log(result); // should be ['A', 'B', 'C', 'D']",
+                  description:
+                    "This loop skips the last item in the array. Fix the condition so all four elements are processed and the output is ['A', 'B', 'C', 'D'].",
+                  starterCode:
+                    "const items = ['a', 'b', 'c', 'd'];\nconst result = [];\nfor (let i = 0; i < items.length - 1; i++) {\n  result.push(items[i].toUpperCase());\n}\nconsole.log(result); // should be ['A', 'B', 'C', 'D']",
                   language: "javascript",
                   hint: "The loop condition uses items.length - 1. Remove the - 1 to include the last element.",
-                  acceptedPatterns: ["i < items.length;", "i < items.length )", "i <= items.length -"],
+                  acceptedPatterns: [
+                    "i < items.length;",
+                    "i < items.length )",
+                    "i <= items.length -",
+                  ],
                 },
               ],
             },
             {
               id: "lesson-project-structure",
               title: "Project Structure and Dependencies",
-              summary: "Understand how projects are organized, what configuration files do, and how dependencies are managed.",
+              summary:
+                "Understand how projects are organized, what configuration files do, and how dependencies are managed.",
               duration: "45 min",
               difficulty: "Core",
-              objective: "Navigate a project, understand package.json, manage dependencies, and reason about project configuration.",
+              objective:
+                "Navigate a project, understand package.json, manage dependencies, and reason about project configuration.",
               explanation: [
                 "Every professional project has a **structure**: source code, configuration, dependencies, tests, and build artifacts. Understanding this structure is required before you can contribute effectively. When you clone a repo, the first thing you read is the file tree — not the code.",
-                "`package.json` is the identity card of a Node.js project. It stores the project name, version, scripts, and dependency lists. The `\"scripts\"` section defines commands you can run with `npm run <name>` — for example, `npm run dev` typically starts the development server. Always read this section when joining a project.",
+                '`package.json` is the identity card of a Node.js project. It stores the project name, version, scripts, and dependency lists. The `"scripts"` section defines commands you can run with `npm run <name>` — for example, `npm run dev` typically starts the development server. Always read this section when joining a project.',
                 "Dependencies are listed in two groups. **`dependencies`** are packages the application needs at runtime (e.g., `express`, `react`). **`devDependencies`** are packages needed only during development — linters, test frameworks, build tools. The distinction matters because production deployments should install only `dependencies` to keep the bundle small and the attack surface minimal.",
                 "When you run `npm install`, npm reads `package.json`, resolves every dependency (and their sub-dependencies), downloads them into the `node_modules/` folder, and writes the exact resolved versions into `package-lock.json`. The **lock file** guarantees that every developer and CI server installs the same versions. It should always be committed to version control.",
               ],
               demonstration: [
                 "Open the practice project and look at the top-level file tree. You see files like `package.json`, `tsconfig.json`, `.eslintrc`, and folders like `src/`, `test/`, and `node_modules/`. Each has a specific role: `package.json` defines the project, `tsconfig.json` configures the TypeScript compiler, `.eslintrc` configures the linter, `src/` holds source code, and `test/` holds tests.",
-                "Open `package.json` and look at the `\"scripts\"` section:\n```json\n{\n  \"scripts\": {\n    \"dev\": \"next dev\",\n    \"build\": \"next build\",\n    \"lint\": \"eslint .\"\n  }\n}\n```\nThese are the commands you use to operate the project. Run `npm run dev` to start the dev server. Run `npm run build` to create a production build. Run `npm run lint` to check for code quality issues.",
+                'Open `package.json` and look at the `"scripts"` section:\n```json\n{\n  "scripts": {\n    "dev": "next dev",\n    "build": "next build",\n    "lint": "eslint ."\n  }\n}\n```\nThese are the commands you use to operate the project. Run `npm run dev` to start the dev server. Run `npm run build` to create a production build. Run `npm run lint` to check for code quality issues.',
                 "Now install dependencies by running `npm install` in the terminal:\n```bash\nnpm install\n# added 847 packages in 12s\n```\nThe output shows how many packages were installed. Open `package-lock.json` — this file records the exact version of every package, including transitive dependencies. If you delete `node_modules/` and run `npm install` again, the lock file ensures you get the exact same versions.",
               ],
-              exerciseSteps: [ "Open the `package.json` of the practice project and identify the project name, the `\"scripts\"` section, and the list of `dependencies` and `devDependencies`.", "Run `npm install` in the terminal to install all dependencies, then confirm that `node_modules/` was created.", "Run `npm run dev` (or whichever script starts the development server) and verify the application starts successfully." ],
-              validationChecks: [ "User can identify the purpose of `\"scripts\"`, `\"dependencies\"`, and `\"devDependencies\"` in `package.json`.", "User understands that `dependencies` are for runtime and `devDependencies` are for development tooling only.", "User can run scripts defined in `package.json` using `npm run <name>`." ],
-              retention: [ "package.json is the project\u2019s identity card.", "The lock file ensures reproducible installs.", "Read the scripts section \u2014 it tells you how to operate the project." ],
+              exerciseSteps: [
+                'Open the `package.json` of the practice project and identify the project name, the `"scripts"` section, and the list of `dependencies` and `devDependencies`.',
+                "Run `npm install` in the terminal to install all dependencies, then confirm that `node_modules/` was created.",
+                "Run `npm run dev` (or whichever script starts the development server) and verify the application starts successfully.",
+              ],
+              validationChecks: [
+                'User can identify the purpose of `"scripts"`, `"dependencies"`, and `"devDependencies"` in `package.json`.',
+                "User understands that `dependencies` are for runtime and `devDependencies` are for development tooling only.",
+                "User can run scripts defined in `package.json` using `npm run <name>`.",
+              ],
+              retention: [
+                "package.json is the project\u2019s identity card.",
+                "The lock file ensures reproducible installs.",
+                "Read the scripts section \u2014 it tells you how to operate the project.",
+              ],
               tools: ["Visual Studio Code", "terminal", "npm"],
-              notesPrompt: "List the five most important fields in package.json and what each one controls.",
+              notesPrompt:
+                "List the five most important fields in package.json and what each one controls.",
               exercises: [
-                { id: "npm-install", title: "Install dependencies", prompt: "What command installs all dependencies listed in package.json?", placeholder: "npm ...", validationMode: "includes", acceptedAnswers: ["npm install", "npm i"], successMessage: "Correct. npm install reads package.json and downloads everything the project needs.", hint: "It is the most common first command when cloning a project.", assessmentType: "action" },
-                { id: "dev-vs-prod-deps", title: "Dev vs production dependencies", prompt: "What is the difference between dependencies and devDependencies in package.json?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["production", "development", "build", "runtime", "deploy", "test", "not needed in production"], successMessage: "Correct. dependencies are needed at runtime; devDependencies are only needed during development (testing, building, linting).", hint: "Think about which packages the app needs to run vs. which are only used while building or testing.", assessmentType: "reasoning" },
+                {
+                  id: "npm-install",
+                  title: "Install dependencies",
+                  prompt:
+                    "What command installs all dependencies listed in package.json?",
+                  placeholder: "npm ...",
+                  validationMode: "includes",
+                  acceptedAnswers: ["npm install", "npm i"],
+                  successMessage:
+                    "Correct. npm install reads package.json and downloads everything the project needs.",
+                  hint: "It is the most common first command when cloning a project.",
+                  assessmentType: "action",
+                },
+                {
+                  id: "dev-vs-prod-deps",
+                  title: "Dev vs production dependencies",
+                  prompt:
+                    "What is the difference between dependencies and devDependencies in package.json?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "production",
+                    "development",
+                    "build",
+                    "runtime",
+                    "deploy",
+                    "test",
+                    "not needed in production",
+                  ],
+                  successMessage:
+                    "Correct. dependencies are needed at runtime; devDependencies are only needed during development (testing, building, linting).",
+                  hint: "Think about which packages the app needs to run vs. which are only used while building or testing.",
+                  assessmentType: "reasoning",
+                },
               ],
               transferTask: {
                 id: "transfer-project-onboard",
                 title: "Transfer challenge: onboard onto a new project",
-                prompt: "You clone a repo for the first time. Describe the order in which you inspect the project: which files you read, what commands you run, and how you verify the project works locally.",
+                prompt:
+                  "You clone a repo for the first time. Describe the order in which you inspect the project: which files you read, what commands you run, and how you verify the project works locally.",
                 placeholder: "Onboarding steps",
                 validationMode: "includes",
-                acceptedAnswers: ["package.json", "npm install", "scripts", "readme", "run", "dev"],
-                successMessage: "Transfer evidence accepted. You described a repeatable onboarding workflow.",
+                acceptedAnswers: [
+                  "package.json",
+                  "npm install",
+                  "scripts",
+                  "readme",
+                  "run",
+                  "dev",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. You described a repeatable onboarding workflow.",
                 hint: "Start with README and package.json, install dependencies, then run the dev script.",
                 assessmentType: "transfer",
               },
@@ -911,32 +1572,42 @@ export const curriculum: Curriculum = {
                 {
                   id: "project-structure-mkdir",
                   title: "Create project directory structure",
-                  description: "Write bash commands to create a standard Node.js project structure with src/, test/, and docs/ directories.",
+                  description:
+                    "Write bash commands to create a standard Node.js project structure with src/, test/, and docs/ directories.",
                   starterCode: "# Create the project directories\n",
                   language: "bash",
                   hint: "Use 'mkdir -p' to create nested directories in one command.",
-                  acceptedPatterns: ["mkdir -p src", "mkdir -p test", "mkdir -p docs"],
+                  acceptedPatterns: [
+                    "mkdir -p src",
+                    "mkdir -p test",
+                    "mkdir -p docs",
+                  ],
                 },
                 {
                   id: "project-structure-tree",
                   title: "Display project structure",
-                  description: "Write the command to display a tree view of the project directory structure.",
+                  description:
+                    "Write the command to display a tree view of the project directory structure.",
                   starterCode: "# Show directory tree\n",
                   language: "bash",
                   hint: "Use 'tree' command or 'find' with formatting to show directory structure.",
                   acceptedPatterns: ["tree", "find . -type d"],
                 },
               ],
-              competencies: [{ track: "ProgrammingLogic", targetLevel: "Functional" }],
+              competencies: [
+                { track: "ProgrammingLogic", targetLevel: "Functional" },
+              ],
               scaffoldingLevel: "step-by-step",
             },
             {
               id: "lesson-package-management",
               title: "Package Management: Semver, Audits, and Lock Files",
-              summary: "Master version pinning, security auditing, and the role of lock files in reproducible builds.",
+              summary:
+                "Master version pinning, security auditing, and the role of lock files in reproducible builds.",
               duration: "40 min",
               difficulty: "Core",
-              objective: "Read semver ranges, upgrade packages deliberately, run npm audit, and explain why lock files matter.",
+              objective:
+                "Read semver ranges, upgrade packages deliberately, run npm audit, and explain why lock files matter.",
               explanation: [
                 "**Semver** (semantic versioning) uses three numbers: `MAJOR.MINOR.PATCH`. A `MAJOR` bump means breaking changes. A `MINOR` bump adds new features without breaking existing ones. A `PATCH` bump fixes bugs. For example, `2.3.1` means major version 2, minor version 3, patch 1.",
                 "In `package.json`, version ranges control how aggressively npm upgrades. The **caret** (`^2.3.1`) allows `MINOR` and `PATCH` upgrades — so npm would install `2.4.0` or `2.3.5` but never `3.0.0`. The **tilde** (`~2.3.1`) allows only `PATCH` upgrades — so npm would install `2.3.5` but not `2.4.0`. An **exact** version (`2.3.1` with no prefix) locks to that specific release.",
@@ -944,7 +1615,7 @@ export const curriculum: Curriculum = {
                 "**Lock files** (`package-lock.json` or `yarn.lock`) record the exact resolved version of every dependency — including transitive ones — so every install is identical regardless of when or where it runs. Without a lock file, two developers running `npm install` a week apart could get different versions. Commit your lock file to version control — it is the contract for reproducible installs.",
               ],
               demonstration: [
-                "Open `package.json` and examine the dependency versions. You see entries like `\"express\": \"^4.18.2\"` (caret — allows 4.x upgrades) and `\"typescript\": \"~5.3.2\"` (tilde — allows only 5.3.x patches). Understanding these prefixes tells you how much version drift is possible.",
+                'Open `package.json` and examine the dependency versions. You see entries like `"express": "^4.18.2"` (caret — allows 4.x upgrades) and `"typescript": "~5.3.2"` (tilde — allows only 5.3.x patches). Understanding these prefixes tells you how much version drift is possible.',
                 "Run `npm outdated` in the terminal to see which packages have newer versions available:\n```bash\nnpm outdated\n# Package     Current  Wanted  Latest\n# express     4.18.2   4.19.1  4.19.1\n# typescript  5.3.2    5.3.3   5.4.5\n```\n`Current` is what is installed. `Wanted` is the newest version allowed by the semver range in `package.json`. `Latest` is the newest version published. If `Latest` is a major version ahead, upgrading requires checking for breaking changes.",
                 "Now run `npm audit` to check for security issues:\n```bash\nnpm audit\n# found 2 vulnerabilities (1 moderate, 1 high)\n```\nThe report lists each vulnerability, the affected package, and the severity. Run `npm audit fix` to apply automatic patches. After fixing, inspect the `package-lock.json` diff with `git diff package-lock.json` to confirm which versions actually changed.",
               ],
@@ -964,27 +1635,38 @@ export const curriculum: Curriculum = {
                 "Commit your lock file — it is the contract for reproducible installs.",
               ],
               tools: ["terminal", "npm"],
-              notesPrompt: "Write a semver cheat sheet: what ^ means, what ~ means, what exact pinning means, and when you'd choose each.",
+              notesPrompt:
+                "Write a semver cheat sheet: what ^ means, what ~ means, what exact pinning means, and when you'd choose each.",
               exercises: [
                 {
                   id: "semver-caret",
                   title: "Caret range meaning",
-                  prompt: "A package is listed as ^2.3.1 in package.json. Which type of upgrade will npm install automatically?",
+                  prompt:
+                    "A package is listed as ^2.3.1 in package.json. Which type of upgrade will npm install automatically?",
                   placeholder: "MAJOR / MINOR / PATCH",
                   validationMode: "includes",
                   acceptedAnswers: ["minor", "patch", "minor and patch"],
-                  successMessage: "Correct. ^ pins the MAJOR version and allows compatible MINOR and PATCH upgrades.",
+                  successMessage:
+                    "Correct. ^ pins the MAJOR version and allows compatible MINOR and PATCH upgrades.",
                   hint: "The caret keeps the left-most non-zero digit fixed.",
                   assessmentType: "action",
                 },
                 {
                   id: "lock-file-purpose",
                   title: "Lock file purpose",
-                  prompt: "Why should package-lock.json be committed to version control?",
+                  prompt:
+                    "Why should package-lock.json be committed to version control?",
                   placeholder: "Reason",
                   validationMode: "includes",
-                  acceptedAnswers: ["reproducible", "identical", "same version", "consistent", "exact"],
-                  successMessage: "Correct. The lock file guarantees every developer and CI run installs the same exact versions.",
+                  acceptedAnswers: [
+                    "reproducible",
+                    "identical",
+                    "same version",
+                    "consistent",
+                    "exact",
+                  ],
+                  successMessage:
+                    "Correct. The lock file guarantees every developer and CI run installs the same exact versions.",
                   hint: "Think about what happens if two developers run npm install a month apart without it.",
                   assessmentType: "action",
                 },
@@ -992,11 +1674,21 @@ export const curriculum: Curriculum = {
               transferTask: {
                 id: "transfer-dependency-audit",
                 title: "Transfer challenge: audit a project's dependencies",
-                prompt: "A project has not been updated in 6 months. Describe the commands you would run to check for outdated packages and security vulnerabilities, and how you decide which updates to apply.",
+                prompt:
+                  "A project has not been updated in 6 months. Describe the commands you would run to check for outdated packages and security vulnerabilities, and how you decide which updates to apply.",
                 placeholder: "Audit workflow",
                 validationMode: "includes",
-                acceptedAnswers: ["npm outdated", "npm audit", "semver", "major", "minor", "lock", "breaking"],
-                successMessage: "Transfer evidence accepted. You demonstrated a deliberate dependency management workflow.",
+                acceptedAnswers: [
+                  "npm outdated",
+                  "npm audit",
+                  "semver",
+                  "major",
+                  "minor",
+                  "lock",
+                  "breaking",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. You demonstrated a deliberate dependency management workflow.",
                 hint: "Run npm outdated, check npm audit, then prioritize security fixes before feature upgrades.",
                 assessmentType: "transfer",
               },
@@ -1004,7 +1696,8 @@ export const curriculum: Curriculum = {
                 {
                   id: "npm-install-package",
                   title: "Install a package",
-                  description: "Write the npm command to install the 'lodash' package as a development dependency.",
+                  description:
+                    "Write the npm command to install the 'lodash' package as a development dependency.",
                   starterCode: "# Install lodash as dev dependency\n",
                   language: "bash",
                   hint: "Use npm install with --save-dev or -D flag.",
@@ -1013,23 +1706,32 @@ export const curriculum: Curriculum = {
                 {
                   id: "npm-audit-fix",
                   title: "Run security audit",
-                  description: "Write the command to run a security audit on project dependencies and automatically fix vulnerabilities.",
+                  description:
+                    "Write the command to run a security audit on project dependencies and automatically fix vulnerabilities.",
                   starterCode: "# Audit and fix security issues\n",
                   language: "bash",
                   hint: "Use npm audit fix to automatically resolve security issues.",
                   acceptedPatterns: ["npm audit fix"],
                 },
               ],
-              competencies: [{ track: "ProgrammingLogic", targetLevel: "Functional" }, { track: "ConfigurationAndEnvironments", targetLevel: "Functional" }],
+              competencies: [
+                { track: "ProgrammingLogic", targetLevel: "Functional" },
+                {
+                  track: "ConfigurationAndEnvironments",
+                  targetLevel: "Functional",
+                },
+              ],
               scaffoldingLevel: "goal-driven",
             },
             {
               id: "lesson-programming-logic",
               title: "Variables, Functions, and Control Flow",
-              summary: "Build the mental model for how programs store data, make decisions, and repeat work.",
+              summary:
+                "Build the mental model for how programs store data, make decisions, and repeat work.",
               duration: "50 min",
               difficulty: "Core",
-              objective: "Declare variables, write functions, apply if/else branching, and loop over data to produce predictable results.",
+              objective:
+                "Declare variables, write functions, apply if/else branching, and loop over data to produce predictable results.",
               explanation: [
                 "Programs are sequences of **decisions** and **repetitions**. Three building blocks make up virtually all programming logic: **variables** store data, **functions** package reusable logic, and **control flow** (`if`/`else`, loops) governs which code runs and how many times.",
                 "In TypeScript, you declare variables with `const` (for values that never change) or `let` (for values that will be reassigned). `const` is preferred by default because it makes intent clear and prevents accidental mutation. Example:\n```ts\nconst name: string = 'Alice';\nlet score: number = 0;\nscore = 10; // allowed with let\n// name = 'Bob'; // ERROR with const\n```",
@@ -1057,38 +1759,51 @@ export const curriculum: Curriculum = {
                 "Control flow only does what the condition actually tests \u2014 not what you intended.",
               ],
               tools: ["Visual Studio Code", "terminal", "TypeScript compiler"],
-              notesPrompt: "Write your own cheat sheet: const vs let, function syntax, if/else pattern, and one loop example.",
+              notesPrompt:
+                "Write your own cheat sheet: const vs let, function syntax, if/else pattern, and one loop example.",
               exercises: [
                 {
                   id: "const-vs-let",
                   title: "Immutable vs mutable binding",
-                  prompt: "Which keyword declares a variable whose binding cannot be reassigned after initialisation?",
+                  prompt:
+                    "Which keyword declares a variable whose binding cannot be reassigned after initialisation?",
                   placeholder: "Keyword",
                   validationMode: "exact",
                   acceptedAnswers: ["const"],
-                  successMessage: "Correct. const prevents reassignment, making intent explicit and reducing accidental mutation.",
+                  successMessage:
+                    "Correct. const prevents reassignment, making intent explicit and reducing accidental mutation.",
                   hint: "It is the counterpart to let and is preferred for values that don\u2019t change.",
                   assessmentType: "action",
                 },
                 {
                   id: "function-return-type",
                   title: "Return type annotation",
-                  prompt: "In TypeScript, where do you write the return type of a function? (e.g., function greet(name: string): _____)",
+                  prompt:
+                    "In TypeScript, where do you write the return type of a function? (e.g., function greet(name: string): _____)",
                   placeholder: "Syntax position",
                   validationMode: "includes",
-                  acceptedAnswers: ["after the closing parenthesis", "after )", ": string", "after params", "colon after"],
-                  successMessage: "Correct. The return type annotation comes after the closing parenthesis of the parameter list.",
+                  acceptedAnswers: [
+                    "after the closing parenthesis",
+                    "after )",
+                    ": string",
+                    "after params",
+                    "colon after",
+                  ],
+                  successMessage:
+                    "Correct. The return type annotation comes after the closing parenthesis of the parameter list.",
                   hint: "It appears between the ) and the opening { of the function body.",
                   assessmentType: "action",
                 },
                 {
                   id: "if-else-branch",
                   title: "Conditional branching",
-                  prompt: "What keyword introduces the alternative path when an if condition is false?",
+                  prompt:
+                    "What keyword introduces the alternative path when an if condition is false?",
                   placeholder: "Keyword",
                   validationMode: "exact",
                   acceptedAnswers: ["else"],
-                  successMessage: "Correct. else handles the case where the if condition is not met.",
+                  successMessage:
+                    "Correct. else handles the case where the if condition is not met.",
                   hint: "It follows the closing brace of the if block.",
                   assessmentType: "action",
                 },
@@ -1096,11 +1811,13 @@ export const curriculum: Curriculum = {
               transferTask: {
                 id: "transfer-programming-logic",
                 title: "Transfer challenge: trace a function",
-                prompt: "A function receives a number. If the number is above 50, it returns 'high'. Otherwise it returns 'low'. Write the TypeScript function signature and body in your own words, including the type annotations.",
+                prompt:
+                  "A function receives a number. If the number is above 50, it returns 'high'. Otherwise it returns 'low'. Write the TypeScript function signature and body in your own words, including the type annotations.",
                 placeholder: "function classify(value: number): ...",
                 validationMode: "includes",
                 acceptedAnswers: ["number", "string", "if", "return", "50"],
-                successMessage: "Transfer evidence accepted. Your function captures the typed conditional pattern correctly.",
+                successMessage:
+                  "Transfer evidence accepted. Your function captures the typed conditional pattern correctly.",
                 hint: "Include the parameter type, the return type, an if condition, and two return statements.",
                 assessmentType: "transfer",
               },
@@ -1108,32 +1825,50 @@ export const curriculum: Curriculum = {
                 {
                   id: "write-classify-function",
                   title: "Write a classify function",
-                  description: "Write a function called classify that accepts a number and returns 'high' if it is above 50, or 'low' otherwise. Include TypeScript type annotations for the parameter and return type.",
-                  starterCode: "function classify(value) {\n  // return 'high' if value > 50, 'low' otherwise\n}",
+                  description:
+                    "Write a function called classify that accepts a number and returns 'high' if it is above 50, or 'low' otherwise. Include TypeScript type annotations for the parameter and return type.",
+                  starterCode:
+                    "function classify(value) {\n  // return 'high' if value > 50, 'low' otherwise\n}",
                   language: "typescript",
                   hint: "Add : number after the parameter name and : string after the parentheses. Use an if/else with a return in each branch.",
-                  acceptedPatterns: ["classify", "value: number", ": string", "if", "return"],
+                  acceptedPatterns: [
+                    "classify",
+                    "value: number",
+                    ": string",
+                    "if",
+                    "return",
+                  ],
                 },
                 {
                   id: "fix-loop-accumulator",
                   title: "Fix a loop accumulator",
-                  description: "This function should return the sum of all numbers in the array, but it always returns 0. Fix the bug.",
-                  starterCode: "function sum(numbers: number[]): number {\n  let total = 0;\n  for (let i = 0; i < numbers.length; i++) {\n    let total = total + numbers[i];\n  }\n  return total;\n}\n\nconsole.log(sum([1, 2, 3])); // should print 6",
+                  description:
+                    "This function should return the sum of all numbers in the array, but it always returns 0. Fix the bug.",
+                  starterCode:
+                    "function sum(numbers: number[]): number {\n  let total = 0;\n  for (let i = 0; i < numbers.length; i++) {\n    let total = total + numbers[i];\n  }\n  return total;\n}\n\nconsole.log(sum([1, 2, 3])); // should print 6",
                   language: "typescript",
                   hint: "The let keyword inside the loop creates a new 'total' variable that shadows the outer one. Remove the re-declaration.",
-                  acceptedPatterns: ["total = total + numbers[i]", "total += numbers[i]", "total ="],
+                  acceptedPatterns: [
+                    "total = total + numbers[i]",
+                    "total += numbers[i]",
+                    "total =",
+                  ],
                 },
               ],
-              competencies: [{ track: "ProgrammingLogic", targetLevel: "Functional" }],
+              competencies: [
+                { track: "ProgrammingLogic", targetLevel: "Functional" },
+              ],
               scaffoldingLevel: "step-by-step",
             },
             {
               id: "lesson-typescript-types",
               title: "TypeScript Types and Compile-Time Safety",
-              summary: "Understand how TypeScript catches bugs before the code runs using the type system.",
+              summary:
+                "Understand how TypeScript catches bugs before the code runs using the type system.",
               duration: "45 min",
               difficulty: "Core",
-              objective: "Read TypeScript type annotations, interpret compile-time errors, and distinguish compile-time from runtime failures.",
+              objective:
+                "Read TypeScript type annotations, interpret compile-time errors, and distinguish compile-time from runtime failures.",
               explanation: [
                 "TypeScript adds a **type layer** on top of JavaScript. The TypeScript compiler (`tsc`) checks your code **before it runs** and reports errors as structured diagnostic messages. This is called **compile-time checking** — a completely different category from errors that happen at runtime.",
                 "A **compile-time error** means the type system found a contradiction in your code before execution began. A **runtime error** means the code compiled successfully but behaved unexpectedly while running. Example compile error:\n```\nsrc/utils.ts(12,5): error TS2322: Type 'string' is not assignable to type 'number'.\n```\nThis tells you the file (`src/utils.ts`), the exact location (line 12, column 5), the error code (`TS2322`), and the conflicting types (`string` vs `number`).",
@@ -1161,38 +1896,51 @@ export const curriculum: Curriculum = {
                 "The TS compiler is your first reviewer \u2014 it reads your intent before anyone else does.",
               ],
               tools: ["Visual Studio Code", "TypeScript compiler", "terminal"],
-              notesPrompt: "Write definitions for: type annotation, interface, union type, compile-time error, and runtime error.",
+              notesPrompt:
+                "Write definitions for: type annotation, interface, union type, compile-time error, and runtime error.",
               exercises: [
                 {
                   id: "ts-when-checked",
                   title: "When TypeScript checks",
-                  prompt: "When does TypeScript report a type error — before the code runs, or while it is running?",
+                  prompt:
+                    "When does TypeScript report a type error — before the code runs, or while it is running?",
                   placeholder: "Short answer",
                   validationMode: "includes",
-                  acceptedAnswers: ["before", "compile", "compile-time", "compile time", "tsc"],
-                  successMessage: "Correct. TypeScript performs static analysis before execution \u2014 that is why it is called compile-time checking.",
+                  acceptedAnswers: [
+                    "before",
+                    "compile",
+                    "compile-time",
+                    "compile time",
+                    "tsc",
+                  ],
+                  successMessage:
+                    "Correct. TypeScript performs static analysis before execution \u2014 that is why it is called compile-time checking.",
                   hint: "TypeScript produces diagnostics during a phase that happens before node or the browser ever runs anything.",
                   assessmentType: "reasoning",
                 },
                 {
                   id: "ts-union-type",
                   title: "Union type syntax",
-                  prompt: "What operator separates the alternatives in a TypeScript union type? (e.g., string ___ number)",
+                  prompt:
+                    "What operator separates the alternatives in a TypeScript union type? (e.g., string ___ number)",
                   placeholder: "Symbol",
                   validationMode: "exact",
                   acceptedAnswers: ["|"],
-                  successMessage: "Correct. The pipe | declares that a value may be any one of the listed types.",
+                  successMessage:
+                    "Correct. The pipe | declares that a value may be any one of the listed types.",
                   hint: "It is a single character used in bitwise OR in other contexts.",
                   assessmentType: "action",
                 },
                 {
                   id: "ts-interface",
                   title: "Interface keyword",
-                  prompt: "What TypeScript keyword defines a named shape for an object type?",
+                  prompt:
+                    "What TypeScript keyword defines a named shape for an object type?",
                   placeholder: "Keyword",
                   validationMode: "exact",
                   acceptedAnswers: ["interface"],
-                  successMessage: "Correct. interface declares a named contract that objects and parameters can be typed against.",
+                  successMessage:
+                    "Correct. interface declares a named contract that objects and parameters can be typed against.",
                   hint: "It starts with the letter i and is distinct from type aliases.",
                   assessmentType: "action",
                 },
@@ -1200,11 +1948,20 @@ export const curriculum: Curriculum = {
               transferTask: {
                 id: "transfer-typescript-types",
                 title: "Transfer challenge: interpret a type error",
-                prompt: "The compiler says: \"Argument of type 'string' is not assignable to parameter of type 'number'.\" Explain in plain language: what caused this error, when it occurred, and what change would fix it.",
+                prompt:
+                  "The compiler says: \"Argument of type 'string' is not assignable to parameter of type 'number'.\" Explain in plain language: what caused this error, when it occurred, and what change would fix it.",
                 placeholder: "The error happened because...",
                 validationMode: "includes",
-                acceptedAnswers: ["string", "number", "type", "compile", "change", "annotation"],
-                successMessage: "Transfer evidence accepted. You correctly interpreted the diagnostic and identified the fix path.",
+                acceptedAnswers: [
+                  "string",
+                  "number",
+                  "type",
+                  "compile",
+                  "change",
+                  "annotation",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. You correctly interpreted the diagnostic and identified the fix path.",
                 hint: "Address: what the function expected, what was passed, whether this is a compile or runtime error, and one concrete fix.",
                 assessmentType: "transfer",
               },
@@ -1212,31 +1969,37 @@ export const curriculum: Curriculum = {
                 {
                   id: "add-type-annotation",
                   title: "Fix a type mismatch",
-                  description: "The function below causes a compile error because it returns a number but is annotated as returning a string. Fix the return type annotation so it matches what the function actually returns.",
-                  starterCode: "function add(a: number, b: number): string {\n  return a + b;\n}",
+                  description:
+                    "The function below causes a compile error because it returns a number but is annotated as returning a string. Fix the return type annotation so it matches what the function actually returns.",
+                  starterCode:
+                    "function add(a: number, b: number): string {\n  return a + b;\n}",
                   language: "typescript",
                   hint: "Change the return type annotation to match what a + b produces when both are numbers.",
                   acceptedPatterns: [": number", "number {"],
                 },
               ],
-              competencies: [{ track: "ProgrammingLogic", targetLevel: "Functional" }],
+              competencies: [
+                { track: "ProgrammingLogic", targetLevel: "Functional" },
+              ],
               scaffoldingLevel: "goal-driven",
             },
             {
               id: "lesson-json-config",
               title: "Configuration Files and Environment Variables",
-              summary: "Read, write, and reason about JSON config files and environment variables that shape application behaviour.",
+              summary:
+                "Read, write, and reason about JSON config files and environment variables that shape application behaviour.",
               duration: "40 min",
               difficulty: "Core",
-              objective: "Parse JSON syntax, identify common configuration files, and explain the role of environment variables in separating secrets from code.",
+              objective:
+                "Parse JSON syntax, identify common configuration files, and explain the role of environment variables in separating secrets from code.",
               explanation: [
                 "**Configuration files** let teams change application behaviour without touching code. **JSON** (JavaScript Object Notation) is the most common format: it uses key-value pairs, arrays, nested objects, and strict syntax rules. Nearly every tool in the JavaScript ecosystem reads JSON for configuration.",
-                "JSON syntax is stricter than JavaScript. Keys must be wrapped in double quotes (`\"key\"`). Values can be strings, numbers, booleans (`true`/`false`), `null`, arrays (`[]`), or nested objects (`{}`). JSON does **not** allow trailing commas, comments, or single quotes. These restrictions are the source of most parse errors:\n```json\n{\n  \"appName\": \"my-app\",\n  \"port\": 3000,\n  \"debug\": true\n}\n```\nNotice: no comma after the last property. Adding one would cause a `SyntaxError`.",
+                'JSON syntax is stricter than JavaScript. Keys must be wrapped in double quotes (`"key"`). Values can be strings, numbers, booleans (`true`/`false`), `null`, arrays (`[]`), or nested objects (`{}`). JSON does **not** allow trailing commas, comments, or single quotes. These restrictions are the source of most parse errors:\n```json\n{\n  "appName": "my-app",\n  "port": 3000,\n  "debug": true\n}\n```\nNotice: no comma after the last property. Adding one would cause a `SyntaxError`.',
                 "**Environment variables** keep secrets and deployment-specific values out of source code. A `.env` file stores them locally as `KEY=VALUE` pairs:\n```\nDATABASE_URL=postgres://localhost:5432/mydb\nAPI_SECRET=s3cret-t0ken\n```\nThe application reads them at startup using `process.env.DATABASE_URL`. This separation means you can change database URLs, API keys, and feature flags without modifying code.",
                 "Secrets must **never** be committed to version control. Add `.env` to `.gitignore` so Git ignores it. Create a `.env.example` file (with placeholder values like `DATABASE_URL=your_url_here`) and commit that instead — it documents which variables the project needs without exposing real credentials.",
               ],
               demonstration: [
-                "Open the practice project's `config.json` file. It contains a syntax error — a trailing comma after the last property:\n```json\n{\n  \"appName\": \"my-app\",\n  \"port\": 3000,\n  \"debug\": true,\n}\n```\nRunning the app produces: `SyntaxError: Unexpected token }`. Remove the trailing comma after `true` and the file parses correctly.",
+                'Open the practice project\'s `config.json` file. It contains a syntax error — a trailing comma after the last property:\n```json\n{\n  "appName": "my-app",\n  "port": 3000,\n  "debug": true,\n}\n```\nRunning the app produces: `SyntaxError: Unexpected token }`. Remove the trailing comma after `true` and the file parses correctly.',
                 "Now open the `.env` file. It contains `DATABASE_URL=postgres://localhost:5432/mydb`. In the application code, find where the URL is read: `const dbUrl = process.env.DATABASE_URL;`. This is how secrets stay out of source files — the code references the variable name, not the value.",
                 "Check `.gitignore` to confirm `.env` is listed. If it is not, add it immediately:\n```bash\necho .env >> .gitignore\ngit status\n# .gitignore modified, .env is now untracked\n```\nThen verify that `.env.example` exists in the repo with placeholder values so other developers know which variables to set up.",
               ],
@@ -1256,7 +2019,8 @@ export const curriculum: Curriculum = {
                 ".env goes in .gitignore; .env.example (with fake values) goes in version control.",
               ],
               tools: ["Visual Studio Code", "terminal", "npm"],
-              notesPrompt: "List the five JSON syntax rules that catch most parse errors, and write the two .gitignore lines every project needs.",
+              notesPrompt:
+                "List the five JSON syntax rules that catch most parse errors, and write the two .gitignore lines every project needs.",
               exercises: [
                 {
                   id: "json-outer-delimiter",
@@ -1265,29 +2029,38 @@ export const curriculum: Curriculum = {
                   placeholder: "Characters",
                   validationMode: "includes",
                   acceptedAnswers: ["{", "}"],
-                  successMessage: "Correct. Curly braces delimit a JSON object; square brackets delimit an array.",
+                  successMessage:
+                    "Correct. Curly braces delimit a JSON object; square brackets delimit an array.",
                   hint: "The same characters wrap objects in JavaScript.",
                   assessmentType: "action",
                 },
                 {
                   id: "env-file-secret-rule",
                   title: "Secret management rule",
-                  prompt: "Which file stores environment-specific secrets locally and must never be committed to version control?",
+                  prompt:
+                    "Which file stores environment-specific secrets locally and must never be committed to version control?",
                   placeholder: "Filename",
                   validationMode: "includes",
                   acceptedAnswers: [".env"],
-                  successMessage: "Correct. .env holds configuration that changes per environment and must stay out of the repository.",
+                  successMessage:
+                    "Correct. .env holds configuration that changes per environment and must stay out of the repository.",
                   hint: "It starts with a dot and has no extension.",
                   assessmentType: "reasoning",
                 },
                 {
                   id: "json-trailing-comma",
                   title: "Common JSON syntax error",
-                  prompt: "What is the most common JSON syntax error that causes a parse failure?",
+                  prompt:
+                    "What is the most common JSON syntax error that causes a parse failure?",
                   placeholder: "Short answer",
                   validationMode: "includes",
-                  acceptedAnswers: ["trailing comma", "extra comma", "comma after last"],
-                  successMessage: "Correct. JSON does not allow a comma after the last property \u2014 this breaks parsers in every language.",
+                  acceptedAnswers: [
+                    "trailing comma",
+                    "extra comma",
+                    "comma after last",
+                  ],
+                  successMessage:
+                    "Correct. JSON does not allow a comma after the last property \u2014 this breaks parsers in every language.",
                   hint: "It is something that JavaScript allows but JSON forbids.",
                   assessmentType: "debugging",
                 },
@@ -1295,11 +2068,21 @@ export const curriculum: Curriculum = {
               transferTask: {
                 id: "transfer-json-config",
                 title: "Transfer challenge: diagnose a config failure",
-                prompt: "A teammate's app crashes on startup with: 'SyntaxError: Unexpected token }'. They say the config file looks fine. List two things you would check in the JSON file and one thing you would verify about the environment variable setup.",
+                prompt:
+                  "A teammate's app crashes on startup with: 'SyntaxError: Unexpected token }'. They say the config file looks fine. List two things you would check in the JSON file and one thing you would verify about the environment variable setup.",
                 placeholder: "I would check...",
                 validationMode: "includes",
-                acceptedAnswers: ["comma", "bracket", "brace", "env", "gitignore", "syntax", "trailing"],
-                successMessage: "Transfer evidence accepted. You identified the likely JSON syntax cause and the environment variable verification step.",
+                acceptedAnswers: [
+                  "comma",
+                  "bracket",
+                  "brace",
+                  "env",
+                  "gitignore",
+                  "syntax",
+                  "trailing",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. You identified the likely JSON syntax cause and the environment variable verification step.",
                 hint: "Think: what JSON syntax errors cause unexpected-token errors, and what could be missing from the environment?",
                 assessmentType: "transfer",
               },
@@ -1307,7 +2090,8 @@ export const curriculum: Curriculum = {
                 {
                   id: "json-fix-trailing-comma",
                   title: "Fix the JSON syntax error",
-                  description: "This JSON config has a trailing comma that causes a parse error. Remove it so the file parses correctly.",
+                  description:
+                    "This JSON config has a trailing comma that causes a parse error. Remove it so the file parses correctly.",
                   starterCode: `{
   "appName": "my-app",
   "port": 3000,
@@ -1315,12 +2099,17 @@ export const curriculum: Curriculum = {
 }`,
                   language: "json",
                   hint: "JSON does not allow a comma after the last property in an object or array.",
-                  acceptedPatterns: ['"debug": true\n}', '"debug":true\n}', '"debug": true }'],
+                  acceptedPatterns: [
+                    '"debug": true\n}',
+                    '"debug":true\n}',
+                    '"debug": true }',
+                  ],
                 },
                 {
                   id: "json-parse-config-value",
                   title: "Read a value from parsed JSON",
-                  description: "Write a line of JavaScript that parses the JSON string stored in `raw` and logs the value of the `port` property.",
+                  description:
+                    "Write a line of JavaScript that parses the JSON string stored in `raw` and logs the value of the `port` property.",
                   starterCode: `const raw = '{"host":"localhost","port":8080}';
 // Parse the JSON and log the port value
 `,
@@ -1329,16 +2118,24 @@ export const curriculum: Curriculum = {
                   acceptedPatterns: ["JSON.parse", ".port"],
                 },
               ],
-              competencies: [{ track: "ProgrammingLogic", targetLevel: "Functional" }, { track: "ConfigurationAndEnvironments", targetLevel: "Functional" }],
+              competencies: [
+                { track: "ProgrammingLogic", targetLevel: "Functional" },
+                {
+                  track: "ConfigurationAndEnvironments",
+                  targetLevel: "Functional",
+                },
+              ],
               scaffoldingLevel: "goal-driven",
             },
             {
               id: "lesson-error-reading",
               title: "Reading Errors and Stack Traces",
-              summary: "Turn cryptic error output into a clear starting point for investigation.",
+              summary:
+                "Turn cryptic error output into a clear starting point for investigation.",
               duration: "45 min",
               difficulty: "Core",
-              objective: "Identify the error type, message, and location from a stack trace and determine the first place to investigate.",
+              objective:
+                "Identify the error type, message, and location from a stack trace and determine the first place to investigate.",
               explanation: [
                 "Error messages are **structured data**, not obstacles. Every error contains three parts: an **error type** (what kind of failure), a **message** (what specifically went wrong), and a **stack trace** (which functions were executing at the moment of failure, innermost first). Learning to read these three parts turns panic into a targeted starting point.",
                 "The **error type** is the first word before the colon. Common types: `TypeError` (a value was the wrong type for the operation), `ReferenceError` (a variable was used before it was defined), `SyntaxError` (the code itself is malformed). Each type narrows the investigation immediately.",
@@ -1366,38 +2163,57 @@ export const curriculum: Curriculum = {
                 "Compile errors reference a file, line, and column \u2014 they are precise, not vague.",
               ],
               tools: ["Visual Studio Code", "terminal", "TypeScript compiler"],
-              notesPrompt: "Describe the three parts of a useful error message. Write one note about how you would explain a TypeError to a teammate who has never read a stack trace.",
+              notesPrompt:
+                "Describe the three parts of a useful error message. Write one note about how you would explain a TypeError to a teammate who has never read a stack trace.",
               exercises: [
                 {
                   id: "error-type-read",
                   title: "Identify the error type",
-                  prompt: "In the error 'TypeError: Cannot read properties of undefined (reading \\'name\\')', what is the error type?",
+                  prompt:
+                    "In the error 'TypeError: Cannot read properties of undefined (reading \\'name\\')', what is the error type?",
                   placeholder: "Error name",
                   validationMode: "includes",
                   acceptedAnswers: ["TypeError", "typeerror"],
-                  successMessage: "Correct. The error type is always the first word before the colon. TypeError means a value was the wrong type for the operation.",
+                  successMessage:
+                    "Correct. The error type is always the first word before the colon. TypeError means a value was the wrong type for the operation.",
                   hint: "It appears before the colon and names the category of failure.",
                   assessmentType: "action",
                 },
                 {
                   id: "stack-entry-point",
                   title: "Find the investigation starting point",
-                  prompt: "When reading a stack trace, which frame should you investigate first?",
+                  prompt:
+                    "When reading a stack trace, which frame should you investigate first?",
                   placeholder: "Short answer",
                   validationMode: "includes",
-                  acceptedAnswers: ["first", "top", "your code", "application code", "own code"],
-                  successMessage: "Correct. Start from the top of the stack and find the first frame that is your own code, not a library or Node internal.",
+                  acceptedAnswers: [
+                    "first",
+                    "top",
+                    "your code",
+                    "application code",
+                    "own code",
+                  ],
+                  successMessage:
+                    "Correct. Start from the top of the stack and find the first frame that is your own code, not a library or Node internal.",
                   hint: "Stack traces list the most recent call at the top. Library frames below yours are usually just the engine delivering the error.",
                   assessmentType: "debugging",
                 },
                 {
                   id: "compile-error-location",
                   title: "TypeScript compile error anatomy",
-                  prompt: "A TypeScript compiler error shows: 'src/utils.ts(12,5): error TS2322'. What does '12,5' represent?",
+                  prompt:
+                    "A TypeScript compiler error shows: 'src/utils.ts(12,5): error TS2322'. What does '12,5' represent?",
                   placeholder: "Short answer",
                   validationMode: "includes",
-                  acceptedAnswers: ["line 12", "line and column", "line", "row and column", "position"],
-                  successMessage: "Correct. The format is (line, column) — it tells you exactly where in the file to look.",
+                  acceptedAnswers: [
+                    "line 12",
+                    "line and column",
+                    "line",
+                    "row and column",
+                    "position",
+                  ],
+                  successMessage:
+                    "Correct. The format is (line, column) — it tells you exactly where in the file to look.",
                   hint: "The two numbers in parentheses follow a consistent convention used by most compilers.",
                   assessmentType: "reasoning",
                 },
@@ -1405,11 +2221,20 @@ export const curriculum: Curriculum = {
               transferTask: {
                 id: "transfer-error-reading",
                 title: "Transfer challenge: triage an error report",
-                prompt: "A teammate pastes this error: 'ReferenceError: fetch is not defined\\n    at getUserData (src/api.ts:8:3)\\n    at main (src/index.ts:4:1)'. Identify the error type, the error message, and the best line to investigate first. Then suggest one fix.",
-                placeholder: "Error type is..., message says..., investigate...",
+                prompt:
+                  "A teammate pastes this error: 'ReferenceError: fetch is not defined\\n    at getUserData (src/api.ts:8:3)\\n    at main (src/index.ts:4:1)'. Identify the error type, the error message, and the best line to investigate first. Then suggest one fix.",
+                placeholder:
+                  "Error type is..., message says..., investigate...",
                 validationMode: "includes",
-                acceptedAnswers: ["ReferenceError", "fetch", "api.ts", "src/api.ts", "line 8"],
-                successMessage: "Transfer evidence accepted. You correctly read the error type, message, and first application frame.",
+                acceptedAnswers: [
+                  "ReferenceError",
+                  "fetch",
+                  "api.ts",
+                  "src/api.ts",
+                  "line 8",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. You correctly read the error type, message, and first application frame.",
                 hint: "The error type is the first word. The message follows the colon. The first app frame is the topmost line in the trace.",
                 assessmentType: "transfer",
               },
@@ -1419,17 +2244,26 @@ export const curriculum: Curriculum = {
                 {
                   id: "error-fix-undefined-access",
                   title: "Fix an undefined property access",
-                  description: "This code throws 'TypeError: Cannot read properties of undefined (reading \\'email\\')'. The user object does not always have a contact property. Add a guard so the function returns 'no email' when contact is missing.",
-                  starterCode: "function getUserEmail(user) {\n  return user.contact.email;\n}\n\nconst user = { name: 'Alice' };\nconsole.log(getUserEmail(user)); // should print 'no email'",
+                  description:
+                    "This code throws 'TypeError: Cannot read properties of undefined (reading \\'email\\')'. The user object does not always have a contact property. Add a guard so the function returns 'no email' when contact is missing.",
+                  starterCode:
+                    "function getUserEmail(user) {\n  return user.contact.email;\n}\n\nconst user = { name: 'Alice' };\nconsole.log(getUserEmail(user)); // should print 'no email'",
                   language: "javascript",
                   hint: "Check whether user.contact exists before accessing .email. Use optional chaining (?.) or an if statement.",
-                  acceptedPatterns: ["user.contact?.email", "if (!user.contact)", "if (user.contact)", "no email"],
+                  acceptedPatterns: [
+                    "user.contact?.email",
+                    "if (!user.contact)",
+                    "if (user.contact)",
+                    "no email",
+                  ],
                 },
                 {
                   id: "error-fix-reference",
                   title: "Fix a ReferenceError",
-                  description: "This code throws 'ReferenceError: totl is not defined' because of a typo. Find the misspelled variable name and correct it so the function returns the sum.",
-                  starterCode: "function calculateTotal(prices) {\n  let total = 0;\n  for (const price of prices) {\n    totl = totl + price;\n  }\n  return total;\n}\n\nconsole.log(calculateTotal([10, 20, 30])); // should print 60",
+                  description:
+                    "This code throws 'ReferenceError: totl is not defined' because of a typo. Find the misspelled variable name and correct it so the function returns the sum.",
+                  starterCode:
+                    "function calculateTotal(prices) {\n  let total = 0;\n  for (const price of prices) {\n    totl = totl + price;\n  }\n  return total;\n}\n\nconsole.log(calculateTotal([10, 20, 30])); // should print 60",
                   language: "javascript",
                   hint: "Look at each use of the variable name inside the loop. Compare it to the declaration on the line above.",
                   acceptedPatterns: ["total = total + price", "total += price"],
@@ -1439,10 +2273,12 @@ export const curriculum: Curriculum = {
             {
               id: "lesson-vscode-debugger",
               title: "The VS Code Debugger and Breakpoints",
-              summary: "Use the VS Code integrated debugger to pause execution, inspect variables, and trace a bug to its source.",
+              summary:
+                "Use the VS Code integrated debugger to pause execution, inspect variables, and trace a bug to its source.",
               duration: "50 min",
               difficulty: "Core",
-              objective: "Set a breakpoint, step through execution, and use the Variables and Call Stack panels to diagnose a runtime bug.",
+              objective:
+                "Set a breakpoint, step through execution, and use the Variables and Call Stack panels to diagnose a runtime bug.",
               explanation: [
                 "The integrated debugger turns a running program into an **inspectable machine**. Instead of scattering `console.log()` calls everywhere, **breakpoints** let you pause execution at any line and inspect the exact program state at that moment — every variable, every argument, every return value.",
                 "To set a **breakpoint**, click the gutter (the space to the left of the line numbers) in VS Code. A red dot appears. When you start the debugger with `F5`, the program runs normally until it hits that line, then **pauses**. The program is still alive — it is just frozen in place so you can inspect it.",
@@ -1471,38 +2307,49 @@ export const curriculum: Curriculum = {
                 "The Call Stack panel shows you the full chain of calls that reached the current line.",
               ],
               tools: ["Visual Studio Code", "terminal", "Node.js"],
-              notesPrompt: "Write a cheat sheet: breakpoint, step over, step into, step out, call stack, watch expression. Add one tip for when you would use each.",
+              notesPrompt:
+                "Write a cheat sheet: breakpoint, step over, step into, step out, call stack, watch expression. Add one tip for when you would use each.",
               exercises: [
                 {
                   id: "debugger-start",
                   title: "Launch the debugger",
-                  prompt: "What keyboard shortcut starts a debug session in VS Code?",
+                  prompt:
+                    "What keyboard shortcut starts a debug session in VS Code?",
                   placeholder: "Key or key combination",
                   validationMode: "includes",
                   acceptedAnswers: ["F5"],
-                  successMessage: "Correct. F5 starts the debug session using the launch configuration in your project.",
+                  successMessage:
+                    "Correct. F5 starts the debug session using the launch configuration in your project.",
                   hint: "It is a single function key. The same key also resumes execution when paused at a breakpoint.",
                   assessmentType: "action",
                 },
                 {
                   id: "debugger-step-over",
                   title: "Step through execution",
-                  prompt: "Which VS Code debugger button executes the current line and moves to the next one WITHOUT entering called functions?",
+                  prompt:
+                    "Which VS Code debugger button executes the current line and moves to the next one WITHOUT entering called functions?",
                   placeholder: "Button name or key",
                   validationMode: "includes",
                   acceptedAnswers: ["Step Over", "F10", "step over"],
-                  successMessage: "Correct. Step Over (F10) advances to the next statement in the current function without descending into nested calls.",
+                  successMessage:
+                    "Correct. Step Over (F10) advances to the next statement in the current function without descending into nested calls.",
                   hint: "There is a 'step' button for staying at the same level and one for going deeper. You want the one that stays at the same level.",
                   assessmentType: "action",
                 },
                 {
                   id: "debugger-variables-panel",
                   title: "Inspect variable state",
-                  prompt: "While paused at a breakpoint, what VS Code panel shows you the current values of all variables in scope?",
+                  prompt:
+                    "While paused at a breakpoint, what VS Code panel shows you the current values of all variables in scope?",
                   placeholder: "Panel name",
                   validationMode: "includes",
-                  acceptedAnswers: ["Variables", "variables panel", "debug panel"],
-                  successMessage: "Correct. The Variables panel shows every in-scope binding and its current value at the paused line.",
+                  acceptedAnswers: [
+                    "Variables",
+                    "variables panel",
+                    "debug panel",
+                  ],
+                  successMessage:
+                    "Correct. The Variables panel shows every in-scope binding and its current value at the paused line.",
                   hint: "It is one of the panels visible in the Debug sidebar when a session is active.",
                   assessmentType: "action",
                 },
@@ -1510,11 +2357,21 @@ export const curriculum: Curriculum = {
               transferTask: {
                 id: "transfer-vscode-debugger",
                 title: "Transfer challenge: plan a debugging session",
-                prompt: "A function is returning -1 when you expect it to return a positive number. You can reproduce the failure consistently. Describe how you would use the VS Code debugger to find the cause — include where you would place the breakpoint, what you would watch in the Variables panel, and which step controls you would use.",
-                placeholder: "I would set a breakpoint at..., watch for..., use Step Over/Into to...",
+                prompt:
+                  "A function is returning -1 when you expect it to return a positive number. You can reproduce the failure consistently. Describe how you would use the VS Code debugger to find the cause — include where you would place the breakpoint, what you would watch in the Variables panel, and which step controls you would use.",
+                placeholder:
+                  "I would set a breakpoint at..., watch for..., use Step Over/Into to...",
                 validationMode: "includes",
-                acceptedAnswers: ["breakpoint", "variables", "step", "inspect", "panel", "value"],
-                successMessage: "Transfer evidence accepted. Your plan demonstrates deliberate use of the debugger to inspect state rather than guessing.",
+                acceptedAnswers: [
+                  "breakpoint",
+                  "variables",
+                  "step",
+                  "inspect",
+                  "panel",
+                  "value",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. Your plan demonstrates deliberate use of the debugger to inspect state rather than guessing.",
                 hint: "Cover: where to set the first breakpoint, what variable value you would examine, and which step command you would use to trace the logic.",
                 assessmentType: "transfer",
               },
@@ -1522,8 +2379,10 @@ export const curriculum: Curriculum = {
                 {
                   id: "debugger-breakpoint",
                   title: "Set a breakpoint",
-                  description: "In VS Code, click the gutter next to line 3 to set a breakpoint, then run the debugger to pause execution.",
-                  starterCode: "function add(a, b) {\n  return a + b;\n}\n\nconsole.log(add(2, 3));",
+                  description:
+                    "In VS Code, click the gutter next to line 3 to set a breakpoint, then run the debugger to pause execution.",
+                  starterCode:
+                    "function add(a, b) {\n  return a + b;\n}\n\nconsole.log(add(2, 3));",
                   language: "javascript",
                   hint: "Click the red dot area to the left of the line number to set a breakpoint.",
                   acceptedPatterns: ["breakpoint", "gutter", "line 3"],
@@ -1531,8 +2390,10 @@ export const curriculum: Curriculum = {
                 {
                   id: "debugger-step-through",
                   title: "Step through code",
-                  description: "With a breakpoint set, use Step Over (F10) to advance through the function call and inspect the return value.",
-                  starterCode: "function multiply(x, y) {\n  const result = x * y;\n  return result;\n}\n\nconsole.log(multiply(4, 5));",
+                  description:
+                    "With a breakpoint set, use Step Over (F10) to advance through the function call and inspect the return value.",
+                  starterCode:
+                    "function multiply(x, y) {\n  const result = x * y;\n  return result;\n}\n\nconsole.log(multiply(4, 5));",
                   language: "javascript",
                   hint: "After hitting the breakpoint, use F10 to step over each line and watch the Variables panel.",
                   acceptedPatterns: ["Step Over", "F10", "Variables"],
@@ -1547,43 +2408,93 @@ export const curriculum: Curriculum = {
           id: "course-version-control",
           title: "Version Control with Git",
           focus: "Commits, branches, merges, and collaboration workflows",
-          outcome: "Learners can use Git confidently for personal and team work, treating version control as a safety system.",
+          outcome:
+            "Learners can use Git confidently for personal and team work, treating version control as a safety system.",
           lessons: [
             {
               id: "lesson-git-workflow",
               title: "Use Git as a Safety System",
-              summary: "Treat version control as a way to reason about change, not as a scary ritual.",
+              summary:
+                "Treat version control as a way to reason about change, not as a scary ritual.",
               duration: "45 min",
               difficulty: "Core",
-              objective: "Understand how Git protects work, explains history, and supports structured experimentation.",
+              objective:
+                "Understand how Git protects work, explains history, and supports structured experimentation.",
               explanation: [
                 "Git gives engineers a **memory system for change**. It answers three questions that file-saving alone cannot: **what** changed, **why** it changed, and **how to return to a known good state**. Every professional codebase uses Git, and understanding it is non-negotiable.",
                 "Git tracks changes in three stages. The **working tree** is your actual files on disk. The **staging area** (also called the index) holds the changes you have selected for the next commit. A **commit** is a permanent snapshot of those staged changes with a message explaining what they accomplish. The flow is: edit files → stage with `git add` → commit with `git commit`.",
                 "Run `git status` constantly — it is the most important command in Git. It shows which files have been modified, which are staged, and which are untracked:\n```bash\ngit status\n# On branch main\n# Changes not staged for commit:\n#   modified:   src/app.ts\n# Untracked files:\n#   src/utils.ts\n```\nThis output tells you exactly what Git sees. Read it before every `git add` and every `git commit`.",
-                "A good commit is **small** (one logical change), **complete** (it does not break the build), and has a **clear message** that explains intent. Compare: `\"fix stuff\"` tells a future reader nothing. `\"Fix null check in checkout handler\"` tells them exactly what changed and why. Clear commit messages compound in value as the project grows — they become a searchable history of every decision.",
+                'A good commit is **small** (one logical change), **complete** (it does not break the build), and has a **clear message** that explains intent. Compare: `"fix stuff"` tells a future reader nothing. `"Fix null check in checkout handler"` tells them exactly what changed and why. Clear commit messages compound in value as the project grows — they become a searchable history of every decision.',
               ],
               demonstration: [
                 "Start by checking the current state of the repository:\n```bash\ngit status\n# On branch main\n# Changes not staged for commit:\n#   modified:   src/app.ts\n```\nOne file has been modified. Before staging anything, look at the actual change with `git diff`:\n```bash\ngit diff src/app.ts\n# -  const user = null;\n# +  const user = getUser(id);\n```\nThe diff shows exactly what changed: a `null` was replaced with a function call. This is the change you want to commit.",
                 "Stage the file with `git add src/app.ts`, then check status again:\n```bash\ngit add src/app.ts\ngit status\n# Changes to be committed:\n#   modified:   src/app.ts\n```\nThe file has moved from 'Changes not staged' to 'Changes to be committed'. Now commit with a descriptive message:\n```bash\ngit commit -m \"Fix user lookup to call getUser instead of returning null\"\n# [main a1b2c3d] Fix user lookup to call getUser instead of returning null\n#  1 file changed, 1 insertion(+), 1 deletion(-)\n```",
-                "Contrast this with a chaotic history where every commit says `\"update\"` or `\"wip\"`. When something breaks, a clean history lets you find the exact commit that introduced the problem using `git log` or `git bisect`. A messy history leaves you guessing.",
+                'Contrast this with a chaotic history where every commit says `"update"` or `"wip"`. When something breaks, a clean history lets you find the exact commit that introduced the problem using `git log` or `git bisect`. A messy history leaves you guessing.',
               ],
-              exerciseSteps: [ "Run `git status` to inspect modified files and distinguish unstaged changes from staged changes.", "Use `git add <file>` to stage only the specific file you intend to commit — not `git add .` blindly.", "Write a `git commit -m` message that explains **what** changed and **why**, not just `\"update\"`."],
-              validationChecks: [ "User runs `git status` before staging and can distinguish unstaged from staged changes.", "User uses `git add <file>` to scope a commit to a single coherent change.", "User writes a commit message that communicates intent (e.g., `\"Fix null check in checkout handler\"`)." ],
-              retention: [ "Small commits make reasoning easier.", "Version control is a safety system, not just a delivery requirement.", "Clear history compounds in value over time." ],
+              exerciseSteps: [
+                "Run `git status` to inspect modified files and distinguish unstaged changes from staged changes.",
+                "Use `git add <file>` to stage only the specific file you intend to commit — not `git add .` blindly.",
+                'Write a `git commit -m` message that explains **what** changed and **why**, not just `"update"`.',
+              ],
+              validationChecks: [
+                "User runs `git status` before staging and can distinguish unstaged from staged changes.",
+                "User uses `git add <file>` to scope a commit to a single coherent change.",
+                'User writes a commit message that communicates intent (e.g., `"Fix null check in checkout handler"`).',
+              ],
+              retention: [
+                "Small commits make reasoning easier.",
+                "Version control is a safety system, not just a delivery requirement.",
+                "Clear history compounds in value over time.",
+              ],
               tools: ["Git", "GitHub", "Visual Studio Code"],
-              notesPrompt: "Write your own definition of staging, then describe what a \u2018good commit\u2019 means in practical terms.",
+              notesPrompt:
+                "Write your own definition of staging, then describe what a \u2018good commit\u2019 means in practical terms.",
               exercises: [
-                { id: "git-status", title: "Inspect repo state", prompt: "Enter the Git command that shows the working tree and staging status.", placeholder: "git ...", validationMode: "exact", acceptedAnswers: ["git status"], successMessage: "Correct. Inspecting state before acting is a repeated professional habit.", hint: "This is the command most engineers run constantly.", assessmentType: "action" },
-                { id: "git-add", title: "Stage a change", prompt: "What command stages a specific file for the next commit?", placeholder: "git ...", validationMode: "includes", acceptedAnswers: ["git add"], successMessage: "Correct. Staging lets you choose exactly what goes into each commit.", hint: "You add files to the staging area.", assessmentType: "action" },
+                {
+                  id: "git-status",
+                  title: "Inspect repo state",
+                  prompt:
+                    "Enter the Git command that shows the working tree and staging status.",
+                  placeholder: "git ...",
+                  validationMode: "exact",
+                  acceptedAnswers: ["git status"],
+                  successMessage:
+                    "Correct. Inspecting state before acting is a repeated professional habit.",
+                  hint: "This is the command most engineers run constantly.",
+                  assessmentType: "action",
+                },
+                {
+                  id: "git-add",
+                  title: "Stage a change",
+                  prompt:
+                    "What command stages a specific file for the next commit?",
+                  placeholder: "git ...",
+                  validationMode: "includes",
+                  acceptedAnswers: ["git add"],
+                  successMessage:
+                    "Correct. Staging lets you choose exactly what goes into each commit.",
+                  hint: "You add files to the staging area.",
+                  assessmentType: "action",
+                },
               ],
               transferTask: {
                 id: "transfer-git-safety",
                 title: "Transfer challenge: explain Git as a safety system",
-                prompt: "A new developer asks: 'Why should I bother with Git if I can just save files?' Explain the three ways Git protects your work that file saving alone cannot provide.",
+                prompt:
+                  "A new developer asks: 'Why should I bother with Git if I can just save files?' Explain the three ways Git protects your work that file saving alone cannot provide.",
                 placeholder: "Three safety benefits",
                 validationMode: "includes",
-                acceptedAnswers: ["history", "revert", "branch", "undo", "rollback", "diff", "compare"],
-                successMessage: "Transfer evidence accepted. You articulated Git's value beyond simple file storage.",
+                acceptedAnswers: [
+                  "history",
+                  "revert",
+                  "branch",
+                  "undo",
+                  "rollback",
+                  "diff",
+                  "compare",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. You articulated Git's value beyond simple file storage.",
                 hint: "Think about history, experimentation (branches), and the ability to undo mistakes.",
                 assessmentType: "transfer",
               },
@@ -1591,7 +2502,8 @@ export const curriculum: Curriculum = {
                 {
                   id: "git-status-read",
                   title: "Read a git status output",
-                  description: "The output below shows `git status`. Add a line that stages the modified file for commit.",
+                  description:
+                    "The output below shows `git status`. Add a line that stages the modified file for commit.",
                   starterCode: `# git status output:\n# On branch main\n# Changes not staged for commit:\n#   modified:   src/app.ts\n\n# Write the git command to stage src/app.ts:\n`,
                   language: "bash",
                   hint: "Use git add followed by the file path.",
@@ -1600,23 +2512,28 @@ export const curriculum: Curriculum = {
                 {
                   id: "git-commit-message",
                   title: "Write a proper commit command",
-                  description: "Write a git commit command with a descriptive message for fixing a login bug.",
+                  description:
+                    "Write a git commit command with a descriptive message for fixing a login bug.",
                   starterCode: `# Write a git commit command with a message:\n`,
                   language: "bash",
                   hint: "Use git commit -m followed by a quoted message.",
                   acceptedPatterns: ["git commit", "-m"],
                 },
               ],
-              competencies: [{ track: "VersionControl", targetLevel: "Functional" }],
+              competencies: [
+                { track: "VersionControl", targetLevel: "Functional" },
+              ],
               scaffoldingLevel: "step-by-step",
             },
             {
               id: "lesson-branching",
               title: "Branches and Safe Experimentation",
-              summary: "Use branches to try ideas, isolate changes, and merge with confidence.",
+              summary:
+                "Use branches to try ideas, isolate changes, and merge with confidence.",
               duration: "45 min",
               difficulty: "Core",
-              objective: "Create branches, switch between them, and merge changes back into the main line.",
+              objective:
+                "Create branches, switch between them, and merge changes back into the main line.",
               explanation: [
                 "**Branches** let you work on changes in isolation. You create a branch, make changes, and those changes do not affect `main` (or any other branch) until you explicitly **merge** them. This gives you a safe space to experiment, make mistakes, and iterate without risk.",
                 "To create a new branch and switch to it in one command, use `git checkout -b <name>` or the newer `git switch -c <name>`:\n```bash\ngit checkout -b feature/login-form\n# Switched to a new branch 'feature/login-form'\n```\nYou are now on a separate timeline. Every commit you make goes onto this branch, not `main`.",
@@ -1628,23 +2545,70 @@ export const curriculum: Curriculum = {
                 "Now switch back to `main` and verify the change is not there:\n```bash\ngit checkout main\ncat src/utils.ts\n# The greeting function does not exist here\n```\nThis proves branch isolation: the work exists only on `feature/add-greeting` until you merge it.",
                 "Merge the feature branch into `main`:\n```bash\ngit merge feature/add-greeting\n# Updating a1b2c3d..e4f5g6h\n#  src/utils.ts | 4 ++++\n#  1 file changed, 4 insertions(+)\n```\nNow `main` has the greeting function. The merge commit records when the feature was integrated. Run `git log --oneline` to see the history.",
               ],
-              exerciseSteps: [ "Create a new branch with `git checkout -b <name>` using a descriptive name like `feature/practice-change`.", "Make a small change on the feature branch, stage it with `git add`, and commit it.", "Switch back to `main` with `git checkout main` and verify the change is not present on `main`." ],
-              validationChecks: [ "User can create a branch with `git checkout -b` or `git switch -c` and name it descriptively.", "User runs `git branch` to see all local branches and identifies the current branch by the `*` marker.", "User understands that branches isolate changes: work on one branch does not appear on another until merged." ],
-              retention: [ "Branch names should describe the work, not the person.", "Branches are cheap \u2014 use them for every non-trivial change.", "Merge with intent, not with haste." ],
+              exerciseSteps: [
+                "Create a new branch with `git checkout -b <name>` using a descriptive name like `feature/practice-change`.",
+                "Make a small change on the feature branch, stage it with `git add`, and commit it.",
+                "Switch back to `main` with `git checkout main` and verify the change is not present on `main`.",
+              ],
+              validationChecks: [
+                "User can create a branch with `git checkout -b` or `git switch -c` and name it descriptively.",
+                "User runs `git branch` to see all local branches and identifies the current branch by the `*` marker.",
+                "User understands that branches isolate changes: work on one branch does not appear on another until merged.",
+              ],
+              retention: [
+                "Branch names should describe the work, not the person.",
+                "Branches are cheap \u2014 use them for every non-trivial change.",
+                "Merge with intent, not with haste.",
+              ],
               tools: ["Git", "Visual Studio Code", "terminal"],
-              notesPrompt: "Write the commands for creating, switching, and merging a branch. Note common mistakes to avoid.",
+              notesPrompt:
+                "Write the commands for creating, switching, and merging a branch. Note common mistakes to avoid.",
               exercises: [
-                { id: "branch-create", title: "Create a branch", prompt: "What Git command creates a new branch and switches to it?", placeholder: "git ...", validationMode: "includes", acceptedAnswers: ["git checkout -b", "git switch -c"], successMessage: "Correct. This single command creates and positions you on the new branch.", hint: "There are two ways: one with checkout and one with switch.", assessmentType: "action" },
-                { id: "branch-list", title: "List branches", prompt: "What Git command shows all local branches and highlights the one you are currently on?", placeholder: "git ...", validationMode: "includes", acceptedAnswers: ["git branch"], successMessage: "Correct. git branch lists local branches and marks the active one with an asterisk.", hint: "The command name is simply the concept itself.", assessmentType: "action" },
+                {
+                  id: "branch-create",
+                  title: "Create a branch",
+                  prompt:
+                    "What Git command creates a new branch and switches to it?",
+                  placeholder: "git ...",
+                  validationMode: "includes",
+                  acceptedAnswers: ["git checkout -b", "git switch -c"],
+                  successMessage:
+                    "Correct. This single command creates and positions you on the new branch.",
+                  hint: "There are two ways: one with checkout and one with switch.",
+                  assessmentType: "action",
+                },
+                {
+                  id: "branch-list",
+                  title: "List branches",
+                  prompt:
+                    "What Git command shows all local branches and highlights the one you are currently on?",
+                  placeholder: "git ...",
+                  validationMode: "includes",
+                  acceptedAnswers: ["git branch"],
+                  successMessage:
+                    "Correct. git branch lists local branches and marks the active one with an asterisk.",
+                  hint: "The command name is simply the concept itself.",
+                  assessmentType: "action",
+                },
               ],
               transferTask: {
                 id: "transfer-branching-strategy",
                 title: "Transfer challenge: recommend a branching strategy",
-                prompt: "A three-person team asks you how they should use branches. Describe when to create a branch, how to name it, and when to merge it back. Include at least one rule that prevents conflicts.",
+                prompt:
+                  "A three-person team asks you how they should use branches. Describe when to create a branch, how to name it, and when to merge it back. Include at least one rule that prevents conflicts.",
                 placeholder: "Branching strategy",
                 validationMode: "includes",
-                acceptedAnswers: ["feature", "branch", "merge", "main", "name", "small", "review"],
-                successMessage: "Transfer evidence accepted. You designed a practical team branching workflow.",
+                acceptedAnswers: [
+                  "feature",
+                  "branch",
+                  "merge",
+                  "main",
+                  "name",
+                  "small",
+                  "review",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. You designed a practical team branching workflow.",
                 hint: "Cover branch naming, when to branch, and how to keep branches short-lived.",
                 assessmentType: "transfer",
               },
@@ -1652,32 +2616,41 @@ export const curriculum: Curriculum = {
                 {
                   id: "git-branch-create",
                   title: "Create a feature branch",
-                  description: "Write the git command to create and switch to a new branch named 'feature/login-form'.",
+                  description:
+                    "Write the git command to create and switch to a new branch named 'feature/login-form'.",
                   starterCode: "# Create and switch to the new branch\n",
                   language: "bash",
                   hint: "Use 'git checkout -b' or 'git switch -c' followed by the branch name.",
-                  acceptedPatterns: ["checkout -b feature/login-form", "switch -c feature/login-form"],
+                  acceptedPatterns: [
+                    "checkout -b feature/login-form",
+                    "switch -c feature/login-form",
+                  ],
                 },
                 {
                   id: "git-branch-list",
                   title: "List and identify branches",
-                  description: "Write the git command that lists all local branches and shows which one is currently checked out.",
+                  description:
+                    "Write the git command that lists all local branches and shows which one is currently checked out.",
                   starterCode: "# List local branches\n",
                   language: "bash",
                   hint: "The simplest form of 'git branch' with no arguments lists local branches.",
                   acceptedPatterns: ["git branch"],
                 },
               ],
-              competencies: [{ track: "VersionControl", targetLevel: "Functional" }],
+              competencies: [
+                { track: "VersionControl", targetLevel: "Functional" },
+              ],
               scaffoldingLevel: "step-by-step",
             },
             {
               id: "lesson-git-merge-conflict",
               title: "Resolving Merge Conflicts",
-              summary: "Understand what causes merge conflicts, how to read conflict markers, and how to resolve them with confidence.",
+              summary:
+                "Understand what causes merge conflicts, how to read conflict markers, and how to resolve them with confidence.",
               duration: "45 min",
               difficulty: "Core",
-              objective: "Read Git conflict markers, choose the correct version of each conflicting change, and complete a merge cleanly.",
+              objective:
+                "Read Git conflict markers, choose the correct version of each conflicting change, and complete a merge cleanly.",
               explanation: [
                 "A **merge conflict** occurs when two branches both modify the same lines of a file. Git cannot decide automatically which version is correct, so it marks the file with **conflict markers** and stops the merge for the human to resolve. Conflicts are not errors — they are Git asking for a decision.",
                 "Conflict markers divide the file into three sections. `<<<<<<< HEAD` marks the start of the current branch's version. `=======` is the separator. `>>>>>>> feature-branch` marks the end of the incoming branch's version:\n```\n<<<<<<< HEAD\nconst greeting = 'Hello';\n=======\nconst greeting = 'Hi there';\n>>>>>>> feature/update-greeting\n```\nYour job is to produce the correct final version by editing the file, choosing one side (or combining both), and **removing all three markers**.",
@@ -1705,38 +2678,45 @@ export const curriculum: Curriculum = {
                 "After resolving, git add the file and git commit to close the merge.",
               ],
               tools: ["Git", "Visual Studio Code", "terminal"],
-              notesPrompt: "Describe the three sections of a conflict marker block. Write down the exact sequence of commands to complete a merge after resolving all conflicts.",
+              notesPrompt:
+                "Describe the three sections of a conflict marker block. Write down the exact sequence of commands to complete a merge after resolving all conflicts.",
               exercises: [
                 {
                   id: "conflict-marker-head",
                   title: "Identify the current branch section",
-                  prompt: "In a Git conflict, what marker indicates the start of the current branch's version of the code?",
+                  prompt:
+                    "In a Git conflict, what marker indicates the start of the current branch's version of the code?",
                   placeholder: "Git marker",
                   validationMode: "includes",
                   acceptedAnswers: ["<<<<<<< HEAD", "<<<<<<<", "HEAD"],
-                  successMessage: "Correct. <<<<<<< HEAD marks the beginning of the version from your current branch.",
+                  successMessage:
+                    "Correct. <<<<<<< HEAD marks the beginning of the version from your current branch.",
                   hint: "Conflict markers start with angle brackets. HEAD refers to your current working branch.",
                   assessmentType: "action",
                 },
                 {
                   id: "conflict-separator",
                   title: "Identify the separator",
-                  prompt: "What Git conflict marker separates the two conflicting versions?",
+                  prompt:
+                    "What Git conflict marker separates the two conflicting versions?",
                   placeholder: "Git marker",
                   validationMode: "includes",
                   acceptedAnswers: ["=======", "====="],
-                  successMessage: "Correct. The ======= line divides the current branch content above from the incoming branch content below.",
+                  successMessage:
+                    "Correct. The ======= line divides the current branch content above from the incoming branch content below.",
                   hint: "It is a line of equals signs that acts as a divider between the two versions.",
                   assessmentType: "action",
                 },
                 {
                   id: "conflict-complete-merge",
                   title: "Complete the merge",
-                  prompt: "After editing a conflict file to remove all markers, what are the two commands needed to complete the merge?",
+                  prompt:
+                    "After editing a conflict file to remove all markers, what are the two commands needed to complete the merge?",
                   placeholder: "git ..., git ...",
                   validationMode: "includes",
                   acceptedAnswers: ["git add", "git commit"],
-                  successMessage: "Correct. Stage the resolved file with git add and then close the merge with git commit.",
+                  successMessage:
+                    "Correct. Stage the resolved file with git add and then close the merge with git commit.",
                   hint: "The same two commands that conclude any normal change also conclude a conflict resolution.",
                   assessmentType: "action",
                 },
@@ -1744,15 +2724,26 @@ export const curriculum: Curriculum = {
               transferTask: {
                 id: "transfer-merge-conflict",
                 title: "Transfer challenge: guide a conflict resolution",
-                prompt: "A teammate says: 'I ran git merge and now there are conflict markers in three files. I don't know what to do.' Write a step-by-step resolution guide that walks them through opening each file, reading the markers, resolving correctly, and closing the merge.",
+                prompt:
+                  "A teammate says: 'I ran git merge and now there are conflict markers in three files. I don't know what to do.' Write a step-by-step resolution guide that walks them through opening each file, reading the markers, resolving correctly, and closing the merge.",
                 placeholder: "Step 1: open the conflicted file...",
                 validationMode: "includes",
-                acceptedAnswers: ["conflict marker", "<<<", "git add", "git commit", "remove", "resolve"],
-                successMessage: "Transfer evidence accepted. Your guide covers the read-decide-remove-stage-commit sequence.",
+                acceptedAnswers: [
+                  "conflict marker",
+                  "<<<",
+                  "git add",
+                  "git commit",
+                  "remove",
+                  "resolve",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. Your guide covers the read-decide-remove-stage-commit sequence.",
                 hint: "Cover: how to identify conflicted files, how to read the three sections, how to make the final version, how to stage, and how to commit.",
                 assessmentType: "transfer",
               },
-              competencies: [{ track: "VersionControl", targetLevel: "Functional" }],
+              competencies: [
+                { track: "VersionControl", targetLevel: "Functional" },
+              ],
               scaffoldingLevel: "goal-driven",
             },
           ],
@@ -1761,16 +2752,20 @@ export const curriculum: Curriculum = {
         {
           id: "course-api-fundamentals",
           title: "API Fundamentals",
-          focus: "HTTP, REST, request/response cycles, status codes, and headers",
-          outcome: "Learners understand how web APIs work and can make requests using both terminal and GUI tools.",
+          focus:
+            "HTTP, REST, request/response cycles, status codes, and headers",
+          outcome:
+            "Learners understand how web APIs work and can make requests using both terminal and GUI tools.",
           lessons: [
             {
               id: "lesson-http-basics",
               title: "HTTP: The Language of the Web",
-              summary: "Understand HTTP methods, status codes, headers, and the request/response cycle that powers every API.",
+              summary:
+                "Understand HTTP methods, status codes, headers, and the request/response cycle that powers every API.",
               duration: "45 min",
               difficulty: "Core",
-              objective: "Explain the HTTP request/response model and use correct methods for different operations.",
+              objective:
+                "Explain the HTTP request/response model and use correct methods for different operations.",
               explanation: [
                 "**HTTP** (HyperText Transfer Protocol) is the protocol behind every web API. It defines how a **client** (your code, your browser, Postman) sends a **request** to a **server**, and how the server sends a **response** back. Understanding HTTP is non-negotiable for any engineer who works with web services.",
                 "Every HTTP request has a **method** that declares intent. The four most common: `GET` retrieves a resource without modifying it. `POST` creates a new resource. `PUT` updates an existing resource by replacing it. `DELETE` removes a resource. Choosing the correct method is not optional — it tells the server (and every proxy, cache, and log between you and the server) what kind of operation this is.",
@@ -1778,27 +2773,74 @@ export const curriculum: Curriculum = {
                 "**Headers** carry metadata that the body cannot. The `Content-Type` header tells the server what format the request body is in (e.g., `application/json`). The `Authorization` header carries authentication credentials. The `Accept` header tells the server what format the client wants the response in. Headers are key-value pairs sent with every request and response.",
               ],
               demonstration: [
-                "Make a `GET` request to the training API using the terminal:\n```bash\ncurl https://api.example.com/users\n# HTTP/1.1 200 OK\n# Content-Type: application/json\n# [{\"id\": 1, \"name\": \"Alice\"}, {\"id\": 2, \"name\": \"Bob\"}]\n```\nThe `200 OK` status code confirms success. The `Content-Type: application/json` header tells you the body is JSON. The body contains the actual data.",
-                "Now send a `POST` request to create a new user:\n```bash\ncurl -X POST https://api.example.com/users \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"name\": \"Charlie\"}'\n# HTTP/1.1 201 Created\n# {\"id\": 3, \"name\": \"Charlie\"}\n```\n`-X POST` sets the method. `-H` sets a header. `-d` sends the request body. The `201 Created` status confirms the resource was created.",
-                "Send a request for a resource that does not exist:\n```bash\ncurl https://api.example.com/users/999\n# HTTP/1.1 404 Not Found\n# {\"error\": \"User not found\"}\n```\n`404 Not Found` is a client error — it means the URL is valid but the resource does not exist. This is different from `500`, which means the server itself failed.",
+                'Make a `GET` request to the training API using the terminal:\n```bash\ncurl https://api.example.com/users\n# HTTP/1.1 200 OK\n# Content-Type: application/json\n# [{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}]\n```\nThe `200 OK` status code confirms success. The `Content-Type: application/json` header tells you the body is JSON. The body contains the actual data.',
+                'Now send a `POST` request to create a new user:\n```bash\ncurl -X POST https://api.example.com/users \\\n  -H "Content-Type: application/json" \\\n  -d \'{"name": "Charlie"}\'\n# HTTP/1.1 201 Created\n# {"id": 3, "name": "Charlie"}\n```\n`-X POST` sets the method. `-H` sets a header. `-d` sends the request body. The `201 Created` status confirms the resource was created.',
+                'Send a request for a resource that does not exist:\n```bash\ncurl https://api.example.com/users/999\n# HTTP/1.1 404 Not Found\n# {"error": "User not found"}\n```\n`404 Not Found` is a client error — it means the URL is valid but the resource does not exist. This is different from `500`, which means the server itself failed.',
               ],
-              exerciseSteps: [ "Make a `GET` request to the training API endpoint and inspect the status code, headers, and response body.", "Send a `POST` request with a JSON body (using the `Content-Type: application/json` header) and confirm the server responds with `201 Created`.", "Request a resource that does not exist and verify you receive a `404 Not Found` status code. Explain the difference between `4xx` and `5xx` errors." ],
-              validationChecks: [ "User knows that `GET` reads, `POST` creates, `PUT` updates, and `DELETE` removes.", "User can read a status code and identify whether the result is success (`2xx`), client error (`4xx`), or server error (`5xx`).", "User understands that headers like `Content-Type` and `Authorization` carry request/response metadata." ],
-              retention: [ "GET reads, POST creates, PUT updates, DELETE removes.", "2xx means success, 4xx means client error, 5xx means server error.", "Headers carry the context that the body cannot." ],
+              exerciseSteps: [
+                "Make a `GET` request to the training API endpoint and inspect the status code, headers, and response body.",
+                "Send a `POST` request with a JSON body (using the `Content-Type: application/json` header) and confirm the server responds with `201 Created`.",
+                "Request a resource that does not exist and verify you receive a `404 Not Found` status code. Explain the difference between `4xx` and `5xx` errors.",
+              ],
+              validationChecks: [
+                "User knows that `GET` reads, `POST` creates, `PUT` updates, and `DELETE` removes.",
+                "User can read a status code and identify whether the result is success (`2xx`), client error (`4xx`), or server error (`5xx`).",
+                "User understands that headers like `Content-Type` and `Authorization` carry request/response metadata.",
+              ],
+              retention: [
+                "GET reads, POST creates, PUT updates, DELETE removes.",
+                "2xx means success, 4xx means client error, 5xx means server error.",
+                "Headers carry the context that the body cannot.",
+              ],
               tools: ["Postman", "terminal", "Docker"],
-              notesPrompt: "Create a reference table of HTTP methods and their purposes. Add the status codes you encountered.",
+              notesPrompt:
+                "Create a reference table of HTTP methods and their purposes. Add the status codes you encountered.",
               exercises: [
-                { id: "http-get", title: "Read operation", prompt: "Which HTTP method is used to retrieve a resource without modifying it?", placeholder: "Method name", validationMode: "exact", acceptedAnswers: ["get", "GET"], successMessage: "Correct. GET is for reading \u2014 it should never cause side effects.", hint: "It is the default method when you open a URL in a browser.", assessmentType: "action" },
-                { id: "status-404", title: "Not found", prompt: "What HTTP status code means the requested resource was not found?", placeholder: "Number", validationMode: "exact", acceptedAnswers: ["404"], successMessage: "Correct. 404 tells the client the resource does not exist at that URL.", hint: "This is probably the most famous status code on the internet.", assessmentType: "action" },
+                {
+                  id: "http-get",
+                  title: "Read operation",
+                  prompt:
+                    "Which HTTP method is used to retrieve a resource without modifying it?",
+                  placeholder: "Method name",
+                  validationMode: "exact",
+                  acceptedAnswers: ["get", "GET"],
+                  successMessage:
+                    "Correct. GET is for reading \u2014 it should never cause side effects.",
+                  hint: "It is the default method when you open a URL in a browser.",
+                  assessmentType: "action",
+                },
+                {
+                  id: "status-404",
+                  title: "Not found",
+                  prompt:
+                    "What HTTP status code means the requested resource was not found?",
+                  placeholder: "Number",
+                  validationMode: "exact",
+                  acceptedAnswers: ["404"],
+                  successMessage:
+                    "Correct. 404 tells the client the resource does not exist at that URL.",
+                  hint: "This is probably the most famous status code on the internet.",
+                  assessmentType: "action",
+                },
               ],
               transferTask: {
                 id: "transfer-http-debug",
                 title: "Transfer challenge: diagnose an API failure",
-                prompt: "An API call returns a 500 status code. Explain what 500 means, what the three most likely server-side causes are, and what you would check first as the developer.",
+                prompt:
+                  "An API call returns a 500 status code. Explain what 500 means, what the three most likely server-side causes are, and what you would check first as the developer.",
                 placeholder: "Diagnosis and causes",
                 validationMode: "includes",
-                acceptedAnswers: ["server", "error", "log", "500", "internal", "crash", "exception"],
-                successMessage: "Transfer evidence accepted. You demonstrated HTTP status code reasoning applied to debugging.",
+                acceptedAnswers: [
+                  "server",
+                  "error",
+                  "log",
+                  "500",
+                  "internal",
+                  "crash",
+                  "exception",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. You demonstrated HTTP status code reasoning applied to debugging.",
                 hint: "500 is a server-side error. Think about what could go wrong on the backend.",
                 assessmentType: "transfer",
               },
@@ -1806,7 +2848,8 @@ export const curriculum: Curriculum = {
                 {
                   id: "http-fetch-get",
                   title: "Write a fetch GET request",
-                  description: "Write JavaScript that uses fetch() to make a GET request to '/api/users' and logs the parsed JSON response.",
+                  description:
+                    "Write JavaScript that uses fetch() to make a GET request to '/api/users' and logs the parsed JSON response.",
                   starterCode: `// Make a GET request to /api/users and log the result\n`,
                   language: "javascript",
                   hint: "Use fetch('/api/users'), then .then(res => res.json()), then .then(data => console.log(data)).",
@@ -1815,23 +2858,28 @@ export const curriculum: Curriculum = {
                 {
                   id: "http-status-check",
                   title: "Check the response status",
-                  description: "Add a status check to the fetch call. If the response is not ok, throw an error with the status code.",
+                  description:
+                    "Add a status check to the fetch call. If the response is not ok, throw an error with the status code.",
                   starterCode: `fetch('/api/data')\n  .then(res => {\n    // Check if response is ok, throw if not\n    return res.json();\n  })\n  .then(data => console.log(data));\n`,
                   language: "javascript",
                   hint: "Check res.ok or res.status and throw new Error if the request failed.",
                   acceptedPatterns: ["res.ok", "throw"],
                 },
               ],
-              competencies: [{ track: "ApiInteraction", targetLevel: "Functional" }],
+              competencies: [
+                { track: "ApiInteraction", targetLevel: "Functional" },
+              ],
               scaffoldingLevel: "goal-driven",
             },
             {
               id: "lesson-postman-basics",
               title: "Professional API Testing with Postman",
-              summary: "Use Postman to build, organize, and automate API requests like a professional.",
+              summary:
+                "Use Postman to build, organize, and automate API requests like a professional.",
               duration: "50 min",
               difficulty: "Core",
-              objective: "Create collections, use environment variables, send authenticated requests, and run collection tests.",
+              objective:
+                "Create collections, use environment variables, send authenticated requests, and run collection tests.",
               explanation: [
                 "**Postman** is the industry standard for API exploration and testing. It goes far beyond making individual requests \u2014 it organises entire API workflows into reusable **collections** that can be shared, versioned, and automated.",
                 "A **collection** is a folder of related API requests. Instead of rebuilding requests from scratch every time, you save them in a collection and replay them with one click. This is especially valuable during development: you build a collection once and use it throughout the project lifecycle for testing, debugging, and demonstration.",
@@ -1840,39 +2888,100 @@ export const curriculum: Curriculum = {
               ],
               demonstration: [
                 "Create a new collection called 'Training API'. Add a `GET` request to `{{baseUrl}}/api/users`. Set up an environment variable: click the eye icon, add `baseUrl` with value `http://localhost:3000`. The request URL now resolves automatically.",
-                "Add a `POST` request to `{{baseUrl}}/api/users` with a JSON body:\n```json\n{\n  \"name\": \"Charlie\",\n  \"email\": \"charlie@example.com\"\n}\n```\nSet the `Content-Type` header to `application/json`. Send the request and confirm a `201 Created` response.",
+                'Add a `POST` request to `{{baseUrl}}/api/users` with a JSON body:\n```json\n{\n  "name": "Charlie",\n  "email": "charlie@example.com"\n}\n```\nSet the `Content-Type` header to `application/json`. Send the request and confirm a `201 Created` response.',
                 "Add a test script to the `GET` request. In the 'Tests' tab, write:\n```js\npm.test('Status is 200', function () {\n  pm.response.to.have.status(200);\n});\npm.test('Response has users', function () {\n  const body = pm.response.json();\n  pm.expect(body).to.be.an('array');\n});\n```\nRun the request \u2014 the test results appear in the 'Test Results' tab. Green checks mean the assertions passed. This is the foundation of automated API testing.",
               ],
-              exerciseSteps: [ "Create a new Postman collection for the training API and add a `GET` request with `{{baseUrl}}` as the URL prefix.", "Set up an environment variable called `baseUrl` and configure it with the local server URL.", "Add a `POST` request with a JSON body and write a test script that asserts the response status code is `201`." ],
-              validationChecks: [ "User creates an organized collection with descriptive request names.", "User uses `{{variableName}}` environment variables instead of hardcoded URLs.", "User can write a basic test assertion using `pm.test()` and `pm.response` in the Tests tab." ],
-              retention: [ "Collections organize work \u2014 loose requests create chaos.", "Environment variables make collections portable.", "Test scripts turn manual checks into automated verification." ],
+              exerciseSteps: [
+                "Create a new Postman collection for the training API and add a `GET` request with `{{baseUrl}}` as the URL prefix.",
+                "Set up an environment variable called `baseUrl` and configure it with the local server URL.",
+                "Add a `POST` request with a JSON body and write a test script that asserts the response status code is `201`.",
+              ],
+              validationChecks: [
+                "User creates an organized collection with descriptive request names.",
+                "User uses `{{variableName}}` environment variables instead of hardcoded URLs.",
+                "User can write a basic test assertion using `pm.test()` and `pm.response` in the Tests tab.",
+              ],
+              retention: [
+                "Collections organize work \u2014 loose requests create chaos.",
+                "Environment variables make collections portable.",
+                "Test scripts turn manual checks into automated verification.",
+              ],
               tools: ["Postman", "Docker"],
-              notesPrompt: "Document the steps to create a Postman collection from scratch. Note how variables make it flexible.",
+              notesPrompt:
+                "Document the steps to create a Postman collection from scratch. Note how variables make it flexible.",
               exercises: [
-                { id: "postman-env-var", title: "Environment variables", prompt: "In Postman, how do you reference an environment variable in a URL? Use double curly braces syntax.", placeholder: "{{...}}", validationMode: "includes", acceptedAnswers: ["{{", "}}"], successMessage: "Correct. {{variable_name}} is how Postman injects dynamic values.", hint: "Variables are wrapped in a special syntax using curly braces.", assessmentType: "action" },
-                { id: "postman-collection-benefit", title: "Why use collections?", prompt: "Why should you organize API requests into a Postman collection instead of sending them individually?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["reuse", "organize", "share", "repeat", "automate", "group", "save", "portable"], successMessage: "Correct. Collections let you organize, reuse, share, and automate groups of related requests.", hint: "Think about what happens when you need to re-run the same set of requests tomorrow or share them with a teammate.", assessmentType: "reasoning" },
+                {
+                  id: "postman-env-var",
+                  title: "Environment variables",
+                  prompt:
+                    "In Postman, how do you reference an environment variable in a URL? Use double curly braces syntax.",
+                  placeholder: "{{...}}",
+                  validationMode: "includes",
+                  acceptedAnswers: ["{{", "}}"],
+                  successMessage:
+                    "Correct. {{variable_name}} is how Postman injects dynamic values.",
+                  hint: "Variables are wrapped in a special syntax using curly braces.",
+                  assessmentType: "action",
+                },
+                {
+                  id: "postman-collection-benefit",
+                  title: "Why use collections?",
+                  prompt:
+                    "Why should you organize API requests into a Postman collection instead of sending them individually?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "reuse",
+                    "organize",
+                    "share",
+                    "repeat",
+                    "automate",
+                    "group",
+                    "save",
+                    "portable",
+                  ],
+                  successMessage:
+                    "Correct. Collections let you organize, reuse, share, and automate groups of related requests.",
+                  hint: "Think about what happens when you need to re-run the same set of requests tomorrow or share them with a teammate.",
+                  assessmentType: "reasoning",
+                },
               ],
               transferTask: {
                 id: "transfer-postman-collection",
                 title: "Transfer challenge: design a test collection",
-                prompt: "You need to test a REST API with three endpoints: list users (GET), create user (POST), delete user (DELETE). Describe how you would organize these in a Postman collection, including which variables you would create and one test assertion per request.",
+                prompt:
+                  "You need to test a REST API with three endpoints: list users (GET), create user (POST), delete user (DELETE). Describe how you would organize these in a Postman collection, including which variables you would create and one test assertion per request.",
                 placeholder: "Collection design",
                 validationMode: "includes",
-                acceptedAnswers: ["collection", "variable", "GET", "POST", "DELETE", "status", "test", "assert"],
-                successMessage: "Transfer evidence accepted. You designed a structured API test collection.",
+                acceptedAnswers: [
+                  "collection",
+                  "variable",
+                  "GET",
+                  "POST",
+                  "DELETE",
+                  "status",
+                  "test",
+                  "assert",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. You designed a structured API test collection.",
                 hint: "Name the collection, define a base URL variable, and describe what each request tests.",
                 assessmentType: "transfer",
               },
-              competencies: [{ track: "ApiInteraction", targetLevel: "Functional" }],
+              competencies: [
+                { track: "ApiInteraction", targetLevel: "Functional" },
+              ],
               scaffoldingLevel: "goal-driven",
             },
             {
               id: "lesson-api-authentication",
               title: "API Authentication: Tokens, Keys, and Secrets",
-              summary: "Understand and implement bearer token auth, API key headers, and safe secret storage with .env files.",
+              summary:
+                "Understand and implement bearer token auth, API key headers, and safe secret storage with .env files.",
               duration: "50 min",
               difficulty: "Core",
-              objective: "Send authenticated requests using bearer tokens and API keys, store secrets in .env, and explain why secrets must never be committed.",
+              objective:
+                "Send authenticated requests using bearer tokens and API keys, store secrets in .env, and explain why secrets must never be committed.",
               explanation: [
                 "Most production APIs require **authentication** to identify and authorise the caller. The two most common mechanisms are **API keys** (a static secret sent in a header or query string) and **bearer tokens** (a short-lived credential obtained by logging in, then sent in the `Authorization` header on every subsequent request).",
                 "An **API key** is a long string assigned to your account. You include it in requests as a header (e.g., `X-API-Key: abc123`) or a query parameter (e.g., `?api_key=abc123`). API keys identify the caller but do not expire automatically — if leaked, they remain valid until revoked.",
@@ -1880,8 +2989,8 @@ export const curriculum: Curriculum = {
                 "Secrets must **never** be hardcoded in source files. Store them in a `.env` file as `KEY=VALUE` pairs, then read them in code with `process.env.API_SECRET`. Add `.env` to `.gitignore` so it is never committed. Create `.env.example` with placeholder values and commit that instead — it documents which variables the project needs without exposing real credentials.",
               ],
               demonstration: [
-                "Send an unauthenticated request to the practice API:\n```bash\ncurl https://api.example.com/protected\n# HTTP/1.1 401 Unauthorized\n# {\"error\": \"Missing or invalid token\"}\n```\nThe `401` status code tells you the request was rejected because no valid credentials were provided.",
-                "Now add the bearer token in an `Authorization` header:\n```bash\ncurl -H \"Authorization: Bearer eyJhbG...\" https://api.example.com/protected\n# HTTP/1.1 200 OK\n# {\"data\": \"secret information\"}\n```\nThe `200 OK` response confirms authentication succeeded. In Postman, you set this in the 'Authorization' tab by choosing 'Bearer Token' and pasting the token value.",
+                'Send an unauthenticated request to the practice API:\n```bash\ncurl https://api.example.com/protected\n# HTTP/1.1 401 Unauthorized\n# {"error": "Missing or invalid token"}\n```\nThe `401` status code tells you the request was rejected because no valid credentials were provided.',
+                'Now add the bearer token in an `Authorization` header:\n```bash\ncurl -H "Authorization: Bearer eyJhbG..." https://api.example.com/protected\n# HTTP/1.1 200 OK\n# {"data": "secret information"}\n```\nThe `200 OK` response confirms authentication succeeded. In Postman, you set this in the \'Authorization\' tab by choosing \'Bearer Token\' and pasting the token value.',
                 "Move the token into a `.env` file for safe storage:\n```bash\necho 'API_TOKEN=eyJhbG...' > .env\necho '.env' >> .gitignore\ngit status\n# .env is untracked (ignored by .gitignore) \u2014 safe\n```\nIn the application code, read it with `const token = process.env.API_TOKEN;`. The secret stays out of version control and can be rotated without changing code.",
               ],
               exerciseSteps: [
@@ -1900,27 +3009,35 @@ export const curriculum: Curriculum = {
                 "A 401 means unauthenticated; a 403 means authenticated but not authorised.",
               ],
               tools: ["Postman", "terminal", "Visual Studio Code"],
-              notesPrompt: "Describe the difference between an API key and a bearer token. Note where each is sent and how you store each safely.",
+              notesPrompt:
+                "Describe the difference between an API key and a bearer token. Note where each is sent and how you store each safely.",
               exercises: [
                 {
                   id: "bearer-header-syntax",
                   title: "Bearer header format",
-                  prompt: "What is the correct HTTP header name and value format for sending a bearer token?",
+                  prompt:
+                    "What is the correct HTTP header name and value format for sending a bearer token?",
                   placeholder: "HeaderName: Value",
                   validationMode: "includes",
-                  acceptedAnswers: ["Authorization: Bearer", "authorization: bearer"],
-                  successMessage: "Correct. The Authorization header with the Bearer scheme is the standard way to send access tokens.",
+                  acceptedAnswers: [
+                    "Authorization: Bearer",
+                    "authorization: bearer",
+                  ],
+                  successMessage:
+                    "Correct. The Authorization header with the Bearer scheme is the standard way to send access tokens.",
                   hint: "The header is named Authorization and the value starts with a specific word before the token.",
                   assessmentType: "action",
                 },
                 {
                   id: "env-gitignore",
                   title: "Protecting secrets from Git",
-                  prompt: "Which file must you add to .gitignore to prevent API secrets from being committed?",
+                  prompt:
+                    "Which file must you add to .gitignore to prevent API secrets from being committed?",
                   placeholder: "filename",
                   validationMode: "includes",
                   acceptedAnswers: [".env"],
-                  successMessage: "Correct. .env holds local secrets and must always be excluded from version control.",
+                  successMessage:
+                    "Correct. .env holds local secrets and must always be excluded from version control.",
                   hint: "It starts with a dot and holds environment variable assignments.",
                   assessmentType: "action",
                 },
@@ -1928,31 +3045,55 @@ export const curriculum: Curriculum = {
               transferTask: {
                 id: "transfer-api-auth",
                 title: "Transfer challenge: secure an API workflow",
-                prompt: "You are building a script that calls a third-party API requiring a bearer token. Describe how you store the token, how the script reads it, and what safeguards prevent the token from being committed to Git.",
+                prompt:
+                  "You are building a script that calls a third-party API requiring a bearer token. Describe how you store the token, how the script reads it, and what safeguards prevent the token from being committed to Git.",
                 placeholder: "Secret management approach",
                 validationMode: "includes",
-                acceptedAnswers: [".env", "gitignore", "environment", "variable", "bearer", "secret", "never commit"],
-                successMessage: "Transfer evidence accepted. You demonstrated secure secret management for API workflows.",
+                acceptedAnswers: [
+                  ".env",
+                  "gitignore",
+                  "environment",
+                  "variable",
+                  "bearer",
+                  "secret",
+                  "never commit",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. You demonstrated secure secret management for API workflows.",
                 hint: "Cover .env storage, process.env access, and .gitignore protection.",
                 assessmentType: "transfer",
               },
-              competencies: [{ track: "ApiInteraction", targetLevel: "Functional" }, { track: "SecurityAwareness", targetLevel: "Aware" }],
+              competencies: [
+                { track: "ApiInteraction", targetLevel: "Functional" },
+                { track: "SecurityAwareness", targetLevel: "Aware" },
+              ],
               scaffoldingLevel: "goal-driven",
             },
           ],
         },
-
       ],
     },
     {
       id: "phase-3",
       title: "Engineering Workflow and Delivery",
-      strapline: "Learn how engineering work is actually managed and completed.",
-      purpose: "Build disciplined project execution: Git workflows, testing strategy, refactoring, task planning, deployment concepts, security basics, observability, and AI-assisted work with verification discipline.",
+      strapline:
+        "Learn how engineering work is actually managed and completed.",
+      purpose:
+        "Build disciplined project execution: Git workflows, testing strategy, refactoring, task planning, deployment concepts, security basics, observability, and AI-assisted work with verification discipline.",
       level: "Intermediate to advanced",
       duration: "8–10 weeks",
-      environment: "Practice repos with pre-seeded issues, broken tests, and deployment pipelines",
-      tools: ["Git", "GitHub", "Docker", "GitHub Actions", "Vitest", "Visual Studio Code", "AI coding assistant", "terminal"],
+      environment:
+        "Practice repos with pre-seeded issues, broken tests, and deployment pipelines",
+      tools: [
+        "Git",
+        "GitHub",
+        "Docker",
+        "GitHub Actions",
+        "Vitest",
+        "Visual Studio Code",
+        "AI coding assistant",
+        "terminal",
+      ],
       guardrails: [
         "All practice repos are disposable and resettable.",
         "Broken states are intentional and recoverable.",
@@ -1973,15 +3114,46 @@ export const curriculum: Curriculum = {
         "Set up a GitHub Actions workflow for automated testing",
         "Complete a mini capstone from issue to working solution",
       ],
-      competencyFocus: ["VersionControl", "Testing", "DeliveryWorkflow", "Debugging", "Documentation"],
+      competencyFocus: [
+        "VersionControl",
+        "Testing",
+        "DeliveryWorkflow",
+        "Debugging",
+        "Documentation",
+      ],
       exitStandard: {
-        summary: "The learner can take a scoped task, implement it in a small codebase, validate it, document it, and explain what they changed and why.",
+        summary:
+          "The learner can take a scoped task, implement it in a small codebase, validate it, document it, and explain what they changed and why.",
         gates: [
-          { description: "Execute a full Git workflow: branch, commit, diff, and pull request", competency: "VersionControl", requiredLevel: "Functional" },
-          { description: "Write and run tests for a component, interpret failures", competency: "Testing", requiredLevel: "Functional" },
-          { description: "Complete a delivery task with validation and a clean commit message", competency: "DeliveryWorkflow", requiredLevel: "Assisted" },
-          { description: "Diagnose a broken local app startup from logs", competency: "Debugging", requiredLevel: "Functional" },
-          { description: "Write a README and code comments that a new teammate can follow", competency: "Documentation", requiredLevel: "Assisted" },
+          {
+            description:
+              "Execute a full Git workflow: branch, commit, diff, and pull request",
+            competency: "VersionControl",
+            requiredLevel: "Functional",
+          },
+          {
+            description:
+              "Write and run tests for a component, interpret failures",
+            competency: "Testing",
+            requiredLevel: "Functional",
+          },
+          {
+            description:
+              "Complete a delivery task with validation and a clean commit message",
+            competency: "DeliveryWorkflow",
+            requiredLevel: "Assisted",
+          },
+          {
+            description: "Diagnose a broken local app startup from logs",
+            competency: "Debugging",
+            requiredLevel: "Functional",
+          },
+          {
+            description:
+              "Write a README and code comments that a new teammate can follow",
+            competency: "Documentation",
+            requiredLevel: "Assisted",
+          },
         ],
         representativeLabs: [
           "Fix a bug on a feature branch and produce a clean commit",
@@ -1996,15 +3168,18 @@ export const curriculum: Curriculum = {
           id: "course-docker-fundamentals",
           title: "Docker Fundamentals",
           focus: "Images, containers, Dockerfiles, volumes, and compose",
-          outcome: "Learners can build, run, and debug containerized applications confidently.",
+          outcome:
+            "Learners can build, run, and debug containerized applications confidently.",
           lessons: [
             {
               id: "lesson-docker-basics",
               title: "Containers: Isolated Environments on Demand",
-              summary: "Understand what containers are, why they matter, and how to run your first one.",
+              summary:
+                "Understand what containers are, why they matter, and how to run your first one.",
               duration: "45 min",
               difficulty: "Core",
-              objective: "Run a container, inspect its state, and understand the difference between images and containers.",
+              objective:
+                "Run a container, inspect its state, and understand the difference between images and containers.",
               explanation: [
                 "A **container** is a lightweight, isolated environment that runs a process with its own filesystem, network, and dependencies — completely separate from your host machine. It solves the classic 'works on my machine' problem because the container carries everything it needs to run. Think of it as a sealed box: same contents every time, on any machine that has Docker installed.",
                 "The mental model you need: an **image** is a blueprint — a read-only template that defines what goes inside the container. A **container** is a running instance of that image. You can run many containers from the same image, just like you can print many copies from the same PDF. Images are built once and reused; containers are created, started, stopped, and discarded.",
@@ -2013,7 +3188,7 @@ export const curriculum: Curriculum = {
               ],
               demonstration: [
                 "Start by pulling an image. Run `docker pull hello-world` — Docker downloads the image layers and stores them locally. Now run `docker run hello-world` — Docker creates a container from that image, runs it, and prints a confirmation message. The output shows Docker is working and explains what just happened behind the scenes.",
-                "Now check what is running: `docker ps` shows **currently running** containers. Since hello-world exits immediately, you will see an empty table. Run `docker ps -a` to see **all** containers including stopped ones — you will see your hello-world container with a status of `Exited`:\n\n```bash\ndocker ps -a\n# CONTAINER ID   IMAGE         COMMAND    STATUS                     NAMES\n# a1b2c3d4e5f6   hello-world   \"/hello\"   Exited (0) 2 seconds ago   quirky_tesla\n```",
+                'Now check what is running: `docker ps` shows **currently running** containers. Since hello-world exits immediately, you will see an empty table. Run `docker ps -a` to see **all** containers including stopped ones — you will see your hello-world container with a status of `Exited`:\n\n```bash\ndocker ps -a\n# CONTAINER ID   IMAGE         COMMAND    STATUS                     NAMES\n# a1b2c3d4e5f6   hello-world   "/hello"   Exited (0) 2 seconds ago   quirky_tesla\n```',
                 "Run a longer-lived container: `docker run -d --name web nginx` starts an Nginx web server in the background (`-d` means **detached**). Now `docker ps` shows it running. Run `docker logs web` to see its output. When you are done, `docker stop web` shuts it down. The container still exists in a stopped state — `docker ps -a` confirms this. To remove it entirely, run `docker rm web`.",
               ],
               exerciseSteps: [
@@ -2026,21 +3201,58 @@ export const curriculum: Curriculum = {
                 "User runs `docker ps` and `docker ps -a` to list running and stopped containers, and can identify which container corresponds to which image.",
                 "User can explain the container lifecycle: pull → run → running → stop → exited, and understands that containers are **ephemeral** by default — data inside them does not persist after removal.",
               ],
-              retention: [ "Images are blueprints. Containers are running instances.", "Containers are ephemeral by default \u2014 data disappears when they stop.", "docker ps shows what is running. docker ps -a shows everything." ],
+              retention: [
+                "Images are blueprints. Containers are running instances.",
+                "Containers are ephemeral by default \u2014 data disappears when they stop.",
+                "docker ps shows what is running. docker ps -a shows everything.",
+              ],
               tools: ["Docker", "terminal"],
-              notesPrompt: "Write the five Docker commands you consider essential. Explain what each does in one sentence.",
+              notesPrompt:
+                "Write the five Docker commands you consider essential. Explain what each does in one sentence.",
               exercises: [
-                { id: "docker-run", title: "Run a container", prompt: "What Docker command runs a new container from an image?", placeholder: "docker ...", validationMode: "includes", acceptedAnswers: ["docker run"], successMessage: "Correct. docker run creates and starts a container from the specified image.", hint: "The command name literally describes what it does.", assessmentType: "action" },
-                { id: "docker-ps", title: "List containers", prompt: "What command shows currently running Docker containers?", placeholder: "docker ...", validationMode: "includes", acceptedAnswers: ["docker ps"], successMessage: "Correct. docker ps is the first thing you check when debugging container issues.", hint: "ps stands for process status \u2014 a Linux convention.", assessmentType: "action" },
+                {
+                  id: "docker-run",
+                  title: "Run a container",
+                  prompt:
+                    "What Docker command runs a new container from an image?",
+                  placeholder: "docker ...",
+                  validationMode: "includes",
+                  acceptedAnswers: ["docker run"],
+                  successMessage:
+                    "Correct. docker run creates and starts a container from the specified image.",
+                  hint: "The command name literally describes what it does.",
+                  assessmentType: "action",
+                },
+                {
+                  id: "docker-ps",
+                  title: "List containers",
+                  prompt:
+                    "What command shows currently running Docker containers?",
+                  placeholder: "docker ...",
+                  validationMode: "includes",
+                  acceptedAnswers: ["docker ps"],
+                  successMessage:
+                    "Correct. docker ps is the first thing you check when debugging container issues.",
+                  hint: "ps stands for process status \u2014 a Linux convention.",
+                  assessmentType: "action",
+                },
               ],
               transferTask: {
                 id: "transfer-docker-debug",
                 title: "Transfer challenge: debug a failing container",
-                prompt: "A team member says their container starts but the app inside is unreachable. Describe the Docker commands you would run to diagnose the problem and the order you would run them in.",
+                prompt:
+                  "A team member says their container starts but the app inside is unreachable. Describe the Docker commands you would run to diagnose the problem and the order you would run them in.",
                 placeholder: "Docker debugging steps",
                 validationMode: "includes",
-                acceptedAnswers: ["docker ps", "docker logs", "inspect", "port", "exec"],
-                successMessage: "Transfer evidence accepted. You demonstrated a systematic container debugging approach.",
+                acceptedAnswers: [
+                  "docker ps",
+                  "docker logs",
+                  "inspect",
+                  "port",
+                  "exec",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. You demonstrated a systematic container debugging approach.",
                 hint: "Start with what is running, then check logs, then look at port mappings or exec into the container.",
                 assessmentType: "transfer",
               },
@@ -2048,7 +3260,8 @@ export const curriculum: Curriculum = {
                 {
                   id: "docker-run-hello-world",
                   title: "Run hello-world container",
-                  description: "Run the official hello-world Docker image to verify Docker is working.",
+                  description:
+                    "Run the official hello-world Docker image to verify Docker is working.",
                   starterCode: "# Run the hello-world container\n",
                   language: "bash",
                   hint: "Use docker run hello-world to pull and run the hello-world image.",
@@ -2057,23 +3270,29 @@ export const curriculum: Curriculum = {
                 {
                   id: "docker-list-containers",
                   title: "List all containers",
-                  description: "List all containers including stopped ones to see the full container history.",
+                  description:
+                    "List all containers including stopped ones to see the full container history.",
                   starterCode: "# List all containers\n",
                   language: "bash",
                   hint: "Use docker ps -a to show all containers, not just running ones.",
                   acceptedPatterns: ["docker ps", "-a"],
                 },
               ],
-              competencies: [{ track: "DeliveryWorkflow", targetLevel: "Functional" }, { track: "Debugging", targetLevel: "Functional" }],
+              competencies: [
+                { track: "DeliveryWorkflow", targetLevel: "Functional" },
+                { track: "Debugging", targetLevel: "Functional" },
+              ],
               scaffoldingLevel: "goal-driven",
             },
             {
               id: "lesson-dockerfile",
               title: "Write a Dockerfile",
-              summary: "Create a Dockerfile that builds a custom image for your application.",
+              summary:
+                "Create a Dockerfile that builds a custom image for your application.",
               duration: "50 min",
               difficulty: "Core",
-              objective: "Write a multi-stage Dockerfile with proper layering, caching, and security considerations.",
+              objective:
+                "Write a multi-stage Dockerfile with proper layering, caching, and security considerations.",
               explanation: [
                 "A **Dockerfile** is a text file that contains the exact recipe for building a Docker image. Each line is an instruction, and each instruction creates a **layer** in the final image. Docker caches these layers — so when you rebuild after a small change, only the layers affected by the change need to rebuild. This is why **instruction order matters for build speed**.",
                 "The five core instructions you will use in nearly every Dockerfile: `FROM` sets the base image (every Dockerfile starts with this), `COPY` copies files from your project into the image, `RUN` executes a command inside the image during build (like `npm install`), `EXPOSE` documents which port the application listens on, and `CMD` defines the default command that runs when a container starts.",
@@ -2081,7 +3300,7 @@ export const curriculum: Curriculum = {
                 "Two production best practices: first, create a `.dockerignore` file to exclude `node_modules`, `.git`, and other files that should not be in the image — this keeps images small and prevents leaking secrets. Second, **do not run your application as root** inside the container. Add a `USER node` instruction (or create a non-root user) before `CMD`. Running as root inside a container is a security risk — if the container is compromised, the attacker has root access to the container's filesystem.",
               ],
               demonstration: [
-                "Start with a complete Dockerfile for a Node.js application:\n\n```dockerfile\nFROM node:20-alpine\nWORKDIR /app\nCOPY package*.json ./\nRUN npm ci\nCOPY . .\nEXPOSE 3000\nUSER node\nCMD [\"node\", \"server.js\"]\n```\n\nEach line has a purpose: `FROM` picks a small Alpine-based Node image, `WORKDIR` sets the working directory inside the container, `COPY package*.json` copies only the dependency files first, `RUN npm ci` installs dependencies (cached unless package.json changes), `COPY . .` brings in the source code, `EXPOSE` documents the port, `USER` drops root privileges, and `CMD` starts the app.",
+                'Start with a complete Dockerfile for a Node.js application:\n\n```dockerfile\nFROM node:20-alpine\nWORKDIR /app\nCOPY package*.json ./\nRUN npm ci\nCOPY . .\nEXPOSE 3000\nUSER node\nCMD ["node", "server.js"]\n```\n\nEach line has a purpose: `FROM` picks a small Alpine-based Node image, `WORKDIR` sets the working directory inside the container, `COPY package*.json` copies only the dependency files first, `RUN npm ci` installs dependencies (cached unless package.json changes), `COPY . .` brings in the source code, `EXPOSE` documents the port, `USER` drops root privileges, and `CMD` starts the app.',
                 "Build the image: `docker build -t myapp .` — Docker processes each instruction and caches the result. The first build takes longer because `npm ci` must download everything. Now change a line in `server.js` and rebuild: `docker build -t myapp .` — notice that the `COPY package*.json` and `RUN npm ci` layers say `CACHED`. Only the `COPY . .` layer and everything after it rebuilds. This is the caching optimization in action:\n\n```bash\ndocker build -t myapp .\n# [2/6] COPY package*.json ./    CACHED\n# [3/6] RUN npm ci                CACHED\n# [4/6] COPY . .                  0.2s\n```",
                 "Run the built image: `docker run -p 3000:3000 myapp` — the `-p` flag maps port 3000 on your host to port 3000 in the container. Open a browser to `http://localhost:3000` to verify the app is running inside the container with the correct dependencies and configuration.",
               ],
@@ -2095,21 +3314,67 @@ export const curriculum: Curriculum = {
                 "`COPY package*.json` and `RUN npm ci` appear **before** `COPY . .` to optimize layer caching — changing source code does not trigger a full dependency reinstall.",
                 "The image builds cleanly with `docker build`, runs with `docker run`, and serves the expected output. A `USER` instruction or non-root configuration is present for security.",
               ],
-              retention: [ "Order matters \u2014 put rarely changing instructions first.", "Use .dockerignore to keep images clean.", "Run as non-root in production images." ],
+              retention: [
+                "Order matters \u2014 put rarely changing instructions first.",
+                "Use .dockerignore to keep images clean.",
+                "Run as non-root in production images.",
+              ],
               tools: ["Docker", "Visual Studio Code", "terminal"],
-              notesPrompt: "Write a Dockerfile template you can reuse. Annotate each line with its purpose.",
+              notesPrompt:
+                "Write a Dockerfile template you can reuse. Annotate each line with its purpose.",
               exercises: [
-                { id: "dockerfile-from", title: "Base image", prompt: "What Dockerfile instruction specifies the base image?", placeholder: "Instruction name", validationMode: "exact", acceptedAnswers: ["FROM", "from"], successMessage: "Correct. FROM is always the first instruction in a Dockerfile.", hint: "Every Docker image is built FROM another image.", assessmentType: "action" },
-                { id: "dockerfile-layer-order", title: "Layer ordering", prompt: "Why should you COPY package.json and run npm install before copying the rest of your source code in a Dockerfile?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["cache", "layer", "rebuild", "change", "faster", "avoid", "skip"], successMessage: "Correct. Copying package.json first lets Docker cache the npm install layer. Source code changes then skip the slow install step.", hint: "Think about what Docker has to re-run when a layer changes.", assessmentType: "reasoning" },
+                {
+                  id: "dockerfile-from",
+                  title: "Base image",
+                  prompt:
+                    "What Dockerfile instruction specifies the base image?",
+                  placeholder: "Instruction name",
+                  validationMode: "exact",
+                  acceptedAnswers: ["FROM", "from"],
+                  successMessage:
+                    "Correct. FROM is always the first instruction in a Dockerfile.",
+                  hint: "Every Docker image is built FROM another image.",
+                  assessmentType: "action",
+                },
+                {
+                  id: "dockerfile-layer-order",
+                  title: "Layer ordering",
+                  prompt:
+                    "Why should you COPY package.json and run npm install before copying the rest of your source code in a Dockerfile?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "cache",
+                    "layer",
+                    "rebuild",
+                    "change",
+                    "faster",
+                    "avoid",
+                    "skip",
+                  ],
+                  successMessage:
+                    "Correct. Copying package.json first lets Docker cache the npm install layer. Source code changes then skip the slow install step.",
+                  hint: "Think about what Docker has to re-run when a layer changes.",
+                  assessmentType: "reasoning",
+                },
               ],
               transferTask: {
                 id: "transfer-dockerfile-review",
                 title: "Transfer challenge: review a Dockerfile",
-                prompt: "A colleague sends you a Dockerfile that COPYs everything before RUN npm install and runs the app as root. Identify both problems and explain how to fix them.",
+                prompt:
+                  "A colleague sends you a Dockerfile that COPYs everything before RUN npm install and runs the app as root. Identify both problems and explain how to fix them.",
                 placeholder: "Problems and fixes",
                 validationMode: "includes",
-                acceptedAnswers: ["cache", "order", "non-root", "user", "layer", ".dockerignore"],
-                successMessage: "Transfer evidence accepted. You demonstrated Dockerfile review competence.",
+                acceptedAnswers: [
+                  "cache",
+                  "order",
+                  "non-root",
+                  "user",
+                  "layer",
+                  ".dockerignore",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. You demonstrated Dockerfile review competence.",
                 hint: "Think about what happens to the npm install layer when source code changes, and why running as root is risky.",
                 assessmentType: "transfer",
               },
@@ -2117,7 +3382,8 @@ export const curriculum: Curriculum = {
                 {
                   id: "dockerfile-base-image",
                   title: "Set the base image",
-                  description: "Write the first line of a Dockerfile that uses Node.js 20 on Alpine Linux as the base image.",
+                  description:
+                    "Write the first line of a Dockerfile that uses Node.js 20 on Alpine Linux as the base image.",
                   starterCode: `# Write the FROM instruction\n`,
                   language: "dockerfile",
                   hint: "Use FROM followed by the image name and tag, e.g. node:20-alpine.",
@@ -2126,14 +3392,17 @@ export const curriculum: Curriculum = {
                 {
                   id: "dockerfile-copy-install",
                   title: "Copy and install dependencies",
-                  description: "Write the Dockerfile lines that copy package.json first, run npm ci, then copy the rest of the source code. This pattern optimises the Docker layer cache.",
+                  description:
+                    "Write the Dockerfile lines that copy package.json first, run npm ci, then copy the rest of the source code. This pattern optimises the Docker layer cache.",
                   starterCode: `WORKDIR /app\n# Copy package files and install, then copy source\n`,
                   language: "dockerfile",
                   hint: "COPY package*.json first, then RUN npm ci, then COPY . . for the source.",
                   acceptedPatterns: ["COPY", "npm ci", "package"],
                 },
               ],
-              competencies: [{ track: "DeliveryWorkflow", targetLevel: "Functional" }],
+              competencies: [
+                { track: "DeliveryWorkflow", targetLevel: "Functional" },
+              ],
               scaffoldingLevel: "goal-driven",
             },
           ],
@@ -2142,16 +3411,20 @@ export const curriculum: Curriculum = {
         {
           id: "course-ai-engineering",
           title: "AI in Real Engineering Work",
-          focus: "Planning, implementation, review, and verification with AI assistance",
-          outcome: "Learners can use AI to accelerate work while preserving correctness, clarity, and system understanding.",
+          focus:
+            "Planning, implementation, review, and verification with AI assistance",
+          outcome:
+            "Learners can use AI to accelerate work while preserving correctness, clarity, and system understanding.",
           lessons: [
             {
               id: "lesson-ai-prompting",
               title: "Write Prompts Like an Engineer",
-              summary: "Learn to give AI clear, constrained, context-rich instructions.",
+              summary:
+                "Learn to give AI clear, constrained, context-rich instructions.",
               duration: "40 min",
               difficulty: "Advanced",
-              objective: "Write engineering prompts that specify constraints, context, expected output format, and verification criteria.",
+              objective:
+                "Write engineering prompts that specify constraints, context, expected output format, and verification criteria.",
               explanation: [
                 "The quality of AI output is directly proportional to the quality of the input. A prompt like 'write a function' gives the AI almost nothing to work with — it does not know the language, the input types, the edge cases, or how you plan to verify the result. **Vague prompts produce vague results.** Precise engineering prompts produce code that is closer to production-ready on the first attempt.",
                 "An effective engineering prompt has five components: **task definition** (what the function/component should do), **constraints** (language, framework, performance requirements), **context** (where this code fits in the system), **expected output format** (return type, response shape, error format), and **uncertainty handling** (what the AI should do if it is unsure — ask, flag, or use a safe default).",
@@ -2173,21 +3446,79 @@ export const curriculum: Curriculum = {
                 "User rewrites the prompt with specific **constraints**, **expected output format**, and at least one named edge case.",
                 "User includes verification criteria — such as `include a test for...` or `the caller should be able to verify by...` — in the rewritten prompt.",
               ],
-              retention: [ "Better prompts come from better engineering thinking.", "Always specify language, constraints, and edge cases.", "If the prompt does not mention how to verify, add that." ],
+              retention: [
+                "Better prompts come from better engineering thinking.",
+                "Always specify language, constraints, and edge cases.",
+                "If the prompt does not mention how to verify, add that.",
+              ],
               tools: ["AI coding assistant", "Visual Studio Code"],
-              notesPrompt: "Write a template for engineering prompts. Include sections for task, constraints, context, and verification.",
+              notesPrompt:
+                "Write a template for engineering prompts. Include sections for task, constraints, context, and verification.",
               exercises: [
-                { id: "prompt-improve", title: "Improve the prompt", prompt: "A developer says \u2018write a function to sort data.\u2019 Name one critical missing constraint.", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["type", "language", "order", "input", "format", "ascending", "descending", "what kind"], successMessage: "Correct. Without specifying the data type, language, or sort order, the AI is guessing.", hint: "Think about what you would need to know before writing the function yourself.", assessmentType: "reasoning" },
-                { id: "prompt-edge-cases", title: "Specify edge cases", prompt: "Why should an engineering prompt include edge cases or error conditions for the AI to handle?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["miss", "ignore", "skip", "forget", "handle", "robust", "error", "unexpected", "assume"], successMessage: "Correct. Without explicit edge cases, AI will often produce code that only handles the happy path and breaks on unexpected input.", hint: "Think about what AI-generated code usually leaves out when the prompt does not mention it.", assessmentType: "reasoning" },
+                {
+                  id: "prompt-improve",
+                  title: "Improve the prompt",
+                  prompt:
+                    "A developer says \u2018write a function to sort data.\u2019 Name one critical missing constraint.",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "type",
+                    "language",
+                    "order",
+                    "input",
+                    "format",
+                    "ascending",
+                    "descending",
+                    "what kind",
+                  ],
+                  successMessage:
+                    "Correct. Without specifying the data type, language, or sort order, the AI is guessing.",
+                  hint: "Think about what you would need to know before writing the function yourself.",
+                  assessmentType: "reasoning",
+                },
+                {
+                  id: "prompt-edge-cases",
+                  title: "Specify edge cases",
+                  prompt:
+                    "Why should an engineering prompt include edge cases or error conditions for the AI to handle?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "miss",
+                    "ignore",
+                    "skip",
+                    "forget",
+                    "handle",
+                    "robust",
+                    "error",
+                    "unexpected",
+                    "assume",
+                  ],
+                  successMessage:
+                    "Correct. Without explicit edge cases, AI will often produce code that only handles the happy path and breaks on unexpected input.",
+                  hint: "Think about what AI-generated code usually leaves out when the prompt does not mention it.",
+                  assessmentType: "reasoning",
+                },
               ],
               transferTask: {
                 id: "transfer-prompt-engineering",
                 title: "Transfer challenge: write a production prompt",
-                prompt: "Write an engineering prompt that asks AI to create a function. Include: task definition, language, input/output types, edge cases, and how to verify the result.",
+                prompt:
+                  "Write an engineering prompt that asks AI to create a function. Include: task definition, language, input/output types, edge cases, and how to verify the result.",
                 placeholder: "Full engineering prompt",
                 validationMode: "includes",
-                acceptedAnswers: ["function", "type", "edge", "test", "verify", "return", "input"],
-                successMessage: "Transfer evidence accepted. You demonstrated structured prompt engineering.",
+                acceptedAnswers: [
+                  "function",
+                  "type",
+                  "edge",
+                  "test",
+                  "verify",
+                  "return",
+                  "input",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. You demonstrated structured prompt engineering.",
                 hint: "Cover what the function does, its signature, at least one edge case, and how you would test the output.",
                 assessmentType: "transfer",
               },
@@ -2195,32 +3526,50 @@ export const curriculum: Curriculum = {
                 {
                   id: "ai-prompt-structure",
                   title: "Structure an AI prompt",
-                  description: "Write a well-structured prompt for an AI to generate a function that calculates Fibonacci numbers up to n.",
+                  description:
+                    "Write a well-structured prompt for an AI to generate a function that calculates Fibonacci numbers up to n.",
                   starterCode: "# Write your prompt here\n",
                   language: "text",
                   hint: "Include the task, constraints (language, efficiency), context, expected output format, and verification criteria.",
-                  acceptedPatterns: ["function", "fibonacci", "calculate", "up to", "return"],
+                  acceptedPatterns: [
+                    "function",
+                    "fibonacci",
+                    "calculate",
+                    "up to",
+                    "return",
+                  ],
                 },
                 {
                   id: "ai-prompt-refine",
                   title: "Refine a vague prompt",
-                  description: "Take the vague prompt 'write code' and refine it into a precise engineering prompt for a React component.",
+                  description:
+                    "Take the vague prompt 'write code' and refine it into a precise engineering prompt for a React component.",
                   starterCode: "# Refined prompt\n",
                   language: "text",
                   hint: "Add specifics about the component's purpose, props, state, and expected behavior.",
-                  acceptedPatterns: ["component", "props", "state", "render", "React"],
+                  acceptedPatterns: [
+                    "component",
+                    "props",
+                    "state",
+                    "render",
+                    "React",
+                  ],
                 },
               ],
-              competencies: [{ track: "DeliveryWorkflow", targetLevel: "Functional" }],
+              competencies: [
+                { track: "DeliveryWorkflow", targetLevel: "Functional" },
+              ],
               scaffoldingLevel: "goal-driven",
             },
             {
               id: "lesson-ai-verification",
               title: "Verify AI Output Like a Professional",
-              summary: "Learn where AI helps, where it misleads, and how to wrap its output in professional verification.",
+              summary:
+                "Learn where AI helps, where it misleads, and how to wrap its output in professional verification.",
               duration: "55 min",
               difficulty: "Advanced",
-              objective: "Apply AI to planning, coding, refactoring, and debugging while maintaining clear accountability for correctness.",
+              objective:
+                "Apply AI to planning, coding, refactoring, and debugging while maintaining clear accountability for correctness.",
               explanation: [
                 "AI coding assistants are powerful because they compress **draft generation** (writing boilerplate, scaffolding functions), **recall** (remembering API signatures, syntax patterns), and **iteration** (refactoring, renaming, restructuring). They are dangerous because they can produce output that **sounds convincing while being wrong** — hallucinated API methods, outdated library usage, or logic that passes a quick glance but fails on edge cases.",
                 "The operating principle: **AI is a drafting tool, not an authority.** You direct it with precise prompts, you constrain it with context about your actual codebase, and you verify every piece of output before it enters your code. The AI does not know your project's architecture, your team's conventions, or whether the library version it references is the one you are actually using.",
@@ -2242,25 +3591,86 @@ export const curriculum: Curriculum = {
                 "User describes a concrete verification workflow: automated checks (`tsc`, `lint`, `test`) followed by manual code review before committing.",
                 "User explains why AI output requires human verification — specifically that AI lacks access to the project's actual architecture, dependencies, and conventions.",
               ],
-              retention: [ "AI speeds work; it does not remove accountability.", "Verification is mandatory, not optional.", "Better prompts come from better engineering thinking." ],
-              tools: ["AI coding assistant", "tests", "linters", "terminal", "editor diagnostics"],
-              notesPrompt: "Write your personal AI operating rules for software engineering work. Keep them strict enough to prevent lazy trust.",
+              retention: [
+                "AI speeds work; it does not remove accountability.",
+                "Verification is mandatory, not optional.",
+                "Better prompts come from better engineering thinking.",
+              ],
+              tools: [
+                "AI coding assistant",
+                "tests",
+                "linters",
+                "terminal",
+                "editor diagnostics",
+              ],
+              notesPrompt:
+                "Write your personal AI operating rules for software engineering work. Keep them strict enough to prevent lazy trust.",
               exercises: [
-                { id: "ai-rule", title: "State the rule", prompt: "Complete this idea in your own words: AI output must always be...", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["verified", "checked", "tested", "reviewed"], successMessage: "Correct. AI is a drafting and acceleration tool, not a substitute for validation.", hint: "Think about the minimum professional standard before shipping AI-assisted work.", assessmentType: "reasoning" },
-                { id: "ai-limitation", title: "Know the limits", prompt: "Name one thing AI coding assistants commonly get wrong.", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["context", "hallucinate", "outdated", "wrong", "stale", "assumptions", "dependencies", "version"], successMessage: "Correct. Awareness of limitations is what separates productive AI use from dangerous AI use.", hint: "Think about what AI does not have access to when generating code.", assessmentType: "reasoning" },
+                {
+                  id: "ai-rule",
+                  title: "State the rule",
+                  prompt:
+                    "Complete this idea in your own words: AI output must always be...",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "verified",
+                    "checked",
+                    "tested",
+                    "reviewed",
+                  ],
+                  successMessage:
+                    "Correct. AI is a drafting and acceleration tool, not a substitute for validation.",
+                  hint: "Think about the minimum professional standard before shipping AI-assisted work.",
+                  assessmentType: "reasoning",
+                },
+                {
+                  id: "ai-limitation",
+                  title: "Know the limits",
+                  prompt:
+                    "Name one thing AI coding assistants commonly get wrong.",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "context",
+                    "hallucinate",
+                    "outdated",
+                    "wrong",
+                    "stale",
+                    "assumptions",
+                    "dependencies",
+                    "version",
+                  ],
+                  successMessage:
+                    "Correct. Awareness of limitations is what separates productive AI use from dangerous AI use.",
+                  hint: "Think about what AI does not have access to when generating code.",
+                  assessmentType: "reasoning",
+                },
               ],
               transferTask: {
                 id: "transfer-ai-verification",
                 title: "Transfer challenge: verify AI-generated code",
-                prompt: "An AI assistant generated a utility function for your project. Describe the verification steps you would take before committing it, including at least one automated check and one manual check.",
+                prompt:
+                  "An AI assistant generated a utility function for your project. Describe the verification steps you would take before committing it, including at least one automated check and one manual check.",
                 placeholder: "Verification steps",
                 validationMode: "includes",
-                acceptedAnswers: ["test", "lint", "review", "read", "run", "edge", "manual"],
-                successMessage: "Transfer evidence accepted. You demonstrated a professional AI verification workflow.",
+                acceptedAnswers: [
+                  "test",
+                  "lint",
+                  "review",
+                  "read",
+                  "run",
+                  "edge",
+                  "manual",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. You demonstrated a professional AI verification workflow.",
                 hint: "Think about both automated checks (tests, linting) and manual steps (reading the code, checking assumptions).",
                 assessmentType: "transfer",
               },
-              competencies: [{ track: "DeliveryWorkflow", targetLevel: "Functional" }],
+              competencies: [
+                { track: "DeliveryWorkflow", targetLevel: "Functional" },
+              ],
               scaffoldingLevel: "goal-driven",
             },
           ],
@@ -2269,30 +3679,34 @@ export const curriculum: Curriculum = {
         {
           id: "course-workflow-practice",
           title: "Engineering Workflow Practice",
-          focus: "Git workflows, testing, refactoring, code review, and task execution",
-          outcome: "Learners execute engineering tasks from scoped issue to clean, tested, committed solution.",
+          focus:
+            "Git workflows, testing, refactoring, code review, and task execution",
+          outcome:
+            "Learners execute engineering tasks from scoped issue to clean, tested, committed solution.",
           lessons: [
             {
               id: "lesson-git-workflow-advanced",
               title: "Git Workflows for Real Projects",
-              summary: "Use branches, commits, diffs, and pull request thinking to manage change safely.",
+              summary:
+                "Use branches, commits, diffs, and pull request thinking to manage change safely.",
               duration: "50 min",
               difficulty: "Core",
-              objective: "Execute a complete Git workflow: create a branch, make targeted commits, review the diff, and prepare a pull request.",
+              objective:
+                "Execute a complete Git workflow: create a branch, make targeted commits, review the diff, and prepare a pull request.",
               explanation: [
                 "**Git** is not a backup tool — it is the primary system for managing, communicating, and reviewing change in professional software work. Every commit is a message to your future self and your teammates. A disciplined Git workflow makes your work **reviewable** (someone can understand what changed), **reversible** (you can undo mistakes cleanly), and **traceable** (you can find out when and why something changed).",
-                "The workflow you will use on real projects follows this rhythm: `git checkout -b feature/description` creates a **branch** for your change (keeping `main` clean), you make small focused edits and commit each one with `git add` and `git commit -m \"clear message\"`, you review your own work with `git diff` before pushing, and finally `git push` sends your branch to the remote for a pull request.",
+                'The workflow you will use on real projects follows this rhythm: `git checkout -b feature/description` creates a **branch** for your change (keeping `main` clean), you make small focused edits and commit each one with `git add` and `git commit -m "clear message"`, you review your own work with `git diff` before pushing, and finally `git push` sends your branch to the remote for a pull request.',
                 "**Atomic commits** are the discipline that makes Git useful. Each commit should represent one logical change — not 'did a bunch of stuff' but 'add email validation to signup form'. The command sequence for one atomic commit:\n\n```bash\ngit add src/validation.ts\ngit commit -m \"add: email format validation before form submit\"\n```\n\nNotice: `git add` stages specific files (not `git add .` which grabs everything), and the commit message explains **intent**, not mechanics. A message like 'fix stuff' is useless six months later. A message like 'fix: prevent duplicate form submission on double-click' is documentation.",
                 "Before pushing, always review what you are about to share. `git diff main` shows every change between your branch and main. `git log --oneline` shows your commit history. Read both. If a commit message does not make sense to a stranger, rewrite it with `git commit --amend`. The diff is your **pre-review** — catch problems here instead of in the pull request.",
               ],
               demonstration: [
-                "Start a feature branch: `git checkout -b fix/login-validation`. Make a targeted edit to the validation file, then stage and commit it:\n\n```bash\ngit add src/login-validation.ts\ngit commit -m \"fix: reject empty email before API call\"\n```\n\nMake a second edit — updating the test — and commit it separately:\n\n```bash\ngit add src/login-validation.test.ts\ngit commit -m \"test: add assertion for empty email rejection\"\n```\n\nTwo commits, each with a single clear purpose. Compare this to one commit with the message 'fix login' — the atomic version is reviewable, the single commit is not.",
+                'Start a feature branch: `git checkout -b fix/login-validation`. Make a targeted edit to the validation file, then stage and commit it:\n\n```bash\ngit add src/login-validation.ts\ngit commit -m "fix: reject empty email before API call"\n```\n\nMake a second edit — updating the test — and commit it separately:\n\n```bash\ngit add src/login-validation.test.ts\ngit commit -m "test: add assertion for empty email rejection"\n```\n\nTwo commits, each with a single clear purpose. Compare this to one commit with the message \'fix login\' — the atomic version is reviewable, the single commit is not.',
                 "Before pushing, review your work. Run `git diff main` to see every line you changed. Run `git log --oneline main..HEAD` to see your commits:\n\n```bash\ngit log --oneline main..HEAD\n# a3f2c1d test: add assertion for empty email rejection\n# 7b8e4f2 fix: reject empty email before API call\n```\n\nThis is what your reviewer will see. If the commits tell a clear story, the review goes faster. Push with `git push -u origin fix/login-validation` and open the pull request.",
                 "In the pull request description, summarize: **what** changed, **why** it changed, and **how to verify**. Example: 'Empty email strings were reaching the API and causing a 500 error. Added a validation check before the API call. Run `npm test` to verify — the new test covers the empty email case.' This gives your reviewer everything they need to approve confidently.",
               ],
               exerciseSteps: [
                 "Create a branch with `git checkout -b fix/descriptive-name` — choose a name that communicates the purpose of the change.",
-                "Make two separate commits using `git add <specific-file>` and `git commit -m \"clear message\"`. Each commit should represent one logical change with a message that explains **why**, not just what.",
+                'Make two separate commits using `git add <specific-file>` and `git commit -m "clear message"`. Each commit should represent one logical change with a message that explains **why**, not just what.',
                 "Run `git diff main` to review all changes, then run `git log --oneline main..HEAD` to see your commit history. Write a one-line summary of the overall change suitable for a pull request title.",
               ],
               validationChecks: [
@@ -2306,32 +3720,80 @@ export const curriculum: Curriculum = {
                 "The diff is your change review — read it before pushing.",
               ],
               tools: ["Git", "terminal", "Visual Studio Code"],
-              notesPrompt: "Write your personal Git workflow checklist: what you check before committing and before pushing.",
+              notesPrompt:
+                "Write your personal Git workflow checklist: what you check before committing and before pushing.",
               exercises: [
-                { id: "git-branch-naming", title: "Branch naming", prompt: "Name the Git command that creates and switches to a new branch called fix/login-error.", placeholder: "git ...", validationMode: "includes", acceptedAnswers: ["git checkout -b fix/login-error", "git switch -c fix/login-error"], successMessage: "Correct. Descriptive branch names communicate intent before anyone reads a single commit.", hint: "Use git checkout -b or git switch -c followed by the branch name.", assessmentType: "action" },
-                { id: "commit-message-quality", title: "Commit messages", prompt: "Which commit message is better: 'fix stuff' or 'fix: validate email before form submission'? Explain why.", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["validate", "specific", "why", "explain", "descriptive"], successMessage: "Correct. Commit messages are documentation — they should explain the intent of the change.", hint: "Think about what a teammate would need to understand the change six months later.", assessmentType: "reasoning" },
+                {
+                  id: "git-branch-naming",
+                  title: "Branch naming",
+                  prompt:
+                    "Name the Git command that creates and switches to a new branch called fix/login-error.",
+                  placeholder: "git ...",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "git checkout -b fix/login-error",
+                    "git switch -c fix/login-error",
+                  ],
+                  successMessage:
+                    "Correct. Descriptive branch names communicate intent before anyone reads a single commit.",
+                  hint: "Use git checkout -b or git switch -c followed by the branch name.",
+                  assessmentType: "action",
+                },
+                {
+                  id: "commit-message-quality",
+                  title: "Commit messages",
+                  prompt:
+                    "Which commit message is better: 'fix stuff' or 'fix: validate email before form submission'? Explain why.",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "validate",
+                    "specific",
+                    "why",
+                    "explain",
+                    "descriptive",
+                  ],
+                  successMessage:
+                    "Correct. Commit messages are documentation — they should explain the intent of the change.",
+                  hint: "Think about what a teammate would need to understand the change six months later.",
+                  assessmentType: "reasoning",
+                },
               ],
               transferTask: {
                 id: "transfer-git-ticket-flow",
                 title: "Transfer challenge: issue to PR flow",
-                prompt: "Given a bug ticket, describe your Git flow from branch creation through final review check before opening a pull request.",
+                prompt:
+                  "Given a bug ticket, describe your Git flow from branch creation through final review check before opening a pull request.",
                 placeholder: "Describe your flow",
                 validationMode: "includes",
-                acceptedAnswers: ["branch", "commit", "diff", "test", "status", "push", "pull request"],
-                successMessage: "Great. Your workflow demonstrates delivery discipline and review readiness.",
+                acceptedAnswers: [
+                  "branch",
+                  "commit",
+                  "diff",
+                  "test",
+                  "status",
+                  "push",
+                  "pull request",
+                ],
+                successMessage:
+                  "Great. Your workflow demonstrates delivery discipline and review readiness.",
                 hint: "Include branch strategy, commit quality, and at least one verification command before PR.",
                 assessmentType: "transfer",
               },
-              competencies: [{ track: "VersionControl", targetLevel: "Functional" }],
+              competencies: [
+                { track: "VersionControl", targetLevel: "Functional" },
+              ],
               scaffoldingLevel: "goal-driven",
             },
             {
               id: "lesson-automated-testing",
               title: "Write Tests That Prove Your Code Works",
-              summary: "Learn to write unit and integration tests that verify real behavior — and make failing tests your first diagnostic tool.",
+              summary:
+                "Learn to write unit and integration tests that verify real behavior — and make failing tests your first diagnostic tool.",
               duration: "55 min",
               difficulty: "Core",
-              objective: "Write tests that assert meaningful behavior, run them in a CI-ready runner, and interpret failures to locate a bug without reading every line of code.",
+              objective:
+                "Write tests that assert meaningful behavior, run them in a CI-ready runner, and interpret failures to locate a bug without reading every line of code.",
               explanation: [
                 "Tests serve three purposes in professional engineering: they **document expected behavior** (a test suite is a living specification), they **verify changes did not break anything** (regression safety net), and they **serve as the fastest diagnostic tool** when something breaks — a failing test points you directly to the broken contract without requiring a full code read.",
                 "This lesson uses **Vitest** — a fast, TypeScript-native test runner that integrates with modern JavaScript projects. The core structure: `describe()` groups related tests, `it()` defines a single test case, and `expect()` makes an assertion about the result. A minimal test looks like:\n\n```typescript\nimport { describe, it, expect } from 'vitest';\n\ndescribe('add', () => {\n  it('returns the sum of two numbers', () => {\n    expect(add(2, 3)).toBe(5);\n  });\n});\n```",
@@ -2340,7 +3802,7 @@ export const curriculum: Curriculum = {
               ],
               demonstration: [
                 "Start with a simple function and build its test suite. Given a `formatCurrency(cents: number): string` function that converts cents to dollar format, write three test cases:\n\n```typescript\ndescribe('formatCurrency', () => {\n  it('formats a normal amount', () => {\n    expect(formatCurrency(1050)).toBe('$10.50');\n  });\n  it('handles zero', () => {\n    expect(formatCurrency(0)).toBe('$0.00');\n  });\n  it('handles negative amounts', () => {\n    expect(formatCurrency(-500)).toBe('-$5.00');\n  });\n});\n```\n\nRun `npx vitest` — all three pass. Each test documents one behavior of the function.",
-                "Now break the function deliberately — change the division from 100 to 10. Run `npx vitest` again. The output pinpoints exactly what failed:\n\n```bash\n FAIL  formatCurrency > formats a normal amount\n   Expected: \"$10.50\"\n   Received: \"$105.00\"\n```\n\nYou know the exact test, the expected value, and the actual value. No need to read the entire function — the test tells you what broke. This is why tests are your fastest debugging tool.",
+                'Now break the function deliberately — change the division from 100 to 10. Run `npx vitest` again. The output pinpoints exactly what failed:\n\n```bash\n FAIL  formatCurrency > formats a normal amount\n   Expected: "$10.50"\n   Received: "$105.00"\n```\n\nYou know the exact test, the expected value, and the actual value. No need to read the entire function — the test tells you what broke. This is why tests are your fastest debugging tool.',
                 "Finally, run `npx vitest --coverage` to generate a coverage report. Coverage shows which lines of your code are exercised by tests and which are not. Low coverage on a critical function is a signal to add more tests — but remember: **coverage shows gaps, it does not guarantee quality**. A test that asserts nothing has 100% coverage and zero value.",
               ],
               exerciseSteps: [
@@ -2359,38 +3821,53 @@ export const curriculum: Curriculum = {
                 "Coverage shows gaps; it does not guarantee quality.",
               ],
               tools: ["Vitest", "Visual Studio Code", "terminal"],
-              notesPrompt: "Write a testing checklist: what cases you always write first, and what a 'well-tested function' looks like to you.",
+              notesPrompt:
+                "Write a testing checklist: what cases you always write first, and what a 'well-tested function' looks like to you.",
               exercises: [
                 {
                   id: "test-command",
                   title: "Run tests",
-                  prompt: "What npm script command runs the test suite as configured in package.json?",
+                  prompt:
+                    "What npm script command runs the test suite as configured in package.json?",
                   placeholder: "npm run ...",
                   validationMode: "includes",
                   acceptedAnswers: ["npm run test", "npm test", "npx vitest"],
-                  successMessage: "Correct. Running tests is the first thing you do when you pull new code or land a change.",
+                  successMessage:
+                    "Correct. Running tests is the first thing you do when you pull new code or land a change.",
                   hint: "Look at the scripts section of package.json.",
                   assessmentType: "action",
                 },
                 {
                   id: "test-assertion",
                   title: "Assertion syntax",
-                  prompt: "In Vitest, what function checks that a value equals an expected result?",
+                  prompt:
+                    "In Vitest, what function checks that a value equals an expected result?",
                   placeholder: "expect(...).to...",
                   validationMode: "includes",
                   acceptedAnswers: ["expect", "toBe", "toEqual"],
-                  successMessage: "Correct. expect().toBe() and expect().toEqual() are the most common assertions.",
+                  successMessage:
+                    "Correct. expect().toBe() and expect().toEqual() are the most common assertions.",
                   hint: "It combines two chained calls — one to set up the value and one to declare the expected result.",
                   assessmentType: "action",
                 },
                 {
                   id: "test-boundary",
                   title: "Edge case thinking",
-                  prompt: "Besides the happy path, name two input conditions every function test should cover.",
+                  prompt:
+                    "Besides the happy path, name two input conditions every function test should cover.",
                   placeholder: "Short answer",
                   validationMode: "includes",
-                  acceptedAnswers: ["null", "empty", "undefined", "invalid", "edge", "boundary", "zero"],
-                  successMessage: "Correct. Edge cases and null/empty inputs are where production bugs most commonly hide.",
+                  acceptedAnswers: [
+                    "null",
+                    "empty",
+                    "undefined",
+                    "invalid",
+                    "edge",
+                    "boundary",
+                    "zero",
+                  ],
+                  successMessage:
+                    "Correct. Edge cases and null/empty inputs are where production bugs most commonly hide.",
                   hint: "Think about inputs that reach the function from outside normal usage.",
                   assessmentType: "reasoning",
                 },
@@ -2398,11 +3875,22 @@ export const curriculum: Curriculum = {
               transferTask: {
                 id: "transfer-test-design",
                 title: "Transfer challenge: design a test suite",
-                prompt: "Given a function that parses a date string and returns a formatted output, describe four test cases you would write and explain what each one verifies.",
+                prompt:
+                  "Given a function that parses a date string and returns a formatted output, describe four test cases you would write and explain what each one verifies.",
                 placeholder: "Case 1: ..., Case 2: ...",
                 validationMode: "includes",
-                acceptedAnswers: ["valid", "invalid", "empty", "null", "edge", "format", "boundary", "undefined"],
-                successMessage: "Transfer evidence accepted. Your test suite covers the cases that matter before the happy path is even run.",
+                acceptedAnswers: [
+                  "valid",
+                  "invalid",
+                  "empty",
+                  "null",
+                  "edge",
+                  "format",
+                  "boundary",
+                  "undefined",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. Your test suite covers the cases that matter before the happy path is even run.",
                 hint: "Think in terms of: does the happy path work? What happens with null or empty input? What happens with a surprising format?",
                 assessmentType: "transfer",
               },
@@ -2410,8 +3898,10 @@ export const curriculum: Curriculum = {
                 {
                   id: "write-test-assertion",
                   title: "Write a test for isEven",
-                  description: "Write a Vitest test that verifies the isEven function returns true for 4 and false for 7. Use describe, it, and expect.",
-                  starterCode: "import { describe, it, expect } from 'vitest';\n\nfunction isEven(n: number): boolean {\n  return n % 2 === 0;\n}\n\n// Write your tests below",
+                  description:
+                    "Write a Vitest test that verifies the isEven function returns true for 4 and false for 7. Use describe, it, and expect.",
+                  starterCode:
+                    "import { describe, it, expect } from 'vitest';\n\nfunction isEven(n: number): boolean {\n  return n % 2 === 0;\n}\n\n// Write your tests below",
                   language: "typescript",
                   hint: "Use describe('isEven', () => { it('returns true for even', () => { expect(isEven(4)).toBe(true) }) }).",
                   acceptedPatterns: ["describe", "it(", "expect", "toBe"],
@@ -2419,8 +3909,10 @@ export const curriculum: Curriculum = {
                 {
                   id: "test-edge-case",
                   title: "Add an edge-case test",
-                  description: "The function below trims and lowercases an email. Add a test case that checks what happens when the input is an empty string.",
-                  starterCode: "import { describe, it, expect } from 'vitest';\n\nfunction normalizeEmail(email: string): string {\n  return email.trim().toLowerCase();\n}\n\ndescribe('normalizeEmail', () => {\n  it('lowercases and trims', () => {\n    expect(normalizeEmail('  Hello@Test.COM  ')).toBe('hello@test.com');\n  });\n\n  // Add your edge-case test below\n});",
+                  description:
+                    "The function below trims and lowercases an email. Add a test case that checks what happens when the input is an empty string.",
+                  starterCode:
+                    "import { describe, it, expect } from 'vitest';\n\nfunction normalizeEmail(email: string): string {\n  return email.trim().toLowerCase();\n}\n\ndescribe('normalizeEmail', () => {\n  it('lowercases and trims', () => {\n    expect(normalizeEmail('  Hello@Test.COM  ')).toBe('hello@test.com');\n  });\n\n  // Add your edge-case test below\n});",
                   language: "typescript",
                   hint: "Call normalizeEmail('') and assert on its result. What does trimming and lowering an empty string produce?",
                   acceptedPatterns: ["normalizeEmail('')", "toBe('')", "it("],
@@ -2432,10 +3924,12 @@ export const curriculum: Curriculum = {
             {
               id: "lesson-ci-cd",
               title: "Automate Quality with GitHub Actions",
-              summary: "Build a CI pipeline that runs lint, tests, and build checks automatically on every pull request.",
+              summary:
+                "Build a CI pipeline that runs lint, tests, and build checks automatically on every pull request.",
               duration: "50 min",
               difficulty: "Core",
-              objective: "Write a GitHub Actions workflow that runs quality gates and understand how CI prevents regressions from reaching the main branch.",
+              objective:
+                "Write a GitHub Actions workflow that runs quality gates and understand how CI prevents regressions from reaching the main branch.",
               explanation: [
                 "**Continuous Integration (CI)** means every push to the repository is automatically checked by the same quality gates your team trusts — linting, type checking, tests, and builds. It removes the 'works on my machine' variability because CI runs in a clean, reproducible environment every time. When CI catches a regression, the broken code never reaches `main`.",
                 "**GitHub Actions** is the CI system built into GitHub. You define workflows in YAML files inside `.github/workflows/`. A workflow has **triggers** (when it runs), **jobs** (what it does), and **steps** (individual commands within a job). The minimum viable CI workflow triggers on `push` and `pull_request`, checks out the code, installs dependencies, and runs your quality gates.",
@@ -2463,27 +3957,37 @@ export const curriculum: Curriculum = {
                 "Required status checks prevent merging broken code.",
               ],
               tools: ["GitHub Actions", "Git", "GitHub", "terminal"],
-              notesPrompt: "Write the YAML skeleton for a CI workflow from memory. Note which parts you always need to look up.",
+              notesPrompt:
+                "Write the YAML skeleton for a CI workflow from memory. Note which parts you always need to look up.",
               exercises: [
                 {
                   id: "ci-trigger",
                   title: "Workflow trigger",
-                  prompt: "Name two GitHub Actions event triggers that should be present in a standard CI workflow.",
+                  prompt:
+                    "Name two GitHub Actions event triggers that should be present in a standard CI workflow.",
                   placeholder: "Short answer",
                   validationMode: "includes",
                   acceptedAnswers: ["push", "pull_request"],
-                  successMessage: "Correct. Running CI on both push and pull_request catches errors both during development and at review time.",
+                  successMessage:
+                    "Correct. Running CI on both push and pull_request catches errors both during development and at review time.",
                   hint: "Think about the two moments when you want automated checks to run in a typical team workflow.",
                   assessmentType: "action",
                 },
                 {
                   id: "ci-required-check",
                   title: "Required status checks",
-                  prompt: "What GitHub branch protection feature prevents merging if the CI workflow fails?",
+                  prompt:
+                    "What GitHub branch protection feature prevents merging if the CI workflow fails?",
                   placeholder: "Short answer",
                   validationMode: "includes",
-                  acceptedAnswers: ["required status", "required check", "branch protection", "status check"],
-                  successMessage: "Correct. Required status checks are the enforcement layer that makes CI meaningful.",
+                  acceptedAnswers: [
+                    "required status",
+                    "required check",
+                    "branch protection",
+                    "status check",
+                  ],
+                  successMessage:
+                    "Correct. Required status checks are the enforcement layer that makes CI meaningful.",
                   hint: "Find it in the branch protection rules for the main branch.",
                   assessmentType: "action",
                 },
@@ -2491,11 +3995,22 @@ export const curriculum: Curriculum = {
               transferTask: {
                 id: "transfer-ci-workflow",
                 title: "Transfer challenge: design a CI pipeline",
-                prompt: "A teammate asks you to add CI to a new repo. Describe the workflow file: what triggers it, what steps it runs, and what happens when a step fails.",
+                prompt:
+                  "A teammate asks you to add CI to a new repo. Describe the workflow file: what triggers it, what steps it runs, and what happens when a step fails.",
                 placeholder: "Workflow design and failure handling",
                 validationMode: "includes",
-                acceptedAnswers: ["push", "pull_request", "test", "lint", "build", "fail", "block", "status"],
-                successMessage: "Transfer evidence accepted. You demonstrated the ability to design a CI pipeline from scratch.",
+                acceptedAnswers: [
+                  "push",
+                  "pull_request",
+                  "test",
+                  "lint",
+                  "build",
+                  "fail",
+                  "block",
+                  "status",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. You demonstrated the ability to design a CI pipeline from scratch.",
                 hint: "Cover triggers, job steps, and what enforcement prevents broken code from merging.",
                 assessmentType: "transfer",
               },
@@ -2503,32 +4018,45 @@ export const curriculum: Curriculum = {
                 {
                   id: "ci-workflow-syntax",
                   title: "GitHub Actions workflow syntax",
-                  description: "Write a basic GitHub Actions workflow YAML that runs tests on push to main branch.",
-                  starterCode: "name: CI\non:\n  push:\n    branches: [main]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n    - uses: actions/checkout@v4\n    - name: Run tests\n      run: |\n",
+                  description:
+                    "Write a basic GitHub Actions workflow YAML that runs tests on push to main branch.",
+                  starterCode:
+                    "name: CI\non:\n  push:\n    branches: [main]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n    - uses: actions/checkout@v4\n    - name: Run tests\n      run: |\n",
                   language: "yaml",
                   hint: "Include checkout step, setup Node.js, install dependencies, and run tests.",
-                  acceptedPatterns: ["uses: actions/checkout", "uses: actions/setup-node", "npm test", "run: npm test"],
+                  acceptedPatterns: [
+                    "uses: actions/checkout",
+                    "uses: actions/setup-node",
+                    "npm test",
+                    "run: npm test",
+                  ],
                 },
                 {
                   id: "ci-status-check",
                   title: "Branch protection status check",
-                  description: "Write the GitHub branch protection rule that requires the 'test' job to pass before merging.",
+                  description:
+                    "Write the GitHub branch protection rule that requires the 'test' job to pass before merging.",
                   starterCode: "# Branch protection settings\n",
                   language: "text",
                   hint: "Specify the required status check name that matches the job name in the workflow.",
                   acceptedPatterns: ["test", "status check", "required"],
                 },
               ],
-              competencies: [{ track: "DeliveryWorkflow", targetLevel: "Functional" }, { track: "Testing", targetLevel: "Assisted" }],
+              competencies: [
+                { track: "DeliveryWorkflow", targetLevel: "Functional" },
+                { track: "Testing", targetLevel: "Assisted" },
+              ],
               scaffoldingLevel: "goal-driven",
             },
             {
               id: "lesson-refactoring",
               title: "Refactor Without Breaking Things",
-              summary: "Improve code structure without changing behavior — and verify you succeeded.",
+              summary:
+                "Improve code structure without changing behavior — and verify you succeeded.",
               duration: "50 min",
               difficulty: "Core",
-              objective: "Identify duplicated logic, extract it into reusable functions, and verify behavior is preserved with tests.",
+              objective:
+                "Identify duplicated logic, extract it into reusable functions, and verify behavior is preserved with tests.",
               explanation: [
                 "**Refactoring** means improving the internal structure of code without changing its external behavior. The function does exactly the same thing after you refactor — the difference is that the code is easier to read, maintain, and extend. Refactoring is how codebases stay healthy as they grow instead of becoming unmaintainable.",
                 "The discipline that makes refactoring safe is a three-step loop: **run tests before** (confirm they pass and document current behavior), **make the structural change** (extract a function, rename a variable, remove duplication), then **run tests after** (confirm they still pass). If the tests pass before and after, you have proof that behavior is preserved. Without tests, refactoring is guessing.",
@@ -2556,19 +4084,60 @@ export const curriculum: Curriculum = {
                 "A good name is the cheapest documentation you can write.",
               ],
               tools: ["Visual Studio Code", "terminal", "Vitest"],
-              notesPrompt: "List three refactoring moves you know (e.g., extract function, rename variable) and when you would use each.",
+              notesPrompt:
+                "List three refactoring moves you know (e.g., extract function, rename variable) and when you would use each.",
               exercises: [
-                { id: "refactor-safety", title: "Safety first", prompt: "What must be in place before refactoring to ensure you don't break behavior?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["tests", "test suite", "unit tests"], successMessage: "Correct. Tests are the safety net that make refactoring possible without fear.", hint: "Think about what would catch a regression automatically.", assessmentType: "reasoning" },
-                { id: "refactor-extract", title: "Extract function", prompt: "You see the same five lines of code copied into three different functions. What refactoring move should you apply?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["extract", "shared function", "reusable function", "helper", "common function"], successMessage: "Correct. Extract the shared logic into a single named function and call it from all three places.", hint: "The goal is to have one source of truth for that logic instead of three copies.", assessmentType: "action" },
+                {
+                  id: "refactor-safety",
+                  title: "Safety first",
+                  prompt:
+                    "What must be in place before refactoring to ensure you don't break behavior?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: ["tests", "test suite", "unit tests"],
+                  successMessage:
+                    "Correct. Tests are the safety net that make refactoring possible without fear.",
+                  hint: "Think about what would catch a regression automatically.",
+                  assessmentType: "reasoning",
+                },
+                {
+                  id: "refactor-extract",
+                  title: "Extract function",
+                  prompt:
+                    "You see the same five lines of code copied into three different functions. What refactoring move should you apply?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "extract",
+                    "shared function",
+                    "reusable function",
+                    "helper",
+                    "common function",
+                  ],
+                  successMessage:
+                    "Correct. Extract the shared logic into a single named function and call it from all three places.",
+                  hint: "The goal is to have one source of truth for that logic instead of three copies.",
+                  assessmentType: "action",
+                },
               ],
               transferTask: {
                 id: "transfer-refactoring",
                 title: "Transfer challenge: plan a refactor",
-                prompt: "You find three functions that each build an HTML string by concatenating hardcoded tags. Describe how you would refactor them: what you extract, how you name it, and how you verify behavior is preserved.",
+                prompt:
+                  "You find three functions that each build an HTML string by concatenating hardcoded tags. Describe how you would refactor them: what you extract, how you name it, and how you verify behavior is preserved.",
                 placeholder: "Refactoring plan and verification",
                 validationMode: "includes",
-                acceptedAnswers: ["extract", "function", "test", "verify", "shared", "reuse", "name"],
-                successMessage: "Transfer evidence accepted. You demonstrated systematic refactoring thinking.",
+                acceptedAnswers: [
+                  "extract",
+                  "function",
+                  "test",
+                  "verify",
+                  "shared",
+                  "reuse",
+                  "name",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. You demonstrated systematic refactoring thinking.",
                 hint: "Name the shared function, explain the extraction, and describe the verification step.",
                 assessmentType: "transfer",
               },
@@ -2576,23 +4145,34 @@ export const curriculum: Curriculum = {
                 {
                   id: "extract-validator",
                   title: "Extract shared validation",
-                  description: "The two functions below both validate email format with identical logic. Extract the validation into a shared isValidEmail function that both can call.",
-                  starterCode: "function registerUser(email, password) {\n  if (!email.includes('@') || !email.includes('.')) {\n    throw new Error('Invalid email');\n  }\n  // register logic...\n}\n\nfunction updateEmail(userId, email) {\n  if (!email.includes('@') || !email.includes('.')) {\n    throw new Error('Invalid email');\n  }\n  // update logic...\n}",
+                  description:
+                    "The two functions below both validate email format with identical logic. Extract the validation into a shared isValidEmail function that both can call.",
+                  starterCode:
+                    "function registerUser(email, password) {\n  if (!email.includes('@') || !email.includes('.')) {\n    throw new Error('Invalid email');\n  }\n  // register logic...\n}\n\nfunction updateEmail(userId, email) {\n  if (!email.includes('@') || !email.includes('.')) {\n    throw new Error('Invalid email');\n  }\n  // update logic...\n}",
                   language: "javascript",
                   hint: "Create a function called isValidEmail(email) that returns a boolean, then call it in both places.",
-                  acceptedPatterns: ["isValidEmail", "function isValidEmail", "includes('@')"],
+                  acceptedPatterns: [
+                    "isValidEmail",
+                    "function isValidEmail",
+                    "includes('@')",
+                  ],
                 },
               ],
-              competencies: [{ track: "CodeReading", targetLevel: "Functional" }, { track: "Debugging", targetLevel: "Assisted" }],
+              competencies: [
+                { track: "CodeReading", targetLevel: "Functional" },
+                { track: "Debugging", targetLevel: "Assisted" },
+              ],
               scaffoldingLevel: "goal-driven",
             },
             {
               id: "lesson-technical-documentation",
               title: "Write Documentation That Works Without You",
-              summary: "Write READMEs, inline comments, and change descriptions that enable a stranger to understand and run your project.",
+              summary:
+                "Write READMEs, inline comments, and change descriptions that enable a stranger to understand and run your project.",
               duration: "45 min",
               difficulty: "Core",
-              objective: "Write a project README with setup instructions, explain a function with inline comments, and describe a pull request clearly enough that a reviewer can understand the change without asking questions.",
+              objective:
+                "Write a project README with setup instructions, explain a function with inline comments, and describe a pull request clearly enough that a reviewer can understand the change without asking questions.",
               explanation: [
                 "Documentation is not extra work after the real work is done — it **is** part of the deliverable. A project without documentation is a project that only works while you are in the room. The moment you leave, hand it off, or come back six months later, undocumented code becomes a puzzle that takes hours to re-learn.",
                 "There are three levels of documentation, each serving a different audience at a different time. **Project-level** documentation is the README — it tells a stranger what the project does, how to set it up, how to run it, and how to test it. **Code-level** documentation is comments and naming — they help the next developer (often future-you) understand *why* a decision was made, not *what* the code does (the code already says that). **Change-level** documentation is commit messages and PR descriptions — they help reviewers and future investigators understand what changed and why.",
@@ -2620,38 +4200,67 @@ export const curriculum: Curriculum = {
                 "A PR description is a gift to your reviewer. Make it easy to say yes.",
               ],
               tools: ["Visual Studio Code", "Git", "Markdown"],
-              notesPrompt: "Write a README template you can reuse for every project. Include the sections you consider non-negotiable.",
+              notesPrompt:
+                "Write a README template you can reuse for every project. Include the sections you consider non-negotiable.",
               exercises: [
                 {
                   id: "readme-sections",
                   title: "README essentials",
-                  prompt: "List four sections every project README should include to be useful to a new contributor.",
+                  prompt:
+                    "List four sections every project README should include to be useful to a new contributor.",
                   placeholder: "Section names",
                   validationMode: "includes",
-                  acceptedAnswers: ["setup", "install", "usage", "purpose", "what", "test", "how to run"],
-                  successMessage: "Correct. Purpose, setup, usage, and testing are the minimum viable README.",
+                  acceptedAnswers: [
+                    "setup",
+                    "install",
+                    "usage",
+                    "purpose",
+                    "what",
+                    "test",
+                    "how to run",
+                  ],
+                  successMessage:
+                    "Correct. Purpose, setup, usage, and testing are the minimum viable README.",
                   hint: "Think about what a stranger needs to answer before they can use or contribute to your project.",
                   assessmentType: "reasoning",
                 },
                 {
                   id: "comment-quality",
                   title: "Good vs bad comments",
-                  prompt: "Which is a better comment: '// increment i' or '// retry up to 3 times before failing'? Explain why.",
+                  prompt:
+                    "Which is a better comment: '// increment i' or '// retry up to 3 times before failing'? Explain why.",
                   placeholder: "Short answer",
                   validationMode: "includes",
-                  acceptedAnswers: ["why", "intent", "retry", "purpose", "reason"],
-                  successMessage: "Correct. Comments should explain intent and context the code cannot express on its own.",
+                  acceptedAnswers: [
+                    "why",
+                    "intent",
+                    "retry",
+                    "purpose",
+                    "reason",
+                  ],
+                  successMessage:
+                    "Correct. Comments should explain intent and context the code cannot express on its own.",
                   hint: "One restates the code. The other explains a decision. Which helps more?",
                   assessmentType: "reasoning",
                 },
                 {
                   id: "pr-description",
                   title: "PR description quality",
-                  prompt: "Name three things a good pull request description should include.",
+                  prompt:
+                    "Name three things a good pull request description should include.",
                   placeholder: "Short list",
                   validationMode: "includes",
-                  acceptedAnswers: ["what", "why", "how", "verify", "test", "change", "context"],
-                  successMessage: "Correct. What changed, why, and how to verify it are the minimum for a reviewable PR.",
+                  acceptedAnswers: [
+                    "what",
+                    "why",
+                    "how",
+                    "verify",
+                    "test",
+                    "change",
+                    "context",
+                  ],
+                  successMessage:
+                    "Correct. What changed, why, and how to verify it are the minimum for a reviewable PR.",
                   hint: "Put yourself in the reviewer's seat: what do they need before they can approve?",
                   assessmentType: "reasoning",
                 },
@@ -2659,30 +4268,52 @@ export const curriculum: Curriculum = {
               transferTask: {
                 id: "transfer-documentation-audit",
                 title: "Transfer challenge: audit and improve documentation",
-                prompt: "You join a new team and find a project with no README, no comments, and commit messages like 'fix stuff' and 'update'. Describe three specific improvements you would make in priority order, and explain why each matters.",
+                prompt:
+                  "You join a new team and find a project with no README, no comments, and commit messages like 'fix stuff' and 'update'. Describe three specific improvements you would make in priority order, and explain why each matters.",
                 placeholder: "Three prioritized improvements",
                 validationMode: "includes",
-                acceptedAnswers: ["readme", "comment", "commit", "message", "setup", "explain", "why", "describe"],
-                successMessage: "Transfer evidence accepted. You demonstrated the ability to assess and improve project documentation systematically.",
+                acceptedAnswers: [
+                  "readme",
+                  "comment",
+                  "commit",
+                  "message",
+                  "setup",
+                  "explain",
+                  "why",
+                  "describe",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. You demonstrated the ability to assess and improve project documentation systematically.",
                 hint: "Start with the highest-impact documentation gap. What unlocks the most value for the team?",
                 assessmentType: "transfer",
               },
-              competencies: [{ track: "Documentation", targetLevel: "Assisted" }],
+              competencies: [
+                { track: "Documentation", targetLevel: "Assisted" },
+              ],
               scaffoldingLevel: "goal-driven",
             },
           ],
-        }
+        },
       ],
     },
     {
       id: "phase-4",
       title: "Independent Build and Portfolio",
       strapline: "Prove what you can do.",
-      purpose: "Transition from training to independent execution. Build complete projects with reduced scaffolding, make architectural decisions, and document work for portfolio presentation.",
+      purpose:
+        "Transition from training to independent execution. Build complete projects with reduced scaffolding, make architectural decisions, and document work for portfolio presentation.",
       level: "Advanced",
       duration: "6–8 weeks",
-      environment: "Open workspaces with minimal scaffolding — ticket-style briefs only",
-      tools: ["Visual Studio Code", "Git", "GitHub", "Node.js", "chosen stack tooling", "AI coding assistant"],
+      environment:
+        "Open workspaces with minimal scaffolding — ticket-style briefs only",
+      tools: [
+        "Visual Studio Code",
+        "Git",
+        "GitHub",
+        "Node.js",
+        "chosen stack tooling",
+        "AI coding assistant",
+      ],
       guardrails: [
         "Scaffolding is intentionally minimal — learners should ask for help from AI or documentation, not step-by-step instructions.",
         "All projects must include a README, setup instructions, and at least basic tests.",
@@ -2701,15 +4332,44 @@ export const curriculum: Curriculum = {
         "Debugging case study with root cause analysis",
         "Documented capstone with README, setup instructions, and test coverage",
       ],
-      competencyFocus: ["DeliveryWorkflow", "Debugging", "Testing", "ApiInteraction", "IndependentProblemSolving"],
+      competencyFocus: [
+        "DeliveryWorkflow",
+        "Debugging",
+        "Testing",
+        "ApiInteraction",
+        "IndependentProblemSolving",
+      ],
       exitStandard: {
-        summary: "The learner can build and explain one or more complete projects that demonstrate engineering competence — inspect systems, modify code, diagnose failures, and build working solutions with discipline.",
+        summary:
+          "The learner can build and explain one or more complete projects that demonstrate engineering competence — inspect systems, modify code, diagnose failures, and build working solutions with discipline.",
         gates: [
-          { description: "Build and ship a working application independently", competency: "DeliveryWorkflow", requiredLevel: "Independent" },
-          { description: "Write tests that verify core behaviors of a project", competency: "Testing", requiredLevel: "Functional" },
-          { description: "Debug and document a real failure from symptoms to fix", competency: "Debugging", requiredLevel: "Independent" },
-          { description: "Integrate at least one external API in a project", competency: "ApiInteraction", requiredLevel: "Functional" },
-          { description: "Solve an unfamiliar problem independently using available resources", competency: "IndependentProblemSolving", requiredLevel: "Functional" },
+          {
+            description: "Build and ship a working application independently",
+            competency: "DeliveryWorkflow",
+            requiredLevel: "Independent",
+          },
+          {
+            description: "Write tests that verify core behaviors of a project",
+            competency: "Testing",
+            requiredLevel: "Functional",
+          },
+          {
+            description:
+              "Debug and document a real failure from symptoms to fix",
+            competency: "Debugging",
+            requiredLevel: "Independent",
+          },
+          {
+            description: "Integrate at least one external API in a project",
+            competency: "ApiInteraction",
+            requiredLevel: "Functional",
+          },
+          {
+            description:
+              "Solve an unfamiliar problem independently using available resources",
+            competency: "IndependentProblemSolving",
+            requiredLevel: "Functional",
+          },
         ],
         representativeLabs: [
           "Build a personal CLI utility",
@@ -2723,15 +4383,18 @@ export const curriculum: Curriculum = {
           id: "course-capstone-tracks",
           title: "Capstone Tracks",
           focus: "Independent project execution with minimal scaffolding",
-          outcome: "Learners complete one or more scoped projects that demonstrate end-to-end engineering competence.",
+          outcome:
+            "Learners complete one or more scoped projects that demonstrate end-to-end engineering competence.",
           lessons: [
             {
               id: "lesson-cli-build",
               title: "Build a CLI Utility",
-              summary: "Design and build a command-line tool that solves a real problem, documented for use by others.",
+              summary:
+                "Design and build a command-line tool that solves a real problem, documented for use by others.",
               duration: "3–4 hours",
               difficulty: "Advanced",
-              objective: "Design, implement, test, and document a CLI tool from scratch.",
+              objective:
+                "Design, implement, test, and document a CLI tool from scratch.",
               explanation: [
                 "A **CLI (command-line interface) tool** is one of the most direct demonstrations of engineering skill: you define the interface (what arguments and flags it accepts), implement the logic, handle edge cases (missing arguments, invalid paths, permission errors), and ship something usable by anyone with a terminal. It is a complete engineering deliverable in miniature.",
                 "Building a CLI forces you to think about **interface design before implementation**. Before writing any logic, decide: What arguments does the tool accept? What flags modify its behavior? What does the output look like? What happens when the user provides invalid input? In Node.js, `process.argv` gives you access to command-line arguments — `process.argv[0]` is the Node binary, `process.argv[1]` is the script path, and `process.argv[2]` onward are user-supplied arguments:\n\n```typescript\n// node mycli.ts ./src\n// process.argv[0] = 'node'\n// process.argv[1] = 'mycli.ts'\n// process.argv[2] = './src'    <-- the user's input\n```",
@@ -2760,19 +4423,67 @@ export const curriculum: Curriculum = {
                 "A README is the first impression of your work.",
               ],
               tools: ["Node.js", "terminal", "Visual Studio Code", "Git"],
-              notesPrompt: "Document the decisions you made: language choice, argument parsing approach, test strategy. Explain one tradeoff you encountered.",
+              notesPrompt:
+                "Document the decisions you made: language choice, argument parsing approach, test strategy. Explain one tradeoff you encountered.",
               exercises: [
-                { id: "cli-interface", title: "Define the interface", prompt: "Before writing code for a CLI tool, what should you define first?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["interface", "arguments", "flags", "input", "output", "contract"], successMessage: "Correct. Defining the interface first prevents you from building a tool that is hard to use.", hint: "Think about what a user of your tool needs to know before running it.", assessmentType: "reasoning" },
-                { id: "cli-test-timing", title: "When to test", prompt: "When building a CLI tool incrementally, at what point should you write tests?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["after each", "each function", "as you go", "incrementally", "every step", "each major"], successMessage: "Correct. Write tests after each major function, not after the whole project is built. Incremental testing catches issues early.", hint: "Think about the cost of finding a bug in the last function vs. the first.", assessmentType: "reasoning" },
+                {
+                  id: "cli-interface",
+                  title: "Define the interface",
+                  prompt:
+                    "Before writing code for a CLI tool, what should you define first?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "interface",
+                    "arguments",
+                    "flags",
+                    "input",
+                    "output",
+                    "contract",
+                  ],
+                  successMessage:
+                    "Correct. Defining the interface first prevents you from building a tool that is hard to use.",
+                  hint: "Think about what a user of your tool needs to know before running it.",
+                  assessmentType: "reasoning",
+                },
+                {
+                  id: "cli-test-timing",
+                  title: "When to test",
+                  prompt:
+                    "When building a CLI tool incrementally, at what point should you write tests?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "after each",
+                    "each function",
+                    "as you go",
+                    "incrementally",
+                    "every step",
+                    "each major",
+                  ],
+                  successMessage:
+                    "Correct. Write tests after each major function, not after the whole project is built. Incremental testing catches issues early.",
+                  hint: "Think about the cost of finding a bug in the last function vs. the first.",
+                  assessmentType: "reasoning",
+                },
               ],
               transferTask: {
                 id: "transfer-cli-delivery",
                 title: "Transfer challenge: ship-ready CLI",
-                prompt: "Describe the minimum deliverables required to ship your CLI utility so another developer can install, run, and verify it independently.",
+                prompt:
+                  "Describe the minimum deliverables required to ship your CLI utility so another developer can install, run, and verify it independently.",
                 placeholder: "List deliverables",
                 validationMode: "includes",
-                acceptedAnswers: ["readme", "tests", "usage", "install", "example", "verification"],
-                successMessage: "Transfer challenge passed. You identified the core delivery artifacts needed for independent use.",
+                acceptedAnswers: [
+                  "readme",
+                  "tests",
+                  "usage",
+                  "install",
+                  "example",
+                  "verification",
+                ],
+                successMessage:
+                  "Transfer challenge passed. You identified the core delivery artifacts needed for independent use.",
                 hint: "Think in terms of reproducibility: setup, usage, and proof it works.",
                 assessmentType: "transfer",
               },
@@ -2780,23 +4491,34 @@ export const curriculum: Curriculum = {
                 {
                   id: "parse-cli-args",
                   title: "Parse command-line arguments",
-                  description: "Complete the function so it reads the first positional argument from process.argv and returns it. If no argument is provided, return the string 'No path given'.",
-                  starterCode: "function getTargetDir(): string {\n  // process.argv: [node, script, ...args]\n  // Return the first user argument, or 'No path given'\n}\n\nconsole.log(getTargetDir());",
+                  description:
+                    "Complete the function so it reads the first positional argument from process.argv and returns it. If no argument is provided, return the string 'No path given'.",
+                  starterCode:
+                    "function getTargetDir(): string {\n  // process.argv: [node, script, ...args]\n  // Return the first user argument, or 'No path given'\n}\n\nconsole.log(getTargetDir());",
                   language: "typescript",
                   hint: "process.argv[2] is the first user-supplied argument. Check if it exists before returning it.",
-                  acceptedPatterns: ["process.argv[2]", "process.argv", "No path given"],
+                  acceptedPatterns: [
+                    "process.argv[2]",
+                    "process.argv",
+                    "No path given",
+                  ],
                 },
               ],
-              competencies: [{ track: "DeliveryWorkflow", targetLevel: "Independent" }, { track: "Testing", targetLevel: "Functional" }],
+              competencies: [
+                { track: "DeliveryWorkflow", targetLevel: "Independent" },
+                { track: "Testing", targetLevel: "Functional" },
+              ],
               scaffoldingLevel: "ticket-style",
             },
             {
               id: "lesson-crud-app",
               title: "Build a CRUD Web Application",
-              summary: "Build a full-stack CRUD application from a requirements brief with frontend, API, and data persistence.",
+              summary:
+                "Build a full-stack CRUD application from a requirements brief with frontend, API, and data persistence.",
               duration: "4–6 hours",
               difficulty: "Advanced",
-              objective: "Build a working CRUD app with a frontend UI, backend API, and persistent storage from a ticket-style brief.",
+              objective:
+                "Build a working CRUD app with a frontend UI, backend API, and persistent storage from a ticket-style brief.",
               explanation: [
                 "**CRUD** — Create, Read, Update, Delete — covers the four fundamental operations behind most web applications. A task manager, a contacts list, a bookmark organizer — they all share this pattern. Building a CRUD app independently tests your ability to make architectural decisions, connect the frontend to a backend API, validate input at the right boundaries, and handle the edge cases that separate a demo from a real application.",
                 "The architecture has three layers: a **data model** (what shape the data takes — fields, types, constraints), an **API** (endpoints that accept requests, validate input, and return responses with appropriate status codes), and a **frontend** (UI that calls the API and renders the results). The data model constrains everything else — get it right first:\n\n```typescript\n// Example: Task data model\ntype Task = {\n  id: string;\n  title: string;       // required, non-empty\n  completed: boolean;   // defaults to false\n  createdAt: string;    // ISO 8601 timestamp\n};\n```",
@@ -2826,20 +4548,76 @@ export const curriculum: Curriculum = {
                 "Validate at the API boundary, not just the UI.",
                 "Test the contract, not the implementation.",
               ],
-              tools: ["Node.js", "Visual Studio Code", "Git", "terminal", "Postman"],
-              notesPrompt: "Write up the architecture decisions you made. What would you change if you built this again?",
+              tools: [
+                "Node.js",
+                "Visual Studio Code",
+                "Git",
+                "terminal",
+                "Postman",
+              ],
+              notesPrompt:
+                "Write up the architecture decisions you made. What would you change if you built this again?",
               exercises: [
-                { id: "crud-model-first", title: "Data model priority", prompt: "Why should you design the data model before writing API routes for a CRUD application?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["schema", "structure", "fields", "model", "constrain", "shape"], successMessage: "Correct. The data model defines the shape of everything else — routes, validation, and UI all follow from it.", hint: "Think about what your routes and validation depend on.", assessmentType: "reasoning" },
-                { id: "crud-validation-boundary", title: "Where to validate", prompt: "Should input validation happen in the frontend UI, the API route, or both? Why?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["both", "api", "server", "boundary", "bypass", "trust"], successMessage: "Correct. Validate at the API boundary because the UI can be bypassed. Frontend validation improves UX but the server is the authority.", hint: "Think about what happens if someone sends a request directly to the API, skipping the UI.", assessmentType: "reasoning" },
+                {
+                  id: "crud-model-first",
+                  title: "Data model priority",
+                  prompt:
+                    "Why should you design the data model before writing API routes for a CRUD application?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "schema",
+                    "structure",
+                    "fields",
+                    "model",
+                    "constrain",
+                    "shape",
+                  ],
+                  successMessage:
+                    "Correct. The data model defines the shape of everything else — routes, validation, and UI all follow from it.",
+                  hint: "Think about what your routes and validation depend on.",
+                  assessmentType: "reasoning",
+                },
+                {
+                  id: "crud-validation-boundary",
+                  title: "Where to validate",
+                  prompt:
+                    "Should input validation happen in the frontend UI, the API route, or both? Why?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "both",
+                    "api",
+                    "server",
+                    "boundary",
+                    "bypass",
+                    "trust",
+                  ],
+                  successMessage:
+                    "Correct. Validate at the API boundary because the UI can be bypassed. Frontend validation improves UX but the server is the authority.",
+                  hint: "Think about what happens if someone sends a request directly to the API, skipping the UI.",
+                  assessmentType: "reasoning",
+                },
               ],
               transferTask: {
                 id: "transfer-crud-variation",
                 title: "Transfer challenge: design a different CRUD app",
-                prompt: "You receive a brief for a bookmark manager: users can add, tag, search, and delete bookmarks. Describe your data model, list the API endpoints you would create, and explain one validation rule you would enforce at the API boundary.",
+                prompt:
+                  "You receive a brief for a bookmark manager: users can add, tag, search, and delete bookmarks. Describe your data model, list the API endpoints you would create, and explain one validation rule you would enforce at the API boundary.",
                 placeholder: "Data model, endpoints, and validation",
                 validationMode: "includes",
-                acceptedAnswers: ["endpoint", "route", "validate", "model", "schema", "create", "delete", "field"],
-                successMessage: "Transfer evidence accepted. You demonstrated independent CRUD design from a fresh brief.",
+                acceptedAnswers: [
+                  "endpoint",
+                  "route",
+                  "validate",
+                  "model",
+                  "schema",
+                  "create",
+                  "delete",
+                  "field",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. You demonstrated independent CRUD design from a fresh brief.",
                 hint: "Describe the fields in your data model, name the routes, and pick one validation rule.",
                 assessmentType: "transfer",
               },
@@ -2847,23 +4625,36 @@ export const curriculum: Curriculum = {
                 {
                   id: "validate-task-input",
                   title: "Add API input validation",
-                  description: "This createTask handler accepts any input. Add validation so it returns a 400 error if the title is missing or empty.",
-                  starterCode: "function createTask(req) {\n  const { title } = req.body;\n  // Add validation: if title is missing or empty, \n  // return { status: 400, error: 'Title is required' }\n  return { status: 201, data: { id: 1, title } };\n}",
+                  description:
+                    "This createTask handler accepts any input. Add validation so it returns a 400 error if the title is missing or empty.",
+                  starterCode:
+                    "function createTask(req) {\n  const { title } = req.body;\n  // Add validation: if title is missing or empty, \n  // return { status: 400, error: 'Title is required' }\n  return { status: 201, data: { id: 1, title } };\n}",
                   language: "javascript",
                   hint: "Check if !title or title.trim() === '' before creating the task.",
-                  acceptedPatterns: ["!title", "title.trim", "400", "Title is required"],
+                  acceptedPatterns: [
+                    "!title",
+                    "title.trim",
+                    "400",
+                    "Title is required",
+                  ],
                 },
               ],
-              competencies: [{ track: "DeliveryWorkflow", targetLevel: "Independent" }, { track: "ApiInteraction", targetLevel: "Functional" }, { track: "Testing", targetLevel: "Functional" }],
+              competencies: [
+                { track: "DeliveryWorkflow", targetLevel: "Independent" },
+                { track: "ApiInteraction", targetLevel: "Functional" },
+                { track: "Testing", targetLevel: "Functional" },
+              ],
               scaffoldingLevel: "ticket-style",
             },
             {
               id: "lesson-debugging-case-study",
               title: "Debugging Case Study",
-              summary: "Investigate and document a real-world style broken application — from symptoms to root cause to fix.",
+              summary:
+                "Investigate and document a real-world style broken application — from symptoms to root cause to fix.",
               duration: "2–3 hours",
               difficulty: "Advanced",
-              objective: "Apply systematic debugging to a broken application, document the investigation process, and produce a clean fix with a written root cause analysis.",
+              objective:
+                "Apply systematic debugging to a broken application, document the investigation process, and produce a clean fix with a written root cause analysis.",
               explanation: [
                 "A **debugging case study** proves you can think like an engineer under pressure: observe symptoms without assumptions, form hypotheses, isolate the cause through evidence, apply a targeted fix, and explain the entire chain from symptom to root cause to resolution. This is the skill that separates someone who can write code from someone who can maintain and fix systems.",
                 "The debugging protocol has five steps: **reproduce** (trigger the failure reliably — if you cannot reproduce it, you cannot confirm a fix), **observe** (read error messages, check logs with `console.log` or `docker logs`, inspect network responses in the browser dev tools), **hypothesize** (form a theory about what is causing the failure), **isolate** (narrow the scope — is it the frontend, the API, the database, or the configuration?), and **fix and verify** (apply the smallest change that addresses the root cause, then reproduce the original steps to confirm the fix).",
@@ -2871,8 +4662,8 @@ export const curriculum: Curriculum = {
                 "The deliverable is a **bug report** — a written artifact that makes your debugging **portable knowledge**. It covers: the symptom (what was observed), the reproduction steps (how to trigger it), the investigation process (what you checked and what you found), the root cause (why it happened — not just where), the fix (the specific change), and the verification (how you confirmed the fix works). This format turns a debugging session into documentation that helps the team prevent similar issues.",
               ],
               demonstration: [
-                "The broken application: a task API that returns `500 Internal Server Error` on `POST /api/tasks` requests. Start by reproducing the failure:\n\n```bash\ncurl -X POST http://localhost:3000/api/tasks \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"title\": \"Test task\"}'\n# Response: 500 Internal Server Error\n```\n\nThe error is reproducible. Now check the logs — the server output shows `TypeError: Cannot read property 'trim' of undefined` in the `createTask` handler. This tells you `title` is `undefined` when it reaches `title.trim()`.",
-                "Form a hypothesis: the request body is not being parsed, so `req.body` is empty. Check the server setup — look for `app.use(express.json())`. It is missing. The `express.json()` middleware converts the raw JSON request body into a JavaScript object. Without it, `req.body` is `undefined`, so `req.body.title` is `undefined`, and `.trim()` throws.\n\nThe fix: add `app.use(express.json())` before the route handlers. One line. Verify:\n\n```bash\ncurl -X POST http://localhost:3000/api/tasks \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"title\": \"Test task\"}'\n# Response: 201 Created {\"id\": \"1\", \"title\": \"Test task\"}\n```",
+                'The broken application: a task API that returns `500 Internal Server Error` on `POST /api/tasks` requests. Start by reproducing the failure:\n\n```bash\ncurl -X POST http://localhost:3000/api/tasks \\\n  -H "Content-Type: application/json" \\\n  -d \'{"title": "Test task"}\'\n# Response: 500 Internal Server Error\n```\n\nThe error is reproducible. Now check the logs — the server output shows `TypeError: Cannot read property \'trim\' of undefined` in the `createTask` handler. This tells you `title` is `undefined` when it reaches `title.trim()`.',
+                'Form a hypothesis: the request body is not being parsed, so `req.body` is empty. Check the server setup — look for `app.use(express.json())`. It is missing. The `express.json()` middleware converts the raw JSON request body into a JavaScript object. Without it, `req.body` is `undefined`, so `req.body.title` is `undefined`, and `.trim()` throws.\n\nThe fix: add `app.use(express.json())` before the route handlers. One line. Verify:\n\n```bash\ncurl -X POST http://localhost:3000/api/tasks \\\n  -H "Content-Type: application/json" \\\n  -d \'{"title": "Test task"}\'\n# Response: 201 Created {"id": "1", "title": "Test task"}\n```',
                 "The bug report documents the entire chain:\n\n```\nSymptom: POST /api/tasks returns 500\nReproduction: curl POST with valid JSON body\nInvestigation: Server logs show TypeError on title.trim()\nRoot cause: express.json() middleware was missing — req.body was undefined\nFix: Added app.use(express.json()) before route handlers\nVerification: POST now returns 201 with correct response body\n```\n\nThis artifact is useful to the team months later when a similar issue occurs.",
               ],
               exerciseSteps: [
@@ -2894,32 +4685,92 @@ export const curriculum: Curriculum = {
                 "A bug report is the artifact that makes your debugging portable knowledge.",
               ],
               tools: ["Visual Studio Code", "terminal", "Git", "Node.js"],
-              notesPrompt: "Write your personal debugging protocol in five steps. Note which step most engineers skip.",
+              notesPrompt:
+                "Write your personal debugging protocol in five steps. Note which step most engineers skip.",
               exercises: [
-                { id: "root-cause-vs-symptom", title: "Root cause vs symptom", prompt: "A server throws a 500 error. Is the 500 error the root cause? Why or why not?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["symptom", "not the cause", "result", "what happened", "deeper"], successMessage: "Correct. The 500 error is the symptom. The root cause is the condition that triggered it — which requires investigation to find.", hint: "Think about the difference between what you observe and why it happened.", assessmentType: "debugging" },
-                { id: "reproduce-first", title: "Reproduce before fixing", prompt: "Why must you reproduce a bug reliably before attempting to fix it?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["verify", "confirm", "know", "prove", "same", "consistent", "reliable", "actually fixed"], successMessage: "Correct. Without reliable reproduction, you cannot confirm the fix works — you might fix the wrong thing or mask the real issue.", hint: "Think about how you would know your fix actually solved the problem.", assessmentType: "debugging" },
+                {
+                  id: "root-cause-vs-symptom",
+                  title: "Root cause vs symptom",
+                  prompt:
+                    "A server throws a 500 error. Is the 500 error the root cause? Why or why not?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "symptom",
+                    "not the cause",
+                    "result",
+                    "what happened",
+                    "deeper",
+                  ],
+                  successMessage:
+                    "Correct. The 500 error is the symptom. The root cause is the condition that triggered it — which requires investigation to find.",
+                  hint: "Think about the difference between what you observe and why it happened.",
+                  assessmentType: "debugging",
+                },
+                {
+                  id: "reproduce-first",
+                  title: "Reproduce before fixing",
+                  prompt:
+                    "Why must you reproduce a bug reliably before attempting to fix it?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "verify",
+                    "confirm",
+                    "know",
+                    "prove",
+                    "same",
+                    "consistent",
+                    "reliable",
+                    "actually fixed",
+                  ],
+                  successMessage:
+                    "Correct. Without reliable reproduction, you cannot confirm the fix works — you might fix the wrong thing or mask the real issue.",
+                  hint: "Think about how you would know your fix actually solved the problem.",
+                  assessmentType: "debugging",
+                },
               ],
               transferTask: {
                 id: "transfer-debugging-protocol",
                 title: "Transfer challenge: debug from a new symptom",
-                prompt: "A user reports that a web form silently fails on submit — no error, no feedback, no data saved. Describe your debugging protocol: what you check first, how you narrow scope, and how you verify your fix.",
+                prompt:
+                  "A user reports that a web form silently fails on submit — no error, no feedback, no data saved. Describe your debugging protocol: what you check first, how you narrow scope, and how you verify your fix.",
                 placeholder: "Investigation steps and reasoning",
                 validationMode: "includes",
-                acceptedAnswers: ["reproduce", "console", "network", "log", "inspect", "verify", "narrow", "isolate"],
-                successMessage: "Transfer evidence accepted. You demonstrated a systematic debugging approach to an unfamiliar symptom.",
+                acceptedAnswers: [
+                  "reproduce",
+                  "console",
+                  "network",
+                  "log",
+                  "inspect",
+                  "verify",
+                  "narrow",
+                  "isolate",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. You demonstrated a systematic debugging approach to an unfamiliar symptom.",
                 hint: "Start with reproduction, then narrow scope through observable signals.",
                 assessmentType: "transfer",
               },
-              competencies: [{ track: "Debugging", targetLevel: "Independent" }, { track: "DeliveryWorkflow", targetLevel: "Functional" }, { track: "IndependentProblemSolving", targetLevel: "Functional" }],
+              competencies: [
+                { track: "Debugging", targetLevel: "Independent" },
+                { track: "DeliveryWorkflow", targetLevel: "Functional" },
+                {
+                  track: "IndependentProblemSolving",
+                  targetLevel: "Functional",
+                },
+              ],
               scaffoldingLevel: "ticket-style",
             },
             {
               id: "lesson-portfolio-capstone",
               title: "Portfolio Capstone",
-              summary: "Deliver and document one or more projects as a coherent portfolio — with READMEs, test coverage, and a written reflection on technical decisions.",
+              summary:
+                "Deliver and document one or more projects as a coherent portfolio — with READMEs, test coverage, and a written reflection on technical decisions.",
               duration: "4–8 hours",
               difficulty: "Advanced",
-              objective: "Package completed projects into a presentable portfolio that demonstrates engineering competence to future collaborators, employers, or clients.",
+              objective:
+                "Package completed projects into a presentable portfolio that demonstrates engineering competence to future collaborators, employers, or clients.",
               explanation: [
                 "A portfolio is not a resume bullet point — it is **evidence**. Anyone who visits your repository should be able to understand what you built, why you made the choices you did, and how to run it themselves — without asking you a single question. The difference between 'I built a task manager' on a resume and a working project with a clear README, passing tests, and documented decisions is the difference between a claim and proof.",
                 "This capstone requires you to treat your completed projects as **professional deliverables**. That means: a comprehensive README (purpose, setup, usage, testing — all four sections), at least basic test coverage (core behaviors verified, not just 'the tests folder exists'), documented architecture decisions (what you chose, what you considered, and why you decided), and a written reflection (what worked, what you would do differently, what you learned).",
@@ -2948,28 +4799,93 @@ export const curriculum: Curriculum = {
                 "Decisions matter more than conclusions — document why, not just what.",
                 "Tests are proof that you know your code works, not just that it ran once.",
               ],
-              tools: ["Visual Studio Code", "Git", "GitHub", "Node.js", "terminal"],
-              notesPrompt: "Write your own definition of a portfolio-ready project. What does it need that a personal practice project does not?",
+              tools: [
+                "Visual Studio Code",
+                "Git",
+                "GitHub",
+                "Node.js",
+                "terminal",
+              ],
+              notesPrompt:
+                "Write your own definition of a portfolio-ready project. What does it need that a personal practice project does not?",
               exercises: [
-                { id: "readme-must-haves", title: "README essentials", prompt: "Name the four sections every technical README must include to be useful to a stranger.", placeholder: "Short list", validationMode: "includes", acceptedAnswers: ["setup", "install", "usage", "what it does", "purpose", "how to run", "tests"], successMessage: "Correct. A README that covers purpose, setup, usage, and testing is immediately useful to anyone who finds it.", hint: "Think about what you need to answer before someone else can use your project independently.", assessmentType: "reasoning" },
-                { id: "portfolio-evidence", title: "Evidence over claims", prompt: "Why is a link to a working project more valuable than a bullet point on a resume?", placeholder: "Short answer", validationMode: "includes", acceptedAnswers: ["evidence", "proof", "show", "demonstrate", "verify", "see", "working"], successMessage: "Correct. Evidence is verifiable. Claims are not. A portfolio converts self-description into demonstrable capability.", hint: "Think about the difference between saying you can do something and showing it.", assessmentType: "reasoning" },
+                {
+                  id: "readme-must-haves",
+                  title: "README essentials",
+                  prompt:
+                    "Name the four sections every technical README must include to be useful to a stranger.",
+                  placeholder: "Short list",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "setup",
+                    "install",
+                    "usage",
+                    "what it does",
+                    "purpose",
+                    "how to run",
+                    "tests",
+                  ],
+                  successMessage:
+                    "Correct. A README that covers purpose, setup, usage, and testing is immediately useful to anyone who finds it.",
+                  hint: "Think about what you need to answer before someone else can use your project independently.",
+                  assessmentType: "reasoning",
+                },
+                {
+                  id: "portfolio-evidence",
+                  title: "Evidence over claims",
+                  prompt:
+                    "Why is a link to a working project more valuable than a bullet point on a resume?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "evidence",
+                    "proof",
+                    "show",
+                    "demonstrate",
+                    "verify",
+                    "see",
+                    "working",
+                  ],
+                  successMessage:
+                    "Correct. Evidence is verifiable. Claims are not. A portfolio converts self-description into demonstrable capability.",
+                  hint: "Think about the difference between saying you can do something and showing it.",
+                  assessmentType: "reasoning",
+                },
               ],
               transferTask: {
                 id: "transfer-portfolio-review",
                 title: "Transfer challenge: review a peer portfolio",
-                prompt: "Imagine you are reviewing a peer's portfolio project. The README exists but only says 'a task manager app'. There are no tests. The project runs but has no error handling. Write three specific, actionable pieces of feedback you would give to improve it.",
+                prompt:
+                  "Imagine you are reviewing a peer's portfolio project. The README exists but only says 'a task manager app'. There are no tests. The project runs but has no error handling. Write three specific, actionable pieces of feedback you would give to improve it.",
                 placeholder: "Three specific feedback items",
                 validationMode: "includes",
-                acceptedAnswers: ["readme", "test", "error", "document", "setup", "instructions", "handle", "cover"],
-                successMessage: "Transfer evidence accepted. You demonstrated the ability to evaluate and improve engineering work critically.",
+                acceptedAnswers: [
+                  "readme",
+                  "test",
+                  "error",
+                  "document",
+                  "setup",
+                  "instructions",
+                  "handle",
+                  "cover",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. You demonstrated the ability to evaluate and improve engineering work critically.",
                 hint: "Focus on the gaps: documentation, testing, and robustness.",
                 assessmentType: "transfer",
               },
-              competencies: [{ track: "DeliveryWorkflow", targetLevel: "Independent" }, { track: "Debugging", targetLevel: "Functional" }, { track: "IndependentProblemSolving", targetLevel: "Independent" }],
+              competencies: [
+                { track: "DeliveryWorkflow", targetLevel: "Independent" },
+                { track: "Debugging", targetLevel: "Functional" },
+                {
+                  track: "IndependentProblemSolving",
+                  targetLevel: "Independent",
+                },
+              ],
               scaffoldingLevel: "ticket-style",
             },
           ],
-        }
+        },
       ],
     },
   ],

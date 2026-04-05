@@ -34,7 +34,9 @@ export function GuidedNotes({
           >
             <div className="gn-card-header">
               <span className="gn-concept-number">{i + 1}</span>
-              <div className="gn-concept-text"><RichText content={concept} /></div>
+              <div className="gn-concept-text">
+                <RichText content={concept} />
+              </div>
             </div>
 
             <div className="gn-card-body">

@@ -14,6 +14,7 @@ export function CollapsiblePanel({
   children,
 }: CollapsiblePanelProps) {
   const [open, setOpen] = useState(defaultOpen);
+  const panelId = `panel-${title.replace(/\s+/g, "-").toLowerCase()}`;
 
   return (
     <section className="panel">
@@ -21,13 +22,15 @@ export function CollapsiblePanel({
         type="button"
         className="collapsible-header"
         onClick={() => setOpen((prev) => !prev)}
+        aria-expanded={open}
+        aria-controls={panelId}
       >
         <h3>{title}</h3>
         <span className="collapsible-chevron" aria-hidden="true">
           ▸
         </span>
       </button>
-      <div className="collapsible-body" data-open={open}>
+      <div id={panelId} className="collapsible-body" data-open={open}>
         <div className="collapsible-inner">{children}</div>
       </div>
     </section>

@@ -250,9 +250,9 @@ export function TerminalSimulator({
               "rename-item":
                 "Rename-Item <path> <newName> [-WhatIf]\n  Rename a file or folder.\n  Use -WhatIf to preview without renaming.\n  Example: Rename-Item old.txt new.txt",
               ren: "ren / Rename-Item <path> <newName>\n  Rename a file or folder. Alias for Rename-Item.\n  Example: ren old.txt new.txt",
-              sls: "sls / Select-String <pattern> [path]\n  Search for text patterns in files.\n  Example: sls \"error\" log.txt",
+              sls: 'sls / Select-String <pattern> [path]\n  Search for text patterns in files.\n  Example: sls "error" log.txt',
               "select-string":
-                "Select-String <pattern> [path]\n  PowerShell cmdlet to search text in files.\n  Alias: sls\n  Example: Select-String \"TODO\" .\\src\\*.js",
+                'Select-String <pattern> [path]\n  PowerShell cmdlet to search text in files.\n  Alias: sls\n  Example: Select-String "TODO" .\\src\\*.js',
               "sort-object":
                 "Sort-Object [-Property <name>] [-Descending]\n  Sort pipeline input by a property.\n  Example: Get-Process | Sort-Object CPU",
               "where-object":
@@ -492,13 +492,22 @@ export function TerminalSimulator({
           const whatIf = args.some((a) => a.toLowerCase() === "-whatif");
           const cleanArgs = args.filter((a) => a.toLowerCase() !== "-whatif");
           if (cleanArgs.length < 2) {
-            addEntry("error", "Copy-Item: You must specify a source and destination.");
+            addEntry(
+              "error",
+              "Copy-Item: You must specify a source and destination.",
+            );
             return;
           }
           if (whatIf) {
-            addEntry("output", `What if: Performing the operation "Copy File" on target "Item: ${cleanArgs[0]} Destination: ${cleanArgs[1]}".`);
+            addEntry(
+              "output",
+              `What if: Performing the operation "Copy File" on target "Item: ${cleanArgs[0]} Destination: ${cleanArgs[1]}".`,
+            );
           } else {
-            addEntry("output", `[Simulated] Copied ${cleanArgs[0]} to ${cleanArgs[1]}`);
+            addEntry(
+              "output",
+              `[Simulated] Copied ${cleanArgs[0]} to ${cleanArgs[1]}`,
+            );
           }
           return;
         }
@@ -508,13 +517,22 @@ export function TerminalSimulator({
           const whatIf = args.some((a) => a.toLowerCase() === "-whatif");
           const cleanArgs = args.filter((a) => a.toLowerCase() !== "-whatif");
           if (cleanArgs.length < 2) {
-            addEntry("error", "Move-Item: You must specify a source and destination.");
+            addEntry(
+              "error",
+              "Move-Item: You must specify a source and destination.",
+            );
             return;
           }
           if (whatIf) {
-            addEntry("output", `What if: Performing the operation "Move File" on target "Item: ${cleanArgs[0]} Destination: ${cleanArgs[1]}".`);
+            addEntry(
+              "output",
+              `What if: Performing the operation "Move File" on target "Item: ${cleanArgs[0]} Destination: ${cleanArgs[1]}".`,
+            );
           } else {
-            addEntry("output", `[Simulated] Moved ${cleanArgs[0]} to ${cleanArgs[1]}`);
+            addEntry(
+              "output",
+              `[Simulated] Moved ${cleanArgs[0]} to ${cleanArgs[1]}`,
+            );
           }
           return;
         }
@@ -529,7 +547,10 @@ export function TerminalSimulator({
             return;
           }
           if (whatIf) {
-            addEntry("output", `What if: Performing the operation "Remove File" on target "${cleanArgs[0]}".`);
+            addEntry(
+              "output",
+              `What if: Performing the operation "Remove File" on target "${cleanArgs[0]}".`,
+            );
           } else {
             addEntry("output", `[Simulated] Removed ${cleanArgs[0]}`);
           }
@@ -541,13 +562,22 @@ export function TerminalSimulator({
           const whatIf = args.some((a) => a.toLowerCase() === "-whatif");
           const cleanArgs = args.filter((a) => a.toLowerCase() !== "-whatif");
           if (cleanArgs.length < 2) {
-            addEntry("error", "Rename-Item: You must specify a path and a new name.");
+            addEntry(
+              "error",
+              "Rename-Item: You must specify a path and a new name.",
+            );
             return;
           }
           if (whatIf) {
-            addEntry("output", `What if: Performing the operation "Rename File" on target "Item: ${cleanArgs[0]} NewName: ${cleanArgs[1]}".`);
+            addEntry(
+              "output",
+              `What if: Performing the operation "Rename File" on target "Item: ${cleanArgs[0]} NewName: ${cleanArgs[1]}".`,
+            );
           } else {
-            addEntry("output", `[Simulated] Renamed ${cleanArgs[0]} to ${cleanArgs[1]}`);
+            addEntry(
+              "output",
+              `[Simulated] Renamed ${cleanArgs[0]} to ${cleanArgs[1]}`,
+            );
           }
           return;
         }
@@ -595,8 +625,12 @@ export function TerminalSimulator({
 
         case "select-object":
         case "select": {
-          const props = args.filter((a) => !a.startsWith("-")).join(", ") || "all properties";
-          const first = args.find((_, i) => args[i - 1]?.toLowerCase() === "-first");
+          const props =
+            args.filter((a) => !a.startsWith("-")).join(", ") ||
+            "all properties";
+          const first = args.find(
+            (_, i) => args[i - 1]?.toLowerCase() === "-first",
+          );
           let msg = `[Simulated] Select-Object: Selecting ${props}`;
           if (first) msg += ` (first ${first})`;
           msg += `\n\nIn a pipeline, this would pick specific properties from objects.\nExample: Get-Process | Select-Object Name, CPU -First 5`;
@@ -731,6 +765,13 @@ export function TerminalSimulator({
   }
 
   const [copyLabel, setCopyLabel] = useState("Copy");
+  const termCopyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (termCopyTimerRef.current) clearTimeout(termCopyTimerRef.current);
+    };
+  }, []);
 
   function handleCopyOutput() {
     const outputText = history
@@ -739,7 +780,8 @@ export function TerminalSimulator({
       .join("\n");
     navigator.clipboard.writeText(outputText).then(() => {
       setCopyLabel("Copied!");
-      setTimeout(() => setCopyLabel("Copy"), 1500);
+      if (termCopyTimerRef.current) clearTimeout(termCopyTimerRef.current);
+      termCopyTimerRef.current = setTimeout(() => setCopyLabel("Copy"), 1500);
     });
   }
 
@@ -779,7 +821,12 @@ export function TerminalSimulator({
           </span>
         </div>
       </div>
-      <div className="terminal-body" ref={scrollRef}>
+      <div
+        className="terminal-body"
+        ref={scrollRef}
+        role="log"
+        aria-label="Terminal output"
+      >
         {history.map((entry) => (
           <div
             key={entry.id}
