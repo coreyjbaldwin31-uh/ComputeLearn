@@ -201,7 +201,7 @@ The MVP should prove that ComputeLearn materially improves learner capability th
 | **Later**  | AI review loop                | Bounded support for explanation, critique, and next-step guidance                                                 | ⬚ Not started                                                                                               |
 | **Later**  | Advanced templates            | More realistic bug sets, project scaffolds, and saved transcripts                                                 | ⬚ Not started                                                                                               |
 | **Later**  | Durable persistence           | Server-backed or IndexedDB persistence with cross-device sync                                                     | ⬚ Not started                                                                                               |
-| **Later**  | Content quality pass          | Deep lesson enrichment, pedagogical review, demonstration quality                                                 | ⬚ Not started                                                                                               |
+| **Later**  | Content quality pass          | Deep lesson enrichment, pedagogical review, demonstration quality                                                 | ✅ Done                                                                                                     |
 
 ### Recommended First-Release Modules
 
@@ -315,7 +315,7 @@ CSS design system in `globals.css` using `--ac-*` custom properties:
 14. ✅ Add new component and hook tests — action-bar, home-dashboard, progress-roadmap, rail-panels, sidebar-panels, lesson-entry-cue, use-prefers-reduced-motion test suites
 15. ✅ Test coverage for new academy components — lesson-flow, guided-notes, lesson-review-panel, learning-catalog
 16. ✅ Dead code cleanup — remove lesson-workspace.tsx (superseded by lesson-flow.tsx)
-17. ⬚ Content quality pass — enrich lesson explanations, demonstrations, retention cues, and exercise prompts for pedagogical depth
+17. ✅ Content quality pass — enrich lesson explanations, demonstrations, retention cues, and exercise prompts for pedagogical depth
 18. ⬚ AI review loop — bounded support for explanation, critique, and next-step guidance (scoped to reflection step)
 19. ⬚ Durable persistence — server-backed or IndexedDB persistence with backup/restore and cross-device sync
 20. ⬚ CSS modularization — extract globals.css class-system namespaces into CSS modules or co-located files
@@ -421,8 +421,8 @@ CSS design system in `globals.css` using `--ac-*` custom properties:
 
 | ID  | Task                                                                              | Status |
 | --- | --------------------------------------------------------------------------------- | ------ |
-| T7  | Content quality pass — Phase 1 lessons (explanation, demo, retention depth)       | ⬚      |
-| T8  | Content quality pass — Phase 2–4 lessons                                          | ⬚      |
+| T7  | Content quality pass — Phase 1 lessons (explanation, demo, retention depth)       | ✅      |
+| T8  | Content quality pass — Phase 2–4 lessons                                          | ✅      |
 | T9  | CSS modularization — extract component class-system namespaces from globals.css   | ⬚      |
 | T10 | Independent readiness UI route — `/readiness` page with assessment wizard         | ⬚      |
 | T11 | Export/backup dialog for localStorage — JSON download/import for data portability | ⬚      |
