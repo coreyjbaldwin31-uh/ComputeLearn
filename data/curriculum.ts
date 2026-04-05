@@ -222,9 +222,10 @@ export const curriculum: Curriculum = {
                 "User can explain why checking your working directory before running file-changing commands prevents accidental damage.",
               ],
               retention: [
-                "Always know where you are before running file-changing commands.",
-                "Prefer inspection first, modification second.",
-                "Fast navigation comes from repetition, not memorizing a giant command list.",
+                "Without looking, what command prints your current working directory in PowerShell? What is its common alias?",
+                "Can you explain the difference between an **absolute path** and a **relative path**? When should you prefer each?",
+                "What is the three-step safety pattern before modifying files in the terminal? Name each step and its command.",
+                "If you run `cd Projects` from `C:\\Users\\learner` and then `cd ..`, where do you end up? What does `cd ~` do instead?",
               ],
               tools: ["Windows Terminal", "PowerShell", "File Explorer"],
               notesPrompt:
@@ -372,9 +373,10 @@ export const curriculum: Curriculum = {
                 "User can explain why keyboard-first habits reduce error rates compared to mouse-driven workflows.",
               ],
               retention: [
-                "Alt+Tab is not optional \u2014 it is a core navigation tool.",
-                "Terminal command recall (Up Arrow) saves more time than you think.",
-                "Every shortcut you learn compounds over thousands of uses.",
+                "Without looking, what keyboard shortcut switches between open windows? What shortcut opens File Explorer?",
+                "In the terminal, how do you recall your previous command without retyping it? How do you auto-complete a folder name?",
+                "What does `Ctrl+C` do in the terminal? What does `Ctrl+L` do? How are they different?",
+                "If a process is frozen and you need to investigate, what shortcut opens Task Manager directly?",
               ],
               tools: ["Windows Terminal", "PowerShell", "File Explorer"],
               notesPrompt:
@@ -468,9 +470,10 @@ export const curriculum: Curriculum = {
                 "User runs `Get-Volume` to check available disk space and can read the output.",
               ],
               retention: [
-                "Know your machine before blaming your code.",
-                "Task Manager is the first stop for performance investigation.",
-                "Get-Process and Get-Volume replace guessing with data.",
+                "Without looking, what PowerShell command lists all running processes? What column shows memory usage?",
+                "What command checks free disk space on each drive? What column tells you how much space remains?",
+                "If a machine feels slow, what is the first tool you open? What would you sort by to find the heaviest process?",
+                "Can you explain what the **WS** (working set) column means in `Get-Process` output?",
               ],
               tools: ["Windows Terminal", "PowerShell", "Task Manager"],
               notesPrompt:
@@ -602,9 +605,10 @@ export const curriculum: Curriculum = {
                 "User runs `Remove-Item` with `-WhatIf` before any actual deletion.",
               ],
               retention: [
-                "Inspect before you delete — -WhatIf is not optional.",
-                "Copy before overwrite when in doubt.",
-                "File operations are composable — combine them in scripts.",
+                "Without looking, name the five core file operation cmdlets in PowerShell (create, copy, move, rename, delete).",
+                "What does the `-WhatIf` flag do when added to `Remove-Item`? Why should it be a reflex before bulk deletes?",
+                "Can you explain the key difference between `Copy-Item` and `Move-Item` in terms of what happens to the original file?",
+                "If you run `Remove-Item *.log` without `-WhatIf`, can you recover the files? Why or why not?",
               ],
               tools: ["PowerShell", "Windows Terminal", "File Explorer"],
               notesPrompt:
@@ -737,9 +741,10 @@ export const curriculum: Curriculum = {
                 "User applies a filter using `-Filter` to narrow results by file extension.",
               ],
               retention: [
-                "Get-ChildItem -Recurse -Filter is the terminal equivalent of system search.",
-                "Select-String is grep for PowerShell — learn it well.",
-                "Pipelines compose search: find files, then search inside them.",
+                "Without looking, what flags do you add to `Get-ChildItem` to search all subdirectories for `.log` files?",
+                "What PowerShell cmdlet searches **inside** file contents for a text pattern? What is its alias?",
+                "Can you write the pipeline that finds all `.txt` files recursively and searches inside them for the word 'error'?",
+                "What happens when `Select-String` finds no matches — does it throw an error or return silently?",
               ],
               tools: ["PowerShell", "Windows Terminal"],
               notesPrompt:
@@ -872,9 +877,10 @@ export const curriculum: Curriculum = {
                 "User records how to reverse the operation (backup, undo plan, or version control).",
               ],
               retention: [
-                "Automate only what you understand.",
-                "Prefer reversible workflows and training sandboxes.",
-                "Documentation is part of automation quality.",
+                "What symbol prefixes a variable name in PowerShell? Write an example that stores a folder path.",
+                "What are the four steps of safe automation in order? (Hint: scope, preview, execute, verify.)",
+                "What flag lets you preview a `Remove-Item` operation without actually deleting anything?",
+                "If you cannot describe how to undo your automation, what should you do before running it?",
               ],
               tools: [
                 "PowerShell",
@@ -1019,9 +1025,10 @@ export const curriculum: Curriculum = {
                 "User shows output redirection to a file using `>` or `>>`.",
               ],
               retention: [
-                "The pipe is how you compose small tools into powerful workflows.",
-                "Where-Object is your filter. Select-Object is your lens.",
-                "Redirect to a file when you need to save or share output.",
+                "What does the pipe operator (`|`) do in PowerShell? Draw a mental picture of data flowing between commands.",
+                "`Where-Object` and `Select-Object` — without looking, which one **filters** rows and which one **chooses** columns or limits count?",
+                "Can you write a one-line pipeline that shows the top 5 processes by CPU usage? Name each stage.",
+                "What operator redirects command output to a file? What is the difference between `>` and `>>`?",
               ],
               tools: ["PowerShell", "Windows Terminal"],
               notesPrompt:
@@ -1148,9 +1155,10 @@ export const curriculum: Curriculum = {
                 "An `if` conditional is applied to check file properties before any modification.",
               ],
               retention: [
-                "Variables start with $ in PowerShell.",
-                "foreach ($item in $collection) is the standard loop pattern.",
-                "Parameterize scripts so they work on more than one machine.",
+                "**`$`** — what does this symbol mean in PowerShell? Write a variable assignment from memory.",
+                "Without looking, write the `foreach` loop header that iterates over a `$files` collection.",
+                "What is the difference between double-quoted strings and single-quoted strings in PowerShell regarding variables?",
+                "If a script should work on different machines, what should you replace hardcoded paths with?",
               ],
               tools: ["PowerShell", "Windows Terminal", "Visual Studio Code"],
               notesPrompt:
@@ -1287,9 +1295,10 @@ export const curriculum: Curriculum = {
                 "User applies `#tags` consistently to notes for cross-folder discovery.",
               ],
               retention: [
-                "A good vault grows with you \u2014 build the habit early.",
-                "Backlinks create a web of understanding, not just isolated notes.",
-                "Searchability beats perfect organization.",
+                "What syntax creates a **backlink** between two notes in Obsidian? Write an example from memory.",
+                "Name four folder categories you would create in an engineering vault and what each one stores.",
+                "What does the `#` prefix do in an Obsidian note? How does it differ from `[[...]]`?",
+                "Can you explain what **bidirectional linking** means? Why is it more powerful than a flat folder of files?",
               ],
               tools: ["Obsidian"],
               notesPrompt:
@@ -1507,9 +1516,10 @@ export const curriculum: Curriculum = {
                 "User describes a data flow path through the code in their own words.",
               ],
               retention: [
-                "Read before you write \u2014 always.",
-                "Entry point \u2192 imports \u2192 data flow \u2192 behavior.",
-                "VS Code navigation tools are faster than scrolling.",
+                "When you open an unfamiliar Node.js project, what file do you read first and what section tells you where execution begins?",
+                "Without looking, what is the four-step code reading sequence? (Entry point \u2192 ? \u2192 ? \u2192 behavior)",
+                "What VS Code shortcut jumps to a function's definition? What shortcut shows every place a symbol is used?",
+                "Can you explain why tracing **imports** outward from the entry point reveals a codebase's architecture?",
               ],
               tools: ["Visual Studio Code", "terminal"],
               notesPrompt:
@@ -1648,9 +1658,10 @@ export const curriculum: Curriculum = {
                 "User verifies the fix by re-running the original reproduction case and confirming expected behavior.",
               ],
               retention: [
-                "Reproduce before changing code.",
-                "Evidence beats confidence.",
-                "A fix is incomplete until verified.",
+                "What are the five steps of the **debugging loop**? Name them in order without looking.",
+                "Why must you **reproduce** a bug reliably before attempting any code changes?",
+                "What is the fastest way to see what data is actually flowing through a function at runtime?",
+                "A fix is incomplete until what step is done? What exactly do you check?",
               ],
               tools: ["Visual Studio Code", "terminal", "test runner", "Git"],
               notesPrompt:
@@ -1790,9 +1801,10 @@ export const curriculum: Curriculum = {
                 "User can run scripts defined in `package.json` using `npm run <name>`.",
               ],
               retention: [
-                "package.json is the project\u2019s identity card.",
-                "The lock file ensures reproducible installs.",
-                "Read the scripts section \u2014 it tells you how to operate the project.",
+                "Without looking, what command installs all dependencies listed in `package.json`? What folder does it create?",
+                "What is the difference between `dependencies` and `devDependencies`? Give one example of each.",
+                "Why should `package-lock.json` be committed to version control? What happens without it?",
+                "In `package.json`, where do you look to find out how to start the dev server or run tests?",
               ],
               tools: ["Visual Studio Code", "terminal", "npm"],
               notesPrompt:
@@ -1916,9 +1928,10 @@ export const curriculum: Curriculum = {
                 "User understands that the lock file must be committed to version control to guarantee reproducible installs.",
               ],
               retention: [
-                "^ allows non-breaking upgrades; ~ allows only bug fixes.",
-                "npm audit is a one-command security scan — run it at install time.",
-                "Commit your lock file — it is the contract for reproducible installs.",
+                "**Semver** `^2.3.1` vs `~2.3.1` — without looking, which allows minor upgrades and which allows only patch upgrades?",
+                "What single command scans every installed dependency for known security vulnerabilities?",
+                "If two developers run `npm install` a month apart without a lock file, what problem can occur?",
+                "What npm flag saves a package as a development-only dependency? Why does the distinction matter?",
               ],
               tools: ["terminal", "npm"],
               notesPrompt:
@@ -2054,9 +2067,10 @@ export const curriculum: Curriculum = {
                 "User uses an `if`/`else` block with a boolean condition to produce different outputs.",
               ],
               retention: [
-                "const is for values that don\u2019t change; let is for values that do.",
-                "Functions should do one thing and name it clearly.",
-                "Control flow only does what the condition actually tests \u2014 not what you intended.",
+                "`const` vs `let` \u2014 without looking, which prevents reassignment? Why is `const` preferred by default?",
+                "Write a TypeScript function signature from memory with a typed parameter and a return type annotation.",
+                "What are the six **falsy values** in JavaScript? Why does `if (count)` fail when `count` is legitimately `0`?",
+                "If `score > 50` is the condition, what does the `else` branch handle? What mental check prevents logic mistakes?",
               ],
               tools: ["Visual Studio Code", "terminal", "TypeScript compiler"],
               notesPrompt:
@@ -2193,9 +2207,10 @@ export const curriculum: Curriculum = {
                 "User can destructure objects and arrays to extract values, and explain when to use bracket notation versus dot notation.",
               ],
               retention: [
-                "Arrays use indexes (starting at 0). Objects use named keys. Arrays of objects combine both.",
-                "`.filter()` keeps matching items; `.map()` transforms every item. Both return new arrays.",
-                "Destructuring unpacks values: `const { name } = obj` for objects, `const [first] = arr` for arrays.",
+                "Arrays are **zero-indexed** \u2014 what value does `items[2]` return from `['a', 'b', 'c', 'd']`? Why?",
+                "Without looking: `.filter()` does what? `.map()` does what? Do they modify the original array or return a new one?",
+                "Write the destructuring syntax for extracting `name` and `age` from `const user = { name: 'Alice', age: 30 }`.",
+                "When should you use **bracket notation** (`obj['key']`) instead of **dot notation** (`obj.key`)?",
               ],
               tools: [
                 "Visual Studio Code",
@@ -2351,9 +2366,10 @@ export const curriculum: Curriculum = {
                 "User can explain the difference between a **compile-time error** (caught by `tsc` before running) and a **runtime error** (thrown by JavaScript while running).",
               ],
               retention: [
-                "Compile-time: TypeScript found it before running. Runtime: JavaScript found it while running.",
-                "Interfaces describe the shape of an object; union types allow a value to be one of several types.",
-                "The TS compiler is your first reviewer \u2014 it reads your intent before anyone else does.",
+                "Without looking, what is the difference between a **compile-time** error and a **runtime** error? Which does TypeScript catch?",
+                "Can you explain when you would use an **interface** vs a **union type**? Write one example of each from memory.",
+                "What does `string | number` mean as a type annotation? What happens if you try to call `.toUpperCase()` on it?",
+                "Why does TypeScript insist on narrowing a union type before using type-specific methods? What operator narrows a type?",
               ],
               tools: ["Visual Studio Code", "TypeScript compiler", "terminal"],
               notesPrompt:
@@ -2491,9 +2507,10 @@ export const curriculum: Curriculum = {
                 "User can trace where an environment variable is read in code by searching for `process.env.<NAME>`.",
               ],
               retention: [
-                "JSON does not allow trailing commas or comments \u2014 these are the most common parse errors.",
-                "Secrets belong in environment variables, not in source code.",
-                ".env goes in .gitignore; .env.example (with fake values) goes in version control.",
+                "Name three syntax rules that JSON enforces which JavaScript objects do not. Which one causes the most parse errors?",
+                "Where should application secrets (API keys, database URLs) be stored? What two files make this pattern work?",
+                "If `.env` contains real secrets and `.env.example` contains fake values, which goes in `.gitignore` and why?",
+                "Without looking, what is the outer delimiter of every valid JSON file — `{}`, `[]`, or either?",
               ],
               tools: ["Visual Studio Code", "terminal", "npm"],
               notesPrompt:
@@ -2635,9 +2652,10 @@ export const curriculum: Curriculum = {
                 "User can explain a TypeScript compile diagnostic by identifying the file, line, error code, and conflicting types.",
               ],
               retention: [
-                "Error type + message + first app frame = the starting point for every investigation.",
-                "Read top-to-bottom in a stack trace; stop at the first line you recognise.",
-                "Compile errors reference a file, line, and column \u2014 they are precise, not vague.",
+                "Name the three parts of a useful error message. Which part tells you *where* to start investigating?",
+                "In a stack trace, do you read top-to-bottom or bottom-to-top? What are you looking for first?",
+                "What is the difference between a **TypeError** and a **ReferenceError**? Give one scenario that triggers each.",
+                "A compile error says `TS2345` at line 12, column 5 — what exactly do those three pieces of information tell you?",
               ],
               tools: ["Visual Studio Code", "terminal", "TypeScript compiler"],
               notesPrompt:
@@ -2779,9 +2797,10 @@ export const curriculum: Curriculum = {
                 "User reads the **Variables panel** to inspect variable values mid-execution without adding `console.log()` statements.",
               ],
               retention: [
-                "Breakpoints freeze execution — the program is still running and inspectable.",
-                "Step Over moves to the next statement; Step Into descends into the called function.",
-                "The Call Stack panel shows you the full chain of calls that reached the current line.",
+                "Without looking, what do these debugger controls do: **Step Over**, **Step Into**, **Step Out**? When would you use each?",
+                "What VS Code shortcut starts a debug session? What file configures how the debugger launches your app?",
+                "When the debugger is paused on a breakpoint, name two panels you can use to inspect the program's current state.",
+                "Can you explain why the **Call Stack** panel is useful when a function is called from multiple places?",
               ],
               tools: ["Visual Studio Code", "terminal", "Node.js"],
               notesPrompt:
@@ -2920,9 +2939,10 @@ export const curriculum: Curriculum = {
                 'User writes a commit message that communicates intent (e.g., `"Fix null check in checkout handler"`).',
               ],
               retention: [
-                "Small commits make reasoning easier.",
-                "Version control is a safety system, not just a delivery requirement.",
-                "Clear history compounds in value over time.",
+                "Without looking, what command shows whether files are untracked, modified, or staged? What three states can a file be in?",
+                "What is the **staging area** and why does Git make you `git add` before `git commit` instead of committing everything?",
+                "Write the exact three-command sequence to save your current work as a Git commit with the message 'Fix typo'.",
+                "If `git log --oneline` shows five commits, how would you see exactly what changed in the most recent one?",
               ],
               tools: ["Git", "GitHub", "Visual Studio Code"],
               notesPrompt:
@@ -3048,9 +3068,10 @@ export const curriculum: Curriculum = {
                 "User understands that branches isolate changes: work on one branch does not appear on another until merged.",
               ],
               retention: [
-                "Branch names should describe the work, not the person.",
-                "Branches are cheap \u2014 use them for every non-trivial change.",
-                "Merge with intent, not with haste.",
+                "What single Git command creates a new branch and switches to it? Write it from memory.",
+                "Can you explain the difference between `git merge` and `git rebase`? Which one rewrites history?",
+                "Without looking, what does `git branch -d feature-x` do? What flag forces deletion of an unmerged branch?",
+                "Draw a mental diagram: you're on `main`, you create `feature`, make 3 commits, then merge back — what does the history look like?",
               ],
               tools: ["Git", "Visual Studio Code", "terminal"],
               notesPrompt:
@@ -3178,9 +3199,10 @@ export const curriculum: Curriculum = {
                 "User completes the merge by running `git add` followed by `git commit`.",
               ],
               retention: [
-                "Conflict markers are not errors \u2014 they are Git asking for a human decision.",
-                "Resolve conflicts by editing the file, not by guessing. Read both sides before choosing.",
-                "After resolving, git add the file and git commit to close the merge.",
+                "Without looking, what are the three conflict marker lines Git inserts? (`<<<<<<<`, `=======`, `>>>>>>>`) What does each section contain?",
+                "After manually resolving every conflict in a file, what two Git commands complete the merge?",
+                "If you open a conflicted file in VS Code, what visual aids does the editor provide to help you choose?",
+                "Can you explain why simply accepting 'current' or 'incoming' changes without reading both sides can introduce bugs?",
               ],
               tools: ["Git", "Visual Studio Code", "terminal"],
               notesPrompt:
@@ -3312,9 +3334,10 @@ export const curriculum: Curriculum = {
                 "User understands that headers like `Content-Type` and `Authorization` carry request/response metadata.",
               ],
               retention: [
-                "GET reads, POST creates, PUT updates, DELETE removes.",
-                "2xx means success, 4xx means client error, 5xx means server error.",
-                "Headers carry the context that the body cannot.",
+                "Without looking, match each HTTP method to its purpose: **GET**, **POST**, **PUT**, **DELETE**.",
+                "What status code range means 'the server understood but the client made a mistake'? Give one specific code and its meaning.",
+                "What is the `Content-Type` header used for? What value does it have when sending JSON?",
+                "If a server returns `200` for GET, what status code should it return for a successful POST that creates a new resource?",
               ],
               tools: ["Postman", "terminal", "Docker"],
               notesPrompt:
@@ -3439,9 +3462,10 @@ export const curriculum: Curriculum = {
                 "User can write a basic test assertion using `pm.test()` and `pm.response` in the Tests tab.",
               ],
               retention: [
-                "Collections organize work \u2014 loose requests create chaos.",
-                "Environment variables make collections portable.",
-                "Test scripts turn manual checks into automated verification.",
+                "In Postman, what syntax references an environment variable inside a URL? Write an example from memory.",
+                "What JavaScript function in Postman's test tab asserts that a response status is 200? Write the `pm.test` call.",
+                "Why should you organize requests into **collections** instead of saving them individually?",
+                "If you switch from a 'dev' to a 'prod' environment in Postman, what changes in your requests and what stays the same?",
               ],
               tools: ["Postman", "Docker"],
               notesPrompt:
@@ -3568,9 +3592,10 @@ export const curriculum: Curriculum = {
                 "User confirms `.env` is listed in `.gitignore` before making any commits.",
               ],
               retention: [
-                "Bearer tokens go in the Authorization header: Authorization: Bearer <token>.",
-                ".env keeps secrets off disk and out of Git — always gitignore it.",
-                "A 401 means unauthenticated; a 403 means authenticated but not authorised.",
+                "Write the exact HTTP header to send a bearer token. What is the header name and value format?",
+                "Without looking, what is the difference between a **401** and a **403** response? Which means 'not logged in' vs 'not allowed'?",
+                "Where should API keys and tokens be stored on disk? What prevents them from accidentally entering version control?",
+                "Can you explain the difference between an **API key** (sent as a query parameter or header) and a **Bearer token** (sent in the Authorization header)?",
               ],
               tools: ["Postman", "terminal", "Visual Studio Code"],
               notesPrompt:
@@ -3811,9 +3836,10 @@ export const curriculum: Curriculum = {
                 "User can explain the container lifecycle: pull → run → running → stop → exited, and understands that containers are **ephemeral** by default — data inside them does not persist after removal.",
               ],
               retention: [
-                "Images are blueprints. Containers are running instances.",
-                "Containers are ephemeral by default \u2014 data disappears when they stop.",
-                "docker ps shows what is running. docker ps -a shows everything.",
+                "Without looking, what is the difference between a Docker **image** and a **container**? Which one is a blueprint?",
+                "What happens to data inside a container when you remove it? What Docker feature persists data across container restarts?",
+                "What command lists only running containers? What flag adds stopped containers to the list?",
+                "Draw a mental diagram of the container lifecycle: `pull` → `run` → ? → `stop` → ? What state is the container in at each step?",
               ],
               tools: ["Docker", "terminal"],
               notesPrompt:
@@ -3938,9 +3964,10 @@ export const curriculum: Curriculum = {
                 "The image builds cleanly with `docker build`, runs with `docker run`, and serves the expected output. A `USER` instruction or non-root configuration is present for security.",
               ],
               retention: [
-                "Order matters \u2014 put rarely changing instructions first.",
-                "Use .dockerignore to keep images clean.",
-                "Run as non-root in production images.",
+                "Why does `COPY package*.json` and `RUN npm ci` appear **before** `COPY . .` in a well-structured Dockerfile?",
+                "Without looking, name three things that belong in a `.dockerignore` file. What happens if `node_modules` is not listed?",
+                "What Dockerfile instruction sets the default user? Why should production containers avoid running as root?",
+                "If you change one line of source code and rebuild, which layers are cached and which rebuild? How does instruction order affect this?",
               ],
               tools: ["Docker", "Visual Studio Code", "terminal"],
               notesPrompt:
@@ -4092,9 +4119,10 @@ export const curriculum: Curriculum = {
                 "User includes verification criteria — such as `include a test for...` or `the caller should be able to verify by...` — in the rewritten prompt.",
               ],
               retention: [
-                "Better prompts come from better engineering thinking.",
-                "Always specify language, constraints, and edge cases.",
-                "If the prompt does not mention how to verify, add that.",
+                "Name the five components of a well-structured AI prompt: task definition, ?, ?, expected output format, and ?",
+                "Without looking, why does specifying the **programming language** and **return type** in a prompt reduce unusable AI output?",
+                "What should you add to every AI prompt to make the output verifiable? Give a concrete example.",
+                "If an AI generates a function, what three checks should you run before committing it? (`tsc`, ?, ?)",
               ],
               tools: ["AI coding assistant", "Visual Studio Code"],
               notesPrompt:
@@ -4259,9 +4287,10 @@ export const curriculum: Curriculum = {
                 "User explains why AI output requires human verification — specifically that AI lacks access to the project's actual architecture, dependencies, and conventions.",
               ],
               retention: [
-                "AI speeds work; it does not remove accountability.",
-                "Verification is mandatory, not optional.",
-                "Better prompts come from better engineering thinking.",
+                "Name three things AI coding assistants commonly get wrong (e.g., hallucinated APIs, outdated patterns, missing project context).",
+                "What is the three-step automated verification loop you should run on every AI-generated code block?",
+                "Can you explain why AI output that compiles and passes lint may still be wrong? Give a specific example.",
+                "After AI generates code, what manual review step catches problems that automated tools miss?",
               ],
               tools: [
                 "AI coding assistant",
@@ -4406,9 +4435,10 @@ export const curriculum: Curriculum = {
                 "User runs `git diff` and `git log --oneline` to review their own changes and can summarize what the diff shows in one sentence.",
               ],
               retention: [
-                "Branch early, commit often, push deliberately.",
-                "A good commit message explains intent, not mechanics.",
-                "The diff is your change review — read it before pushing.",
+                "Without looking, write the command to create a descriptive branch, make a focused commit, and review the diff before pushing.",
+                "What makes a commit message explain **intent**? Write an example good message and a bad message for the same change.",
+                "What does `git log --oneline main..HEAD` show? Why is this useful before opening a pull request?",
+                "Can you explain why reviewing `git diff` before pushing catches problems that writing code does not?",
               ],
               tools: ["Git", "terminal", "Visual Studio Code"],
               notesPrompt:
@@ -4543,9 +4573,10 @@ export const curriculum: Curriculum = {
                 "Learner reads a failing test output (expected vs. received) and locates the source of the failure without reading every line of the function under test.",
               ],
               retention: [
-                "Test the contract, not the implementation.",
-                "A failing test is information — it tells you exactly what broke.",
-                "Coverage shows gaps; it does not guarantee quality.",
+                "Without looking, what three functions structure a Vitest test file? (`describe`, `?`, `?`)",
+                "What does `expect(result).toBe(expected)` check? What is the difference between `.toBe()` and `.toEqual()`?",
+                "When a test fails, what two values does the output show? How do you use them to find the bug without reading the function source?",
+                "Name three boundary cases you should always test for a function that accepts an array (e.g., empty array, single item, ?).",
               ],
               tools: ["Vitest", "Visual Studio Code", "terminal"],
               notesPrompt:
@@ -4680,9 +4711,10 @@ export const curriculum: Curriculum = {
                 "Learner can navigate the GitHub Actions log, locate a failing step by its red X indicator, and read the error output to identify the problem.",
               ],
               retention: [
-                "CI is peer review for the machine — it does not get tired or forget.",
-                "A failing CI check is information, not a punishment.",
-                "Required status checks prevent merging broken code.",
+                "Without looking, name the three keys under `on:` that trigger a CI workflow. What events do `push` and `pull_request` fire on?",
+                "What does a GitHub Actions **job** contain? What is the relationship between a job and its steps?",
+                "What is a **required status check** and how does it prevent broken code from being merged to `main`?",
+                "If a CI step fails with a red X, where exactly do you look in the GitHub Actions UI to find the error output?",
               ],
               tools: ["GitHub Actions", "Git", "GitHub", "terminal"],
               notesPrompt:
@@ -4831,9 +4863,10 @@ export const curriculum: Curriculum = {
                 "User runs `npm test` (or `npx vitest`) before and after the refactoring and confirms that all tests pass — behavior is preserved.",
               ],
               retention: [
-                "Refactor in small steps — one change at a time.",
-                "Tests are the safety net that make refactoring possible.",
-                "A good name is the cheapest documentation you can write.",
+                "Name three refactoring techniques you have practiced. When would you use **extract function** vs **rename variable**?",
+                "What must you run before AND after every refactoring to prove behavior is preserved? Why is this non-negotiable?",
+                "Without looking, what is a **guard clause**? How does it simplify deeply nested `if/else` blocks?",
+                "If you extract duplicated logic into a new function, what makes a good function name? What makes a bad one?",
               ],
               tools: ["Visual Studio Code", "terminal", "Vitest"],
               notesPrompt:
@@ -4984,9 +5017,10 @@ export const curriculum: Curriculum = {
                 "PR description follows the **what/why/how to verify** structure and includes at least one specific verification command (e.g., `npm test`, `curl localhost:3000/api/tasks`).",
               ],
               retention: [
-                "A README is the front door to your project. If it is locked, nobody enters.",
-                "Comment why, not what. The code already says what.",
-                "A PR description is a gift to your reviewer. Make it easy to say yes.",
+                "Name the four sections every README should have. What happens if someone clones your repo and the README is missing setup instructions?",
+                "What is the rule for code comments: comment **why** or comment **what**? Give an example of each.",
+                "Without looking, what three sections should every pull request description include? (What changed, ?, ?)",
+                "Can you explain why `// Prevent duplicate submission on double-click` is better than `// Check if submitted`?",
               ],
               tools: ["Visual Studio Code", "Git", "Markdown"],
               notesPrompt:
@@ -5207,9 +5241,10 @@ export const curriculum: Curriculum = {
                 "At least two tests pass: one verifying core functionality (correct file counts) and one verifying error handling (missing argument or invalid path).",
               ],
               retention: [
-                "Define the interface before writing logic.",
-                "Tests after each function, not after the whole project.",
-                "A README is the first impression of your work.",
+                "Before writing any logic for a CLI tool, what should you define first? Why does interface-first design prevent rework?",
+                "Without looking, what is `process.argv[2]` and why is it the standard way to accept a CLI argument in Node.js?",
+                "How does the 'build one function, test it, then build the next' pattern differ from writing all the code first and testing at the end?",
+                "Name the four sections your README needs for a stranger to use your tool within one minute of cloning the repo.",
               ],
               tools: ["Node.js", "terminal", "Visual Studio Code", "Git"],
               notesPrompt:
@@ -5355,9 +5390,10 @@ export const curriculum: Curriculum = {
                 "At least two tests verify API behavior: one happy-path test (valid input → correct response) and one validation test (invalid input → `400` response).",
               ],
               retention: [
-                "Data model first — it constrains everything else.",
-                "Validate at the API boundary, not just the UI.",
-                "Test the contract, not the implementation.",
+                "Why should you design the **data model** (e.g., the `Task` type) before writing any API routes? What does it constrain?",
+                "Without looking, what HTTP status code should `POST /api/tasks` return on success? What code for a missing `title`?",
+                "Where should input validation happen in a full-stack app — the UI, the API boundary, or both? Why?",
+                "What is the full-stack round trip that proves your frontend and API are connected correctly? Name the steps.",
               ],
               tools: [
                 "Node.js",
@@ -5504,9 +5540,10 @@ export const curriculum: Curriculum = {
                 "Bug report includes all five sections: **Symptom**, **Reproduction**, **Root cause**, **Fix**, and **Verification** with specific commands or steps.",
               ],
               retention: [
-                "Reproduce first — always.",
-                "Root cause is not the line that throws. It is why that line throws.",
-                "A bug report is the artifact that makes your debugging portable knowledge.",
+                "Why must you **reproduce** a bug with documented steps before changing any code? What risk does skipping this step create?",
+                "Without looking, what is the difference between the **symptom** (the line that throws) and the **root cause** (why it throws)? Give an example.",
+                "Name the five sections of a bug report. Which section makes your debugging useful to teammates months later?",
+                "After applying a fix, what must you do to confirm the bug is actually resolved? What counts as verification?",
               ],
               tools: ["Visual Studio Code", "terminal", "Git", "Node.js"],
               notesPrompt:
@@ -5654,9 +5691,10 @@ export const curriculum: Curriculum = {
                 "Project runs end-to-end from a fresh `git clone`: the README instructions lead to a working application without needing to ask the author for help.",
               ],
               retention: [
-                "A README is the front door to your work — make it work without you.",
-                "Decisions matter more than conclusions — document why, not just what.",
-                "Tests are proof that you know your code works, not just that it ran once.",
+                "What is the clone-and-run test? What does it prove about your documentation that no amount of self-review can?",
+                "Without looking, what does the **Considered / Chose / Tradeoff** format capture about an architectural decision? Why is documenting the 'why' more valuable than the 'what'?",
+                "Name three things that separate a weak README from a strong one. Which section do most beginners forget?",
+                "What does a meaningful test prove that 'the code ran once without errors' does not? Give a specific example.",
               ],
               tools: [
                 "Visual Studio Code",
