@@ -1,0 +1,231 @@
+.root {
+  margin-top: 2rem;
+}
+
+.section {
+  margin-bottom: 2rem;
+}
+
+.sectionTitle {
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ac-fg);
+  margin: 0 0 1rem;
+}
+
+.overall {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.overallLabel {
+  font-size: 0.85rem;
+  color: var(--ac-muted);
+}
+
+.overallValue {
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.metricCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem 1rem;
+  background: var(--ac-surface);
+  border: 1px solid var(--ac-border);
+  border-radius: 6px;
+}
+
+.metricLabel {
+  font-size: 0.75rem;
+  color: var(--ac-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.metricValue {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.metricSub {
+  font-size: 0.72rem;
+  color: var(--ac-muted);
+}
+
+.statusStrong {
+  color: var(--ac-success, #22c55e);
+}
+
+.statusWatch {
+  color: var(--ac-warning, #eab308);
+}
+
+.statusCritical {
+  color: var(--ac-danger, #ef4444);
+}
+
+.actions {
+  margin-top: 0.75rem;
+}
+
+.actionsTitle {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ac-fg);
+  margin: 0 0 0.5rem;
+}
+
+.actionsList {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.82rem;
+  color: var(--ac-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.phaseGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 0.75rem;
+}
+
+.phaseCard {
+  padding: 0.75rem 1rem;
+  background: var(--ac-surface);
+  border: 1px solid var(--ac-border);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.phaseHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.phaseName {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ac-fg);
+}
+
+.phaseBadge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  text-transform: capitalize;
+}
+
+.phaseBadgeNotStarted {
+  background: var(--ac-border);
+  color: var(--ac-muted);
+}
+
+.phaseBadgeInProgress {
+  background: color-mix(in srgb, var(--ac-accent) 15%, transparent);
+  color: var(--ac-accent);
+}
+
+.phaseBadgeReviewNeeded {
+  background: color-mix(in srgb, var(--ac-warning, #eab308) 15%, transparent);
+  color: var(--ac-warning, #eab308);
+}
+
+.phaseBadgeReady {
+  background: color-mix(in srgb, var(--ac-success, #22c55e) 15%, transparent);
+  color: var(--ac-success, #22c55e);
+}
+
+.phaseBarWrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.phaseBar {
+  flex: 1;
+  height: 6px;
+  background: var(--ac-border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.phaseFill {
+  height: 100%;
+  background: var(--ac-accent);
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+.phasePct {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--ac-fg);
+  min-width: 2.5rem;
+  text-align: right;
+}
+
+.phaseDetail {
+  font-size: 0.72rem;
+  color: var(--ac-muted);
+}
+
+.readiness {
+  padding: 0.75rem 1rem;
+  background: var(--ac-surface);
+  border: 1px solid var(--ac-border);
+  border-radius: 6px;
+}
+
+.readinessHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.5rem;
+}
+
+.readinessLabel {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ac-fg);
+}
+
+.readinessPct {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--ac-accent);
+}
+
+.readinessStats {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.75rem;
+  color: var(--ac-muted);
+  margin-top: 0.5rem;
+}
+
+.readinessUnmet {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+  font-size: 0.78rem;
+  color: var(--ac-danger, #ef4444);
+}

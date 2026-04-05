@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { curriculum } from '@/data/curriculum';
 import { useLocalStorageState } from '@/components/hooks/use-local-storage-state';
+import styles from './dashboard-overview.module.css';
 
 export function DashboardOverview() {
   const [progress] = useLocalStorageState<Record<string, true>>(
@@ -54,14 +55,14 @@ export function DashboardOverview() {
   }
 
   return (
-    <div className="do-overview">
+    <div className={styles.overview}>
       {/* Progress summary cards */}
-      <div className="do-stats-grid">
-        <div className="do-stat-card do-stat-card--primary">
-          <span className="do-stat-value">{percentComplete}%</span>
-          <span className="do-stat-label">Overall Progress</span>
+      <div className={styles.statsGrid}>
+        <div className={`${styles.statCard} ${styles.statCardPrimary}`}>
+          <span className={styles.statValue}>{percentComplete}%</span>
+          <span className={styles.statLabel}>Overall Progress</span>
           <div
-            className="do-progress-bar"
+            className={styles.progressBar}
             role="progressbar"
             aria-valuenow={percentComplete}
             aria-valuemin={0}
@@ -69,40 +70,40 @@ export function DashboardOverview() {
             aria-label="Overall progress"
           >
             <div
-              className="do-progress-fill"
+              className={styles.progressFill}
               style={{ width: `${percentComplete}%` }}
             />
           </div>
         </div>
-        <div className="do-stat-card">
-          <span className="do-stat-value">{completedLessons}</span>
-          <span className="do-stat-label">Lessons Completed</span>
+        <div className={styles.statCard}>
+          <span className={styles.statValue}>{completedLessons}</span>
+          <span className={styles.statLabel}>Lessons Completed</span>
         </div>
-        <div className="do-stat-card">
-          <span className="do-stat-value">{totalLessons}</span>
-          <span className="do-stat-label">Total Lessons</span>
+        <div className={styles.statCard}>
+          <span className={styles.statValue}>{totalLessons}</span>
+          <span className={styles.statLabel}>Total Lessons</span>
         </div>
-        <div className="do-stat-card">
-          <span className="do-stat-value">{phasesCompleted}</span>
-          <span className="do-stat-label">Phases Completed</span>
+        <div className={styles.statCard}>
+          <span className={styles.statValue}>{phasesCompleted}</span>
+          <span className={styles.statLabel}>Phases Completed</span>
         </div>
       </div>
 
       {/* Phase progress breakdown */}
-      <section className="do-phases" aria-label="Phase progress">
-        <h2>Your Learning Path</h2>
+      <section className={styles.phases} aria-label="Phase progress">
+        <h2 className={styles.sectionTitle}>Your Learning Path</h2>
         {phaseStats.map(({ phase, total, completed }) => {
           const pct = total ? Math.round((completed / total) * 100) : 0;
           return (
-            <div key={phase.id} className="do-phase-row">
-              <div className="do-phase-info">
-                <h3>{phase.title}</h3>
-                <span className="do-phase-detail">
+            <div key={phase.id} className={styles.phaseRow}>
+              <div className={styles.phaseInfo}>
+                <h3 className={styles.phaseHeading}>{phase.title}</h3>
+                <span className={styles.phaseDetail}>
                   {completed} / {total} lessons
                 </span>
               </div>
               <div
-                className="do-phase-bar"
+                className={styles.phaseBar}
                 role="progressbar"
                 aria-valuenow={pct}
                 aria-valuemin={0}
@@ -110,11 +111,11 @@ export function DashboardOverview() {
                 aria-label={`${phase.title} progress`}
               >
                 <div
-                  className="do-phase-fill"
+                  className={styles.phaseFill}
                   style={{ width: `${pct}%` }}
                 />
               </div>
-              <span className="do-phase-pct">{pct}%</span>
+              <span className={styles.phasePct}>{pct}%</span>
             </div>
           );
         })}
@@ -122,17 +123,17 @@ export function DashboardOverview() {
 
       {/* Continue learning CTA */}
       {nextLesson && (
-        <section className="do-continue" aria-label="Continue learning">
-          <h2>Continue Learning</h2>
+        <section className={styles.continueSection} aria-label="Continue learning">
+          <h2 className={styles.sectionTitle}>Continue Learning</h2>
           <Link
             href={`/lessons/${nextLesson.id}`}
-            className="do-continue-card"
+            className={styles.continueCard}
           >
-            <span className="do-continue-title">{nextLesson.title}</span>
-            <span className="do-continue-meta">
+            <span className={styles.continueTitle}>{nextLesson.title}</span>
+            <span className={styles.continueMeta}>
               {nextPhaseTitle} &middot; {nextCourseTitle}
             </span>
-            <span className="do-continue-action">Continue &rarr;</span>
+            <span className={styles.continueAction}>Continue &rarr;</span>
           </Link>
         </section>
       )}

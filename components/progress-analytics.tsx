@@ -7,6 +7,20 @@ import type { ArtifactRecord, AttemptRecord } from "@/lib/artifact-engine";
 import type { ReviewRecord } from "@/lib/progression-engine";
 import { calculateCompetencyLevels } from "@/lib/progression-engine";
 import { useMemo } from "react";
+import styles from "./progress-analytics.module.css";
+
+function statusClass(status: "strong" | "watch" | "critical") {
+  if (status === "strong") return styles.statusStrong;
+  if (status === "watch") return styles.statusWatch;
+  return styles.statusCritical;
+}
+
+function phaseBadgeClass(statusLabel: string) {
+  if (statusLabel === "not-started") return styles.phaseBadgeNotStarted;
+  if (statusLabel === "in-progress") return styles.phaseBadgeInProgress;
+  if (statusLabel === "review-needed") return styles.phaseBadgeReviewNeeded;
+  return styles.phaseBadgeReady;
+}
 
 export function ProgressAnalytics() {
   const [progress] = useLocalStorageState<Record<string, true>>(
@@ -52,30 +66,30 @@ export function ProgressAnalytics() {
   const readiness = analytics.independentReadiness;
 
   return (
-    <section className="pa-root" aria-label="Progress analytics">
+    <section className={styles.root} aria-label="Progress analytics">
       {/* Outcomes Dashboard */}
-      <div className="pa-section">
-        <h2 className="pa-section-title">Outcomes Dashboard</h2>
-        <div className="pa-overall">
-          <span className="pa-overall-label">Overall Score</span>
-          <span className={`pa-overall-value pa-status--${outcomes.status}`}>
+      <div className={styles.section}>
+        <h2 className={styles.sectionTitle}>Outcomes Dashboard</h2>
+        <div className={styles.overall}>
+          <span className={styles.overallLabel}>Overall Score</span>
+          <span className={`${styles.overallValue} ${statusClass(outcomes.status)}`}>
             {outcomes.overallScore}%
           </span>
         </div>
-        <div className="pa-metrics-grid">
+        <div className={styles.metricsGrid}>
           {outcomes.snapshots.map((snap) => (
-            <div key={snap.id} className="pa-metric-card">
-              <span className="pa-metric-label">{snap.label}</span>
-              <span className={`pa-metric-value pa-status--${snap.status}`}>
+            <div key={snap.id} className={styles.metricCard}>
+              <span className={styles.metricLabel}>{snap.label}</span>
+              <span className={`${styles.metricValue} ${statusClass(snap.status)}`}>
                 {snap.value}%
               </span>
             </div>
           ))}
         </div>
         {outcomes.prioritizedActions.length > 0 && (
-          <div className="pa-actions">
-            <h3 className="pa-actions-title">Priority Actions</h3>
-            <ul className="pa-actions-list">
+          <div className={styles.actions}>
+            <h3 className={styles.actionsTitle}>Priority Actions</h3>
+            <ul className={styles.actionsList}>
               {outcomes.prioritizedActions.map((action) => (
                 <li key={action}>{action}</li>
               ))}
@@ -85,9 +99,9 @@ export function ProgressAnalytics() {
       </div>
 
       {/* Phase Progress */}
-      <div className="pa-section">
-        <h2 className="pa-section-title">Phase Progress</h2>
-        <div className="pa-phase-grid">
+      <div className={styles.section}>
+        <h2 className={styles.sectionTitle}>Phase Progress</h2>
+        <div className={styles.phaseGrid}>
           {phases.map((phase) => {
             const pct =
               phase.totalLessons === 0
@@ -96,25 +110,23 @@ export function ProgressAnalytics() {
                     (phase.completedLessons / phase.totalLessons) * 100,
                   );
             return (
-              <div key={phase.phaseId} className="pa-phase-card">
-                <div className="pa-phase-header">
-                  <span className="pa-phase-name">{phase.title}</span>
-                  <span
-                    className={`pa-phase-badge pa-phase-badge--${phase.statusLabel}`}
-                  >
+              <div key={phase.phaseId} className={styles.phaseCard}>
+                <div className={styles.phaseHeader}>
+                  <span className={styles.phaseName}>{phase.title}</span>
+                  <span className={`${styles.phaseBadge} ${phaseBadgeClass(phase.statusLabel)}`}>
                     {phase.statusLabel.replace("-", " ")}
                   </span>
                 </div>
-                <div className="pa-phase-bar-wrap">
-                  <div className="pa-phase-bar">
+                <div className={styles.phaseBarWrap}>
+                  <div className={styles.phaseBar}>
                     <div
-                      className="pa-phase-fill"
+                      className={styles.phaseFill}
                       style={{ width: `${pct}%` }}
                     />
                   </div>
-                  <span className="pa-phase-pct">{pct}%</span>
+                  <span className={styles.phasePct}>{pct}%</span>
                 </div>
-                <span className="pa-phase-detail">
+                <span className={styles.phaseDetail}>
                   {phase.completedLessons} / {phase.totalLessons} lessons
                 </span>
               </div>
@@ -124,18 +136,24 @@ export function ProgressAnalytics() {
       </div>
 
       {/* Transfer Analytics */}
-      <div className="pa-section">
-        <h2 className="pa-section-title">Transfer Analytics</h2>
-        <div className="pa-metrics-grid">
+      <div className={styles.section}>
+        <h2 className={styles.sectionTitle}>Transfer Analytics</h2>
+        <div className={styles.metricsGrid}>
           {transfers.map((t) => (
-            <div key={t.phaseId} className="pa-metric-card">
-              <span className="pa-metric-label">{t.phaseTitle}</span>
+            <div key={t.phaseId} className={styles.metricCard}>
+              <span className={styles.metricLabel}>{t.phaseTitle}</span>
               <span
-                className={`pa-metric-value ${t.passRate >= 80 ? "pa-status--strong" : t.passRate >= 60 ? "pa-status--watch" : "pa-status--critical"}`}
+                className={`${styles.metricValue} ${
+                  t.passRate >= 80
+                    ? styles.statusStrong
+                    : t.passRate >= 60
+                      ? styles.statusWatch
+                      : styles.statusCritical
+                }`}
               >
                 {t.passRate}%
               </span>
-              <span className="pa-metric-sub">
+              <span className={styles.metricSub}>
                 {t.passedTransferLessons} / {t.totalTransferLessons} tasks
               </span>
             </div>
@@ -145,24 +163,24 @@ export function ProgressAnalytics() {
 
       {/* Independent Readiness */}
       {readiness && (
-        <div className="pa-section">
-          <h2 className="pa-section-title">Independent Readiness</h2>
-          <div className="pa-readiness">
-            <div className="pa-readiness-header">
-              <span className="pa-readiness-label">Portfolio readiness</span>
-              <span className="pa-readiness-pct">
+        <div className={styles.section}>
+          <h2 className={styles.sectionTitle}>Independent Readiness</h2>
+          <div className={styles.readiness}>
+            <div className={styles.readinessHeader}>
+              <span className={styles.readinessLabel}>Portfolio readiness</span>
+              <span className={styles.readinessPct}>
                 {readiness.readinessPercent}%
               </span>
             </div>
-            <div className="pa-phase-bar-wrap">
-              <div className="pa-phase-bar">
+            <div className={styles.phaseBarWrap}>
+              <div className={styles.phaseBar}>
                 <div
-                  className="pa-phase-fill"
+                  className={styles.phaseFill}
                   style={{ width: `${readiness.readinessPercent}%` }}
                 />
               </div>
             </div>
-            <div className="pa-readiness-stats">
+            <div className={styles.readinessStats}>
               <span>
                 {readiness.documentationArtifacts} documentation artifact
                 {readiness.documentationArtifacts !== 1 ? "s" : ""}
@@ -173,7 +191,7 @@ export function ProgressAnalytics() {
               </span>
             </div>
             {readiness.unmetChecks.length > 0 && (
-              <ul className="pa-readiness-unmet">
+              <ul className={styles.readinessUnmet}>
                 {readiness.unmetChecks.map((check) => (
                   <li key={check}>{check}</li>
                 ))}

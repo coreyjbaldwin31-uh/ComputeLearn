@@ -1,0 +1,204 @@
+.overview {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 900px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.statCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: var(--radius-md, 8px);
+  background: var(--surface, #fff);
+}
+
+.statCardPrimary {
+  background: var(--accent, #2563eb);
+  color: #fff;
+  border-color: transparent;
+}
+
+.statValue {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.statLabel {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.progressBar {
+  margin-top: 0.5rem;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: 3px;
+  background: #fff;
+  transition: width 0.4s ease;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.continueSection .sectionTitle {
+  margin-bottom: 0.75rem;
+}
+
+.phaseRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border, #e2e8f0);
+}
+
+.phaseRow:last-child {
+  border-bottom: none;
+}
+
+.phaseInfo {
+  flex: 0 0 220px;
+}
+
+.phaseHeading {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.phaseDetail {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.phaseBar {
+  flex: 1;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--border, #e2e8f0);
+  overflow: hidden;
+}
+
+.phaseFill {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--accent, #2563eb);
+  transition: width 0.4s ease;
+}
+
+.phasePct {
+  flex: 0 0 3rem;
+  text-align: right;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .phaseRow {
+    flex-wrap: wrap;
+  }
+
+  .phaseInfo {
+    flex: 1 1 100%;
+  }
+
+  .phaseBar {
+    flex: 1 1 auto;
+  }
+}
+
+.continueCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: var(--radius-md, 8px);
+  background: var(--surface, #fff);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.continueCard:hover {
+  border-color: var(--accent, #2563eb);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+}
+
+.continueTitle {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.continueMeta {
+  font-size: 0.825rem;
+  opacity: 0.7;
+}
+
+.continueAction {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--accent, #2563eb);
+  margin-top: 0.25rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .statCard {
+    background: var(--surface-dark, #1e293b);
+    border-color: var(--border-dark, #334155);
+  }
+
+  .statCardPrimary {
+    background: var(--accent, #2563eb);
+    border-color: transparent;
+  }
+
+  .phaseBar {
+    background: var(--border-dark, #334155);
+  }
+
+  .phaseRow {
+    border-color: var(--border-dark, #334155);
+  }
+
+  .continueCard {
+    background: var(--surface-dark, #1e293b);
+    border-color: var(--border-dark, #334155);
+    color: var(--fg-dark, #e2e8f0);
+  }
+
+  .continueCard:hover {
+    border-color: var(--accent, #2563eb);
+  }
+}

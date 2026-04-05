@@ -26,7 +26,7 @@ Version 1.0 | Prepared for product planning and implementation alignment
 | **Product**          | Mastery-based learning platform for turning everyday computer users into technically fluent builders.                                                                                                                                              |
 | **Core promise**     | Learners progress by operating real tools inside safe, reversible labs instead of consuming passive lessons.                                                                                                                                       |
 | **Primary outcome**  | Practical entry-level software engineering competence across system use, coding, debugging, Git, testing, and delivery workflow.                                                                                                                   |
-| **Current baseline** | Next.js 16 App Router, React 19, TypeScript 5, multi-page academy shell with 15 routes, 4-step lesson flow, 15 domain engines, 38 lab templates, 59 test files (505 tests), Docker build, Sentry + OTel instrumentation, localStorage persistence. |
+| **Current baseline** | Next.js 16 App Router, React 19, TypeScript 5, multi-page academy shell with 15 routes, 4-step lesson flow, 15 domain engines, 38 lab templates, 62 test files (515 tests), Docker build, Sentry + OTel instrumentation, localStorage persistence. |
 
 > **Executive framing:** The current concept is strong, but it becomes significantly more investable and buildable once the end state, competency gates, lab engine, and capstone path are made explicit. This document reframes ComputeLearn as a training system for engineering behavior, not only a content platform.
 
@@ -318,7 +318,7 @@ CSS design system in `globals.css` using `--ac-*` custom properties:
 17. ✅ Content quality pass — enrich lesson explanations, demonstrations, retention cues, and exercise prompts for pedagogical depth
 18. ⬚ AI review loop — bounded support for explanation, critique, and next-step guidance (scoped to reflection step)
 19. ⬚ Durable persistence — server-backed or IndexedDB persistence with backup/restore and cross-device sync
-20. ⬚ CSS modularization — extract globals.css class-system namespaces into CSS modules or co-located files
+20. 🔧 CSS modularization — extract globals.css class-system namespaces into CSS modules or co-located files (two namespaces migrated)
 21. ✅ Independent readiness UI — dedicated route and wizard for the independent-readiness-engine assessment
 22. ⬚ Advanced lab templates — realistic bug sets, seeded project scaffolds, saved transcripts
 23. ⬚ Real workspace runtime — move from in-memory lab-engine to sandboxed runtime with real file I/O
@@ -423,7 +423,7 @@ CSS design system in `globals.css` using `--ac-*` custom properties:
 | --- | --------------------------------------------------------------------------------- | ------ |
 | T7  | Content quality pass — Phase 1 lessons (explanation, demo, retention depth)       | ✅     |
 | T8  | Content quality pass — Phase 2–4 lessons                                          | ✅     |
-| T9  | CSS modularization — extract component class-system namespaces from globals.css   | ⬚      |
+| T9  | CSS modularization — extract component class-system namespaces from globals.css   | 🔧      |
 | T10 | Independent readiness UI route — `/readiness` page with assessment wizard         | ✅     |
 | T11 | Export/backup dialog for localStorage — JSON download/import for data portability | ✅     |
 
