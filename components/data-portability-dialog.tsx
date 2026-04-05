@@ -2,6 +2,7 @@
 
 import { useCallback, useId, useRef, useState } from "react";
 import { useFocusTrap } from "./hooks/use-focus-trap";
+import styles from "./data-portability-dialog.module.css";
 
 type DataPortabilityDialogProps = {
   isOpen: boolean;
@@ -203,7 +204,7 @@ export function DataPortabilityDialog({
     <div className="confirm-backdrop" onClick={onClose}>
       <div
         ref={dialogRef}
-        className="confirm-dialog dp-dialog"
+        className={`confirm-dialog ${styles.dialog}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
@@ -223,18 +224,18 @@ export function DataPortabilityDialog({
         </p>
 
         {/* Export Section */}
-        <div className="dp-section">
-          <h5 className="dp-section-heading">Export Backup</h5>
-          <p className="dp-section-desc">
+        <div className={styles.section}>
+          <h5 className={styles.sectionHeading}>Export Backup</h5>
+          <p className={styles.sectionDesc}>
             Download all learning data stored in this browser.
           </p>
-          <div className="dp-meta">
+          <div className={styles.meta}>
             <span>Size: {estimateSize()}</span>
             {lastExport && <span>Last export: {formatDate(lastExport)}</span>}
           </div>
           <button
             type="button"
-            className="ghost-button dp-download-btn"
+            className={`ghost-button ${styles.downloadBtn}`}
             onClick={handleExport}
           >
             Download Backup
@@ -242,9 +243,9 @@ export function DataPortabilityDialog({
         </div>
 
         {/* Import Section */}
-        <div className="dp-section">
-          <h5 className="dp-section-heading">Import Backup</h5>
-          <p className="dp-warning">
+        <div className={styles.section}>
+          <h5 className={styles.sectionHeading}>Import Backup</h5>
+          <p className={styles.warning}>
             ⚠ This will replace your current progress. Export your data first if
             you want to keep it.
           </p>
@@ -252,24 +253,24 @@ export function DataPortabilityDialog({
             ref={fileInputRef}
             type="file"
             accept=".json"
-            className="dp-file-input"
+            className={styles.fileInput}
             onChange={handleFileChange}
             aria-label="Choose backup file"
           />
 
           {importError && (
-            <p className="dp-error" role="alert">
+            <p className={styles.error} role="alert">
               {importError}
             </p>
           )}
 
           {importPreview && (
-            <div className="dp-preview">
-              <p className="dp-preview-heading">Data to import:</p>
-              <ul className="dp-preview-list">
+            <div className={styles.preview}>
+              <p className={styles.previewHeading}>Data to import:</p>
+              <ul className={styles.previewList}>
                 {importPreview.keys.map(({ key, summary }) => (
                   <li key={key}>
-                    <span className="dp-preview-key">
+                    <span className={styles.previewKey}>
                       {key.replace("computelearn-", "")}
                     </span>
                     : {summary}
@@ -278,7 +279,7 @@ export function DataPortabilityDialog({
               </ul>
               <button
                 type="button"
-                className="confirm-destructive dp-import-btn"
+                className={`confirm-destructive ${styles.importBtn}`}
                 onClick={handleImport}
               >
                 Import &amp; Replace
@@ -287,7 +288,7 @@ export function DataPortabilityDialog({
           )}
 
           {importSuccess && (
-            <p className="dp-success" role="status">
+            <p className={styles.success} role="status">
               Data imported successfully. Reload the page to see updated
               progress.
             </p>

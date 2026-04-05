@@ -104,7 +104,7 @@ describe("DashboardOverview", () => {
 
   it("computes progress correctly when some lessons are completed", () => {
     mockUseLocalStorageState.mockImplementation(
-      (_key: string, _defaultValue: unknown) => [
+      () => [
         { l1: true, l2: true } as Record<string, true>,
         vi.fn(),
       ],
