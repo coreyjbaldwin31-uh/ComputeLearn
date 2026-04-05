@@ -10,22 +10,22 @@ Operational log for autonomous workflow runs. Entries are concise.
 
 ### Startup Checklist
 
-| Check | Result |
-| ----- | ------ |
-| PRD.md | Present, detailed, canonical plan — 9 sections covering vision through roadmap |
-| README.md | Present, setup and verify instructions correct |
-| git status | 1 modified file (whitespace-only in lab-engine.test.ts), 19+ untracked .github agent/skill files |
-| Branch model | `main` + `develop` local; only `main` tracked remotely; `develop` has no remote |
-| package.json | Scripts: dev, build, lint, type-check, test, verify, docker:build/up/down, api:test |
-| tsconfig.json | Strict, noEmit, bundler resolution, path alias `@/*` |
-| Vitest | 21 test files, 136 tests, all passing |
-| ESLint | 0 errors, 3 warnings (1 unused var in pre-tool-safety-check.mjs, 2 useMemo dep warnings in training-platform.tsx) |
-| TypeScript | Clean — `tsc --noEmit` passes |
-| Build | `next build` succeeds, single static route `/` |
-| Docker | Dockerfile (multi-stage, Node 20-alpine, standalone output) + docker-compose.yml present |
-| CI | `.github/workflows/ci.yml` — lint, type-check, test, build, docker-build jobs on PR/push to main/develop |
-| .env files | None committed; .gitignore covers .env variants; no .env.example exists |
-| Deploy config | None (no vercel.json, fly.toml, etc.) |
+| Check         | Result                                                                                                            |
+| ------------- | ----------------------------------------------------------------------------------------------------------------- |
+| PRD.md        | Present, detailed, canonical plan — 9 sections covering vision through roadmap                                    |
+| README.md     | Present, setup and verify instructions correct                                                                    |
+| git status    | 1 modified file (whitespace-only in lab-engine.test.ts), 19+ untracked .github agent/skill files                  |
+| Branch model  | `main` + `develop` local; only `main` tracked remotely; `develop` has no remote                                   |
+| package.json  | Scripts: dev, build, lint, type-check, test, verify, docker:build/up/down, api:test                               |
+| tsconfig.json | Strict, noEmit, bundler resolution, path alias `@/*`                                                              |
+| Vitest        | 21 test files, 136 tests, all passing                                                                             |
+| ESLint        | 0 errors, 3 warnings (1 unused var in pre-tool-safety-check.mjs, 2 useMemo dep warnings in training-platform.tsx) |
+| TypeScript    | Clean — `tsc --noEmit` passes                                                                                     |
+| Build         | `next build` succeeds, single static route `/`                                                                    |
+| Docker        | Dockerfile (multi-stage, Node 20-alpine, standalone output) + docker-compose.yml present                          |
+| CI            | `.github/workflows/ci.yml` — lint, type-check, test, build, docker-build jobs on PR/push to main/develop          |
+| .env files    | None committed; .gitignore covers .env variants; no .env.example exists                                           |
+| Deploy config | None (no vercel.json, fly.toml, etc.)                                                                             |
 
 ### Classification
 
@@ -46,13 +46,13 @@ Operational log for autonomous workflow runs. Entries are concise.
 
 ### Drift Summary
 
-| Item | PRD/README says | Repo reality |
-| ---- | --------------- | ------------ |
-| Lab engine workspace runtime | "Still open" (README) | Lab engine exists with template model, validation rules, reset/replay, hints, artifacts — partially delivered |
-| PRD execution tracking | PRD is the living plan | PRD has no task-level status markers; it reads as a static spec |
-| Branch model | CONTRIBUTING: develop is default target | develop has no remote; PR #1 targets main directly |
-| Validator expansion | PRD §6/§8 calls for file-presence, dir-structure, command-output, code-behavior, test-pass | lab-engine supports file-presence, directory-structure, content-match, command-output — code-behavior and test-pass are missing |
-| Agent/skill files | Referenced in workflow | Not committed to version control |
+| Item                         | PRD/README says                                                                            | Repo reality                                                                                                                    |
+| ---------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| Lab engine workspace runtime | "Still open" (README)                                                                      | Lab engine exists with template model, validation rules, reset/replay, hints, artifacts — partially delivered                   |
+| PRD execution tracking       | PRD is the living plan                                                                     | PRD has no task-level status markers; it reads as a static spec                                                                 |
+| Branch model                 | CONTRIBUTING: develop is default target                                                    | develop has no remote; PR #1 targets main directly                                                                              |
+| Validator expansion          | PRD §6/§8 calls for file-presence, dir-structure, command-output, code-behavior, test-pass | lab-engine supports file-presence, directory-structure, content-match, command-output — code-behavior and test-pass are missing |
+| Agent/skill files            | Referenced in workflow                                                                     | Not committed to version control                                                                                                |
 
 ### Immediate Blockers (priority order)
 
@@ -78,11 +78,11 @@ Operational log for autonomous workflow runs. Entries are concise.
 
 ### Startup State
 
-| Check | Result |
-| ----- | ------ |
-| Verify suite | 195 tests passing, lint clean, type-check clean, build green |
-| Uncommitted | package.json: 3 unused observability deps added (not wired) |
-| PRD next | Roadmap item 7 🔧: "next: smoke-test full lab flow end to end" |
+| Check        | Result                                                         |
+| ------------ | -------------------------------------------------------------- |
+| Verify suite | 195 tests passing, lint clean, type-check clean, build green   |
+| Uncommitted  | package.json: 3 unused observability deps added (not wired)    |
+| PRD next     | Roadmap item 7 🔧: "next: smoke-test full lab flow end to end" |
 
 ### Routing Decision
 
@@ -121,12 +121,12 @@ Route to **Implementer** or **Planner** for Phase 2 lab templates and code-behav
 
 ### Startup State
 
-| Check | Result |
-| ----- | ------ |
-| Verify suite | 491 tests passing, lint clean, type-check clean, build green |
-| Uncommitted | 3 files (curriculum.ts, lab-templates.ts, lab-templates.test.ts) — curriculum strengthening from prior session |
-| Git | Local HEAD at `661317e`, origin/main at `0abb1a1` (3 commits ahead) |
-| PRD | 10 sections, tasks T1–T15 (T1–T6 done, T7–T15 not started) |
+| Check        | Result                                                                                                         |
+| ------------ | -------------------------------------------------------------------------------------------------------------- |
+| Verify suite | 491 tests passing, lint clean, type-check clean, build green                                                   |
+| Uncommitted  | 3 files (curriculum.ts, lab-templates.ts, lab-templates.test.ts) — curriculum strengthening from prior session |
+| Git          | Local HEAD at `661317e`, origin/main at `0abb1a1` (3 commits ahead)                                            |
+| PRD          | 10 sections, tasks T1–T15 (T1–T6 done, T7–T15 not started)                                                     |
 
 ### Routing Decisions
 
