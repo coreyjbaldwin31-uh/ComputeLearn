@@ -501,11 +501,11 @@ Gaps are tiered by deployment impact. **Tier 1** items are blockers — the plat
 
 | ID  | Task                                                    | Description                                                                                                                    | Status |
 | --- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ------ |
-| T16 | Add NextAuth.js with OAuth provider                     | Configure NextAuth.js with Google OAuth (and optionally MIT Touchstone/SAML). Add sign-in/sign-out UI. Protect academy routes. | ⬚      |
-| T17 | Add PostgreSQL with Prisma ORM                          | Add Prisma schema, configure connection, add Docker Compose service for local Postgres, create migration scripts.              | ⬚      |
-| T18 | Define core data models                                 | Create Prisma models: `User`, `Enrollment`, `Progress`, `Submission`, `LabAttempt`, `CompetencySnapshot`.                      | ⬚      |
-| T19 | Create API routes for progress persistence              | Build authenticated CRUD routes under `app/api/` for progress, submissions, and lab attempts.                                  | ⬚      |
-| T20 | Migrate localStorage reads to API with offline fallback | Replace direct localStorage access with API calls. Keep localStorage as offline cache, sync on reconnect.                      | ⬚      |
+| T16 | Add NextAuth.js with OAuth provider                     | Configure NextAuth.js with Google OAuth (and optionally MIT Touchstone/SAML). Add sign-in/sign-out UI. Protect academy routes. | ✅      |
+| T17 | Add PostgreSQL with Prisma ORM                          | Add Prisma schema, configure connection, add Docker Compose service for local Postgres, create migration scripts.              | ✅      |
+| T18 | Define core data models                                 | Create Prisma models: `User`, `Enrollment`, `Progress`, `Submission`, `LabAttempt`, `CompetencySnapshot`.                      | ✅      |
+| T19 | Create API routes for progress persistence              | Build authenticated CRUD routes under `app/api/` for progress, submissions, and lab attempts.                                  | ✅      |
+| T20 | Migrate localStorage reads to API with offline fallback | Replace direct localStorage access with API calls. Keep localStorage as offline cache, sync on reconnect.                      | ✅      |
 
 #### Phase B — Instructor Experience (Weeks 5–8): Dashboard + Grading
 
@@ -571,11 +571,11 @@ T34 (Monitoring) ── depends on T33
 
 | Phase                     | Tasks                   | Completed  | Status            |
 | ------------------------- | ----------------------- | ---------- | ----------------- |
-| A — Foundation            | T16, T17, T18, T19, T20 | 0 / 5      | ⬚ Not started     |
+| A — Foundation            | T16, T17, T18, T19, T20 | 5 / 5      | ✅ Complete        |
 | B — Instructor Experience | T21, T22, T23, T24, T25 | 0 / 5      | ⬚ Not started     |
 | C — Integration           | T26, T27, T28, T29      | 0 / 4      | ⬚ Not started     |
 | D — Scale and Compliance  | T30, T31, T32, T33, T34 | 0 / 5      | ⬚ Not started     |
-| **Total**                 | **T16–T34**             | **0 / 19** | **⬚ Not started** |
+| **Total**                 | **T16–T34**             | **5 / 19** | **🔧 In progress** |
 
 ---
 
