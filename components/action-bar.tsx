@@ -1,4 +1,5 @@
 import type { Lesson } from "@/data/curriculum";
+import styles from "./action-bar.module.css";
 
 type ActionBarProps = {
   lesson: Lesson;
@@ -8,6 +9,14 @@ type ActionBarProps = {
   onScrollToNotes: () => void;
   onScrollToExercises: () => void;
 };
+
+function difficultyClass(difficulty: string) {
+  const value = difficulty.toLowerCase();
+  if (value === "beginner") return styles.diffBeginner;
+  if (value === "intermediate") return styles.diffIntermediate;
+  if (value === "advanced") return styles.diffAdvanced;
+  return "";
+}
 
 export function ActionBar({
   lesson,
@@ -23,9 +32,9 @@ export function ActionBar({
       : 0;
 
   return (
-    <div className="action-bar" role="toolbar" aria-label="Lesson actions">
-      <div className="action-bar-left">
-        <span className="action-bar-time">
+    <div className={styles.bar} role="toolbar" aria-label="Lesson actions">
+      <div className={styles.left}>
+        <span className={styles.time}>
           <svg
             width="14"
             height="14"
@@ -51,29 +60,29 @@ export function ActionBar({
           {lesson.duration}
         </span>
         <span
-          className={`action-bar-diff action-bar-diff--${lesson.difficulty.toLowerCase()}`}
+          className={`${styles.diff} ${difficultyClass(lesson.difficulty)}`}
         >
           {lesson.difficulty}
         </span>
         {lessonProgress.total > 0 && (
-          <span className="action-bar-progress">
+          <span className={styles.progress}>
             <progress
-              className="action-bar-progress-track"
+              className={styles.progressTrack}
               value={progressPct}
               max={100}
               aria-label="Lesson exercise completion"
             />
-            <span className="action-bar-progress-label">
+            <span className={styles.progressLabel}>
               {lessonProgress.current}/{lessonProgress.total}
             </span>
           </span>
         )}
       </div>
 
-      <div className="action-bar-right">
+      <div className={styles.right}>
         <button
           type="button"
-          className="action-bar-btn"
+          className={styles.button}
           onClick={onScrollToExercises}
           aria-label="Jump to exercises section"
         >
@@ -106,7 +115,7 @@ export function ActionBar({
 
         <button
           type="button"
-          className="action-bar-btn"
+          className={styles.button}
           onClick={onScrollToNotes}
           aria-label="Jump to notes section"
         >
@@ -142,7 +151,7 @@ export function ActionBar({
         {isComplete ? (
           <button
             type="button"
-            className="action-bar-complete action-bar-complete--done"
+            className={`${styles.complete} ${styles.completeDone}`}
             onClick={onToggleCompletion}
             aria-pressed="true"
             aria-label="Mark lesson as incomplete"
@@ -168,7 +177,7 @@ export function ActionBar({
         ) : (
           <button
             type="button"
-            className="action-bar-complete"
+            className={styles.complete}
             onClick={onToggleCompletion}
             aria-pressed="false"
             aria-label="Mark lesson as complete"

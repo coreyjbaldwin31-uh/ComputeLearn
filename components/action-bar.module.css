@@ -1,0 +1,168 @@
+.bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  margin-bottom: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
+  position: sticky;
+  top: 54px;
+  z-index: 50;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.left,
+.right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.time {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.diff {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--muted);
+}
+
+.diffBeginner {
+  background: rgba(13, 107, 87, 0.08);
+  color: var(--accent);
+}
+
+.diffIntermediate {
+  background: rgba(198, 139, 44, 0.1);
+  color: var(--gold);
+}
+
+.diffAdvanced {
+  background: rgba(196, 68, 44, 0.08);
+  color: var(--error);
+}
+
+.progress {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.progressTrack {
+  width: 60px;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.progressTrack::-webkit-progress-bar {
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 999px;
+}
+
+.progressTrack::-webkit-progress-value {
+  background: var(--accent);
+  border-radius: 999px;
+}
+
+.progressTrack::-moz-progress-bar {
+  background: var(--accent);
+  border-radius: 999px;
+}
+
+.progressLabel {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+:global([data-theme="dark"]) .progressTrack {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+:global([data-theme="dark"]) .progressTrack::-webkit-progress-bar {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
+  min-height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 150ms ease,
+    border-color 150ms ease;
+}
+
+.button:hover {
+  background: var(--bg);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.button:focus-visible,
+.complete:focus-visible {
+  outline: 3px solid rgba(13, 107, 87, 0.4);
+  outline-offset: 2px;
+  border-color: var(--accent-strong);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.complete {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 16px;
+  min-height: 36px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  background: rgba(13, 107, 87, 0.06);
+  color: var(--accent);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.complete:hover {
+  background: rgba(13, 107, 87, 0.12);
+}
+
+.completeDone {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.completeDone:hover {
+  background: var(--accent-strong);
+}
+
+:global([data-theme="dark"]) .diff {
+  background: rgba(255, 255, 255, 0.06);
+}
