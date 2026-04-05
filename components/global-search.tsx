@@ -2,6 +2,7 @@
 
 import type { LessonEntry } from "@/lib/progression-engine";
 import { useEffect, useId, useRef, useState } from "react";
+import styles from "./global-search.module.css";
 
 type GlobalSearchProps = {
   allLessonsFlat: LessonEntry[];
@@ -17,7 +18,7 @@ function highlightMatch(text: string, query: string): React.ReactNode {
   return (
     <>
       {text.slice(0, idx)}
-      <mark className="search-highlight">
+      <mark className={styles.searchHighlight}>
         {text.slice(idx, idx + query.length)}
       </mark>
       {text.slice(idx + query.length)}
@@ -118,7 +119,7 @@ export function GlobalSearch({
   // Scroll selected result into view
   useEffect(() => {
     if (clampedSelectedIndex >= 0 && listRef.current) {
-      const items = listRef.current.querySelectorAll(".global-search-result");
+      const items = listRef.current.querySelectorAll('[data-global-search-result="true"]');
       const selectedItem = items[clampedSelectedIndex];
       if (
         selectedItem &&
@@ -132,26 +133,26 @@ export function GlobalSearch({
 
   return (
     <div
-      className="global-search-backdrop"
+      className={styles.backdrop}
       ref={backdropRef}
       onClick={(e) => {
         if (e.target === backdropRef.current) onClose();
       }}
     >
       <div
-        className="global-search-panel"
+        className={styles.panel}
         role="dialog"
         aria-label="Search lessons"
         onKeyDown={handleKeyDown}
       >
-        <div className="global-search-header">
+        <div className={styles.header}>
           <svg
             width="18"
             height="18"
             viewBox="0 0 18 18"
             fill="none"
             aria-hidden="true"
-            className="global-search-icon"
+            className={styles.icon}
           >
             <circle
               cx="8"
@@ -170,7 +171,7 @@ export function GlobalSearch({
           </svg>
           <input
             ref={inputRef}
-            className="global-search-input"
+            className={styles.input}
             type="search"
             role="combobox"
             aria-expanded="true"
@@ -187,7 +188,7 @@ export function GlobalSearch({
           />
           <button
             type="button"
-            className="global-search-close"
+            className={styles.close}
             onClick={onClose}
             aria-label="Close search"
           >
@@ -208,12 +209,12 @@ export function GlobalSearch({
           </button>
         </div>
 
-        <div className="global-search-filters">
+        <div className={styles.filters}>
           {(["all", "pending", "complete"] as const).map((f) => (
             <button
               key={f}
               type="button"
-              className={`global-search-filter ${filter === f ? "active" : ""}`}
+              className={`${styles.filter} ${filter === f ? styles.filterActive : ""}`}
               onClick={() => {
                 setFilter(f);
                 setSelectedIndex(-1);
@@ -226,7 +227,7 @@ export function GlobalSearch({
                   : "Completed"}
             </button>
           ))}
-          <span className="global-search-count">
+          <span className={styles.count}>
             {results.length} result{results.length !== 1 ? "s" : ""}
           </span>
         </div>
@@ -243,7 +244,7 @@ export function GlobalSearch({
 
         <div
           id={listboxId}
-          className="global-search-results"
+          className={styles.results}
           ref={listRef}
           role="listbox"
         >
@@ -255,15 +256,16 @@ export function GlobalSearch({
                 role="option"
                 aria-selected="true"
                 tabIndex={-1}
-                className="global-search-result global-search-result--selected"
+                data-global-search-result="true"
+                className={`${styles.result} ${styles.resultSelected}`}
                 onClick={() => {
                   onNavigateToEntry(entry);
                   onClose();
                 }}
                 onMouseEnter={() => setSelectedIndex(i)}
               >
-                <div className="global-search-result-top">
-                  <span className="global-search-result-title">
+                <div className={styles.resultTop}>
+                  <span className={styles.resultTitle}>
                     {highlightMatch(entry.lesson.title, normalizedQuery)}
                   </span>
                   <span
@@ -272,11 +274,11 @@ export function GlobalSearch({
                     {progress[entry.lesson.id] ? "Done" : "Pending"}
                   </span>
                 </div>
-                <span className="global-search-result-path">
+                <span className={styles.resultPath}>
                   {highlightMatch(entry.phase.title, normalizedQuery)} ›{" "}
                   {highlightMatch(entry.course.title, normalizedQuery)}
                 </span>
-                <span className="global-search-result-meta">
+                <span className={styles.resultMeta}>
                   {entry.lesson.duration} · {entry.lesson.difficulty}
                 </span>
               </div>
@@ -287,15 +289,16 @@ export function GlobalSearch({
                 role="option"
                 aria-selected="false"
                 tabIndex={-1}
-                className="global-search-result"
+                data-global-search-result="true"
+                className={styles.result}
                 onClick={() => {
                   onNavigateToEntry(entry);
                   onClose();
                 }}
                 onMouseEnter={() => setSelectedIndex(i)}
               >
-                <div className="global-search-result-top">
-                  <span className="global-search-result-title">
+                <div className={styles.resultTop}>
+                  <span className={styles.resultTitle}>
                     {highlightMatch(entry.lesson.title, normalizedQuery)}
                   </span>
                   <span
@@ -304,11 +307,11 @@ export function GlobalSearch({
                     {progress[entry.lesson.id] ? "Done" : "Pending"}
                   </span>
                 </div>
-                <span className="global-search-result-path">
+                <span className={styles.resultPath}>
                   {highlightMatch(entry.phase.title, normalizedQuery)} ›{" "}
                   {highlightMatch(entry.course.title, normalizedQuery)}
                 </span>
-                <span className="global-search-result-meta">
+                <span className={styles.resultMeta}>
                   {entry.lesson.duration} · {entry.lesson.difficulty}
                 </span>
               </div>
@@ -316,12 +319,12 @@ export function GlobalSearch({
           )}
         </div>
         {results.length === 0 && normalizedQuery.length > 0 && (
-          <div className="global-search-empty" role="status">
+          <div className={styles.empty} role="status">
             No lessons match &quot;{query}&quot;
           </div>
         )}
         {results.length > 20 && (
-          <div className="global-search-more" role="status">
+          <div className={styles.more} role="status">
             Showing 20 of {results.length} results — refine your search
           </div>
         )}
