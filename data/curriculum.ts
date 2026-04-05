@@ -193,19 +193,21 @@ export const curriculum: Curriculum = {
               title: "Navigate the Filesystem with Intent",
               summary:
                 "Understand where things live, how to move through directories quickly, and how to avoid destructive mistakes.",
-              duration: "35 min",
+              duration: "45 min",
               difficulty: "Foundational",
               objective:
-                "Move through folders, inspect files, and reason about the working directory before taking action.",
+                "Move through folders, inspect files, distinguish absolute from relative paths, and reason about the working directory before taking action.",
               explanation: [
                 "Every command you run in a terminal executes **relative to a location** called the **working directory**. If you do not know your working directory, you cannot predict what a command will affect. The first habit to build is checking where you are before doing anything else. In PowerShell, the command is `Get-Location` (alias: `pwd`). Run it, read the path, and only then proceed.",
                 "Once you know where you are, the next question is: what is here? `Get-ChildItem` (aliases: `dir`, `ls`) lists the files and folders in your current directory. Think of it as looking around the room before rearranging furniture. You will use this command constantly — before creating files, before deleting files, and before running scripts.",
-                "To move between directories, use `Set-Location` (alias: `cd`) followed by the folder name. `cd Projects` moves you into a subfolder called Projects. `cd ..` moves you up one level to the **parent directory**. These two — `cd <folder>` to go deeper and `cd ..` to go up — are all you need to navigate any directory tree.",
+                "To move between directories, use `Set-Location` (alias: `cd`) followed by the folder name. `cd Projects` moves you into a subfolder called Projects. `cd ..` moves you up one level to the **parent directory**. `cd ~` takes you to your **home directory** (e.g., `C:\\Users\\learner`). These three — `cd <folder>` to go deeper, `cd ..` to go up, and `cd ~` to go home — are all you need to navigate any directory tree.",
+                "Understand the difference between **absolute paths** and **relative paths**. An **absolute path** starts from the root of the drive and specifies the full location: `C:\\Users\\learner\\Projects\\app`. It works the same no matter where your working directory is. A **relative path** starts from your current working directory: `Projects\\app` means 'the Projects folder inside wherever I am right now.' If you run `cd Projects\\app` from `C:\\Users\\learner`, you end up at `C:\\Users\\learner\\Projects\\app`. If you run it from `C:\\`, it fails because there is no `Projects` folder there. Relative paths are shorter and convenient; absolute paths are unambiguous and safe. Use absolute paths in scripts and configuration files where reliability matters.",
                 "The pattern that keeps you safe is: **check, inspect, then act**. Run `Get-Location` to confirm your position, run `Get-ChildItem` to see what is around you, and only then execute commands that create, move, or delete files. This three-step habit prevents the most common terminal mistakes.",
               ],
               demonstration: [
                 "Open the training terminal. Run `Get-Location` — you will see output like `C:\\Users\\learner\\Workspace`. This is your starting position. Now run `Get-ChildItem` (or `dir`) to see the contents: folders like `Projects`, `Documents`, and files like `README.txt`. Notice that the output shows both folders and files with their sizes and dates.",
                 "Now navigate deeper: run `cd Projects` to enter the Projects folder. Run `Get-Location` again — the path has changed to `C:\\Users\\learner\\Workspace\\Projects`. Run `dir` to see what is inside. When you are done, run `cd ..` to go back up to the Workspace folder. Run `pwd` one more time to confirm you are back where you started.",
+                "Watch the difference between absolute and relative paths. From `C:\\Users\\learner\\Workspace`, the command `cd Projects` uses a **relative path** — it resolves to `C:\\Users\\learner\\Workspace\\Projects`. The command `cd C:\\Users\\learner\\Workspace\\Projects` uses an **absolute path** — it reaches the same destination regardless of where you start. Try both and confirm with `pwd` that you end up in the same place. Then run `cd ~` to jump back to your home directory in one step.",
                 "Notice the rhythm: **check → inspect → move → check again**. Every navigation step is bookended by a location check. This is not slow — it is precise. Engineers who skip context checks are the ones who accidentally delete files in the wrong directory.",
               ],
               exerciseSteps: [
@@ -266,6 +268,32 @@ export const curriculum: Curriculum = {
                   hint: "Use cd or Set-Location followed by the folder name.",
                   assessmentType: "action",
                 },
+                {
+                  id: "absolute-vs-relative",
+                  title: "Path types",
+                  prompt:
+                    "Is the path 'C:\\Users\\learner\\Projects' an absolute path or a relative path? Why?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: ["absolute"],
+                  successMessage:
+                    "Correct. It starts from the drive root (C:\\), making it absolute — it works the same no matter where your working directory is.",
+                  hint: "Look at whether the path starts from the root of the drive or from the current directory.",
+                  assessmentType: "reasoning",
+                },
+                {
+                  id: "home-directory",
+                  title: "Navigate home",
+                  prompt:
+                    "What shortcut takes you directly to your home directory from anywhere in the filesystem?",
+                  placeholder: "cd ...",
+                  validationMode: "includes",
+                  acceptedAnswers: ["cd ~", "~"],
+                  successMessage:
+                    "Correct. The tilde (~) is a universal shortcut for your home directory in both PowerShell and Unix shells.",
+                  hint: "It uses a special character that represents the home directory.",
+                  assessmentType: "action",
+                },
               ],
               transferTask: {
                 id: "transfer-filesystem-recovery",
@@ -274,18 +302,39 @@ export const curriculum: Curriculum = {
                   "You are in the wrong directory and need to find a misplaced file safely. Describe the command sequence you would use before moving or deleting anything.",
                 placeholder: "Describe commands and reasoning",
                 validationMode: "includes",
-                acceptedAnswers: [
-                  "get-location",
-                  "dir",
-                  "ls",
-                  "cd",
-                  "inspect",
-                ],
+                acceptedAnswers: ["get-location", "dir", "ls", "cd", "inspect"],
                 successMessage:
                   "Strong transfer response. You emphasized context checks and inspection before modification.",
                 hint: "Mention at least one context check and one inspection command before any file-changing action.",
                 assessmentType: "transfer",
               },
+              codeExercises: [
+                {
+                  id: "ce-filesystem-navigate",
+                  title: "Navigate and verify",
+                  description:
+                    "Navigate into the Projects folder and confirm your location by printing the working directory.",
+                  starterCode:
+                    "# Navigate into the Projects folder, then check your location\n",
+                  language: "powershell",
+                  hint: "Use cd to change directory, then Get-Location or pwd to confirm.",
+                  acceptedPatterns: [
+                    "cd Projects",
+                    "cd projects",
+                    "Set-Location Projects",
+                  ],
+                },
+                {
+                  id: "ce-filesystem-list",
+                  title: "Inspect directory contents",
+                  description:
+                    "List all files and folders in the current directory.",
+                  starterCode: "# List everything in the current directory\n",
+                  language: "powershell",
+                  hint: "Use Get-ChildItem, dir, or ls to see what is in the current folder.",
+                  acceptedPatterns: ["Get-ChildItem", "dir", "ls"],
+                },
+              ],
               competencies: [
                 { track: "SystemNavigation", targetLevel: "Functional" },
               ],
@@ -353,6 +402,19 @@ export const curriculum: Curriculum = {
                   successMessage:
                     "Correct. Win+E bypasses the Start menu entirely.",
                   hint: "It uses the Windows key combined with a letter.",
+                  assessmentType: "action",
+                },
+                {
+                  id: "shortcut-cancel",
+                  title: "Cancel a command",
+                  prompt:
+                    "What keyboard shortcut cancels a running command in the terminal?",
+                  placeholder: "Key combination",
+                  validationMode: "includes",
+                  acceptedAnswers: ["ctrl+c", "ctrl c"],
+                  successMessage:
+                    "Correct. Ctrl+C is essential for stopping runaway commands or hung processes in the terminal.",
+                  hint: "It uses the Ctrl key combined with a letter associated with cancel or copy.",
                   assessmentType: "action",
                 },
               ],
@@ -480,6 +542,28 @@ export const curriculum: Curriculum = {
                 hint: "Start with what is consuming the most resources, then narrow down.",
                 assessmentType: "transfer",
               },
+              codeExercises: [
+                {
+                  id: "ce-inspection-processes",
+                  title: "List running processes",
+                  description:
+                    "Run the command that lists all running processes on your system.",
+                  starterCode: "# Show all running processes\n",
+                  language: "powershell",
+                  hint: "The cmdlet name describes exactly what it does — it gets processes.",
+                  acceptedPatterns: ["Get-Process", "ps"],
+                },
+                {
+                  id: "ce-inspection-disk",
+                  title: "Check disk space",
+                  description:
+                    "Run the command that shows disk volume information including free space remaining.",
+                  starterCode: "# Check available disk space on all drives\n",
+                  language: "powershell",
+                  hint: "The cmdlet gets information about storage volumes.",
+                  acceptedPatterns: ["Get-Volume"],
+                },
+              ],
               competencies: [
                 { track: "SystemNavigation", targetLevel: "Functional" },
               ],
@@ -592,6 +676,29 @@ export const curriculum: Curriculum = {
                 hint: "Mention how you would preview the deletions before running them, and how you would filter by file type.",
                 assessmentType: "transfer",
               },
+              codeExercises: [
+                {
+                  id: "ce-fileops-create",
+                  title: "Create a file",
+                  description:
+                    "Create a new file called notes.txt in the current directory using PowerShell.",
+                  starterCode: "# Create a new file called notes.txt\n",
+                  language: "powershell",
+                  hint: "Use New-Item with -Path and -ItemType parameters.",
+                  acceptedPatterns: ["New-Item", "notes.txt"],
+                },
+                {
+                  id: "ce-fileops-whatif",
+                  title: "Preview before deleting",
+                  description:
+                    "Write a command that previews which .tmp files would be deleted, without actually deleting them.",
+                  starterCode:
+                    "# Preview deletion of all .tmp files (don't actually delete)\n",
+                  language: "powershell",
+                  hint: "Use Remove-Item with the -WhatIf flag to see what would happen.",
+                  acceptedPatterns: ["Remove-Item", "-WhatIf"],
+                },
+              ],
               competencies: [
                 { track: "FileManipulation", targetLevel: "Functional" },
               ],
@@ -615,7 +722,7 @@ export const curriculum: Curriculum = {
               demonstration: [
                 "Run `Get-ChildItem -Recurse -Filter *.txt` in the sandbox. You will see a list of every `.txt` file in the entire directory tree, with full paths. Notice that `-Recurse` descended into every subfolder automatically — no need to navigate into each one manually.",
                 'Now search inside those files: run `Get-ChildItem -Recurse -Filter *.txt | Select-String "TODO"`. The output shows matching lines with the filename, line number, and the matched text highlighted. This is how you answer questions like "which file contains the database port?" in seconds instead of minutes.',
-                "To narrow results by file extension, use the `-Filter` flag directly: `Get-ChildItem -Recurse -Filter *.txt` shows only text files. You can also search a specific path: `Select-String -Path C:\\Projects\\*.log -Pattern \"error\"` searches all `.log` files in a specific folder. These building blocks are invaluable when debugging — the recently changed files are your primary suspects when something breaks.",
+                'To narrow results by file extension, use the `-Filter` flag directly: `Get-ChildItem -Recurse -Filter *.txt` shows only text files. You can also search a specific path: `Select-String -Path C:\\Projects\\*.log -Pattern "error"` searches all `.log` files in a specific folder. These building blocks are invaluable when debugging — the recently changed files are your primary suspects when something breaks.',
               ],
               exerciseSteps: [
                 "Run `Get-ChildItem -Recurse -Filter *.txt` to search the sandbox for all `.txt` files recursively.",
@@ -662,6 +769,19 @@ export const curriculum: Curriculum = {
                   hint: "It selects lines from files that match a string or pattern.",
                   assessmentType: "action",
                 },
+                {
+                  id: "pipe-search-combo",
+                  title: "Pipeline search",
+                  prompt:
+                    "Write a command that finds all .log files recursively and searches inside them for the word 'error' using a pipe.",
+                  placeholder: "Pipeline command",
+                  validationMode: "includes",
+                  acceptedAnswers: ["get-childitem", "|", "select-string"],
+                  successMessage:
+                    "Correct. Combining Get-ChildItem with Select-String via a pipe is the standard pattern for recursive content search.",
+                  hint: "Pipe the output of Get-ChildItem -Recurse -Filter into Select-String.",
+                  assessmentType: "action",
+                },
               ],
               transferTask: {
                 id: "transfer-file-search",
@@ -682,6 +802,28 @@ export const curriculum: Curriculum = {
                 hint: "Combine recursive file listing with content search using the pipe operator.",
                 assessmentType: "transfer",
               },
+              codeExercises: [
+                {
+                  id: "ce-search-recursive",
+                  title: "Recursive file search",
+                  description:
+                    "Find all .log files in the current directory and all subdirectories.",
+                  starterCode: "# Find all .log files recursively\n",
+                  language: "powershell",
+                  hint: "Use Get-ChildItem with -Recurse and -Filter flags.",
+                  acceptedPatterns: ["Get-ChildItem", "-Recurse", "-Filter"],
+                },
+                {
+                  id: "ce-search-content",
+                  title: "Search inside files",
+                  description:
+                    "Search all .txt files in the current directory for lines containing the word 'TODO'.",
+                  starterCode: "# Search for 'TODO' inside all .txt files\n",
+                  language: "powershell",
+                  hint: "Use Select-String with -Path and -Pattern parameters.",
+                  acceptedPatterns: ["Select-String", "TODO"],
+                },
+              ],
               competencies: [
                 { track: "TerminalOperation", targetLevel: "Functional" },
               ],
@@ -814,6 +956,29 @@ export const curriculum: Curriculum = {
                 hint: "Cover scope, preview, execution, and rollback — in that order.",
                 assessmentType: "transfer",
               },
+              codeExercises: [
+                {
+                  id: "ce-automation-variable",
+                  title: "Store a target path",
+                  description:
+                    "Create a variable called $folder that stores the path '.\\sandbox\\logs'.",
+                  starterCode: "# Store the target folder path in a variable\n",
+                  language: "powershell",
+                  hint: "Use $variableName = 'value' to assign a string to a variable.",
+                  acceptedPatterns: ["$folder", "sandbox"],
+                },
+                {
+                  id: "ce-automation-preview",
+                  title: "Dry-run a cleanup",
+                  description:
+                    "Write a command that previews removing all .tmp files from the $folder path without actually deleting them.",
+                  starterCode:
+                    "# Preview removing .tmp files from $folder\n$folder = '.\\sandbox\\logs'\n",
+                  language: "powershell",
+                  hint: "Use Remove-Item with the -WhatIf flag.",
+                  acceptedPatterns: ["Remove-Item", "-WhatIf"],
+                },
+              ],
               competencies: [
                 { track: "Automation", targetLevel: "Functional" },
               ],
@@ -884,6 +1049,19 @@ export const curriculum: Curriculum = {
                   hint: "Think about WHERE you want to look in the results.",
                   assessmentType: "action",
                 },
+                {
+                  id: "select-properties",
+                  title: "Choose properties",
+                  prompt:
+                    "What PowerShell cmdlet selects which properties to display or limits the number of results?",
+                  placeholder: "Cmdlet name",
+                  validationMode: "includes",
+                  acceptedAnswers: ["select-object", "select"],
+                  successMessage:
+                    "Correct. Select-Object lets you pick specific columns and limit output count.",
+                  hint: "It selects specific objects or properties from the pipeline.",
+                  assessmentType: "action",
+                },
               ],
               transferTask: {
                 id: "transfer-pipeline-compose",
@@ -906,6 +1084,29 @@ export const curriculum: Curriculum = {
                 hint: "List files, sort by size descending, then select the top 5 with only the properties you need.",
                 assessmentType: "transfer",
               },
+              codeExercises: [
+                {
+                  id: "ce-piping-sort",
+                  title: "Sort processes by CPU",
+                  description:
+                    "Write a pipeline that lists all processes sorted by CPU usage in descending order.",
+                  starterCode:
+                    "# List processes sorted by CPU usage (highest first)\n",
+                  language: "powershell",
+                  hint: "Pipe Get-Process into Sort-Object with the CPU property and -Descending.",
+                  acceptedPatterns: ["Get-Process", "|", "Sort-Object"],
+                },
+                {
+                  id: "ce-piping-filter",
+                  title: "Filter large files",
+                  description:
+                    "Write a pipeline that lists only files larger than 1KB in the current directory.",
+                  starterCode: "# Show only files larger than 1KB\n",
+                  language: "powershell",
+                  hint: "Pipe Get-ChildItem into Where-Object with a size condition.",
+                  acceptedPatterns: ["Get-ChildItem", "|", "Where-Object"],
+                },
+              ],
               competencies: [
                 { track: "TerminalOperation", targetLevel: "Functional" },
               ],
@@ -1011,6 +1212,30 @@ export const curriculum: Curriculum = {
                 hint: "Mention the loop structure, file type check, move command, and how you would log actions.",
                 assessmentType: "transfer",
               },
+              codeExercises: [
+                {
+                  id: "ce-scripting-variables",
+                  title: "Declare and use a variable",
+                  description:
+                    "Create a variable called $folderPath set to '.\\Projects' and print its value using Write-Host with string interpolation.",
+                  starterCode:
+                    "# Declare a folder path variable and print it\n",
+                  language: "powershell",
+                  hint: "Use $variableName = 'value' then Write-Host with double-quoted string interpolation.",
+                  acceptedPatterns: ["$folderPath", "Write-Host"],
+                },
+                {
+                  id: "ce-scripting-loop",
+                  title: "Loop over files",
+                  description:
+                    "Write a foreach loop that iterates over files from Get-ChildItem and prints each filename.",
+                  starterCode:
+                    "# Loop over files and print each name\n$files = Get-ChildItem .\\sandbox\n",
+                  language: "powershell",
+                  hint: "Use foreach ($file in $files) { ... } with Write-Host inside the block.",
+                  acceptedPatterns: ["foreach", "$file", "Write-Host"],
+                },
+              ],
               competencies: [
                 { track: "Automation", targetLevel: "Functional" },
               ],
@@ -1106,6 +1331,30 @@ export const curriculum: Curriculum = {
                     "Correct. Backlinks create a web of connections so you can discover related knowledge and navigate between topics.",
                   hint: "Think about how one concept relates to another and how you would find those connections later.",
                   assessmentType: "reasoning",
+                },
+                {
+                  id: "vault-daily-use",
+                  title: "Daily engineering notes",
+                  prompt:
+                    "Name one type of information an engineer should capture in their vault daily to make debugging and decision-making faster later.",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "error",
+                    "decision",
+                    "command",
+                    "fix",
+                    "solution",
+                    "bug",
+                    "log",
+                    "what I tried",
+                    "problem",
+                    "learned",
+                  ],
+                  successMessage:
+                    "Correct. Recording errors, fixes, commands, and decisions creates a personal knowledge base that accelerates future work.",
+                  hint: "Think about what you wish you had written down the last time you hit a problem you had solved before.",
+                  assessmentType: "reasoning" as const,
                 },
               ],
               transferTask: {
@@ -1293,6 +1542,19 @@ export const curriculum: Curriculum = {
                   hint: "It is a single function key.",
                   assessmentType: "action",
                 },
+                {
+                  id: "find-all-references",
+                  title: "Trace usage across files",
+                  prompt:
+                    "What VS Code shortcut shows every place a function or variable is used across the codebase?",
+                  placeholder: "Keyboard shortcut",
+                  validationMode: "includes",
+                  acceptedAnswers: ["shift+f12", "Shift+F12", "shift f12"],
+                  successMessage:
+                    "Correct. Shift+F12 opens the References panel, showing every location where the symbol is used \u2014 critical for understanding impact before making changes.",
+                  hint: "It is a variation of the F12 shortcut you already know, with the Shift modifier.",
+                  assessmentType: "action" as const,
+                },
               ],
               transferTask: {
                 id: "transfer-code-reading",
@@ -1414,6 +1676,26 @@ export const curriculum: Curriculum = {
                     "Correct. Verification is what turns a code change into an engineering result.",
                   hint: "The answer is not \u2018commit it\u2019.",
                   assessmentType: "debugging",
+                },
+                {
+                  id: "narrow-scope",
+                  title: "Narrow the scope",
+                  prompt:
+                    "During debugging, how do you confirm which function is producing the wrong value \u2014 before changing any code?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "console.log",
+                    "log",
+                    "print",
+                    "breakpoint",
+                    "inspect",
+                    "debugger",
+                  ],
+                  successMessage:
+                    "Correct. Adding console.log or setting breakpoints lets you observe actual values at specific points \u2014 narrowing the cause before you edit anything.",
+                  hint: "Think about inserting observation points to see what the code is actually doing at each step.",
+                  assessmentType: "reasoning" as const,
                 },
               ],
               transferTask: {
@@ -1668,6 +1950,19 @@ export const curriculum: Curriculum = {
                   hint: "Think about what happens if two developers run npm install a month apart without it.",
                   assessmentType: "action",
                 },
+                {
+                  id: "save-dev-flag",
+                  title: "Dev vs production dependencies",
+                  prompt:
+                    "A linting tool like ESLint is needed during development but not in production. Which flag do you use with npm install to save it as a dev dependency?",
+                  placeholder: "npm install flag",
+                  validationMode: "includes",
+                  acceptedAnswers: ["--save-dev", "-D", "devDependencies"],
+                  successMessage:
+                    "Correct. --save-dev (or -D) puts the package in devDependencies, keeping production installs lean and secure.",
+                  hint: "There is a specific npm install flag that puts packages in the devDependencies section of package.json.",
+                  assessmentType: "action" as const,
+                },
               ],
               transferTask: {
                 id: "transfer-dependency-audit",
@@ -1859,6 +2154,164 @@ export const curriculum: Curriculum = {
               scaffoldingLevel: "step-by-step",
             },
             {
+              id: "lesson-data-structures",
+              title: "Arrays, Objects, and Data Manipulation",
+              summary:
+                "Learn to store, access, and transform collections of data using arrays and objects — the fundamental data structures in every JavaScript and TypeScript program.",
+              duration: "50 min",
+              difficulty: "Core",
+              objective:
+                "Create arrays and objects, access values with index and dot/bracket notation, and use core array methods to filter, map, and transform data.",
+              explanation: [
+                "An **array** is an ordered list of values. You create one with square brackets: `const items = ['a', 'b', 'c']`. Each value has a numeric **index** starting from zero — so `items[0]` returns `'a'`, `items[1]` returns `'b'`, and `items[2]` returns `'c'`. The `.length` property tells you how many elements the array contains (`items.length` is `3`). Arrays are **zero-indexed** because the index represents an offset from the start — the first element is zero steps away from the beginning.",
+                "Arrays come with built-in **methods** that let you manipulate their contents. `.push('d')` adds an element to the end. `.pop()` removes the last element and returns it. `.includes('b')` returns `true` if the value exists in the array. `.indexOf('c')` returns the index where that value is found (or `-1` if missing). Two especially powerful methods create new arrays from existing ones: `.filter()` keeps only elements that pass a test (`items.filter(x => x !== 'a')` returns `['b', 'c']`), and `.map()` transforms every element (`items.map(x => x.toUpperCase())` returns `['A', 'B', 'C']`).",
+                "An **object** is a collection of named properties. You create one with curly braces: `const user = { name: 'Alice', age: 25 }`. Access properties using **dot notation** (`user.name` returns `'Alice'`) or **bracket notation** (`user['name']` returns `'Alice'`). Use dot notation for known, fixed property names — it is shorter and clearer. Use bracket notation when the property name is stored in a variable (`const key = 'age'; user[key]`) or when the name contains special characters.",
+                "The most common real-world pattern is an **array of objects** — a list where each item has named properties. For example: `const users = [{ name: 'Alice', age: 30 }, { name: 'Bob', age: 25 }]`. You access individual values by combining index and dot notation: `users[0].name` returns `'Alice'` and `users[1].age` returns `25`. Almost every API response, database result, and configuration file follows this pattern.",
+                "**Destructuring** lets you extract values from objects and arrays into named variables in a single statement. For objects: `const { name, age } = user` pulls `name` and `age` out of `user`. For arrays: `const [first, ...rest] = items` assigns the first element to `first` and collects everything else into `rest`. The **spread operator** (`...`) also combines structures: `const merged = { ...defaults, ...overrides }` creates a new object with all properties from both, where `overrides` wins on any duplicate keys.",
+              ],
+              demonstration: [
+                "Start by creating an array and working through common operations step by step:\n```typescript\nconst fruits = ['apple', 'banana', 'cherry'];\nconsole.log(fruits.length);  // 3\n\nfruits.push('date');\nconsole.log(fruits);  // ['apple', 'banana', 'cherry', 'date']\n\nconst removed = fruits.pop();\nconsole.log(removed);  // 'date'\nconsole.log(fruits);   // ['apple', 'banana', 'cherry']\n\nconst longNames = fruits.filter(f => f.length > 5);\nconsole.log(longNames);  // ['banana', 'cherry']\n\nconst uppercased = fruits.map(f => f.toUpperCase());\nconsole.log(uppercased);  // ['APPLE', 'BANANA', 'CHERRY']\n```\nEach method either modifies the original array (`.push()`, `.pop()`) or returns a new array (`.filter()`, `.map()`). Knowing which is which prevents accidental data mutation.",
+                "Now create an object and explore property access. A realistic example is an API response:\n```typescript\nconst response = {\n  status: 200,\n  data: {\n    user: { name: 'Alice', email: 'alice@example.com' },\n    timestamp: '2025-01-15T10:30:00Z',\n  },\n};\n\nconsole.log(response.status);           // 200\nconsole.log(response.data.user.name);   // 'Alice'\nconsole.log(response.data.user.email);  // 'alice@example.com'\n\n// Modify a value\nresponse.data.user.name = 'Alice Smith';\nconsole.log(response.data.user.name);   // 'Alice Smith'\n```\nDot notation chains naturally for nested access. Each dot goes one level deeper into the structure.",
+                "Finally, combine arrays of objects with filtering, mapping, and destructuring:\n```typescript\nconst users = [\n  { name: 'Alice', age: 30 },\n  { name: 'Bob', age: 17 },\n  { name: 'Carol', age: 25 },\n];\n\n// Filter: keep only users aged 18 or older\nconst adults = users.filter(u => u.age >= 18);\nconsole.log(adults);  // [{ name: 'Alice', age: 30 }, { name: 'Carol', age: 25 }]\n\n// Map: extract just the names\nconst names = users.map(u => u.name);\nconsole.log(names);  // ['Alice', 'Bob', 'Carol']\n\n// Destructure in a loop\nfor (const { name, age } of users) {\n  console.log(`${name} is ${age} years old`);\n}\n// Alice is 30 years old\n// Bob is 17 years old\n// Carol is 25 years old\n```\nThis pattern — filter, map, destructure — appears in nearly every professional codebase.",
+              ],
+              exerciseSteps: [
+                "Create an array of at least four strings, access an element by index, and use `.filter()` to create a new array with only elements longer than four characters.",
+                "Create an object with three properties, access each property using both dot notation and bracket notation, then modify one value and confirm the change.",
+                "Build an array of three objects (each with `name` and `age`), filter for ages above 20, map to extract names, and destructure one object into individual variables.",
+              ],
+              validationChecks: [
+                "User can create arrays and objects with correct syntax and access individual values by index, dot notation, or bracket notation.",
+                "User can use `.filter()` and `.map()` to transform arrays without modifying the original data.",
+                "User can destructure objects and arrays to extract values, and explain when to use bracket notation versus dot notation.",
+              ],
+              retention: [
+                "Arrays use indexes (starting at 0). Objects use named keys. Arrays of objects combine both.",
+                "`.filter()` keeps matching items; `.map()` transforms every item. Both return new arrays.",
+                "Destructuring unpacks values: `const { name } = obj` for objects, `const [first] = arr` for arrays.",
+              ],
+              tools: [
+                "Visual Studio Code",
+                "TypeScript compiler",
+                "terminal",
+                "Node.js REPL",
+              ],
+              notesPrompt:
+                "Write definitions for: array, object, index, dot notation, bracket notation, .filter(), .map(), destructuring, spread operator.",
+              exercises: [
+                {
+                  id: "ds-array-access",
+                  title: "Array index access",
+                  prompt:
+                    "Given `const items = ['a', 'b', 'c', 'd']`, what value does `items[2]` return?",
+                  placeholder: "Value",
+                  validationMode: "exact",
+                  acceptedAnswers: ["c", "'c'", '"c"'],
+                  successMessage:
+                    "Correct. Arrays are zero-indexed, so index 2 is the third element.",
+                  hint: "Index 0 is 'a', index 1 is 'b', index 2 is…",
+                  assessmentType: "action",
+                },
+                {
+                  id: "ds-filter-method",
+                  title: "Array filter method",
+                  prompt:
+                    "Which array method creates a new array containing only items that pass a test?",
+                  placeholder: "Method name",
+                  validationMode: "includes",
+                  acceptedAnswers: ["filter", ".filter", ".filter()"],
+                  successMessage:
+                    "Correct. `.filter()` accepts a callback and returns a new array with only the elements where the callback returned true.",
+                  hint: "This method's name describes exactly what it does — it removes items that don't meet a condition.",
+                  assessmentType: "reasoning",
+                },
+                {
+                  id: "ds-object-dot-notation",
+                  title: "Object dot notation",
+                  prompt:
+                    "How do you access the `email` property of a `user` object using dot notation?",
+                  placeholder: "Expression",
+                  validationMode: "exact",
+                  acceptedAnswers: ["user.email"],
+                  successMessage:
+                    "Correct. Dot notation chains the object name, a dot, and the property name.",
+                  hint: "The syntax is objectName.propertyName — no brackets or quotes needed.",
+                  assessmentType: "action",
+                },
+                {
+                  id: "ds-nested-access",
+                  title: "Nested array-object access",
+                  prompt:
+                    "Given `const users = [{ name: 'Alice' }, { name: 'Bob' }]`, how do you get Bob's name?",
+                  placeholder: "Expression",
+                  validationMode: "exact",
+                  acceptedAnswers: ["users[1].name"],
+                  successMessage:
+                    "Correct. Index 1 selects the second object, and `.name` accesses the property.",
+                  hint: "Bob is the second element (index 1). Then use dot notation for the property.",
+                  assessmentType: "action",
+                },
+              ],
+              transferTask: {
+                id: "ds-transfer-bookmarks",
+                title: "Transfer challenge: design a bookmarks data model",
+                prompt:
+                  "Design a data model for a bookmarks app. Describe the structure as an array of objects (include at least `title`, `url`, and `tags` properties). Show how you would access the URL of the second bookmark, and write a `.filter()` expression that returns only bookmarks tagged with 'typescript'.",
+                placeholder:
+                  "const bookmarks = [{ title: ..., url: ..., tags: [...] }, ...];\nbookmarks[1].url\nbookmarks.filter(...)",
+                validationMode: "includes",
+                acceptedAnswers: [
+                  "bookmarks",
+                  "title",
+                  "url",
+                  "tags",
+                  "filter",
+                ],
+                successMessage:
+                  "Transfer evidence accepted. Your bookmarks model demonstrates array-of-objects design, property access, and filtering.",
+                hint: "Define an array with at least two bookmark objects. Each object needs title, url, and tags (an array of strings). Then use index + dot notation for access, and .filter() with a callback that checks the tags array.",
+                assessmentType: "transfer",
+              },
+              codeExercises: [
+                {
+                  id: "ds-filter-even-numbers",
+                  title: "Filter even numbers",
+                  description:
+                    "Given an array of numbers, use `.filter()` to create a new array containing only the even numbers.",
+                  starterCode:
+                    "const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];\n\n// Use .filter() to keep only even numbers\nconst evens = numbers.filter(/* your code here */);\n\nconsole.log(evens); // should print [2, 4, 6, 8, 10]",
+                  language: "typescript",
+                  hint: "A number is even when `n % 2 === 0`. Pass an arrow function to `.filter()` that tests this condition.",
+                  acceptedPatterns: ["filter", "% 2", "=== 0"],
+                },
+                {
+                  id: "ds-map-user-names",
+                  title: "Map user objects to names",
+                  description:
+                    "Given an array of user objects, use `.map()` to create a new array containing only the name strings.",
+                  starterCode:
+                    "const users = [\n  { name: 'Alice', age: 30 },\n  { name: 'Bob', age: 25 },\n  { name: 'Carol', age: 28 },\n];\n\n// Use .map() to extract just the names\nconst names = users.map(/* your code here */);\n\nconsole.log(names); // should print ['Alice', 'Bob', 'Carol']",
+                  language: "typescript",
+                  hint: "Pass an arrow function to `.map()` that receives a user object and returns `user.name`.",
+                  acceptedPatterns: ["map", ".name"],
+                },
+                {
+                  id: "ds-destructure-object",
+                  title: "Destructure an object",
+                  description:
+                    "Use object destructuring to extract the `name` and `email` properties from the `contact` object into individual variables.",
+                  starterCode:
+                    "const contact = { name: 'Alice', email: 'alice@example.com', role: 'admin' };\n\n// Destructure name and email from contact\n// Your code here\n\nconsole.log(name);  // should print 'Alice'\nconsole.log(email); // should print 'alice@example.com'",
+                  language: "typescript",
+                  hint: "Use `const { name, email } = contact;` to pull both values out in one statement.",
+                  acceptedPatterns: ["const {", "name", "email", "} = contact"],
+                },
+              ],
+              competencies: [
+                { track: "ProgrammingLogic", targetLevel: "Functional" },
+              ],
+              scaffoldingLevel: "step-by-step",
+            },
+            {
               id: "lesson-typescript-types",
               title: "TypeScript Types and Compile-Time Safety",
               summary:
@@ -1974,6 +2427,23 @@ export const curriculum: Curriculum = {
                   language: "typescript",
                   hint: "Change the return type annotation to match what a + b produces when both are numbers.",
                   acceptedPatterns: [": number", "number {"],
+                },
+                {
+                  id: "define-interface",
+                  title: "Define an interface",
+                  description:
+                    "Define a TypeScript interface called User with three properties: id (number), name (string), and active (boolean). Then create a variable of type User.",
+                  starterCode:
+                    "// Define the User interface\n\n// Create a user variable\nconst user = { id: 1, name: 'Alice', active: true };",
+                  language: "typescript",
+                  hint: "Use the interface keyword followed by the type name and property declarations with their types.",
+                  acceptedPatterns: [
+                    "interface User",
+                    "id:",
+                    "name:",
+                    "active:",
+                    "boolean",
+                  ],
                 },
               ],
               competencies: [
@@ -2474,6 +2944,19 @@ export const curriculum: Curriculum = {
                   hint: "You add files to the staging area.",
                   assessmentType: "action",
                 },
+                {
+                  id: "git-diff-review",
+                  title: "Review before committing",
+                  prompt:
+                    "What Git command shows the exact line-by-line changes in your working directory that have not been staged yet?",
+                  placeholder: "git ...",
+                  validationMode: "includes",
+                  acceptedAnswers: ["git diff"],
+                  successMessage:
+                    "Correct. git diff shows unstaged changes line by line \u2014 always review your changes before staging and committing.",
+                  hint: "This command shows the difference between your working directory and the staging area.",
+                  assessmentType: "action" as const,
+                },
               ],
               transferTask: {
                 id: "transfer-git-safety",
@@ -2587,6 +3070,19 @@ export const curriculum: Curriculum = {
                     "Correct. git branch lists local branches and marks the active one with an asterisk.",
                   hint: "The command name is simply the concept itself.",
                   assessmentType: "action",
+                },
+                {
+                  id: "branch-merge",
+                  title: "Merge a branch",
+                  prompt:
+                    "After finishing work on a feature branch, what Git command merges it into main? (Assume you are already on main.)",
+                  placeholder: "git ...",
+                  validationMode: "includes",
+                  acceptedAnswers: ["git merge"],
+                  successMessage:
+                    "Correct. git merge integrates the feature branch's changes into main. Always review the diff before merging.",
+                  hint: "You are on main and want to bring in the changes from another branch.",
+                  assessmentType: "action" as const,
                 },
               ],
               transferTask: {
@@ -2739,6 +3235,23 @@ export const curriculum: Curriculum = {
                 hint: "Cover: how to identify conflicted files, how to read the three sections, how to make the final version, how to stage, and how to commit.",
                 assessmentType: "transfer",
               },
+              codeExercises: [
+                {
+                  id: "resolve-conflict-markers",
+                  title: "Resolve a merge conflict",
+                  description:
+                    "The file below has Git conflict markers from a merge. Remove the conflict markers and keep both changes so the function validates email format AND checks for minimum length.",
+                  starterCode:
+                    "function validateEmail(email: string): boolean {\n<<<<<<< HEAD\n  return email.includes('@') && email.includes('.');\n=======\n  return email.length >= 5;\n>>>>>>> feature/min-length\n}",
+                  language: "typescript",
+                  hint: "Remove the <<<<<<< HEAD, =======, and >>>>>>> lines. Combine both conditions with && so the function checks both rules.",
+                  acceptedPatterns: [
+                    "email.includes('@')",
+                    "email.length",
+                    "&&",
+                  ],
+                },
+              ],
               competencies: [
                 { track: "VersionControl", targetLevel: "Functional" },
               ],
@@ -2819,6 +3332,19 @@ export const curriculum: Curriculum = {
                     "Correct. 404 tells the client the resource does not exist at that URL.",
                   hint: "This is probably the most famous status code on the internet.",
                   assessmentType: "action",
+                },
+                {
+                  id: "http-post-method",
+                  title: "Create operation",
+                  prompt:
+                    "Which HTTP method is used to send data to a server to create a new resource?",
+                  placeholder: "HTTP method",
+                  validationMode: "includes",
+                  acceptedAnswers: ["post", "POST"],
+                  successMessage:
+                    "Correct. POST sends data in the request body to create a new resource. The server typically responds with 201 Created.",
+                  hint: "GET reads data. This method writes new data to the server.",
+                  assessmentType: "action" as const,
                 },
               ],
               transferTask: {
@@ -2943,6 +3469,19 @@ export const curriculum: Curriculum = {
                   hint: "Think about what happens when you need to re-run the same set of requests tomorrow or share them with a teammate.",
                   assessmentType: "reasoning",
                 },
+                {
+                  id: "postman-test-script",
+                  title: "Verify with test scripts",
+                  prompt:
+                    "In Postman, what function do you use to assert that a response has a specific status code? (Start with pm.)",
+                  placeholder: "pm. ...",
+                  validationMode: "includes",
+                  acceptedAnswers: ["pm.test", "pm.response", "pm.expect"],
+                  successMessage:
+                    "Correct. pm.test() lets you write assertions in the Tests tab \u2014 for example, checking that a response returns status 200 or contains expected data.",
+                  hint: "Postman provides a pm object with a test() method that accepts a name and a function containing assertions.",
+                  assessmentType: "action" as const,
+                },
               ],
               transferTask: {
                 id: "transfer-postman-collection",
@@ -2966,6 +3505,19 @@ export const curriculum: Curriculum = {
                 hint: "Name the collection, define a base URL variable, and describe what each request tests.",
                 assessmentType: "transfer",
               },
+              codeExercises: [
+                {
+                  id: "postman-test-assertion",
+                  title: "Write a Postman test script",
+                  description:
+                    "Write a Postman test script that verifies the response status code is 200 and the response body contains a 'users' array.",
+                  starterCode:
+                    "// Write your Postman test script\npm.test('Status is 200', function () {\n  // Assert status code is 200\n});\n\npm.test('Response has users array', function () {\n  // Parse the response and check for users\n});",
+                  language: "javascript",
+                  hint: "Use pm.response.to.have.status(200) for status checks and pm.response.json() to parse the body.",
+                  acceptedPatterns: ["pm.test", "pm.response", "status", "200"],
+                },
+              ],
               competencies: [
                 { track: "ApiInteraction", targetLevel: "Functional" },
               ],
@@ -3039,6 +3591,27 @@ export const curriculum: Curriculum = {
                   hint: "It starts with a dot and holds environment variable assignments.",
                   assessmentType: "action",
                 },
+                {
+                  id: "auth-status-codes",
+                  title: "Authentication status codes",
+                  prompt:
+                    "What is the difference between HTTP status code 401 and 403?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "unauthorized",
+                    "forbidden",
+                    "identity",
+                    "permission",
+                    "credentials",
+                    "not authenticated",
+                    "not authorized",
+                  ],
+                  successMessage:
+                    "Correct. 401 means the client is not authenticated (no valid credentials provided). 403 means the client is authenticated but does not have permission to access the resource.",
+                  hint: "One means 'I do not know who you are.' The other means 'I know who you are, but you are not allowed.'",
+                  assessmentType: "reasoning" as const,
+                },
               ],
               transferTask: {
                 id: "transfer-api-auth",
@@ -3061,6 +3634,30 @@ export const curriculum: Curriculum = {
                 hint: "Cover .env storage, process.env access, and .gitignore protection.",
                 assessmentType: "transfer",
               },
+              codeExercises: [
+                {
+                  id: "fetch-with-bearer",
+                  title: "Add bearer token to a fetch request",
+                  description:
+                    "Complete the fetch call so it includes the Authorization header with a bearer token read from an environment variable.",
+                  starterCode:
+                    "const API_TOKEN = process.env.API_TOKEN;\n\nasync function getUser(id: number) {\n  const response = await fetch(`https://api.example.com/users/${id}`, {\n    headers: {\n      // Add the Authorization header with bearer token\n    },\n  });\n  return response.json();\n}",
+                  language: "typescript",
+                  hint: "The header name is 'Authorization' and the value format is 'Bearer ' followed by the token variable.",
+                  acceptedPatterns: ["Authorization", "Bearer", "API_TOKEN"],
+                },
+                {
+                  id: "env-secret-loading",
+                  title: "Load secrets from environment",
+                  description:
+                    "Write code that reads an API key from a .env file using process.env and throws an error if the key is missing.",
+                  starterCode:
+                    "// Read the API key from environment\n// Throw an error with a clear message if it is not set\n\nconst apiKey = // your code here\n\nconsole.log('Key loaded:', apiKey ? 'yes' : 'no');",
+                  language: "typescript",
+                  hint: "Use process.env.API_KEY and check if it is undefined or empty before proceeding.",
+                  acceptedPatterns: ["process.env", "throw", "API_KEY"],
+                },
+              ],
               competencies: [
                 { track: "ApiInteraction", targetLevel: "Functional" },
                 { track: "SecurityAwareness", targetLevel: "Aware" },
@@ -3234,6 +3831,19 @@ export const curriculum: Curriculum = {
                   hint: "ps stands for process status \u2014 a Linux convention.",
                   assessmentType: "action",
                 },
+                {
+                  id: "docker-logs",
+                  title: "View container output",
+                  prompt:
+                    "What Docker command shows the output (logs) of a running or stopped container?",
+                  placeholder: "docker ...",
+                  validationMode: "includes",
+                  acceptedAnswers: ["docker logs"],
+                  successMessage:
+                    "Correct. docker logs <container> shows the standard output and error output \u2014 your first debugging tool for containers.",
+                  hint: "You need to see what a container printed while running. The command takes the container name or ID.",
+                  assessmentType: "action",
+                },
               ],
               transferTask: {
                 id: "transfer-docker-debug",
@@ -3352,6 +3962,28 @@ export const curriculum: Curriculum = {
                   successMessage:
                     "Correct. Copying package.json first lets Docker cache the npm install layer. Source code changes then skip the slow install step.",
                   hint: "Think about what Docker has to re-run when a layer changes.",
+                  assessmentType: "reasoning",
+                },
+                {
+                  id: "dockerignore-purpose",
+                  title: ".dockerignore purpose",
+                  prompt:
+                    "Why should you create a .dockerignore file, and name two things it should exclude?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "node_modules",
+                    ".git",
+                    "size",
+                    "small",
+                    "exclude",
+                    "secret",
+                    "leak",
+                    "ignore",
+                  ],
+                  successMessage:
+                    "Correct. A .dockerignore excludes files like node_modules and .git from the build context \u2014 keeping images small and preventing secrets from being included.",
+                  hint: "Think about files that are large or sensitive and should not end up inside your Docker image.",
                   assessmentType: "reasoning",
                 },
               ],
@@ -3495,6 +4127,28 @@ export const curriculum: Curriculum = {
                   successMessage:
                     "Correct. Without explicit edge cases, AI will often produce code that only handles the happy path and breaks on unexpected input.",
                   hint: "Think about what AI-generated code usually leaves out when the prompt does not mention it.",
+                  assessmentType: "reasoning",
+                },
+                {
+                  id: "prompt-verification",
+                  title: "Include verification criteria",
+                  prompt:
+                    "Why should you add 'include a test for...' or 'verify by...' to your AI prompt?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "verify",
+                    "check",
+                    "test",
+                    "validate",
+                    "correct",
+                    "edge",
+                    "prove",
+                    "catch",
+                  ],
+                  successMessage:
+                    "Correct. Including verification criteria forces the AI to consider correctness during generation and gives you a concrete way to check the output.",
+                  hint: "Think about what you would do after the AI generates code \u2014 and how you could ask for that upfront.",
                   assessmentType: "reasoning",
                 },
               ],
@@ -3643,6 +4297,30 @@ export const curriculum: Curriculum = {
                   hint: "Think about what AI does not have access to when generating code.",
                   assessmentType: "reasoning",
                 },
+                {
+                  id: "ai-hallucinated-api",
+                  title: "Catch hallucinated APIs",
+                  prompt:
+                    "AI generates code using users.findFirst(). JavaScript arrays have find() but not findFirst(). How would you catch this error?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "tsc",
+                    "typecheck",
+                    "type check",
+                    "compile",
+                    "run",
+                    "test",
+                    "docs",
+                    "documentation",
+                    "MDN",
+                    "review",
+                  ],
+                  successMessage:
+                    "Correct. Running the TypeScript compiler (tsc --noEmit) or reading the docs would catch this immediately. Hallucinated methods compile-check is the fastest catch.",
+                  hint: "Think about the automated verification step that would flag a non-existent method.",
+                  assessmentType: "reasoning",
+                },
               ],
               transferTask: {
                 id: "transfer-ai-verification",
@@ -3755,6 +4433,19 @@ export const curriculum: Curriculum = {
                   hint: "Think about what a teammate would need to understand the change six months later.",
                   assessmentType: "reasoning",
                 },
+                {
+                  id: "diff-before-push",
+                  title: "Review before pushing",
+                  prompt:
+                    "What Git command shows the exact changes between your current branch and main before you push?",
+                  placeholder: "git ...",
+                  validationMode: "includes",
+                  acceptedAnswers: ["git diff main", "git diff origin/main"],
+                  successMessage:
+                    "Correct. git diff main shows every change you are about to share. Review your own work before asking others to review it.",
+                  hint: "You want to see the difference between your branch and the main branch.",
+                  assessmentType: "action",
+                },
               ],
               transferTask: {
                 id: "transfer-git-ticket-flow",
@@ -3777,6 +4468,28 @@ export const curriculum: Curriculum = {
                 hint: "Include branch strategy, commit quality, and at least one verification command before PR.",
                 assessmentType: "transfer",
               },
+              codeExercises: [
+                {
+                  id: "atomic-commit-message",
+                  title: "Write an atomic commit message",
+                  description:
+                    "Write a commit message for a change that adds email validation to a signup form. Follow the conventional format: type: description.",
+                  starterCode: "# Write your commit message below\n",
+                  language: "text",
+                  hint: "Use a prefix like 'feat:', 'fix:', or 'add:' followed by a description of the intent — not just 'update file'.",
+                  acceptedPatterns: ["feat:", "fix:", "add:", "email", "valid"],
+                },
+                {
+                  id: "git-log-review",
+                  title: "Review commit history",
+                  description:
+                    "Write the git command that shows a compact one-line log of commits on your current branch that are NOT on main.",
+                  starterCode: "# Write the git command\n",
+                  language: "text",
+                  hint: "Use git log --oneline with a range like main..HEAD to show only your branch's commits.",
+                  acceptedPatterns: ["git log", "--oneline", "main"],
+                },
+              ],
               competencies: [
                 { track: "VersionControl", targetLevel: "Functional" },
               ],
@@ -3988,6 +4701,27 @@ export const curriculum: Curriculum = {
                   hint: "Find it in the branch protection rules for the main branch.",
                   assessmentType: "action",
                 },
+                {
+                  id: "ci-failure-debug",
+                  title: "Debug a CI failure",
+                  prompt:
+                    "A CI job fails on npm test but passes on npm run lint. Where in GitHub Actions do you look to read the exact test failure?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "step",
+                    "log",
+                    "output",
+                    "click",
+                    "expand",
+                    "details",
+                    "npm test",
+                  ],
+                  successMessage:
+                    "Correct. Click into the failed job, expand the npm test step, and read the output \u2014 it shows the same error you would see locally.",
+                  hint: "Each step in a GitHub Actions job produces its own output log that you can expand.",
+                  assessmentType: "reasoning",
+                },
               ],
               transferTask: {
                 id: "transfer-ci-workflow",
@@ -4116,6 +4850,25 @@ export const curriculum: Curriculum = {
                   hint: "The goal is to have one source of truth for that logic instead of three copies.",
                   assessmentType: "action",
                 },
+                {
+                  id: "refactor-rename",
+                  title: "Rename for clarity",
+                  prompt:
+                    "A variable named `d` stores the number of days until expiry. What refactoring move improves this code without changing behavior?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "rename",
+                    "daysUntilExpiry",
+                    "descriptive",
+                    "name",
+                    "meaningful",
+                  ],
+                  successMessage:
+                    "Correct. Renaming d to daysUntilExpiry is the cheapest documentation you can write \u2014 the code explains itself.",
+                  hint: "The variable works fine but its name does not communicate its purpose.",
+                  assessmentType: "reasoning",
+                },
               ],
               transferTask: {
                 id: "transfer-refactoring",
@@ -4152,6 +4905,23 @@ export const curriculum: Curriculum = {
                     "isValidEmail",
                     "function isValidEmail",
                     "includes('@')",
+                  ],
+                },
+                {
+                  id: "rename-variable",
+                  title: "Rename for clarity",
+                  description:
+                    "The code below uses single-letter variable names that make it hard to understand. Rename the variables to be descriptive without changing the behavior.",
+                  starterCode:
+                    "function calc(p: number, q: number): number {\n  const r = p * q;\n  const t = r * 0.2;\n  return r - t;\n}",
+                  language: "typescript",
+                  hint: "What do p, q, r, and t actually represent? Give them names that explain their purpose.",
+                  acceptedPatterns: [
+                    "price",
+                    "quantity",
+                    "total",
+                    "discount",
+                    "subtotal",
                   ],
                 },
               ],
@@ -4463,6 +5233,28 @@ export const curriculum: Curriculum = {
                   hint: "Think about the cost of finding a bug in the last function vs. the first.",
                   assessmentType: "reasoning",
                 },
+                {
+                  id: "cli-error-handling",
+                  title: "Handle invalid input",
+                  prompt:
+                    "When a user runs your CLI tool without providing the required directory argument, what should the tool do instead of crashing with a stack trace?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "error message",
+                    "usage",
+                    "help",
+                    "exit",
+                    "print",
+                    "inform",
+                    "clear message",
+                    "non-zero",
+                  ],
+                  successMessage:
+                    "Correct. A professional CLI tool prints a clear error message and usage instructions, then exits with a non-zero code \u2014 never a raw stack trace.",
+                  hint: "Think about what you would want to see if you forgot an argument. Stack traces help developers, not users.",
+                  assessmentType: "reasoning" as const,
+                },
               ],
               transferTask: {
                 id: "transfer-cli-delivery",
@@ -4595,6 +5387,19 @@ export const curriculum: Curriculum = {
                   hint: "Think about what happens if someone sends a request directly to the API, skipping the UI.",
                   assessmentType: "reasoning",
                 },
+                {
+                  id: "crud-status-codes",
+                  title: "REST status codes",
+                  prompt:
+                    "What HTTP status code should a successful POST request return when creating a new resource? What about a successful DELETE?",
+                  placeholder: "POST: ..., DELETE: ...",
+                  validationMode: "includes",
+                  acceptedAnswers: ["201", "200", "204"],
+                  successMessage:
+                    "Correct. POST \u2192 201 Created (a new resource was made), DELETE \u2192 200 OK or 204 No Content (the resource was removed). Correct status codes make APIs predictable.",
+                  hint: "POST creates something new (which specific 2xx code?). DELETE removes something (200 or 204 are both acceptable).",
+                  assessmentType: "action" as const,
+                },
               ],
               transferTask: {
                 id: "transfer-crud-variation",
@@ -4726,6 +5531,28 @@ export const curriculum: Curriculum = {
                   hint: "Think about how you would know your fix actually solved the problem.",
                   assessmentType: "debugging",
                 },
+                {
+                  id: "minimal-fix",
+                  title: "Smallest possible fix",
+                  prompt:
+                    "After identifying the root cause of a bug, why should your fix be the smallest change possible instead of a larger rewrite?",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "risk",
+                    "break",
+                    "side effect",
+                    "regression",
+                    "scope",
+                    "verify",
+                    "isolate",
+                    "confidence",
+                  ],
+                  successMessage:
+                    "Correct. A minimal fix reduces the risk of introducing new bugs. The smaller the change, the easier it is to verify and the less likely it creates side effects.",
+                  hint: "Think about what could go wrong if you rewrote the entire function instead of fixing the one broken line.",
+                  assessmentType: "reasoning" as const,
+                },
               ],
               transferTask: {
                 id: "transfer-debugging-protocol",
@@ -4749,6 +5576,19 @@ export const curriculum: Curriculum = {
                 hint: "Start with reproduction, then narrow scope through observable signals.",
                 assessmentType: "transfer",
               },
+              codeExercises: [
+                {
+                  id: "add-diagnostic-logs",
+                  title: "Add diagnostic logging",
+                  description:
+                    "The function below silently returns undefined when it should return a user. Add console.log statements to determine why the user is not found.",
+                  starterCode:
+                    "function findUser(users: any[], email: string) {\n  const result = users.find(u => u.email === email);\n  return result;\n}\n\nconst users = [\n  { name: 'Alice', email: 'alice@test.com' },\n  { name: 'Bob', email: 'bob@test.com' },\n];\n\nconst found = findUser(users, 'Alice@test.com');\nconsole.log(found); // undefined — why?",
+                  language: "typescript",
+                  hint: "Add console.log to see the actual email values being compared. The issue is case sensitivity.",
+                  acceptedPatterns: ["console.log", "email", "u.email"],
+                },
+              ],
               competencies: [
                 { track: "Debugging", targetLevel: "Independent" },
                 { track: "DeliveryWorkflow", targetLevel: "Functional" },
@@ -4847,6 +5687,27 @@ export const curriculum: Curriculum = {
                     "Correct. Evidence is verifiable. Claims are not. A portfolio converts self-description into demonstrable capability.",
                   hint: "Think about the difference between saying you can do something and showing it.",
                   assessmentType: "reasoning",
+                },
+                {
+                  id: "clone-and-run-test",
+                  title: "The clone-and-run test",
+                  prompt:
+                    "What is the ultimate test that your portfolio project is ready to share? Describe the process in one sentence.",
+                  placeholder: "Short answer",
+                  validationMode: "includes",
+                  acceptedAnswers: [
+                    "clone",
+                    "fresh",
+                    "new directory",
+                    "follow readme",
+                    "run",
+                    "install",
+                    "works",
+                  ],
+                  successMessage:
+                    "Correct. Clone your repo into a fresh directory, follow only the README instructions, and verify everything works. If you get stuck, your docs have a gap.",
+                  hint: "Imagine someone who has never seen your project before. What would they try first?",
+                  assessmentType: "reasoning" as const,
                 },
               ],
               transferTask: {

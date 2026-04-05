@@ -38,7 +38,7 @@ export const phase1LabTemplates: Phase1LabTemplate[] = [
       {
         path: "project/src/index.ts",
         content:
-          'export function greet(name: string): string {\n  return `Hello, ${name}!`;\n}\n',
+          "export function greet(name: string): string {\n  return `Hello, ${name}!`;\n}\n",
       },
       {
         path: "project/src/utils/helpers.ts",
@@ -59,11 +59,7 @@ export const phase1LabTemplates: Phase1LabTemplate[] = [
       },
       {
         kind: "directory-structure",
-        paths: [
-          "project/src",
-          "project/src/utils",
-          "project/.config",
-        ],
+        paths: ["project/src", "project/src/utils", "project/.config"],
         shouldExist: true,
       },
       {
@@ -74,12 +70,18 @@ export const phase1LabTemplates: Phase1LabTemplate[] = [
     ],
     hints: {
       0: [
-        { level: 0, text: "Use a command to print the current directory path." },
+        {
+          level: 0,
+          text: "Use a command to print the current directory path.",
+        },
         { level: 1, text: "Run `Get-Location` or `pwd` to see where you are." },
       ],
       1: [
         { level: 0, text: "List everything, including hidden items." },
-        { level: 1, text: "Use `Get-ChildItem -Force` to reveal dotfiles and dotfolders." },
+        {
+          level: 1,
+          text: "Use `Get-ChildItem -Force` to reveal dotfiles and dotfolders.",
+        },
       ],
       2: [
         { level: 0, text: "Look for a folder whose name starts with a dot." },
@@ -103,7 +105,8 @@ export const phase1LabTemplates: Phase1LabTemplate[] = [
     initialFiles: [
       {
         path: "workspace/notes.md",
-        content: "# Keyboard Practice\n\nRecord the shortcuts you discover below.\n",
+        content:
+          "# Keyboard Practice\n\nRecord the shortcuts you discover below.\n",
       },
       {
         path: "workspace/app.ts",
@@ -111,7 +114,8 @@ export const phase1LabTemplates: Phase1LabTemplate[] = [
       },
       {
         path: "workspace/shortcut-log.md",
-        content: "# Shortcut Log\n\n| Action | Shortcut |\n|--------|----------|\n",
+        content:
+          "# Shortcut Log\n\n| Action | Shortcut |\n|--------|----------|\n",
       },
     ],
     rules: [
@@ -135,8 +139,14 @@ export const phase1LabTemplates: Phase1LabTemplate[] = [
     ],
     hints: {
       0: [
-        { level: 0, text: "Think about the modifier keys you press with letter keys." },
-        { level: 1, text: "Add entries like `| Open file | Ctrl+O |` to the log." },
+        {
+          level: 0,
+          text: "Think about the modifier keys you press with letter keys.",
+        },
+        {
+          level: 1,
+          text: "Add entries like `| Open file | Ctrl+O |` to the log.",
+        },
       ],
       1: [
         { level: 0, text: "Each row in the table needs pipes on both sides." },
@@ -144,7 +154,10 @@ export const phase1LabTemplates: Phase1LabTemplate[] = [
       ],
       2: [
         { level: 0, text: "Make sure you haven't deleted the log file." },
-        { level: 1, text: "The file must still exist at `workspace/shortcut-log.md`." },
+        {
+          level: 1,
+          text: "The file must still exist at `workspace/shortcut-log.md`.",
+        },
       ],
     },
   },
@@ -164,7 +177,8 @@ export const phase1LabTemplates: Phase1LabTemplate[] = [
     initialFiles: [
       {
         path: "reports/health-report.md",
-        content: "# System Health Report\n\n## OS\n\n## Processes\n\n## Disk\n\n## Memory\n",
+        content:
+          "# System Health Report\n\n## OS\n\n## Processes\n\n## Disk\n\n## Memory\n",
       },
       {
         path: "reports/example-report.md",
@@ -199,20 +213,38 @@ export const phase1LabTemplates: Phase1LabTemplate[] = [
     ],
     hints: {
       0: [
-        { level: 0, text: "Fill in the OS section with your operating system name and version." },
-        { level: 1, text: "Run `[System.Environment]::OSVersion` or `Get-ComputerInfo | Select-Object OsName` to find the OS." },
+        {
+          level: 0,
+          text: "Fill in the OS section with your operating system name and version.",
+        },
+        {
+          level: 1,
+          text: "Run `[System.Environment]::OSVersion` or `Get-ComputerInfo | Select-Object OsName` to find the OS.",
+        },
       ],
       1: [
         { level: 0, text: "Include a number with a unit like GB or MB." },
-        { level: 1, text: "Use `Get-CimInstance Win32_PhysicalMemory` or `systeminfo` to find memory values." },
+        {
+          level: 1,
+          text: "Use `Get-CimInstance Win32_PhysicalMemory` or `systeminfo` to find memory values.",
+        },
       ],
       2: [
-        { level: 0, text: "Make sure the Disk section has data below its heading." },
-        { level: 1, text: "Run `Get-PSDrive C | Select-Object Used, Free` and note the values." },
+        {
+          level: 0,
+          text: "Make sure the Disk section has data below its heading.",
+        },
+        {
+          level: 1,
+          text: "Run `Get-PSDrive C | Select-Object Used, Free` and note the values.",
+        },
       ],
       3: [
         { level: 0, text: "Don't delete the report file!" },
-        { level: 1, text: "The file must remain at `reports/health-report.md`." },
+        {
+          level: 1,
+          text: "The file must remain at `reports/health-report.md`.",
+        },
       ],
     },
   },
@@ -272,11 +304,17 @@ export const phase1LabTemplates: Phase1LabTemplate[] = [
     hints: {
       0: [
         { level: 0, text: "Create the backup directory first." },
-        { level: 1, text: "Run `New-Item -ItemType Directory -Path sandbox/backup`." },
+        {
+          level: 1,
+          text: "Run `New-Item -ItemType Directory -Path sandbox/backup`.",
+        },
       ],
       1: [
         { level: 0, text: "Copy the draft into backup before removing it." },
-        { level: 1, text: "Use `Copy-Item sandbox/draft-report.txt sandbox/backup/`." },
+        {
+          level: 1,
+          text: "Use `Copy-Item sandbox/draft-report.txt sandbox/backup/`.",
+        },
       ],
       2: [
         { level: 0, text: "Remove the original draft from the sandbox root." },
@@ -342,16 +380,31 @@ export const phase1LabTemplates: Phase1LabTemplate[] = [
     ],
     hints: {
       0: [
-        { level: 0, text: "Search for the filename across the entire project tree." },
-        { level: 1, text: "Run `Get-ChildItem -Recurse -Filter app.json` to find all matches." },
+        {
+          level: 0,
+          text: "Search for the filename across the entire project tree.",
+        },
+        {
+          level: 1,
+          text: "Run `Get-ChildItem -Recurse -Filter app.json` to find all matches.",
+        },
       ],
       1: [
-        { level: 0, text: "Look at what config.ts expects — it reads from a specific path." },
-        { level: 1, text: "The file content must include `ComputeLearn` as the appName." },
+        {
+          level: 0,
+          text: "Look at what config.ts expects — it reads from a specific path.",
+        },
+        {
+          level: 1,
+          text: "The file content must include `ComputeLearn` as the appName.",
+        },
       ],
       2: [
         { level: 0, text: "The old copy should no longer be in the archive." },
-        { level: 1, text: "Use `Move-Item` instead of `Copy-Item` so the original is removed." },
+        {
+          level: 1,
+          text: "Use `Move-Item` instead of `Copy-Item` so the original is removed.",
+        },
       ],
     },
   },
@@ -417,15 +470,27 @@ export const phase1LabTemplates: Phase1LabTemplate[] = [
     hints: {
       0: [
         { level: 0, text: "Create a new `.ps1` file in the workspace folder." },
-        { level: 1, text: "Create `workspace/cleanup.ps1` with your cleanup logic." },
+        {
+          level: 1,
+          text: "Create `workspace/cleanup.ps1` with your cleanup logic.",
+        },
       ],
       1: [
-        { level: 0, text: "Your script should use a command that removes files." },
-        { level: 1, text: "Use `Remove-Item` to delete files matching a pattern." },
+        {
+          level: 0,
+          text: "Your script should use a command that removes files.",
+        },
+        {
+          level: 1,
+          text: "Use `Remove-Item` to delete files matching a pattern.",
+        },
       ],
       2: [
         { level: 0, text: "Target only files ending in `.tmp`." },
-        { level: 1, text: "Use a wildcard like `*.tmp` in your Remove-Item call." },
+        {
+          level: 1,
+          text: "Use a wildcard like `*.tmp` in your Remove-Item call.",
+        },
       ],
       3: [
         { level: 0, text: "Make sure you don't delete important files." },
@@ -454,7 +519,8 @@ export const phase1LabTemplates: Phase1LabTemplate[] = [
       },
       {
         path: "lab/filter-script.ps1",
-        content: "# TODO: pipe processes.csv through Where-Object and Select-Object\n",
+        content:
+          "# TODO: pipe processes.csv through Where-Object and Select-Object\n",
       },
       {
         path: "lab/expected-output.md",
@@ -489,16 +555,28 @@ export const phase1LabTemplates: Phase1LabTemplate[] = [
     ],
     hints: {
       0: [
-        { level: 0, text: "Read the CSV first, then pipe the results through a filter." },
-        { level: 1, text: "Start with `Import-Csv lab/processes.csv | Where-Object { ... }`." },
+        {
+          level: 0,
+          text: "Read the CSV first, then pipe the results through a filter.",
+        },
+        {
+          level: 1,
+          text: "Start with `Import-Csv lab/processes.csv | Where-Object { ... }`.",
+        },
       ],
       1: [
-        { level: 0, text: "After filtering rows, narrow down which columns to keep." },
+        {
+          level: 0,
+          text: "After filtering rows, narrow down which columns to keep.",
+        },
         { level: 1, text: "Pipe into `Select-Object Name, Memory`." },
       ],
       2: [
         { level: 0, text: "The pipe character connects commands together." },
-        { level: 1, text: "Chain commands like `Import-Csv ... | Where-Object ... | Select-Object ...`." },
+        {
+          level: 1,
+          text: "Chain commands like `Import-Csv ... | Where-Object ... | Select-Object ...`.",
+        },
       ],
       3: [
         { level: 0, text: "Don't delete the script file." },
@@ -570,10 +648,16 @@ export const phase1LabTemplates: Phase1LabTemplate[] = [
     hints: {
       0: [
         { level: 0, text: "You need a loop to process each `.txt` file." },
-        { level: 1, text: "Use `foreach ($file in Get-ChildItem *.txt) { ... }` to iterate." },
+        {
+          level: 1,
+          text: "Use `foreach ($file in Get-ChildItem *.txt) { ... }` to iterate.",
+        },
       ],
       1: [
-        { level: 0, text: "Use a cmdlet that changes a file's name without moving it." },
+        {
+          level: 0,
+          text: "Use a cmdlet that changes a file's name without moving it.",
+        },
         { level: 1, text: "`Rename-Item` changes the name in place." },
       ],
       2: [
@@ -581,8 +665,14 @@ export const phase1LabTemplates: Phase1LabTemplate[] = [
         { level: 1, text: "Example: `$date = Get-Date -Format 'yyyy-MM-dd'`." },
       ],
       3: [
-        { level: 0, text: "Build the new name from the date and the original filename." },
-        { level: 1, text: 'Use `"${date}_$($file.Name)"` and pass it to `Rename-Item -NewName`.' },
+        {
+          level: 0,
+          text: "Build the new name from the date and the original filename.",
+        },
+        {
+          level: 1,
+          text: 'Use `"${date}_$($file.Name)"` and pass it to `Rename-Item -NewName`.',
+        },
       ],
     },
   },
@@ -614,7 +704,8 @@ export const phase1LabTemplates: Phase1LabTemplate[] = [
       },
       {
         path: "downloads/setup-notes.txt",
-        content: "Install steps:\n1. Download installer\n2. Run as admin\n3. Reboot\n",
+        content:
+          "Install steps:\n1. Download installer\n2. Run as admin\n3. Reboot\n",
       },
       {
         path: "downloads/organize.ps1",
@@ -656,19 +747,34 @@ export const phase1LabTemplates: Phase1LabTemplate[] = [
     hints: {
       0: [
         { level: 0, text: "Loop through every file in the downloads folder." },
-        { level: 1, text: "Use `foreach ($file in Get-ChildItem -File) { ... }`." },
+        {
+          level: 1,
+          text: "Use `foreach ($file in Get-ChildItem -File) { ... }`.",
+        },
       ],
       1: [
-        { level: 0, text: "Use a cmdlet that relocates a file to a different directory." },
+        {
+          level: 0,
+          text: "Use a cmdlet that relocates a file to a different directory.",
+        },
         { level: 1, text: "`Move-Item` moves a file to a new path." },
       ],
       2: [
-        { level: 0, text: "Each file object has a property for its extension." },
-        { level: 1, text: "Access `$file.Extension` and trim the leading dot with `.TrimStart('.')`." },
+        {
+          level: 0,
+          text: "Each file object has a property for its extension.",
+        },
+        {
+          level: 1,
+          text: "Access `$file.Extension` and trim the leading dot with `.TrimStart('.')`.",
+        },
       ],
       3: [
         { level: 0, text: "Create the target folder if it doesn't exist yet." },
-        { level: 1, text: "Use `New-Item -ItemType Directory -Force` to create the subfolder." },
+        {
+          level: 1,
+          text: "Use `New-Item -ItemType Directory -Force` to create the subfolder.",
+        },
       ],
       4: [
         { level: 0, text: "Store the extension in a variable for reuse." },
@@ -692,8 +798,7 @@ export const phase1LabTemplates: Phase1LabTemplate[] = [
     initialFiles: [
       {
         path: "vault/README.md",
-        content:
-          "# My Engineering Vault\n\nA place to capture what I learn.\n",
+        content: "# My Engineering Vault\n\nA place to capture what I learn.\n",
       },
       {
         path: "vault/templates/note-template.md",
@@ -728,15 +833,24 @@ export const phase1LabTemplates: Phase1LabTemplate[] = [
     hints: {
       0: [
         { level: 0, text: "Create a `notes` folder inside the vault." },
-        { level: 1, text: "Run `New-Item -ItemType Directory -Path vault/notes`." },
+        {
+          level: 1,
+          text: "Run `New-Item -ItemType Directory -Path vault/notes`.",
+        },
       ],
       1: [
         { level: 0, text: "Link between notes using double-bracket syntax." },
-        { level: 1, text: "Write `[[other-note]]` inside one of your notes to create a wiki-link." },
+        {
+          level: 1,
+          text: "Write `[[other-note]]` inside one of your notes to create a wiki-link.",
+        },
       ],
       2: [
         { level: 0, text: "Add tags so you can find notes by topic later." },
-        { level: 1, text: "Add `#powershell` or `#filesystem` at the bottom of your note." },
+        {
+          level: 1,
+          text: "Add `#powershell` or `#filesystem` at the bottom of your note.",
+        },
       ],
       3: [
         { level: 0, text: "Don't delete the vault README." },
@@ -801,7 +915,8 @@ export const phase2LabTemplates: Phase2LabTemplate[] = [
       },
       {
         path: "app/FLOW.md",
-        content: "# Data Flow\n\nDocument the data flow through this project below.\n",
+        content:
+          "# Data Flow\n\nDocument the data flow through this project below.\n",
       },
     ],
     rules: [
@@ -833,19 +948,40 @@ export const phase2LabTemplates: Phase2LabTemplate[] = [
     hints: {
       0: [
         { level: 0, text: "Start at the entry point — which file runs first?" },
-        { level: 1, text: "Open `app/index.ts`. It imports from two modules — note them in FLOW.md." },
+        {
+          level: 1,
+          text: "Open `app/index.ts`. It imports from two modules — note them in FLOW.md.",
+        },
       ],
       1: [
-        { level: 0, text: "Follow the first import — where does the data come from?" },
-        { level: 1, text: "Mention `user-service.ts` and how `fetchUsers` calls the database." },
+        {
+          level: 0,
+          text: "Follow the first import — where does the data come from?",
+        },
+        {
+          level: 1,
+          text: "Mention `user-service.ts` and how `fetchUsers` calls the database.",
+        },
       ],
       2: [
-        { level: 0, text: "What provides the raw data that the service returns?" },
-        { level: 1, text: "The `database.ts` module simulates a DB query — document this in FLOW.md." },
+        {
+          level: 0,
+          text: "What provides the raw data that the service returns?",
+        },
+        {
+          level: 1,
+          text: "The `database.ts` module simulates a DB query — document this in FLOW.md.",
+        },
       ],
       3: [
-        { level: 0, text: "How is the raw data transformed before being printed?" },
-        { level: 1, text: "The `formatReport` function in `formatter.ts` builds the output string." },
+        {
+          level: 0,
+          text: "How is the raw data transformed before being printed?",
+        },
+        {
+          level: 1,
+          text: "The `formatReport` function in `formatter.ts` builds the output string.",
+        },
       ],
     },
   },
@@ -875,7 +1011,8 @@ export const phase2LabTemplates: Phase2LabTemplate[] = [
       },
       {
         path: "src/debug-log.md",
-        content: "# Debug Log\n\n## Observed behavior\n\n## Hypothesis\n\n## Fix applied\n",
+        content:
+          "# Debug Log\n\n## Observed behavior\n\n## Hypothesis\n\n## Fix applied\n",
       },
     ],
     rules: [
@@ -899,16 +1036,28 @@ export const phase2LabTemplates: Phase2LabTemplate[] = [
     ],
     hints: {
       0: [
-        { level: 0, text: "Look at the loop condition — does it include all numbers up to N?" },
-        { level: 1, text: "Change `i < n` to `i <= n` so the loop includes N itself." },
+        {
+          level: 0,
+          text: "Look at the loop condition — does it include all numbers up to N?",
+        },
+        {
+          level: 1,
+          text: "Change `i < n` to `i <= n` so the loop includes N itself.",
+        },
       ],
       1: [
         { level: 0, text: "Document what you observed before the fix." },
-        { level: 1, text: "Write your hypothesis in the debug log, e.g., 'The loop stops one iteration early.'" },
+        {
+          level: 1,
+          text: "Write your hypothesis in the debug log, e.g., 'The loop stops one iteration early.'",
+        },
       ],
       2: [
         { level: 0, text: "Describe the fix you applied in the log." },
-        { level: 1, text: "Note that you changed `<` to `<=` in the Fix section of debug-log.md." },
+        {
+          level: 1,
+          text: "Note that you changed `<` to `<=` in the Fix section of debug-log.md.",
+        },
       ],
     },
   },
@@ -980,11 +1129,17 @@ export const phase2LabTemplates: Phase2LabTemplate[] = [
     hints: {
       0: [
         { level: 0, text: "Create three directories: src, test, and docs." },
-        { level: 1, text: "Run `mkdir messy-project/src messy-project/test messy-project/docs`." },
+        {
+          level: 1,
+          text: "Run `mkdir messy-project/src messy-project/test messy-project/docs`.",
+        },
       ],
       1: [
         { level: 0, text: "Move source code files into src/." },
-        { level: 1, text: "Move `app.ts` and `helper.ts` into `messy-project/src/`." },
+        {
+          level: 1,
+          text: "Move `app.ts` and `helper.ts` into `messy-project/src/`.",
+        },
       ],
       2: [
         { level: 0, text: "Move test files into test/." },
@@ -1054,20 +1209,44 @@ export const phase2LabTemplates: Phase2LabTemplate[] = [
     ],
     hints: {
       0: [
-        { level: 0, text: "Replace exact versions with semver ranges using ^ or ~." },
-        { level: 1, text: 'Change `"express": "4.17.1"` to `"express": "^4.17.1"` to allow minor updates.' },
+        {
+          level: 0,
+          text: "Replace exact versions with semver ranges using ^ or ~.",
+        },
+        {
+          level: 1,
+          text: 'Change `"express": "4.17.1"` to `"express": "^4.17.1"` to allow minor updates.',
+        },
       ],
       1: [
-        { level: 0, text: "Document why you chose each version range in UPGRADE.md." },
-        { level: 1, text: "Under each heading, write the current pinned version and the new range." },
+        {
+          level: 0,
+          text: "Document why you chose each version range in UPGRADE.md.",
+        },
+        {
+          level: 1,
+          text: "Under each heading, write the current pinned version and the new range.",
+        },
       ],
       2: [
-        { level: 0, text: "Explain the difference between ^ and ~ in your notes." },
-        { level: 1, text: "^ allows minor+patch updates; ~ allows only patch updates. Note which you chose." },
+        {
+          level: 0,
+          text: "Explain the difference between ^ and ~ in your notes.",
+        },
+        {
+          level: 1,
+          text: "^ allows minor+patch updates; ~ allows only patch updates. Note which you chose.",
+        },
       ],
       3: [
-        { level: 0, text: "Make sure all dependencies still appear in package.json." },
-        { level: 1, text: "Don't remove any dependency — just update the version strings." },
+        {
+          level: 0,
+          text: "Make sure all dependencies still appear in package.json.",
+        },
+        {
+          level: 1,
+          text: "Don't remove any dependency — just update the version strings.",
+        },
       ],
     },
   },
@@ -1088,7 +1267,7 @@ export const phase2LabTemplates: Phase2LabTemplate[] = [
       {
         path: "src/fizzbuzz.ts",
         content:
-          "// Write your fizzBuzz function here.\n// It should take a number n and return a string[] of results from 1 to n.\n// Rules: divisible by 3 → \"Fizz\", by 5 → \"Buzz\", both → \"FizzBuzz\", else the number as a string.\n\nexport function fizzBuzz(n: number): string[] {\n  // TODO: implement\n  return [];\n}\n",
+          '// Write your fizzBuzz function here.\n// It should take a number n and return a string[] of results from 1 to n.\n// Rules: divisible by 3 → "Fizz", by 5 → "Buzz", both → "FizzBuzz", else the number as a string.\n\nexport function fizzBuzz(n: number): string[] {\n  // TODO: implement\n  return [];\n}\n',
       },
       {
         path: "src/fizzbuzz.test.ts",
@@ -1123,20 +1302,112 @@ export const phase2LabTemplates: Phase2LabTemplate[] = [
     ],
     hints: {
       0: [
-        { level: 0, text: "Use a for loop and conditionals to build the result array." },
-        { level: 1, text: "Loop `for (let i = 1; i <= n; i++)` and push the right string based on modulo checks." },
+        {
+          level: 0,
+          text: "Use a for loop and conditionals to build the result array.",
+        },
+        {
+          level: 1,
+          text: "Loop `for (let i = 1; i <= n; i++)` and push the right string based on modulo checks.",
+        },
       ],
       1: [
         { level: 0, text: "Check divisibility using the modulo operator %." },
-        { level: 1, text: "Use `if (i % 15 === 0)` for FizzBuzz, then `% 3` for Fizz, then `% 5` for Buzz." },
+        {
+          level: 1,
+          text: "Use `if (i % 15 === 0)` for FizzBuzz, then `% 3` for Fizz, then `% 5` for Buzz.",
+        },
       ],
       2: [
         { level: 0, text: 'Numbers divisible by 3 produce "Fizz".' },
-        { level: 1, text: 'Push `"Fizz"` when `i % 3 === 0` (and not also divisible by 5).' },
+        {
+          level: 1,
+          text: 'Push `"Fizz"` when `i % 3 === 0` (and not also divisible by 5).',
+        },
       ],
       3: [
         { level: 0, text: 'Numbers divisible by 5 produce "Buzz".' },
-        { level: 1, text: 'Push `"Buzz"` when `i % 5 === 0` (and not also divisible by 3).' },
+        {
+          level: 1,
+          text: 'Push `"Buzz"` when `i % 5 === 0` (and not also divisible by 3).',
+        },
+      ],
+    },
+  },
+
+  // -----------------------------------------------------------------------
+  // 5b. lesson-data-structures — Arrays, Objects, and Data Manipulation
+  // -----------------------------------------------------------------------
+  {
+    id: "lab-data-structures",
+    lessonId: "lesson-data-structures",
+    title: "Transform and Filter a User Dataset",
+    description:
+      "You have an array of user objects. Write functions to filter active users, extract their emails using .map(), and find a user by ID. Use destructuring where appropriate.",
+    difficulty: 3,
+    scaffoldingLevel: "goal-driven",
+    maxResets: 0,
+    initialFiles: [
+      {
+        path: "src/users.ts",
+        content:
+          "type User = {\n  id: number;\n  name: string;\n  email: string;\n  active: boolean;\n};\n\nconst users: User[] = [\n  { id: 1, name: 'Alice', email: 'alice@example.com', active: true },\n  { id: 2, name: 'Bob', email: 'bob@example.com', active: false },\n  { id: 3, name: 'Charlie', email: 'charlie@example.com', active: true },\n  { id: 4, name: 'Diana', email: 'diana@example.com', active: true },\n];\n\n// 1. Return only active users\nexport function getActiveUsers(data: User[]): User[] {\n  // TODO: use .filter()\n  return [];\n}\n\n// 2. Return an array of just email strings\nexport function getEmails(data: User[]): string[] {\n  // TODO: use .map()\n  return [];\n}\n\n// 3. Find a user by ID, return undefined if not found\nexport function findUserById(data: User[], id: number): User | undefined {\n  // TODO: use .find()\n  return undefined;\n}\n\n// Test your functions\nconsole.log('Active:', getActiveUsers(users).length, '(expected 3)');\nconsole.log('Emails:', getEmails(users).length, '(expected 4)');\nconsole.log('Find #3:', findUserById(users, 3)?.name, '(expected Charlie)');\n",
+      },
+      {
+        path: "src/users.test.ts",
+        content:
+          "import { getActiveUsers, getEmails, findUserById } from './users';\n\nconst testUsers = [\n  { id: 1, name: 'Alice', email: 'alice@test.com', active: true },\n  { id: 2, name: 'Bob', email: 'bob@test.com', active: false },\n];\n\nconsole.log('getActiveUsers returns 1 active:', getActiveUsers(testUsers).length === 1);\nconsole.log('getEmails returns 2 emails:', getEmails(testUsers).length === 2);\nconsole.log('findUserById(1) is Alice:', findUserById(testUsers, 1)?.name === 'Alice');\nconsole.log('findUserById(99) is undefined:', findUserById(testUsers, 99) === undefined);\n",
+      },
+    ],
+    rules: [
+      {
+        kind: "code-behavior",
+        requiredPatterns: [".filter(", ".map(", ".find("],
+        forbiddenPatterns: ["return \\[\\];\n}", "return undefined;\n}"],
+      },
+      {
+        kind: "content-match",
+        path: "src/users.ts",
+        pattern: "\\.active",
+        isRegex: true,
+      },
+      {
+        kind: "content-match",
+        path: "src/users.ts",
+        pattern: "\\.email",
+        isRegex: true,
+      },
+    ],
+    hints: {
+      0: [
+        {
+          level: 0,
+          text: "Use .filter() with a condition that checks the active property.",
+        },
+        {
+          level: 1,
+          text: "Return data.filter(user => user.active) to keep only active users.",
+        },
+      ],
+      1: [
+        {
+          level: 0,
+          text: "Use .map() to transform each user object into just their email string.",
+        },
+        {
+          level: 1,
+          text: "Return data.map(user => user.email) to extract the email field.",
+        },
+      ],
+      2: [
+        {
+          level: 0,
+          text: "Use .find() which returns the first matching element or undefined.",
+        },
+        {
+          level: 1,
+          text: "Return data.find(user => user.id === id) to locate a user by their ID.",
+        },
       ],
     },
   },
@@ -1192,20 +1463,38 @@ export const phase2LabTemplates: Phase2LabTemplate[] = [
     ],
     hints: {
       0: [
-        { level: 0, text: "Define a User type with id, name, email, and age fields." },
-        { level: 1, text: "In `types.ts`: `export type User = { id: number; name: string; email: string; age: number };`" },
+        {
+          level: 0,
+          text: "Define a User type with id, name, email, and age fields.",
+        },
+        {
+          level: 1,
+          text: "In `types.ts`: `export type User = { id: number; name: string; email: string; age: number };`",
+        },
       ],
       1: [
-        { level: 0, text: "Use the User type as the return type and parameter type in user-service.ts." },
-        { level: 1, text: "Change `getUser(id: any): any` to `getUser(id: number): User`." },
+        {
+          level: 0,
+          text: "Use the User type as the return type and parameter type in user-service.ts.",
+        },
+        {
+          level: 1,
+          text: "Change `getUser(id: any): any` to `getUser(id: number): User`.",
+        },
       ],
       2: [
         { level: 0, text: "Make sure User is exported from types.ts." },
-        { level: 1, text: "Add `export` before the type definition: `export type User = { ... }`." },
+        {
+          level: 1,
+          text: "Add `export` before the type definition: `export type User = { ... }`.",
+        },
       ],
       3: [
         { level: 0, text: "Import the User type into user-service.ts." },
-        { level: 1, text: 'Add `import { User } from "./types";` at the top of user-service.ts.' },
+        {
+          level: 1,
+          text: 'Add `import { User } from "./types";` at the top of user-service.ts.',
+        },
       ],
     },
   },
@@ -1260,12 +1549,24 @@ export const phase2LabTemplates: Phase2LabTemplate[] = [
     ],
     hints: {
       0: [
-        { level: 0, text: "Create a config.json for non-secret configuration." },
-        { level: 1, text: 'Create `server/config.json` with `{ "port": 3000, "dbUrl": "postgres://localhost:5432/mydb" }`.' },
+        {
+          level: 0,
+          text: "Create a config.json for non-secret configuration.",
+        },
+        {
+          level: 1,
+          text: 'Create `server/config.json` with `{ "port": 3000, "dbUrl": "postgres://localhost:5432/mydb" }`.',
+        },
       ],
       1: [
-        { level: 0, text: "Secrets should never go in JSON files — use .env instead." },
-        { level: 1, text: "Create `server/.env` with `API_KEY=sk-secret-key-12345`." },
+        {
+          level: 0,
+          text: "Secrets should never go in JSON files — use .env instead.",
+        },
+        {
+          level: 1,
+          text: "Create `server/.env` with `API_KEY=sk-secret-key-12345`.",
+        },
       ],
       2: [
         { level: 0, text: "The config.json should contain the port number." },
@@ -1273,7 +1574,10 @@ export const phase2LabTemplates: Phase2LabTemplate[] = [
       ],
       3: [
         { level: 0, text: "The .env file should contain the API key." },
-        { level: 1, text: "Add `API_KEY=sk-secret-key-12345` to the .env file." },
+        {
+          level: 1,
+          text: "Add `API_KEY=sk-secret-key-12345` to the .env file.",
+        },
       ],
     },
   },
@@ -1304,7 +1608,7 @@ export const phase2LabTemplates: Phase2LabTemplate[] = [
       {
         path: "crash/src/formatter.ts",
         content:
-          "export function formatUsers(users: { name: string }[] | undefined) {\n  // Line 12 below is where the error occurs\n  // The function doesn't check for undefined before using .map\n  const names = users.map((u) => u.name);\n  return names.join(\", \");\n}\n",
+          'export function formatUsers(users: { name: string }[] | undefined) {\n  // Line 12 below is where the error occurs\n  // The function doesn\'t check for undefined before using .map\n  const names = users.map((u) => u.name);\n  return names.join(", ");\n}\n',
       },
     ],
     rules: [
@@ -1329,15 +1633,30 @@ export const phase2LabTemplates: Phase2LabTemplate[] = [
     ],
     hints: {
       0: [
-        { level: 0, text: "The first line of a stack trace tells you the error type and message." },
-        { level: 1, text: "The error type is `TypeError` — write it in the Error Type section." },
+        {
+          level: 0,
+          text: "The first line of a stack trace tells you the error type and message.",
+        },
+        {
+          level: 1,
+          text: "The error type is `TypeError` — write it in the Error Type section.",
+        },
       ],
       1: [
-        { level: 0, text: "Read the error message carefully — what value was being accessed?" },
-        { level: 1, text: "The message is: \"Cannot read properties of undefined (reading 'map')\"." },
+        {
+          level: 0,
+          text: "Read the error message carefully — what value was being accessed?",
+        },
+        {
+          level: 1,
+          text: "The message is: \"Cannot read properties of undefined (reading 'map')\".",
+        },
       ],
       2: [
-        { level: 0, text: "The top frame in the stack trace shows where the error originated." },
+        {
+          level: 0,
+          text: "The top frame in the stack trace shows where the error originated.",
+        },
         { level: 1, text: "The origin is `src/formatter.ts` at line 12." },
       ],
     },
@@ -1387,16 +1706,34 @@ export const phase2LabTemplates: Phase2LabTemplate[] = [
     ],
     hints: {
       0: [
-        { level: 0, text: "Create a .vscode folder and a launch.json inside it." },
-        { level: 1, text: 'Create `shop/.vscode/launch.json` with a `{ "version": "0.2.0", "configurations": [...] }` structure.' },
+        {
+          level: 0,
+          text: "Create a .vscode folder and a launch.json inside it.",
+        },
+        {
+          level: 1,
+          text: 'Create `shop/.vscode/launch.json` with a `{ "version": "0.2.0", "configurations": [...] }` structure.',
+        },
       ],
       1: [
-        { level: 0, text: "The launch.json needs at least one configuration to run a Node file." },
-        { level: 1, text: 'Add a config with `"type": "node"`, `"request": "launch"`, and `"program": "${workspaceFolder}/src/pricing.ts"`.' },
+        {
+          level: 0,
+          text: "The launch.json needs at least one configuration to run a Node file.",
+        },
+        {
+          level: 1,
+          text: 'Add a config with `"type": "node"`, `"request": "launch"`, and `"program": "${workspaceFolder}/src/pricing.ts"`.',
+        },
       ],
       2: [
-        { level: 0, text: "Look at which variable is being subtracted — is it the right one?" },
-        { level: 1, text: "Change `price - discountPercent` to `price - discountAmount`." },
+        {
+          level: 0,
+          text: "Look at which variable is being subtracted — is it the right one?",
+        },
+        {
+          level: 1,
+          text: "Change `price - discountPercent` to `price - discountAmount`.",
+        },
       ],
     },
   },
@@ -1421,7 +1758,7 @@ export const phase2LabTemplates: Phase2LabTemplate[] = [
       {
         path: "my-project/src/index.ts",
         content:
-          'export function greet(name: string): string {\n  return `Hello, ${name}!`;\n}\n',
+          "export function greet(name: string): string {\n  return `Hello, ${name}!`;\n}\n",
       },
       {
         path: "my-project/package.json",
@@ -1470,23 +1807,47 @@ export const phase2LabTemplates: Phase2LabTemplate[] = [
     hints: {
       0: [
         { level: 0, text: "Create a .gitignore file in the project root." },
-        { level: 1, text: "Create `my-project/.gitignore` to list patterns of files Git should ignore." },
+        {
+          level: 1,
+          text: "Create `my-project/.gitignore` to list patterns of files Git should ignore.",
+        },
       ],
       1: [
-        { level: 0, text: "Build artifacts like dist/ and node_modules/ should be ignored." },
-        { level: 1, text: "Add `node_modules/` and `dist/` on separate lines in .gitignore." },
+        {
+          level: 0,
+          text: "Build artifacts like dist/ and node_modules/ should be ignored.",
+        },
+        {
+          level: 1,
+          text: "Add `node_modules/` and `dist/` on separate lines in .gitignore.",
+        },
       ],
       2: [
         { level: 0, text: "Secret files must never be committed." },
-        { level: 1, text: "Add `.env` to .gitignore to prevent committing secrets." },
+        {
+          level: 1,
+          text: "Add `.env` to .gitignore to prevent committing secrets.",
+        },
       ],
       3: [
-        { level: 0, text: "Write a commit message that describes what this initial commit contains." },
-        { level: 1, text: 'Create `COMMIT_MSG.md` with a message like "Initial project setup with src and build config".' },
+        {
+          level: 0,
+          text: "Write a commit message that describes what this initial commit contains.",
+        },
+        {
+          level: 1,
+          text: 'Create `COMMIT_MSG.md` with a message like "Initial project setup with src and build config".',
+        },
       ],
       4: [
-        { level: 0, text: "A good commit message is at least a full sentence." },
-        { level: 1, text: "Make sure the message is at least 10 characters long and describes the change." },
+        {
+          level: 0,
+          text: "A good commit message is at least a full sentence.",
+        },
+        {
+          level: 1,
+          text: "Make sure the message is at least 10 characters long and describes the change.",
+        },
       ],
     },
   },
@@ -1506,8 +1867,7 @@ export const phase2LabTemplates: Phase2LabTemplate[] = [
     initialFiles: [
       {
         path: "repo/main.ts",
-        content:
-          "// Main branch code\nexport const version = \"1.0.0\";\n",
+        content: '// Main branch code\nexport const version = "1.0.0";\n',
       },
       {
         path: "repo/BRANCHES.md",
@@ -1542,20 +1902,38 @@ export const phase2LabTemplates: Phase2LabTemplate[] = [
     ],
     hints: {
       0: [
-        { level: 0, text: "Create a new file to represent work done on the feature branch." },
-        { level: 1, text: "Create `repo/feature.ts` with an exported function or constant." },
+        {
+          level: 0,
+          text: "Create a new file to represent work done on the feature branch.",
+        },
+        {
+          level: 1,
+          text: "Create `repo/feature.ts` with an exported function or constant.",
+        },
       ],
       1: [
         { level: 0, text: "Document the branch name you would use." },
-        { level: 1, text: "Write a branch name like `feature/add-login` in the Branch Name section." },
+        {
+          level: 1,
+          text: "Write a branch name like `feature/add-login` in the Branch Name section.",
+        },
       ],
       2: [
         { level: 0, text: "Record the merge status of the branch." },
-        { level: 1, text: 'Write "Merged to main" or "Complete" in the Merge Status section.' },
+        {
+          level: 1,
+          text: 'Write "Merged to main" or "Complete" in the Merge Status section.',
+        },
       ],
       3: [
-        { level: 0, text: "The feature file should export something meaningful." },
-        { level: 1, text: 'Add `export const featureName = "login";` or similar to feature.ts.' },
+        {
+          level: 0,
+          text: "The feature file should export something meaningful.",
+        },
+        {
+          level: 1,
+          text: 'Add `export const featureName = "login";` or similar to feature.ts.',
+        },
       ],
     },
   },
@@ -1610,16 +1988,31 @@ export const phase2LabTemplates: Phase2LabTemplate[] = [
     ],
     hints: {
       0: [
-        { level: 0, text: "Remove ALL conflict markers: <<<<<<<, =======, and >>>>>>>." },
-        { level: 1, text: "Delete the lines containing `<<<<<<< HEAD`, `=======`, and `>>>>>>> feature/production-settings`." },
+        {
+          level: 0,
+          text: "Remove ALL conflict markers: <<<<<<<, =======, and >>>>>>>.",
+        },
+        {
+          level: 1,
+          text: "Delete the lines containing `<<<<<<< HEAD`, `=======`, and `>>>>>>> feature/production-settings`.",
+        },
       ],
       1: [
-        { level: 0, text: "Choose one version of the conflicting lines (or combine them)." },
-        { level: 1, text: "Keep either `port: 3000, debug: true` or `port: 8080, debug: false` — or pick each value." },
+        {
+          level: 0,
+          text: "Choose one version of the conflicting lines (or combine them).",
+        },
+        {
+          level: 1,
+          text: "Keep either `port: 3000, debug: true` or `port: 8080, debug: false` — or pick each value.",
+        },
       ],
       2: [
         { level: 0, text: "Document what you chose and why in RESOLUTION.md." },
-        { level: 1, text: "Write which port and debug values you kept and your reasoning." },
+        {
+          level: 1,
+          text: "Write which port and debug values you kept and your reasoning.",
+        },
       ],
     },
   },
@@ -1644,7 +2037,7 @@ export const phase2LabTemplates: Phase2LabTemplate[] = [
       {
         path: "http/requests.md",
         content:
-          "# HTTP Requests\n\nFill in the correct HTTP method for each operation:\n\n## Get all users\nMethod: ___\nURL: /api/users\n\n## Create a new user\nMethod: ___\nURL: /api/users\nBody: { \"name\": \"Alice\" }\n\n## Delete user 42\nMethod: ___\nURL: /api/users/42\n",
+          '# HTTP Requests\n\nFill in the correct HTTP method for each operation:\n\n## Get all users\nMethod: ___\nURL: /api/users\n\n## Create a new user\nMethod: ___\nURL: /api/users\nBody: { "name": "Alice" }\n\n## Delete user 42\nMethod: ___\nURL: /api/users/42\n',
       },
       {
         path: "http/responses.md",
@@ -1686,19 +2079,34 @@ export const phase2LabTemplates: Phase2LabTemplate[] = [
     hints: {
       0: [
         { level: 0, text: "Retrieving data uses which HTTP method?" },
-        { level: 1, text: "Replace `___` with `GET` for the 'Get all users' request." },
+        {
+          level: 1,
+          text: "Replace `___` with `GET` for the 'Get all users' request.",
+        },
       ],
       1: [
         { level: 0, text: "Creating a new resource uses which method?" },
-        { level: 1, text: "Replace `___` with `POST` for the 'Create a new user' request." },
+        {
+          level: 1,
+          text: "Replace `___` with `POST` for the 'Create a new user' request.",
+        },
       ],
       2: [
         { level: 0, text: "Removing a resource uses which method?" },
-        { level: 1, text: "Replace `___` with `DELETE` for the 'Delete user 42' request." },
+        {
+          level: 1,
+          text: "Replace `___` with `DELETE` for the 'Delete user 42' request.",
+        },
       ],
       3: [
-        { level: 0, text: "Use the reference table to match status codes to scenarios." },
-        { level: 1, text: "201 = Created, 404 = Not Found, 401 = Unauthorized." },
+        {
+          level: 0,
+          text: "Use the reference table to match status codes to scenarios.",
+        },
+        {
+          level: 1,
+          text: "201 = Created, 404 = Not Found, 401 = Unauthorized.",
+        },
       ],
     },
   },
@@ -1755,20 +2163,38 @@ export const phase2LabTemplates: Phase2LabTemplate[] = [
     ],
     hints: {
       0: [
-        { level: 0, text: "The List Users request retrieves data — what method is that?" },
-        { level: 1, text: 'Replace `"___"` with `"GET"` for the List Users request.' },
+        {
+          level: 0,
+          text: "The List Users request retrieves data — what method is that?",
+        },
+        {
+          level: 1,
+          text: 'Replace `"___"` with `"GET"` for the List Users request.',
+        },
       ],
       1: [
-        { level: 0, text: "The Create User request sends data to create a resource." },
-        { level: 1, text: 'Replace `"___"` with `"POST"` for the Create User request.' },
+        {
+          level: 0,
+          text: "The Create User request sends data to create a resource.",
+        },
+        {
+          level: 1,
+          text: 'Replace `"___"` with `"POST"` for the Create User request.',
+        },
       ],
       2: [
         { level: 0, text: "The Delete User request removes a resource." },
-        { level: 1, text: 'Replace `"___"` with `"DELETE"` for the Delete User request.' },
+        {
+          level: 1,
+          text: 'Replace `"___"` with `"DELETE"` for the Delete User request.',
+        },
       ],
       3: [
         { level: 0, text: "The environment needs a real baseUrl value." },
-        { level: 1, text: 'Set `"value"` to `"http://localhost:3000"` in environment.json.' },
+        {
+          level: 1,
+          text: 'Set `"value"` to `"http://localhost:3000"` in environment.json.',
+        },
       ],
     },
   },
@@ -1830,23 +2256,50 @@ export const phase2LabTemplates: Phase2LabTemplate[] = [
     hints: {
       0: [
         { level: 0, text: "Create a .env file with your API token." },
-        { level: 1, text: "Create `api-project/.env` with `API_TOKEN=your-secret-token-here`." },
+        {
+          level: 1,
+          text: "Create `api-project/.env` with `API_TOKEN=your-secret-token-here`.",
+        },
       ],
       1: [
-        { level: 0, text: "The token value in .env should look like a real token." },
-        { level: 1, text: "Use a value like `API_TOKEN=sk-abc123xyz` in the .env file." },
+        {
+          level: 0,
+          text: "The token value in .env should look like a real token.",
+        },
+        {
+          level: 1,
+          text: "Use a value like `API_TOKEN=sk-abc123xyz` in the .env file.",
+        },
       ],
       2: [
-        { level: 0, text: "Prevent .env from being committed to version control." },
-        { level: 1, text: "Create `api-project/.gitignore` and add `.env` to it." },
+        {
+          level: 0,
+          text: "Prevent .env from being committed to version control.",
+        },
+        {
+          level: 1,
+          text: "Create `api-project/.gitignore` and add `.env` to it.",
+        },
       ],
       3: [
-        { level: 0, text: "The .gitignore must list .env to keep secrets out of the repo." },
-        { level: 1, text: "Add a line with just `.env` in the .gitignore file." },
+        {
+          level: 0,
+          text: "The .gitignore must list .env to keep secrets out of the repo.",
+        },
+        {
+          level: 1,
+          text: "Add a line with just `.env` in the .gitignore file.",
+        },
       ],
       4: [
-        { level: 0, text: "Replace the hardcoded token with an environment variable." },
-        { level: 1, text: 'Change `const API_TOKEN = "hardcoded..."` to `const API_TOKEN = process.env.API_TOKEN`.' },
+        {
+          level: 0,
+          text: "Replace the hardcoded token with an environment variable.",
+        },
+        {
+          level: 1,
+          text: 'Change `const API_TOKEN = "hardcoded..."` to `const API_TOKEN = process.env.API_TOKEN`.',
+        },
       ],
     },
   },
@@ -1924,20 +2377,41 @@ export const phase3LabTemplates: Phase3LabTemplate[] = [
     ],
     hints: {
       0: [
-        { level: 0, text: "Start by pulling or running an image — record the command." },
-        { level: 1, text: "Add `docker pull nginx` or `docker run --rm nginx` to commands.sh." },
+        {
+          level: 0,
+          text: "Start by pulling or running an image — record the command.",
+        },
+        {
+          level: 1,
+          text: "Add `docker pull nginx` or `docker run --rm nginx` to commands.sh.",
+        },
       ],
       1: [
-        { level: 0, text: "How do you see which containers are currently active?" },
-        { level: 1, text: "Add `docker ps` to commands.sh to list running containers." },
+        {
+          level: 0,
+          text: "How do you see which containers are currently active?",
+        },
+        {
+          level: 1,
+          text: "Add `docker ps` to commands.sh to list running containers.",
+        },
       ],
       2: [
-        { level: 0, text: "An image is a blueprint — what does a container add on top?" },
-        { level: 1, text: "Write that an image is a read-only template and a container is a running instance of that image." },
+        {
+          level: 0,
+          text: "An image is a blueprint — what does a container add on top?",
+        },
+        {
+          level: 1,
+          text: "Write that an image is a read-only template and a container is a running instance of that image.",
+        },
       ],
       3: [
         { level: 0, text: "Fill in all three sections of the report." },
-        { level: 1, text: "The report must mention both 'image' and 'container' with explanations." },
+        {
+          level: 1,
+          text: "The report must mention both 'image' and 'container' with explanations.",
+        },
       ],
     },
   },
@@ -2003,24 +2477,54 @@ export const phase3LabTemplates: Phase3LabTemplate[] = [
     ],
     hints: {
       0: [
-        { level: 0, text: "A multi-stage Dockerfile has more than one FROM instruction." },
-        { level: 1, text: "Start with `FROM node:20-alpine AS build` for the build stage." },
+        {
+          level: 0,
+          text: "A multi-stage Dockerfile has more than one FROM instruction.",
+        },
+        {
+          level: 1,
+          text: "Start with `FROM node:20-alpine AS build` for the build stage.",
+        },
       ],
       1: [
-        { level: 0, text: "The build stage should install dependencies and compile TypeScript." },
-        { level: 1, text: "Add `RUN npm install && npm run build` in the build stage." },
+        {
+          level: 0,
+          text: "The build stage should install dependencies and compile TypeScript.",
+        },
+        {
+          level: 1,
+          text: "Add `RUN npm install && npm run build` in the build stage.",
+        },
       ],
       2: [
-        { level: 0, text: "The production stage copies artifacts from the build stage." },
-        { level: 1, text: "Use `COPY --from=build /app/dist ./dist` to copy only compiled output." },
+        {
+          level: 0,
+          text: "The production stage copies artifacts from the build stage.",
+        },
+        {
+          level: 1,
+          text: "Use `COPY --from=build /app/dist ./dist` to copy only compiled output.",
+        },
       ],
       3: [
-        { level: 0, text: "Create a .dockerignore to exclude unnecessary files from the build context." },
-        { level: 1, text: "Add `node_modules` and `dist` to `webapp/.dockerignore`." },
+        {
+          level: 0,
+          text: "Create a .dockerignore to exclude unnecessary files from the build context.",
+        },
+        {
+          level: 1,
+          text: "Add `node_modules` and `dist` to `webapp/.dockerignore`.",
+        },
       ],
       4: [
-        { level: 0, text: "The .dockerignore works like .gitignore — list files to exclude." },
-        { level: 1, text: "Add `node_modules`, `dist`, and `.git` on separate lines." },
+        {
+          level: 0,
+          text: "The .dockerignore works like .gitignore — list files to exclude.",
+        },
+        {
+          level: 1,
+          text: "Add `node_modules`, `dist`, and `.git` on separate lines.",
+        },
       ],
     },
   },
@@ -2041,7 +2545,7 @@ export const phase3LabTemplates: Phase3LabTemplate[] = [
       {
         path: "prompts/bad-prompt.md",
         content:
-          "# Bad Prompt Example\n\n\"Write me some code.\"\n\nThis prompt is too vague. It lacks context, constraints, and a desired format.\n",
+          '# Bad Prompt Example\n\n"Write me some code."\n\nThis prompt is too vague. It lacks context, constraints, and a desired format.\n',
       },
       {
         path: "prompts/prompt-template.md",
@@ -2088,24 +2592,51 @@ export const phase3LabTemplates: Phase3LabTemplate[] = [
     ],
     hints: {
       0: [
-        { level: 0, text: "Start with a deliberately vague prompt to show the contrast." },
-        { level: 1, text: "Under Prompt 1, write something short and unclear like 'Make a function.'" },
+        {
+          level: 0,
+          text: "Start with a deliberately vague prompt to show the contrast.",
+        },
+        {
+          level: 1,
+          text: "Under Prompt 1, write something short and unclear like 'Make a function.'",
+        },
       ],
       1: [
-        { level: 0, text: "Good prompts mention context, constraints, or expected format." },
-        { level: 1, text: "In Prompt 2, add the language, purpose, and any constraints like 'no external libraries.'" },
+        {
+          level: 0,
+          text: "Good prompts mention context, constraints, or expected format.",
+        },
+        {
+          level: 1,
+          text: "In Prompt 2, add the language, purpose, and any constraints like 'no external libraries.'",
+        },
       ],
       2: [
-        { level: 0, text: "A production-ready prompt is specific, scoped, and structured." },
-        { level: 1, text: "Prompt 3 should include all sections from the template: context, task, constraints, and output format." },
+        {
+          level: 0,
+          text: "A production-ready prompt is specific, scoped, and structured.",
+        },
+        {
+          level: 1,
+          text: "Prompt 3 should include all sections from the template: context, task, constraints, and output format.",
+        },
       ],
       3: [
         { level: 0, text: "Explain what improved between each version." },
-        { level: 1, text: "In the Reflection section, describe how added context and constraints make the prompt more effective." },
+        {
+          level: 1,
+          text: "In the Reflection section, describe how added context and constraints make the prompt more effective.",
+        },
       ],
       4: [
-        { level: 0, text: "Your prompts should be detailed — short one-liners won't pass." },
-        { level: 1, text: "The total content must be at least 200 characters — write real, thoughtful prompts." },
+        {
+          level: 0,
+          text: "Your prompts should be detailed — short one-liners won't pass.",
+        },
+        {
+          level: 1,
+          text: "The total content must be at least 200 characters — write real, thoughtful prompts.",
+        },
       ],
     },
   },
@@ -2135,8 +2666,7 @@ export const phase3LabTemplates: Phase3LabTemplate[] = [
       },
       {
         path: "review/fixed.ts",
-        content:
-          "// Write your fixed version of the AI-generated code here\n",
+        content: "// Write your fixed version of the AI-generated code here\n",
       },
     ],
     rules: [
@@ -2166,20 +2696,41 @@ export const phase3LabTemplates: Phase3LabTemplate[] = [
     ],
     hints: {
       0: [
-        { level: 0, text: "Look at each function — are there any security vulnerabilities?" },
-        { level: 1, text: "The `buildQuery` function is vulnerable to SQL injection via string interpolation." },
+        {
+          level: 0,
+          text: "Look at each function — are there any security vulnerabilities?",
+        },
+        {
+          level: 1,
+          text: "The `buildQuery` function is vulnerable to SQL injection via string interpolation.",
+        },
       ],
       1: [
-        { level: 0, text: "Using `eval()` on file contents is extremely dangerous." },
-        { level: 1, text: "Replace `eval(...)` with `JSON.parse(...)` in the `readConfig` function." },
+        {
+          level: 0,
+          text: "Using `eval()` on file contents is extremely dangerous.",
+        },
+        {
+          level: 1,
+          text: "Replace `eval(...)` with `JSON.parse(...)` in the `readConfig` function.",
+        },
       ],
       2: [
-        { level: 0, text: "Write the fixed versions in fixed.ts without the dangerous patterns." },
-        { level: 1, text: "Use parameterized queries instead of template literals, remove `eval`, and replace `any` with proper types." },
+        {
+          level: 0,
+          text: "Write the fixed versions in fixed.ts without the dangerous patterns.",
+        },
+        {
+          level: 1,
+          text: "Use parameterized queries instead of template literals, remove `eval`, and replace `any` with proper types.",
+        },
       ],
       3: [
         { level: 0, text: "Document what you found in the checklist." },
-        { level: 1, text: "Under Issues Found, list: SQL injection in buildQuery, eval in readConfig, any type in parseUserInput." },
+        {
+          level: 1,
+          text: "Under Issues Found, list: SQL injection in buildQuery, eval in readConfig, any type in parseUserInput.",
+        },
       ],
     },
   },
@@ -2247,23 +2798,47 @@ export const phase3LabTemplates: Phase3LabTemplate[] = [
     hints: {
       0: [
         { level: 0, text: "Start by choosing a descriptive branch name." },
-        { level: 1, text: "Under Branch Name, write something like `feature/add-multiply-function`." },
+        {
+          level: 1,
+          text: "Under Branch Name, write something like `feature/add-multiply-function`.",
+        },
       ],
       1: [
-        { level: 0, text: "Use a branch naming convention — feature/, fix/, or chore/." },
-        { level: 1, text: "Branch names should start with `feature/`, `fix/`, or `chore/` followed by a short description." },
+        {
+          level: 0,
+          text: "Use a branch naming convention — feature/, fix/, or chore/.",
+        },
+        {
+          level: 1,
+          text: "Branch names should start with `feature/`, `fix/`, or `chore/` followed by a short description.",
+        },
       ],
       2: [
-        { level: 0, text: "Break your work into small, atomic commit messages." },
-        { level: 1, text: "Under Commit Messages, list commits like 'Add multiply function' and 'Add tests for multiply'." },
+        {
+          level: 0,
+          text: "Break your work into small, atomic commit messages.",
+        },
+        {
+          level: 1,
+          text: "Under Commit Messages, list commits like 'Add multiply function' and 'Add tests for multiply'.",
+        },
       ],
       3: [
-        { level: 0, text: "Do not delete the source files — a real PR adds to existing code." },
-        { level: 1, text: "Keep `pr-workflow/src/utils.ts` with your additions." },
+        {
+          level: 0,
+          text: "Do not delete the source files — a real PR adds to existing code.",
+        },
+        {
+          level: 1,
+          text: "Keep `pr-workflow/src/utils.ts` with your additions.",
+        },
       ],
       4: [
         { level: 0, text: "Describe how the changes were tested." },
-        { level: 1, text: "Under Testing, write what you ran to verify the changes work." },
+        {
+          level: 1,
+          text: "Under Testing, write what you ran to verify the changes work.",
+        },
       ],
     },
   },
@@ -2318,7 +2893,13 @@ export const phase3LabTemplates: Phase3LabTemplate[] = [
       },
       {
         kind: "code-behavior",
-        requiredPatterns: ["describe", "expect", "capitalize", "truncate", "slugify"],
+        requiredPatterns: [
+          "describe",
+          "expect",
+          "capitalize",
+          "truncate",
+          "slugify",
+        ],
         forbiddenPatterns: ["console.log"],
       },
       {
@@ -2330,24 +2911,51 @@ export const phase3LabTemplates: Phase3LabTemplate[] = [
     ],
     hints: {
       0: [
-        { level: 0, text: "Group related tests inside a `describe` block for each function." },
-        { level: 1, text: 'Start with `describe("capitalize", () => { ... })` and add `it(...)` blocks inside.' },
+        {
+          level: 0,
+          text: "Group related tests inside a `describe` block for each function.",
+        },
+        {
+          level: 1,
+          text: 'Start with `describe("capitalize", () => { ... })` and add `it(...)` blocks inside.',
+        },
       ],
       1: [
-        { level: 0, text: "Use `expect(...).toBe(...)` for value comparisons." },
-        { level: 1, text: 'Write `expect(capitalize("hello")).toBe("Hello")` to test the happy path.' },
+        {
+          level: 0,
+          text: "Use `expect(...).toBe(...)` for value comparisons.",
+        },
+        {
+          level: 1,
+          text: 'Write `expect(capitalize("hello")).toBe("Hello")` to test the happy path.',
+        },
       ],
       2: [
         { level: 0, text: "Each function should have at least one test." },
-        { level: 1, text: "Add `it(...)` or `test(...)` blocks for capitalize, truncate, and slugify." },
+        {
+          level: 1,
+          text: "Add `it(...)` or `test(...)` blocks for capitalize, truncate, and slugify.",
+        },
       ],
       3: [
-        { level: 0, text: "Use proper assertions — avoid console.log for test verification." },
-        { level: 1, text: "Replace any `console.log` checks with `expect(...).toBe(...)` or `.toEqual(...)`." },
+        {
+          level: 0,
+          text: "Use proper assertions — avoid console.log for test verification.",
+        },
+        {
+          level: 1,
+          text: "Replace any `console.log` checks with `expect(...).toBe(...)` or `.toEqual(...)`.",
+        },
       ],
       4: [
-        { level: 0, text: "All tests must pass when run with `npx vitest run`." },
-        { level: 1, text: "Run the tests to verify — at least 3 tests must pass with 0 failures." },
+        {
+          level: 0,
+          text: "All tests must pass when run with `npx vitest run`.",
+        },
+        {
+          level: 1,
+          text: "Run the tests to verify — at least 3 tests must pass with 0 failures.",
+        },
       ],
     },
   },
@@ -2373,7 +2981,7 @@ export const phase3LabTemplates: Phase3LabTemplate[] = [
       {
         path: "ci-project/src/index.ts",
         content:
-          'export function greet(name: string): string {\n  return `Hello, ${name}!`;\n}\n',
+          "export function greet(name: string): string {\n  return `Hello, ${name}!`;\n}\n",
       },
       {
         path: "ci-project/README.md",
@@ -2413,24 +3021,45 @@ export const phase3LabTemplates: Phase3LabTemplate[] = [
     ],
     hints: {
       0: [
-        { level: 0, text: "GitHub Actions workflows live in `.github/workflows/`." },
-        { level: 1, text: "Create `ci-project/.github/workflows/ci.yml` with a valid workflow structure." },
+        {
+          level: 0,
+          text: "GitHub Actions workflows live in `.github/workflows/`.",
+        },
+        {
+          level: 1,
+          text: "Create `ci-project/.github/workflows/ci.yml` with a valid workflow structure.",
+        },
       ],
       1: [
         { level: 0, text: "Every workflow needs an `on:` trigger section." },
-        { level: 1, text: "Add `on: { push: { branches: [main] }, pull_request: {} }` to trigger on push and PRs." },
+        {
+          level: 1,
+          text: "Add `on: { push: { branches: [main] }, pull_request: {} }` to trigger on push and PRs.",
+        },
       ],
       2: [
         { level: 0, text: "Use the official checkout action to get the code." },
         { level: 1, text: "Add a step: `- uses: actions/checkout@v4`." },
       ],
       3: [
-        { level: 0, text: "The pipeline should run your project's lint and test scripts." },
-        { level: 1, text: "Add steps for `npm ci`, `npm run lint`, and `npm run test`." },
+        {
+          level: 0,
+          text: "The pipeline should run your project's lint and test scripts.",
+        },
+        {
+          level: 1,
+          text: "Add steps for `npm ci`, `npm run lint`, and `npm run test`.",
+        },
       ],
       4: [
-        { level: 0, text: "Workflows are YAML — check that the directory structure is correct." },
-        { level: 1, text: "The file must be at `.github/workflows/ci.yml` inside `ci-project/`." },
+        {
+          level: 0,
+          text: "Workflows are YAML — check that the directory structure is correct.",
+        },
+        {
+          level: 1,
+          text: "The file must be at `.github/workflows/ci.yml` inside `ci-project/`.",
+        },
       ],
     },
   },
@@ -2455,8 +3084,7 @@ export const phase3LabTemplates: Phase3LabTemplate[] = [
       },
       {
         path: "refactor-lab/src/validators.ts",
-        content:
-          "// Extract shared validation logic here\n",
+        content: "// Extract shared validation logic here\n",
       },
       {
         path: "refactor-lab/REFACTOR-LOG.md",
@@ -2490,20 +3118,44 @@ export const phase3LabTemplates: Phase3LabTemplate[] = [
     ],
     hints: {
       0: [
-        { level: 0, text: "Look for the code that is copy-pasted across all three functions." },
-        { level: 1, text: "The null check, type check, and length check for `name` are repeated in every function." },
+        {
+          level: 0,
+          text: "Look for the code that is copy-pasted across all three functions.",
+        },
+        {
+          level: 1,
+          text: "The null check, type check, and length check for `name` are repeated in every function.",
+        },
       ],
       1: [
-        { level: 0, text: "Move the repeated pattern into a shared function in validators.ts." },
-        { level: 1, text: "Create `export function validateName(data: unknown)` in validators.ts that throws on invalid input." },
+        {
+          level: 0,
+          text: "Move the repeated pattern into a shared function in validators.ts.",
+        },
+        {
+          level: 1,
+          text: "Create `export function validateName(data: unknown)` in validators.ts that throws on invalid input.",
+        },
       ],
       2: [
-        { level: 0, text: "Replace the duplicated code in handlers.ts with a call to the shared function." },
-        { level: 1, text: 'Add `import { validateName } from "./validators"` and call `validateName(data)` in each handler.' },
+        {
+          level: 0,
+          text: "Replace the duplicated code in handlers.ts with a call to the shared function.",
+        },
+        {
+          level: 1,
+          text: 'Add `import { validateName } from "./validators"` and call `validateName(data)` in each handler.',
+        },
       ],
       3: [
-        { level: 0, text: "Document what you changed and why in the refactoring log." },
-        { level: 1, text: "Describe the duplication, what you extracted, and any variable renames you applied." },
+        {
+          level: 0,
+          text: "Document what you changed and why in the refactoring log.",
+        },
+        {
+          level: 1,
+          text: "Describe the duplication, what you extracted, and any variable renames you applied.",
+        },
       ],
     },
   },
@@ -2571,24 +3223,54 @@ export const phase3LabTemplates: Phase3LabTemplate[] = [
     ],
     hints: {
       0: [
-        { level: 0, text: "The README needs real content under the Setup heading." },
-        { level: 1, text: "Add setup instructions like `npm install` and `npm run build` under the Setup section." },
+        {
+          level: 0,
+          text: "The README needs real content under the Setup heading.",
+        },
+        {
+          level: 1,
+          text: "Add setup instructions like `npm install` and `npm run build` under the Setup section.",
+        },
       ],
       1: [
-        { level: 0, text: "The README should mention how to install or get started." },
-        { level: 1, text: "Include a `git clone` command, `npm install`, and basic usage instructions." },
+        {
+          level: 0,
+          text: "The README should mention how to install or get started.",
+        },
+        {
+          level: 1,
+          text: "Include a `git clone` command, `npm install`, and basic usage instructions.",
+        },
       ],
       2: [
-        { level: 0, text: "The auth module has no comments — add inline comments explaining what each function does." },
-        { level: 1, text: "Add a comment above `hashPassword` explaining it generates a salt and hashes with PBKDF2." },
+        {
+          level: 0,
+          text: "The auth module has no comments — add inline comments explaining what each function does.",
+        },
+        {
+          level: 1,
+          text: "Add a comment above `hashPassword` explaining it generates a salt and hashes with PBKDF2.",
+        },
       ],
       3: [
-        { level: 0, text: "The PR description needs a real summary of the changes." },
-        { level: 1, text: "Under Summary, describe what the auth module does and why it was added." },
+        {
+          level: 0,
+          text: "The PR description needs a real summary of the changes.",
+        },
+        {
+          level: 1,
+          text: "Under Summary, describe what the auth module does and why it was added.",
+        },
       ],
       4: [
-        { level: 0, text: "PR descriptions should be detailed — at least a few sentences." },
-        { level: 1, text: "The description must be at least 50 characters — explain the feature, changes, and test plan." },
+        {
+          level: 0,
+          text: "PR descriptions should be detailed — at least a few sentences.",
+        },
+        {
+          level: 1,
+          text: "The description must be at least 50 characters — explain the feature, changes, and test plan.",
+        },
       ],
     },
   },
@@ -2681,24 +3363,54 @@ export const phase4LabTemplates: Phase4LabTemplate[] = [
     ],
     hints: {
       0: [
-        { level: 0, text: "The project needs a valid package.json with the right entry point." },
-        { level: 1, text: "Check that `main` and `bin` both reference your entry file." },
+        {
+          level: 0,
+          text: "The project needs a valid package.json with the right entry point.",
+        },
+        {
+          level: 1,
+          text: "Check that `main` and `bin` both reference your entry file.",
+        },
       ],
       1: [
-        { level: 0, text: "Users expect a --help flag to explain available commands." },
-        { level: 1, text: "Check process.argv for `--help` or `-h` and print usage info." },
+        {
+          level: 0,
+          text: "Users expect a --help flag to explain available commands.",
+        },
+        {
+          level: 1,
+          text: "Check process.argv for `--help` or `-h` and print usage info.",
+        },
       ],
       2: [
-        { level: 0, text: "The file I/O module needs to actually read and write files." },
-        { level: 1, text: "Use `fs.readFileSync` or `fs.promises.readFile` to implement the helpers." },
+        {
+          level: 0,
+          text: "The file I/O module needs to actually read and write files.",
+        },
+        {
+          level: 1,
+          text: "Use `fs.readFileSync` or `fs.promises.readFile` to implement the helpers.",
+        },
       ],
       3: [
-        { level: 0, text: "A shipping CLI needs tests — at least for the core commands." },
-        { level: 1, text: "Write test files in `test/` using Node's built-in test runner." },
+        {
+          level: 0,
+          text: "A shipping CLI needs tests — at least for the core commands.",
+        },
+        {
+          level: 1,
+          text: "Write test files in `test/` using Node's built-in test runner.",
+        },
       ],
       4: [
-        { level: 0, text: "The README should explain how to use the tool, not just list section headers." },
-        { level: 1, text: "Fill in the Usage section with actual command examples and flags." },
+        {
+          level: 0,
+          text: "The README should explain how to use the tool, not just list section headers.",
+        },
+        {
+          level: 1,
+          text: "Fill in the Usage section with actual command examples and flags.",
+        },
       ],
     },
   },
@@ -2734,7 +3446,7 @@ export const phase4LabTemplates: Phase4LabTemplate[] = [
       {
         path: "crud-app/src/routes.js",
         content:
-          '// Route handlers — map HTTP methods and paths to data operations\n\n// TODO: implement handlers for:\n// POST   /tasks       — create a task\n// GET    /tasks       — list all tasks\n// GET    /tasks/:id   — get one task\n// PUT    /tasks/:id   — update a task\n// DELETE /tasks/:id   — delete a task\n\nmodule.exports = {};\n',
+          "// Route handlers — map HTTP methods and paths to data operations\n\n// TODO: implement handlers for:\n// POST   /tasks       — create a task\n// GET    /tasks       — list all tasks\n// GET    /tasks/:id   — get one task\n// PUT    /tasks/:id   — update a task\n// DELETE /tasks/:id   — delete a task\n\nmodule.exports = {};\n",
       },
       {
         path: "crud-app/test/.gitkeep",
@@ -2779,24 +3491,54 @@ export const phase4LabTemplates: Phase4LabTemplate[] = [
     ],
     hints: {
       0: [
-        { level: 0, text: "The routes module should handle standard HTTP methods for a resource." },
-        { level: 1, text: "Parse the request method and URL to dispatch to the right handler." },
+        {
+          level: 0,
+          text: "The routes module should handle standard HTTP methods for a resource.",
+        },
+        {
+          level: 1,
+          text: "Parse the request method and URL to dispatch to the right handler.",
+        },
       ],
       1: [
-        { level: 0, text: "The data store needs functions to manage the task collection." },
-        { level: 1, text: "Export functions like `create(title)`, `getAll()`, `update(id, data)`, `remove(id)`." },
+        {
+          level: 0,
+          text: "The data store needs functions to manage the task collection.",
+        },
+        {
+          level: 1,
+          text: "Export functions like `create(title)`, `getAll()`, `update(id, data)`, `remove(id)`.",
+        },
       ],
       2: [
-        { level: 0, text: "Production APIs handle errors gracefully and return proper status codes." },
-        { level: 1, text: "Wrap handler logic in try/catch and return 400 or 404 with error messages." },
+        {
+          level: 0,
+          text: "Production APIs handle errors gracefully and return proper status codes.",
+        },
+        {
+          level: 1,
+          text: "Wrap handler logic in try/catch and return 400 or 404 with error messages.",
+        },
       ],
       3: [
-        { level: 0, text: "Test each CRUD operation — create, read, update, and delete." },
-        { level: 1, text: "Write tests that call data-store functions and assert the results." },
+        {
+          level: 0,
+          text: "Test each CRUD operation — create, read, update, and delete.",
+        },
+        {
+          level: 1,
+          text: "Write tests that call data-store functions and assert the results.",
+        },
       ],
       4: [
-        { level: 0, text: "The README should document every endpoint with method, path, and expected behavior." },
-        { level: 1, text: "List each route with its HTTP method, request body shape, and response format." },
+        {
+          level: 0,
+          text: "The README should document every endpoint with method, path, and expected behavior.",
+        },
+        {
+          level: 1,
+          text: "List each route with its HTTP method, request body shape, and response format.",
+        },
       ],
     },
   },
@@ -2836,7 +3578,8 @@ export const phase4LabTemplates: Phase4LabTemplate[] = [
       },
       {
         path: "broken-app/data/input.csv",
-        content: "name,role,department\nAlice,Engineer,Platform\nBob,Designer,Product\nCarol,Manager,Engineering\n",
+        content:
+          "name,role,department\nAlice,Engineer,Platform\nBob,Designer,Product\nCarol,Manager,Engineering\n",
       },
       {
         path: "broken-app/ROOT-CAUSE.md",
@@ -2882,24 +3625,54 @@ export const phase4LabTemplates: Phase4LabTemplate[] = [
     ],
     hints: {
       0: [
-        { level: 0, text: "The app crashes before it can read any data — look at the first I/O call." },
-        { level: 1, text: "Check the method name used to read the file in index.js." },
+        {
+          level: 0,
+          text: "The app crashes before it can read any data — look at the first I/O call.",
+        },
+        {
+          level: 1,
+          text: "Check the method name used to read the file in index.js.",
+        },
       ],
       1: [
-        { level: 0, text: "The parser processes too many lines — check loop bounds." },
-        { level: 1, text: "Look at the loop condition — does it read past the last line?" },
+        {
+          level: 0,
+          text: "The parser processes too many lines — check loop bounds.",
+        },
+        {
+          level: 1,
+          text: "Look at the loop condition — does it read past the last line?",
+        },
       ],
       2: [
-        { level: 0, text: "The report total is wrong — check the property access." },
-        { level: 1, text: "Look for misspelled property names in formatter.js." },
+        {
+          level: 0,
+          text: "The report total is wrong — check the property access.",
+        },
+        {
+          level: 1,
+          text: "Look for misspelled property names in formatter.js.",
+        },
       ],
       3: [
-        { level: 0, text: "Document each bug you found, what caused it, and how you fixed it." },
-        { level: 1, text: "The Root Causes section should describe each defect with enough detail to prevent recurrence." },
+        {
+          level: 0,
+          text: "Document each bug you found, what caused it, and how you fixed it.",
+        },
+        {
+          level: 1,
+          text: "The Root Causes section should describe each defect with enough detail to prevent recurrence.",
+        },
       ],
       4: [
-        { level: 0, text: "Name the specific class of error — typo, off-by-one, etc." },
-        { level: 1, text: "Categorize each bug (e.g., 'method name typo', 'loop boundary error')." },
+        {
+          level: 0,
+          text: "Name the specific class of error — typo, off-by-one, etc.",
+        },
+        {
+          level: 1,
+          text: "Categorize each bug (e.g., 'method name typo', 'loop boundary error').",
+        },
       ],
     },
   },
@@ -2919,8 +3692,7 @@ export const phase4LabTemplates: Phase4LabTemplate[] = [
     initialFiles: [
       {
         path: "portfolio/README.md",
-        content:
-          "# My Portfolio\n\n## Projects\n\n## About Me\n\n## Contact\n",
+        content: "# My Portfolio\n\n## Projects\n\n## About Me\n\n## Contact\n",
       },
       {
         path: "portfolio/projects/cli-tool/README.md",
@@ -2984,24 +3756,54 @@ export const phase4LabTemplates: Phase4LabTemplate[] = [
     ],
     hints: {
       0: [
-        { level: 0, text: "The portfolio README should describe each project — not just list names." },
-        { level: 1, text: "Under Projects, write a short paragraph about each project with a link to its directory." },
+        {
+          level: 0,
+          text: "The portfolio README should describe each project — not just list names.",
+        },
+        {
+          level: 1,
+          text: "Under Projects, write a short paragraph about each project with a link to its directory.",
+        },
       ],
       1: [
-        { level: 0, text: "A professional portfolio has a clear, navigable structure." },
-        { level: 1, text: "Keep projects in their own directories with individual READMEs." },
+        {
+          level: 0,
+          text: "A professional portfolio has a clear, navigable structure.",
+        },
+        {
+          level: 1,
+          text: "Keep projects in their own directories with individual READMEs.",
+        },
       ],
       2: [
-        { level: 0, text: "Deployment docs should have real, actionable steps." },
-        { level: 1, text: "Fill in the Steps section with commands a reader can follow to deploy." },
+        {
+          level: 0,
+          text: "Deployment docs should have real, actionable steps.",
+        },
+        {
+          level: 1,
+          text: "Fill in the Steps section with commands a reader can follow to deploy.",
+        },
       ],
       3: [
-        { level: 0, text: "Setup docs should cover everything someone needs to run the projects locally." },
-        { level: 1, text: "Include Node.js version, install commands, and how to start and test." },
+        {
+          level: 0,
+          text: "Setup docs should cover everything someone needs to run the projects locally.",
+        },
+        {
+          level: 1,
+          text: "Include Node.js version, install commands, and how to start and test.",
+        },
       ],
       4: [
-        { level: 0, text: "Every project should have its own README with enough context to evaluate." },
-        { level: 1, text: "Each project README should explain what it does, how to run it, and what you learned." },
+        {
+          level: 0,
+          text: "Every project should have its own README with enough context to evaluate.",
+        },
+        {
+          level: 1,
+          text: "Each project README should explain what it does, how to run it, and what you learned.",
+        },
       ],
     },
   },

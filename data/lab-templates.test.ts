@@ -1,12 +1,12 @@
 import {
-    phase1LabTemplates,
-    phase1LabsByLesson,
-    phase2LabTemplates,
-    phase2LabsByLesson,
-    phase3LabTemplates,
-    phase3LabsByLesson,
-    phase4LabTemplates,
-    phase4LabsByLesson,
+  phase1LabTemplates,
+  phase1LabsByLesson,
+  phase2LabTemplates,
+  phase2LabsByLesson,
+  phase3LabTemplates,
+  phase3LabsByLesson,
+  phase4LabTemplates,
+  phase4LabsByLesson,
 } from "@/data/lab-templates";
 import { createLabInstance } from "@/lib/lab-engine";
 import { describe, expect, it } from "vitest";
@@ -60,7 +60,10 @@ describe("Phase 1 lab templates — lesson mapping", () => {
   it("every Phase 1 lesson has at least one lab", () => {
     for (const lessonId of PHASE1_LESSON_IDS) {
       const labs = phase1LabTemplates.filter((t) => t.lessonId === lessonId);
-      expect(labs.length, `${lessonId} should have at least 1 lab`).toBeGreaterThanOrEqual(1);
+      expect(
+        labs.length,
+        `${lessonId} should have at least 1 lab`,
+      ).toBeGreaterThanOrEqual(1);
     }
   });
 
@@ -140,7 +143,10 @@ describe("Phase 1 lab templates — hint coverage", () => {
   it("every lab has hints for every rule index", () => {
     for (const t of phase1LabTemplates) {
       for (let i = 0; i < t.rules.length; i++) {
-        expect(t.hints[i], `${t.id} missing hint for rule index ${i}`).toBeDefined();
+        expect(
+          t.hints[i],
+          `${t.id} missing hint for rule index ${i}`,
+        ).toBeDefined();
       }
     }
   });
@@ -186,7 +192,9 @@ describe("Phase 1 lab templates — initial files", () => {
   it("all initial file content is a string", () => {
     for (const t of phase1LabTemplates) {
       for (const f of t.initialFiles) {
-        expect(typeof f.content, `${t.id} ${f.path} content type`).toBe("string");
+        expect(typeof f.content, `${t.id} ${f.path} content type`).toBe(
+          "string",
+        );
       }
     }
   });
@@ -195,7 +203,9 @@ describe("Phase 1 lab templates — initial files", () => {
     for (const t of phase1LabTemplates) {
       for (const f of t.initialFiles) {
         if (!f.path.endsWith(".gitkeep")) {
-          expect(f.content.length, `${t.id} ${f.path} content`).toBeGreaterThan(0);
+          expect(f.content.length, `${t.id} ${f.path} content`).toBeGreaterThan(
+            0,
+          );
         }
       }
     }
@@ -235,6 +245,7 @@ const PHASE2_LESSON_IDS = [
   "lesson-project-structure",
   "lesson-package-management",
   "lesson-programming-logic",
+  "lesson-data-structures",
   "lesson-typescript-types",
   "lesson-json-config",
   "lesson-error-reading",
@@ -248,8 +259,8 @@ const PHASE2_LESSON_IDS = [
 ] as const;
 
 describe("Phase 2 lab templates — structural integrity", () => {
-  it("has exactly 15 lab templates", () => {
-    expect(phase2LabTemplates).toHaveLength(15);
+  it("has exactly 16 lab templates", () => {
+    expect(phase2LabTemplates).toHaveLength(16);
   });
 
   it("all IDs are unique", () => {
@@ -275,12 +286,15 @@ describe("Phase 2 lab templates — lesson mapping", () => {
   it("every Phase 2 lesson has at least one lab", () => {
     for (const lessonId of PHASE2_LESSON_IDS) {
       const labs = phase2LabTemplates.filter((t) => t.lessonId === lessonId);
-      expect(labs.length, `${lessonId} should have at least 1 lab`).toBeGreaterThanOrEqual(1);
+      expect(
+        labs.length,
+        `${lessonId} should have at least 1 lab`,
+      ).toBeGreaterThanOrEqual(1);
     }
   });
 
-  it("phase2LabsByLesson has exactly 15 keys", () => {
-    expect(Object.keys(phase2LabsByLesson)).toHaveLength(15);
+  it("phase2LabsByLesson has exactly 16 keys", () => {
+    expect(Object.keys(phase2LabsByLesson)).toHaveLength(16);
   });
 
   it('every lessonId in templates starts with "lesson-"', () => {
@@ -336,7 +350,10 @@ describe("Phase 2 lab templates — hint coverage", () => {
   it("every lab has hints for every rule index", () => {
     for (const t of phase2LabTemplates) {
       for (let i = 0; i < t.rules.length; i++) {
-        expect(t.hints[i], `${t.id} missing hint for rule index ${i}`).toBeDefined();
+        expect(
+          t.hints[i],
+          `${t.id} missing hint for rule index ${i}`,
+        ).toBeDefined();
       }
     }
   });
@@ -382,7 +399,9 @@ describe("Phase 2 lab templates — initial files", () => {
   it("all initial file content is a string", () => {
     for (const t of phase2LabTemplates) {
       for (const f of t.initialFiles) {
-        expect(typeof f.content, `${t.id} ${f.path} content type`).toBe("string");
+        expect(typeof f.content, `${t.id} ${f.path} content type`).toBe(
+          "string",
+        );
       }
     }
   });
@@ -391,7 +410,9 @@ describe("Phase 2 lab templates — initial files", () => {
     for (const t of phase2LabTemplates) {
       for (const f of t.initialFiles) {
         if (!f.path.endsWith(".gitkeep")) {
-          expect(f.content.length, `${t.id} ${f.path} content`).toBeGreaterThan(0);
+          expect(f.content.length, `${t.id} ${f.path} content`).toBeGreaterThan(
+            0,
+          );
         }
       }
     }
@@ -465,7 +486,10 @@ describe("Phase 3 lab templates — lesson mapping", () => {
   it("every Phase 3 lesson has at least one lab", () => {
     for (const lessonId of PHASE3_LESSON_IDS) {
       const labs = phase3LabTemplates.filter((t) => t.lessonId === lessonId);
-      expect(labs.length, `${lessonId} should have at least 1 lab`).toBeGreaterThanOrEqual(1);
+      expect(
+        labs.length,
+        `${lessonId} should have at least 1 lab`,
+      ).toBeGreaterThanOrEqual(1);
     }
   });
 
@@ -526,7 +550,10 @@ describe("Phase 3 lab templates — hint coverage", () => {
   it("every lab has hints for every rule index", () => {
     for (const t of phase3LabTemplates) {
       for (let i = 0; i < t.rules.length; i++) {
-        expect(t.hints[i], `${t.id} missing hint for rule index ${i}`).toBeDefined();
+        expect(
+          t.hints[i],
+          `${t.id} missing hint for rule index ${i}`,
+        ).toBeDefined();
       }
     }
   });
@@ -572,7 +599,9 @@ describe("Phase 3 lab templates — initial files", () => {
   it("all initial file content is a string", () => {
     for (const t of phase3LabTemplates) {
       for (const f of t.initialFiles) {
-        expect(typeof f.content, `${t.id} ${f.path} content type`).toBe("string");
+        expect(typeof f.content, `${t.id} ${f.path} content type`).toBe(
+          "string",
+        );
       }
     }
   });
@@ -581,7 +610,9 @@ describe("Phase 3 lab templates — initial files", () => {
     for (const t of phase3LabTemplates) {
       for (const f of t.initialFiles) {
         if (!f.path.endsWith(".gitkeep")) {
-          expect(f.content.length, `${t.id} ${f.path} content`).toBeGreaterThan(0);
+          expect(f.content.length, `${t.id} ${f.path} content`).toBeGreaterThan(
+            0,
+          );
         }
       }
     }
@@ -650,7 +681,10 @@ describe("Phase 4 lab templates — lesson mapping", () => {
   it("every Phase 4 lesson has at least one lab", () => {
     for (const lessonId of PHASE4_LESSON_IDS) {
       const labs = phase4LabTemplates.filter((t) => t.lessonId === lessonId);
-      expect(labs.length, `${lessonId} should have at least 1 lab`).toBeGreaterThanOrEqual(1);
+      expect(
+        labs.length,
+        `${lessonId} should have at least 1 lab`,
+      ).toBeGreaterThanOrEqual(1);
     }
   });
 
@@ -711,7 +745,10 @@ describe("Phase 4 lab templates — hint coverage", () => {
   it("every lab has hints for every rule index", () => {
     for (const t of phase4LabTemplates) {
       for (let i = 0; i < t.rules.length; i++) {
-        expect(t.hints[i], `${t.id} missing hint for rule index ${i}`).toBeDefined();
+        expect(
+          t.hints[i],
+          `${t.id} missing hint for rule index ${i}`,
+        ).toBeDefined();
       }
     }
   });
@@ -757,7 +794,9 @@ describe("Phase 4 lab templates — initial files", () => {
   it("all initial file content is a string", () => {
     for (const t of phase4LabTemplates) {
       for (const f of t.initialFiles) {
-        expect(typeof f.content, `${t.id} ${f.path} content type`).toBe("string");
+        expect(typeof f.content, `${t.id} ${f.path} content type`).toBe(
+          "string",
+        );
       }
     }
   });
@@ -766,7 +805,9 @@ describe("Phase 4 lab templates — initial files", () => {
     for (const t of phase4LabTemplates) {
       for (const f of t.initialFiles) {
         if (!f.path.endsWith(".gitkeep")) {
-          expect(f.content.length, `${t.id} ${f.path} content`).toBeGreaterThan(0);
+          expect(f.content.length, `${t.id} ${f.path} content`).toBeGreaterThan(
+            0,
+          );
         }
       }
     }
