@@ -423,13 +423,13 @@ export const curriculum: Curriculum = {
                 id: "transfer-keyboard-workflow",
                 title: "Transfer challenge: keyboard-only task",
                 prompt:
-                  "Describe how you would open a terminal, navigate to a project folder, check Git status, and switch to your editor — using only keyboard shortcuts. List each shortcut.",
+                  "Describe how you would open a terminal, navigate to a project folder, list the folder contents, and switch to another window — using only keyboard shortcuts and terminal commands. List each shortcut or command.",
                 placeholder: "Shortcut sequence",
                 validationMode: "includes",
-                acceptedAnswers: ["alt+tab", "cd", "git status", "win", "ctrl"],
+                acceptedAnswers: ["alt+tab", "cd", "dir", "ls", "win", "ctrl"],
                 successMessage:
                   "Transfer evidence accepted. You mapped a full workflow to keyboard shortcuts.",
-                hint: "Walk through the workflow step by step: launch, navigate, command, switch.",
+                hint: "Walk through the workflow step by step: launch, navigate, inspect, switch.",
                 assessmentType: "transfer",
               },
               competencies: [
