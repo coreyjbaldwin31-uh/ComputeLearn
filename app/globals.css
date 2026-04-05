@@ -3271,8 +3271,7 @@ button[disabled] {
 .notes-grid,
 .lesson-terminal-section,
 .onboarding-card,
-.social-proof,
-.pricing-callout {
+.social-proof {
   animation: revealUp 0.5s ease both;
 }
 
@@ -3284,8 +3283,7 @@ button[disabled] {
   .notes-grid,
   .lesson-terminal-section,
   .onboarding-card,
-  .social-proof,
-  .pricing-callout {
+  .social-proof {
     animation: none;
   }
 }
@@ -3562,123 +3560,6 @@ button[disabled] {
   .page-footer {
     padding: 24px 16px 16px;
   }
-
-  .pricing-card {
-    padding: 24px 20px;
-  }
-}
-
-/* ── Pricing callout section ─────────────────────────────── */
-
-.pricing-callout {
-  margin-top: 56px;
-  margin-bottom: 40px;
-  display: flex;
-  justify-content: center;
-}
-
-.pricing-card {
-  position: relative;
-  width: min(520px, 100%);
-  padding: 36px 32px;
-  border: 2px solid var(--accent);
-  border-radius: 24px;
-  background: linear-gradient(
-    135deg,
-    rgba(13, 107, 87, 0.06),
-    rgba(198, 139, 44, 0.04)
-  );
-  text-align: center;
-}
-
-.pricing-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 5px 14px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-  color: #f7f4ee;
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.pricing-title {
-  font-size: 1.6rem;
-  margin: 16px 0 8px;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-}
-
-.pricing-description {
-  margin: 0 auto 20px;
-  max-width: 440px;
-  color: var(--muted);
-  font-size: 0.94rem;
-  line-height: 1.6;
-}
-
-.pricing-features {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px 16px;
-  list-style: none;
-  margin: 0 0 24px;
-  padding: 0;
-  text-align: left;
-}
-
-.pricing-features li {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.88rem;
-  line-height: 1.55;
-  color: var(--text);
-}
-
-.pricing-check {
-  color: var(--accent-strong);
-  font-weight: 700;
-  flex-shrink: 0;
-}
-
-.pricing-cta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 14px 36px;
-  border: none;
-  border-radius: 999px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-  color: #f7f4ee;
-  font-size: 1.05rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition:
-    transform 150ms ease,
-    box-shadow 150ms ease;
-}
-
-.pricing-cta:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(13, 107, 87, 0.35);
-}
-
-.pricing-note {
-  margin: 14px 0 0;
-  font-size: 0.82rem;
-  color: var(--muted);
-}
-
-[data-theme="dark"] .pricing-card {
-  background: linear-gradient(
-    135deg,
-    rgba(45, 212, 168, 0.06),
-    rgba(229, 166, 68, 0.04)
-  );
-  border-color: var(--accent);
 }
 
 /* ── Gradient accent text ────────────────────────────────── */
@@ -3755,37 +3636,15 @@ button[disabled] {
 /* ── Responsive: feature grid + pricing ──────────────────── */
 
 @media (max-width: 1180px) {
-  .pricing-features {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 760px) {
-  .pricing-callout {
-    margin-top: 28px;
-  }
-
-  .pricing-card {
-    padding: 28px 20px;
-  }
-
-  .pricing-title {
-    font-size: 1.3rem;
-  }
 }
 
 /* ── Dark mode polish for new elements ───────────────────── */
 
 [data-theme="dark"] .plan-chip {
   background: rgba(255, 255, 255, 0.06);
-}
-
-[data-theme="dark"] .pricing-cta {
-  background: linear-gradient(135deg, #0d6b57, #084c3d);
-}
-
-[data-theme="dark"] .pricing-cta:hover {
-  box-shadow: 0 8px 24px rgba(45, 212, 168, 0.3);
 }
 
 [data-theme="dark"] .proof-avatar {
