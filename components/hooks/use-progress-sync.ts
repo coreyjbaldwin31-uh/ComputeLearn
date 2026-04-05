@@ -2,10 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useEffect, useRef } from "react";
-import {
-  fetchProgress,
-  upsertProgress,
-} from "@/lib/api-client";
+import { fetchProgress, upsertProgress } from "@/lib/api-client";
 
 function safeParseJSON<T>(raw: string | null, fallback: T): T {
   if (raw == null) return fallback;
@@ -159,9 +156,7 @@ function syncNotesReflectionsToServer(key: string) {
   for (const [lessonId, value] of Object.entries(map)) {
     if (!value) continue;
     void upsertProgress(
-      isNotes
-        ? { lessonId, notes: value }
-        : { lessonId, reflection: value },
+      isNotes ? { lessonId, notes: value } : { lessonId, reflection: value },
     );
   }
 }
