@@ -2,6 +2,7 @@ import Link from "next/link";
 import { curriculum } from "@/data/curriculum";
 import { getAssignments, getLessonRecords } from "@/lib/learning-catalog";
 import { LearnerDashboard } from "@/components/learner-dashboard";
+import { DashboardOverview } from "@/components/dashboard-overview";
 
 export default function DashboardPage() {
   const lessonRecords = getLessonRecords(curriculum);
@@ -25,6 +26,9 @@ export default function DashboardPage() {
 
       {/* Interactive learner dashboard */}
       <LearnerDashboard />
+
+      {/* Rich progress visualization */}
+      <DashboardOverview />
 
       <div className="academy-two-col">
         <div className="academy-col-block">
