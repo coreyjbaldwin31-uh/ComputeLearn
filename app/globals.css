@@ -1785,35 +1785,6 @@ button[disabled] {
   background: #d4544a;
 }
 
-/* ── Lesson table of contents ────────────────────────────── */
-
-.lesson-toc {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 12px 0 4px;
-}
-
-.lesson-toc-link {
-  padding: 5px 12px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--muted);
-  font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition:
-    background 150ms ease,
-    color 150ms ease;
-  text-decoration: none;
-}
-
-.lesson-toc-link:hover {
-  background: var(--accent-soft);
-  color: var(--accent-strong);
-}
-
 /* ── Progress bar percentage label ───────────────────────── */
 
 .progress-with-label {
@@ -3536,20 +3507,6 @@ button[disabled] {
 }
 
 /* ---------------------------------------------------------------------------
-   Lesson TOC – active highlight
-   --------------------------------------------------------------------------- */
-
-.lesson-toc-link:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.lesson-toc-link:active {
-  background: var(--accent);
-  color: #fff;
-}
-
-/* ---------------------------------------------------------------------------
    Mobile responsive additions
    --------------------------------------------------------------------------- */
 
@@ -3633,21 +3590,6 @@ button[disabled] {
 
 [data-theme="dark"] .section-label {
   color: var(--muted);
-}
-
-[data-theme="dark"] .lesson-toc-link {
-  border-color: var(--border);
-  color: var(--muted);
-}
-
-[data-theme="dark"] .lesson-toc-link:hover {
-  background: rgba(13, 107, 87, 0.12);
-  color: var(--accent);
-}
-
-[data-theme="dark"] .lesson-toc-link:active {
-  background: var(--accent);
-  color: #fff;
 }
 
 [data-theme="dark"] .note-card textarea,

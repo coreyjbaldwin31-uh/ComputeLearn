@@ -3,6 +3,7 @@
 import type { Course, Lesson, Phase } from "@/data/curriculum";
 import { useId } from "react";
 import { useFocusTrap } from "./hooks/use-focus-trap";
+import styles from "./lesson-header.module.css";
 
 type LessonHeaderProps = {
   selectedPhase: Phase;
@@ -141,34 +142,34 @@ export function LessonHeader({
         ) : null}
       </div>
 
-      <nav className="lesson-toc" aria-label="Lesson sections">
-        <a className="lesson-toc-link" href="#section-explanation">
+      <nav className={styles.lessonToc} aria-label="Lesson sections">
+        <a className={styles.lessonTocLink} href="#section-explanation">
           Concept
         </a>
-        <a className="lesson-toc-link" href="#section-exercises">
+        <a className={styles.lessonTocLink} href="#section-exercises">
           Exercises
         </a>
         {selectedLesson.exercises.length > 0 ? (
-          <a className="lesson-toc-link" href="#section-validation">
+          <a className={styles.lessonTocLink} href="#section-validation">
             Validation
           </a>
         ) : null}
         {selectedLesson.transferTask ? (
-          <a className="lesson-toc-link" href="#section-transfer">
+          <a className={styles.lessonTocLink} href="#section-transfer">
             Transfer
           </a>
         ) : null}
         {selectedLesson.codeExercises &&
         selectedLesson.codeExercises.length > 0 ? (
-          <a className="lesson-toc-link" href="#section-code">
+          <a className={styles.lessonTocLink} href="#section-code">
             Code
           </a>
         ) : null}
-        <a className="lesson-toc-link" href="#section-notes">
+        <a className={styles.lessonTocLink} href="#section-notes">
           Notes
         </a>
         {showTerminal ? (
-          <a className="lesson-toc-link" href="#section-terminal">
+          <a className={styles.lessonTocLink} href="#section-terminal">
             Terminal
           </a>
         ) : null}

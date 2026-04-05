@@ -1,0 +1,51 @@
+.lessonToc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 0 4px;
+}
+
+.lessonTocLink {
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
+  text-decoration: none;
+}
+
+.lessonTocLink:hover {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.lessonTocLink:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.lessonTocLink:active {
+  background: var(--accent);
+  color: #fff;
+}
+
+:global([data-theme="dark"]) .lessonTocLink {
+  border-color: var(--border);
+  color: var(--muted);
+}
+
+:global([data-theme="dark"]) .lessonTocLink:hover {
+  background: rgba(13, 107, 87, 0.12);
+  color: var(--accent);
+}
+
+:global([data-theme="dark"]) .lessonTocLink:active {
+  background: var(--accent);
+  color: #fff;
+}
