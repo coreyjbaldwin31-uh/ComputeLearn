@@ -1,0 +1,148 @@
+// Prisma schema for ComputeLearn
+// https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── Auth.js required models ────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  role          Role      @default(STUDENT)
+
+  accounts           Account[]
+  sessions           Session[]
+  enrollments        Enrollment[]
+  progress           Progress[]
+  submissions        Submission[]
+  labAttempts        LabAttempt[]
+  competencySnapshots CompetencySnapshot[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ── Application models ─────────────────────────────────────────────
+
+model Enrollment {
+  id        String   @id @default(cuid())
+  userId    String
+  courseId   String
+  role      Role     @default(STUDENT)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+}
+
+model Progress {
+  id         String   @id @default(cuid())
+  userId     String
+  lessonId   String
+  step       Int      @default(0)
+  completed  Boolean  @default(false)
+  notes      String?  @db.Text
+  reflection String?  @db.Text
+  updatedAt  DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+}
+
+model Submission {
+  id        String           @id @default(cuid())
+  userId    String
+  lessonId  String
+  content   String           @db.Text
+  status    SubmissionStatus @default(DRAFT)
+  feedback  String?          @db.Text
+  grade     Float?
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model LabAttempt {
+  id         String   @id @default(cuid())
+  userId     String
+  lessonId   String
+  templateId String
+  attempt    Int      @default(1)
+  files      Json
+  passed     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model CompetencySnapshot {
+  id        String   @id @default(cuid())
+  userId    String
+  domain    String
+  level     Float    @default(0)
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, domain])
+}
+
+// ── Enums ──────────────────────────────────────────────────────────
+
+enum Role {
+  STUDENT
+  INSTRUCTOR
+  TA
+}
+
+enum SubmissionStatus {
+  DRAFT
+  SUBMITTED
+  REVIEWED
+}

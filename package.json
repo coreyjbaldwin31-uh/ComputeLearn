@@ -21,10 +21,13 @@
     "api:test": "newman run tests/api/smoke.postman_collection.json"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.11.1",
     "@opentelemetry/api": "^1.9.1",
+    "@prisma/client": "^6.19.3",
     "@sentry/nextjs": "^10.46.0",
     "@vercel/otel": "^2.1.1",
     "next": "^16.2.1",
+    "next-auth": "^5.0.0-beta.30",
     "react": "19.0.0",
     "react-dom": "19.0.0"
   },
@@ -40,6 +43,7 @@
     "eslint-config-next": "^16.2.1",
     "jsdom": "^29.0.1",
     "newman": "^6.2.2",
+    "prisma": "^6.19.3",
     "typescript": "^5",
     "vitest": "^3.2.4"
   }
