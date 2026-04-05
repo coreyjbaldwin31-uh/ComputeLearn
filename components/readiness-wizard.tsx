@@ -7,6 +7,7 @@ import { buildIndependentLabSummary } from "@/lib/independent-lab-engine";
 import { buildIndependentReadinessSummary } from "@/lib/independent-readiness-engine";
 import { calculateCompetencyLevels } from "@/lib/progression-engine";
 import { useMemo } from "react";
+import styles from "./readiness-wizard.module.css";
 
 const STATUS_COLORS: Record<string, string> = {
   "not-started": "var(--ac-muted)",
@@ -35,7 +36,7 @@ function ReadinessRing({
 
   return (
     <svg
-      className="rw-ring-svg"
+      className={styles.ringSvg}
       viewBox="0 0 120 120"
       aria-hidden="true"
       role="img"
@@ -112,7 +113,7 @@ export function ReadinessWizard() {
 
   if (!readiness) {
     return (
-      <div className="rw-empty" role="status">
+      <div className={styles.empty} role="status">
         <p>
           Complete Phases 1–3 to unlock independent readiness tracking.
         </p>
@@ -123,22 +124,22 @@ export function ReadinessWizard() {
   const statusColor = STATUS_COLORS[readiness.statusLabel] ?? "var(--ac-muted)";
 
   return (
-    <div className="rw-container">
+    <div className={styles.container}>
       {/* Status Hero */}
-      <section className="rw-status-hero" aria-label="Readiness overview">
-        <div className="rw-ring-wrap">
+      <section className={styles.statusHero} aria-label="Readiness overview">
+        <div className={styles.ringWrap}>
           <ReadinessRing percent={readiness.readinessPercent} color={statusColor} />
-          <span className="rw-ring-text" aria-live="polite">
+          <span className={styles.ringText} aria-live="polite">
             {readiness.readinessPercent}%
           </span>
         </div>
         <span
-          className="rw-status-label"
+          className={styles.statusLabel}
           style={{ backgroundColor: statusColor }}
         >
           {STATUS_LABELS[readiness.statusLabel] ?? readiness.statusLabel}
         </span>
-        <p className="rw-hero-detail">
+        <p className={styles.heroDetail}>
           {readiness.completedLessons}/{readiness.totalLessons} lessons complete
           in {readiness.phaseTitle}
         </p>
@@ -146,19 +147,19 @@ export function ReadinessWizard() {
 
       {/* Readiness Checks */}
       <section aria-label="Readiness checks">
-        <h2 className="rw-section-heading">Readiness Checks</h2>
-        <ul className="rw-checks" role="list">
+        <h2 className={styles.sectionHeading}>Readiness Checks</h2>
+        <ul className={styles.checks} role="list">
           {readiness.checks.map((check) => (
             <li
               key={check.id}
-              className={`rw-check-item${check.passed ? " rw-check-item--passed" : ""}`}
+              className={`${styles.checkItem}${check.passed ? ` ${styles.checkItemPassed}` : ""}`}
             >
-              <span className="rw-check-icon" aria-hidden="true">
+              <span className={styles.checkIcon} aria-hidden="true">
                 {check.passed ? "✅" : "⬜"}
               </span>
-              <div className="rw-check-text">
-                <span className="rw-check-label">{check.label}</span>
-                <span className="rw-check-detail">{check.detail}</span>
+              <div className={styles.checkText}>
+                <span className={styles.checkLabel}>{check.label}</span>
+                <span className={styles.checkDetail}>{check.detail}</span>
               </div>
             </li>
           ))}
@@ -167,27 +168,27 @@ export function ReadinessWizard() {
 
       {/* Lab Performance */}
       <section aria-label="Lab performance">
-        <h2 className="rw-section-heading">Lab Performance</h2>
-        <div className="rw-lab-stats">
-          <div className="rw-stat-card">
-            <span className="rw-stat-value">{labSummary.totalLabs}</span>
-            <span className="rw-stat-label">Total Labs</span>
+        <h2 className={styles.sectionHeading}>Lab Performance</h2>
+        <div className={styles.labStats}>
+          <div className={styles.statCard}>
+            <span className={styles.statValue}>{labSummary.totalLabs}</span>
+            <span className={styles.statLabel}>Total Labs</span>
           </div>
-          <div className="rw-stat-card">
-            <span className="rw-stat-value">{labSummary.completedLabs}</span>
-            <span className="rw-stat-label">Completed</span>
+          <div className={styles.statCard}>
+            <span className={styles.statValue}>{labSummary.completedLabs}</span>
+            <span className={styles.statLabel}>Completed</span>
           </div>
-          <div className="rw-stat-card">
-            <span className="rw-stat-value">{labSummary.validatedLabs}</span>
-            <span className="rw-stat-label">Validated</span>
+          <div className={styles.statCard}>
+            <span className={styles.statValue}>{labSummary.validatedLabs}</span>
+            <span className={styles.statLabel}>Validated</span>
           </div>
-          <div className="rw-stat-card">
-            <span className="rw-stat-value">{labSummary.firstPassLabs}</span>
-            <span className="rw-stat-label">First Pass</span>
+          <div className={styles.statCard}>
+            <span className={styles.statValue}>{labSummary.firstPassLabs}</span>
+            <span className={styles.statLabel}>First Pass</span>
           </div>
-          <div className="rw-stat-card">
-            <span className="rw-stat-value">{labSummary.completionRate}%</span>
-            <span className="rw-stat-label">Completion Rate</span>
+          <div className={styles.statCard}>
+            <span className={styles.statValue}>{labSummary.completionRate}%</span>
+            <span className={styles.statLabel}>Completion Rate</span>
           </div>
         </div>
       </section>
@@ -195,22 +196,22 @@ export function ReadinessWizard() {
       {/* Phase Breakdown */}
       {labSummary.phaseBreakdown.some((p) => p.totalLabs > 0) && (
         <section aria-label="Phase breakdown">
-          <h2 className="rw-section-heading">Phase Breakdown</h2>
-          <div className="rw-phase-grid">
+          <h2 className={styles.sectionHeading}>Phase Breakdown</h2>
+          <div className={styles.phaseGrid}>
             {labSummary.phaseBreakdown
               .filter((p) => p.totalLabs > 0)
               .map((phase) => (
-                <div key={phase.phaseId} className="rw-phase-card">
-                  <h3 className="rw-phase-title">{phase.phaseTitle}</h3>
-                  <div className="rw-phase-bar-track">
+                <div key={phase.phaseId} className={styles.phaseCard}>
+                  <h3 className={styles.phaseTitle}>{phase.phaseTitle}</h3>
+                  <div className={styles.phaseBarTrack}>
                     <div
-                      className="rw-phase-bar-fill"
+                      className={styles.phaseBarFill}
                       style={{
                         width: `${phase.completionRate}%`,
                       }}
                     />
                   </div>
-                  <div className="rw-phase-stats">
+                  <div className={styles.phaseStats}>
                     <span>
                       {phase.completedLabs}/{phase.totalLabs} complete
                     </span>
@@ -226,8 +227,8 @@ export function ReadinessWizard() {
       {/* Unmet Requirements */}
       {readiness.unmetChecks.length > 0 && (
         <section aria-label="Next steps">
-          <h2 className="rw-section-heading">Next Steps</h2>
-          <ul className="rw-next-steps" role="list">
+          <h2 className={styles.sectionHeading}>Next Steps</h2>
+          <ul className={styles.nextSteps} role="list">
             {readiness.unmetChecks.map((msg) => (
               <li key={msg}>{msg}</li>
             ))}
