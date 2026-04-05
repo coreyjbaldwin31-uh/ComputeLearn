@@ -1,0 +1,38 @@
+.panel {
+  padding: 24px;
+}
+
+.emptyState {
+  color: var(--muted);
+  text-align: center;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.headRow {
+  border-bottom: 2px solid var(--border);
+  text-align: left;
+}
+
+.row {
+  border-bottom: 1px solid var(--border);
+}
+
+.cell {
+  padding: 8px 12px;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.reviewLink {
+  color: var(--accent);
+}

@@ -3,6 +3,7 @@ import { curriculum } from "@/data/curriculum";
 import { getLessonRecords } from "@/lib/learning-catalog";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
+import styles from "./gradebook-page.module.css";
 
 export const metadata = {
   title: "Gradebook — Instructor",
@@ -102,7 +103,7 @@ export default async function GradebookPage() {
     <div>
       <h1 className="page-title">Gradebook</h1>
 
-      <div className="stats" style={{ marginBottom: "24px" }}>
+      <div className={`stats ${styles.stats}`}>
         <div className="stat-card">
           <span>Students</span>
           <p className="stat-value">{students.length}</p>
@@ -119,15 +120,8 @@ export default async function GradebookPage() {
         </div>
       </div>
 
-      <div className="panel" style={{ padding: "24px", marginBottom: "24px" }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "16px",
-          }}
-        >
+      <div className={`panel ${styles.panelBlock}`}>
+        <div className={styles.headerRow}>
           <h2>Grades</h2>
           <a
             href="/api/instructor/gradebook/export"
@@ -139,28 +133,16 @@ export default async function GradebookPage() {
         </div>
 
         {students.length === 0 ? (
-          <p style={{ color: "var(--muted)", textAlign: "center" }}>
-            No students enrolled yet.
-          </p>
+          <p className={styles.emptyState}>No students enrolled yet.</p>
         ) : (
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <div className={styles.tableWrap}>
+            <table className={styles.table}>
               <caption className="sr-only">Student grades by lesson</caption>
               <thead>
-                <tr
-                  style={{
-                    borderBottom: "2px solid var(--border)",
-                    textAlign: "left",
-                  }}
-                >
+                <tr className={styles.headRow}>
                   <th
                     scope="col"
-                    style={{
-                      padding: "8px 12px",
-                      position: "sticky",
-                      left: 0,
-                      background: "var(--bg, #fff)",
-                    }}
+                    className={`${styles.cell} ${styles.stickyCell}`}
                   >
                     Student
                   </th>
@@ -168,13 +150,7 @@ export default async function GradebookPage() {
                     <th
                       key={l.id}
                       scope="col"
-                      style={{
-                        padding: "8px 12px",
-                        maxWidth: "120px",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                      }}
+                      className={`${styles.cell} ${styles.lessonHeaderCell}`}
                       title={l.title}
                     >
                       {l.title}
@@ -182,7 +158,7 @@ export default async function GradebookPage() {
                   ))}
                   <th
                     scope="col"
-                    style={{ padding: "8px 12px", fontWeight: 700 }}
+                    className={`${styles.cell} ${styles.strongCell}`}
                   >
                     Average
                   </th>
@@ -192,19 +168,10 @@ export default async function GradebookPage() {
                 {students.map((student) => {
                   const avg = studentAvg(student.id);
                   return (
-                    <tr
-                      key={student.id}
-                      style={{ borderBottom: "1px solid var(--border)" }}
-                    >
+                    <tr key={student.id} className={styles.row}>
                       <th
                         scope="row"
-                        style={{
-                          padding: "8px 12px",
-                          position: "sticky",
-                          left: 0,
-                          background: "var(--bg, #fff)",
-                          fontWeight: "normal",
-                        }}
+                        className={`${styles.cell} ${styles.stickyCell} ${styles.normalWeight}`}
                       >
                         {student.name ?? student.email ?? "Unknown"}
                       </th>
@@ -213,21 +180,14 @@ export default async function GradebookPage() {
                         return (
                           <td
                             key={l.id}
-                            style={{
-                              padding: "8px 12px",
-                              textAlign: "center",
-                            }}
+                            className={`${styles.cell} ${styles.centerCell}`}
                           >
                             {grade != null ? grade.toFixed(0) : "—"}
                           </td>
                         );
                       })}
                       <td
-                        style={{
-                          padding: "8px 12px",
-                          textAlign: "center",
-                          fontWeight: 600,
-                        }}
+                        className={`${styles.cell} ${styles.centerCell} ${styles.averageCell}`}
                       >
                         {avg != null ? avg.toFixed(1) : "—"}
                       </td>
@@ -235,20 +195,10 @@ export default async function GradebookPage() {
                   );
                 })}
                 {/* Class averages row */}
-                <tr
-                  style={{
-                    borderTop: "2px solid var(--border)",
-                    fontWeight: 600,
-                  }}
-                >
+                <tr className={styles.classAverageRow}>
                   <th
                     scope="row"
-                    style={{
-                      padding: "8px 12px",
-                      position: "sticky",
-                      left: 0,
-                      background: "var(--bg, #fff)",
-                    }}
+                    className={`${styles.cell} ${styles.stickyCell}`}
                   >
                     Class Average
                   </th>
@@ -257,21 +207,13 @@ export default async function GradebookPage() {
                     return (
                       <td
                         key={l.id}
-                        style={{
-                          padding: "8px 12px",
-                          textAlign: "center",
-                        }}
+                        className={`${styles.cell} ${styles.centerCell}`}
                       >
                         {avg ? (avg.total / avg.count).toFixed(1) : "—"}
                       </td>
                     );
                   })}
-                  <td
-                    style={{
-                      padding: "8px 12px",
-                      textAlign: "center",
-                    }}
-                  >
+                  <td className={`${styles.cell} ${styles.centerCell}`}>
                     {classAvg != null ? classAvg.toFixed(1) : "—"}
                   </td>
                 </tr>

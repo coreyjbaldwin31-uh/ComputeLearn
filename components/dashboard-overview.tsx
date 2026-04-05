@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { curriculum } from '@/data/curriculum';
-import { useLocalStorageState } from '@/components/hooks/use-local-storage-state';
-import styles from './dashboard-overview.module.css';
+import { useLocalStorageState } from "@/components/hooks/use-local-storage-state";
+import { curriculum } from "@/data/curriculum";
+import Link from "next/link";
+import styles from "./dashboard-overview.module.css";
 
 export function DashboardOverview() {
   const [progress] = useLocalStorageState<Record<string, true>>(
-    'computelearn-progress',
+    "computelearn-progress",
     {},
   );
 
@@ -37,8 +37,8 @@ export function DashboardOverview() {
 
   // Find next uncompleted lesson
   let nextLesson: { id: string; title: string } | null = null;
-  let nextPhaseTitle = '';
-  let nextCourseTitle = '';
+  let nextPhaseTitle = "";
+  let nextCourseTitle = "";
   for (const phase of phases) {
     for (const course of phase.courses) {
       for (const lesson of course.lessons) {
@@ -61,19 +61,12 @@ export function DashboardOverview() {
         <div className={`${styles.statCard} ${styles.statCardPrimary}`}>
           <span className={styles.statValue}>{percentComplete}%</span>
           <span className={styles.statLabel}>Overall Progress</span>
-          <div
+          <progress
             className={styles.progressBar}
-            role="progressbar"
-            aria-valuenow={percentComplete}
-            aria-valuemin={0}
-            aria-valuemax={100}
+            max={100}
+            value={percentComplete}
             aria-label="Overall progress"
-          >
-            <div
-              className={styles.progressFill}
-              style={{ width: `${percentComplete}%` }}
-            />
-          </div>
+          />
         </div>
         <div className={styles.statCard}>
           <span className={styles.statValue}>{completedLessons}</span>
@@ -102,19 +95,12 @@ export function DashboardOverview() {
                   {completed} / {total} lessons
                 </span>
               </div>
-              <div
+              <progress
                 className={styles.phaseBar}
-                role="progressbar"
-                aria-valuenow={pct}
-                aria-valuemin={0}
-                aria-valuemax={100}
+                max={100}
+                value={pct}
                 aria-label={`${phase.title} progress`}
-              >
-                <div
-                  className={styles.phaseFill}
-                  style={{ width: `${pct}%` }}
-                />
-              </div>
+              />
               <span className={styles.phasePct}>{pct}%</span>
             </div>
           );
@@ -123,7 +109,10 @@ export function DashboardOverview() {
 
       {/* Continue learning CTA */}
       {nextLesson && (
-        <section className={styles.continueSection} aria-label="Continue learning">
+        <section
+          className={styles.continueSection}
+          aria-label="Continue learning"
+        >
           <h2 className={styles.sectionTitle}>Continue Learning</h2>
           <Link
             href={`/lessons/${nextLesson.id}`}

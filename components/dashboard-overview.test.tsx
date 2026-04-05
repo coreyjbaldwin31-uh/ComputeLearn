@@ -72,7 +72,7 @@ describe("DashboardOverview", () => {
     render(<DashboardOverview />);
 
     const bar = screen.getByRole("progressbar", { name: "Overall progress" });
-    expect(bar).toHaveAttribute("aria-valuenow", "0");
+    expect(bar).toHaveAttribute("value", "0");
     expect(screen.getByText("Overall Progress")).toBeInTheDocument();
   });
 
@@ -83,9 +83,7 @@ describe("DashboardOverview", () => {
 
     render(<DashboardOverview />);
 
-    expect(
-      screen.getByText("Phase 1: Fundamentals"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Phase 1: Fundamentals")).toBeInTheDocument();
     expect(screen.getByText("Phase 2: Building")).toBeInTheDocument();
     expect(screen.getByText("Your Learning Path")).toBeInTheDocument();
   });
@@ -103,12 +101,10 @@ describe("DashboardOverview", () => {
   });
 
   it("computes progress correctly when some lessons are completed", () => {
-    mockUseLocalStorageState.mockImplementation(
-      () => [
-        { l1: true, l2: true } as Record<string, true>,
-        vi.fn(),
-      ],
-    );
+    mockUseLocalStorageState.mockImplementation(() => [
+      { l1: true, l2: true } as Record<string, true>,
+      vi.fn(),
+    ]);
 
     render(<DashboardOverview />);
 

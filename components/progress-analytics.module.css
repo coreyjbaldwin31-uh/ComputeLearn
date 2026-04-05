@@ -169,11 +169,28 @@
   overflow: hidden;
 }
 
-.phaseFill {
-  height: 100%;
+.phaseProgress {
+  flex: 1;
+  height: 6px;
+  appearance: none;
+  border: none;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.phaseProgress::-webkit-progress-bar {
+  background: var(--ac-border);
+  border-radius: 3px;
+}
+
+.phaseProgress::-webkit-progress-value {
   background: var(--ac-accent);
   border-radius: 3px;
-  transition: width 0.4s ease;
+}
+
+.phaseProgress::-moz-progress-bar {
+  background: var(--ac-accent);
+  border-radius: 3px;
 }
 
 .phasePct {

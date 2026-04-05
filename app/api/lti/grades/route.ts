@@ -3,6 +3,33 @@ import { isLtiConfigured } from "@/lib/lti-config";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
+type LtiGradeSyncRecord = {
+  id: string;
+};
+
+type LtiGradeSyncCreateInput = {
+  userId: string;
+  lessonId: string;
+  grade: number;
+  comment: string | null;
+  synced: boolean;
+};
+
+type LtiGradeSyncDelegate = {
+  create: (args: {
+    data: LtiGradeSyncCreateInput;
+  }) => Promise<LtiGradeSyncRecord>;
+};
+
+type PrismaWithLtiGradeSync = {
+  ltiGradeSync?: LtiGradeSyncDelegate;
+};
+
+function getLtiGradeSyncDelegate(): LtiGradeSyncDelegate | null {
+  const candidate = (prisma as unknown as PrismaWithLtiGradeSync).ltiGradeSync;
+  return candidate?.create ? candidate : null;
+}
+
 /**
  * LTI Assignment and Grade Services (AGS) — grade passback to Canvas.
  * V1: stores the grade passback request. Actual HTTP call to Canvas
@@ -66,8 +93,16 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
 
+  const ltiGradeSync = getLtiGradeSyncDelegate();
+  if (!ltiGradeSync) {
+    return NextResponse.json(
+      { error: "LTI grade sync persistence is not available" },
+      { status: 503 },
+    );
+  }
+
   try {
-    const record = await prisma.ltiGradeSync.create({
+    const record = await ltiGradeSync.create({
       data: {
         userId,
         lessonId,

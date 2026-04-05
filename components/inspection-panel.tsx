@@ -42,9 +42,7 @@ export function InspectionPanel({
         </svg>
         <div>
           <span className={styles.gapLabel}>Skill gap</span>
-          <span className={styles.gapValue}>
-            {inspection.probableSkillGap}
-          </span>
+          <span className={styles.gapValue}>{inspection.probableSkillGap}</span>
         </div>
       </div>
       <div className={styles.grid}>

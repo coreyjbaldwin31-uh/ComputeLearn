@@ -13,7 +13,9 @@ export function AcademyBreadcrumbs({ items }: { items: Crumb[] }) {
         {items.map((item, index) => (
           <li
             key={`${item.label}-${index}`}
-            className={index === items.length - 1 ? styles.current : styles.item}
+            className={
+              index === items.length - 1 ? styles.current : styles.item
+            }
           >
             {item.href ? (
               <Link href={item.href} className={styles.link}>

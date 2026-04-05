@@ -1,8 +1,8 @@
-import Link from "next/link";
+import { DashboardOverview } from "@/components/dashboard-overview";
+import { LearnerDashboard } from "@/components/learner-dashboard";
 import { curriculum } from "@/data/curriculum";
 import { getAssignments, getLessonRecords } from "@/lib/learning-catalog";
-import { LearnerDashboard } from "@/components/learner-dashboard";
-import { DashboardOverview } from "@/components/dashboard-overview";
+import Link from "next/link";
 
 export default function DashboardPage() {
   const lessonRecords = getLessonRecords(curriculum);

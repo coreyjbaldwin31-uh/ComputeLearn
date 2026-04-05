@@ -18,18 +18,33 @@ export function CollapsiblePanel({
 
   return (
     <section className="panel">
-      <button
-        type="button"
-        className="collapsible-header"
-        onClick={() => setOpen((prev) => !prev)}
-        aria-expanded={open}
-        aria-controls={panelId}
-      >
-        <h3>{title}</h3>
-        <span className="collapsible-chevron" aria-hidden="true">
-          ▸
-        </span>
-      </button>
+      {open ? (
+        <button
+          type="button"
+          className="collapsible-header"
+          onClick={() => setOpen((prev) => !prev)}
+          aria-expanded="true"
+          aria-controls={panelId}
+        >
+          <h3>{title}</h3>
+          <span className="collapsible-chevron" aria-hidden="true">
+            ▸
+          </span>
+        </button>
+      ) : (
+        <button
+          type="button"
+          className="collapsible-header"
+          onClick={() => setOpen((prev) => !prev)}
+          aria-expanded="false"
+          aria-controls={panelId}
+        >
+          <h3>{title}</h3>
+          <span className="collapsible-chevron" aria-hidden="true">
+            ▸
+          </span>
+        </button>
+      )}
       <div id={panelId} className="collapsible-body" data-open={open}>
         <div className="collapsible-inner">{children}</div>
       </div>

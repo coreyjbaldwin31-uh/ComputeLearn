@@ -173,7 +173,10 @@ const features = [
 
 export function FeatureHighlights() {
   return (
-    <section className={styles.featureHighlights} aria-label="Platform features">
+    <section
+      className={styles.featureHighlights}
+      aria-label="Platform features"
+    >
       <div className={styles.featureHighlightsHeader}>
         <span className="eyebrow">Everything you need</span>
         <h2 className={styles.featureHighlightsTitle}>

@@ -75,7 +75,11 @@ export function FaqSection() {
                   </span>
                 </button>
               </h3>
-              <div className={styles.faqAnswer} data-open={isOpen} role="region">
+              <div
+                className={styles.faqAnswer}
+                data-open={isOpen}
+                role="region"
+              >
                 <div className={styles.faqAnswerInner}>
                   <p>{item.answer}</p>
                 </div>

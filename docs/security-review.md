@@ -7,19 +7,19 @@
 
 ## Findings
 
-| # | Severity | Finding | File | Line | Status |
-|---|----------|---------|------|------|--------|
-| 1 | High | LTI callback decodes JWT without cryptographic signature verification | `app/api/lti/callback/route.ts` | 38 | mitigated — gated by `isLtiConfigured()` requiring `LTI_JWKS_URL` |
-| 2 | High | LTI launch generates nonce/state but never persists them; callback cannot validate state against replay/CSRF | `app/api/lti/launch/route.ts` | 52-53 | pending |
-| 3 | Medium | CSV injection — gradebook export cell values starting with `=`, `+`, `-`, `@` were not sanitized | `app/api/instructor/gradebook/export/route.ts` | 63 | **fixed** |
-| 4 | Medium | No input size limits on progress notes/reflection fields (potential DoS via large payloads) | `app/api/progress/route.ts` | — | **fixed** (10 KB limit) |
-| 5 | Medium | No input size limits on submission content/feedback (potential DoS via large payloads) | `app/api/submissions/route.ts`, `app/api/submissions/[id]/route.ts` | — | **fixed** (100 KB limit) |
-| 6 | Medium | CSV enrollment import had no body size limit | `app/api/instructor/enrollments/import/route.ts` | — | **fixed** (1 MB limit) |
-| 7 | Medium | `NEXT_PUBLIC_APP_URL` used in server-only LTI config — `NEXT_PUBLIC_` prefix causes Next.js to bundle into client JS | `lib/lti-config.ts` | 13 | **fixed** — renamed to `APP_URL` with fallback |
-| 8 | Low | LTI endpoints blocked by auth middleware — LTI integration is non-functional until `/api/lti` is exempted | `middleware.ts` | 37 | noted — must add exemption when LTI is deployed, after JWKS verification is implemented |
-| 9 | Low | No rate limiting on any endpoints | all routes | — | pending |
-| 10 | Low | Health endpoint exposes `process.uptime()` — minor info leak | `app/api/health/route.ts` | 26 | accepted |
-| 11 | Info | Instructor can review any submission regardless of enrollment scope | `app/api/submissions/[id]/route.ts` | 46 | accepted — single-course platform, appropriate for current model |
+| #   | Severity | Finding                                                                                                              | File                                                                | Line  | Status                                                                                  |
+| --- | -------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ----- | --------------------------------------------------------------------------------------- |
+| 1   | High     | LTI callback decodes JWT without cryptographic signature verification                                                | `app/api/lti/callback/route.ts`                                     | 38    | mitigated — gated by `isLtiConfigured()` requiring `LTI_JWKS_URL`                       |
+| 2   | High     | LTI launch generates nonce/state but never persists them; callback cannot validate state against replay/CSRF         | `app/api/lti/launch/route.ts`                                       | 52-53 | pending                                                                                 |
+| 3   | Medium   | CSV injection — gradebook export cell values starting with `=`, `+`, `-`, `@` were not sanitized                     | `app/api/instructor/gradebook/export/route.ts`                      | 63    | **fixed**                                                                               |
+| 4   | Medium   | No input size limits on progress notes/reflection fields (potential DoS via large payloads)                          | `app/api/progress/route.ts`                                         | —     | **fixed** (10 KB limit)                                                                 |
+| 5   | Medium   | No input size limits on submission content/feedback (potential DoS via large payloads)                               | `app/api/submissions/route.ts`, `app/api/submissions/[id]/route.ts` | —     | **fixed** (100 KB limit)                                                                |
+| 6   | Medium   | CSV enrollment import had no body size limit                                                                         | `app/api/instructor/enrollments/import/route.ts`                    | —     | **fixed** (1 MB limit)                                                                  |
+| 7   | Medium   | `NEXT_PUBLIC_APP_URL` used in server-only LTI config — `NEXT_PUBLIC_` prefix causes Next.js to bundle into client JS | `lib/lti-config.ts`                                                 | 13    | **fixed** — renamed to `APP_URL` with fallback                                          |
+| 8   | Low      | LTI endpoints blocked by auth middleware — LTI integration is non-functional until `/api/lti` is exempted            | `middleware.ts`                                                     | 37    | noted — must add exemption when LTI is deployed, after JWKS verification is implemented |
+| 9   | Low      | No rate limiting on any endpoints                                                                                    | all routes                                                          | —     | pending                                                                                 |
+| 10  | Low      | Health endpoint exposes `process.uptime()` — minor info leak                                                         | `app/api/health/route.ts`                                           | 26    | accepted                                                                                |
+| 11  | Info     | Instructor can review any submission regardless of enrollment scope                                                  | `app/api/submissions/[id]/route.ts`                                 | 46    | accepted — single-course platform, appropriate for current model                        |
 
 ---
 
@@ -46,7 +46,7 @@
 
 ## Areas Reviewed
 
-- All 14 API routes in scope (progress, submissions, instructor/*, lti/*, account/delete, export/transcript/*, health)
+- All 14 API routes in scope (progress, submissions, instructor/_, lti/_, account/delete, export/transcript/\*, health)
 - Auth system (`auth.ts`, `middleware.ts`, `lib/auth-helpers.ts`)
 - LTI config (`lib/lti-config.ts`)
 - Client components (data-portability-dialog, roster-management, submission-panel, academy-global-ux, readiness-wizard)

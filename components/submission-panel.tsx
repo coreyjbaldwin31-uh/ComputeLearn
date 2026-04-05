@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import styles from "./submission-panel.module.css";
 
 type Submission = {
   id: string;
@@ -119,8 +120,8 @@ export function SubmissionPanel({ lessonId }: SubmissionPanelProps) {
   const isReviewed = submission?.status === "REVIEWED";
 
   return (
-    <div className="panel" style={{ padding: "16px", marginTop: "16px" }}>
-      <h4 style={{ marginBottom: "8px" }}>Submission</h4>
+    <div className={`panel ${styles.panel}`}>
+      <h4 className={styles.title}>Submission</h4>
 
       <div className="sr-only" aria-live="polite" aria-atomic="true">
         {isReviewed
@@ -131,38 +132,26 @@ export function SubmissionPanel({ lessonId }: SubmissionPanelProps) {
       </div>
 
       {isReviewed && (
-        <div style={{ marginBottom: "12px" }}>
-          <span
-            className="assessment-badge"
-            style={{ background: "var(--success, #22c55e)", color: "#fff" }}
-          >
+        <div className={styles.reviewedBlock}>
+          <span className={`assessment-badge ${styles.reviewedBadge}`}>
             Reviewed
           </span>
           {submission.grade != null && (
-            <span style={{ marginLeft: "8px", fontWeight: 600 }}>
+            <span className={styles.gradeText}>
               Grade: {submission.grade}/100
             </span>
           )}
           {submission.feedback && (
-            <div
-              style={{
-                marginTop: "8px",
-                padding: "12px",
-                background: "var(--surface, #f5f5f5)",
-                borderRadius: "6px",
-              }}
-            >
+            <div className={styles.feedbackCard}>
               <strong>Instructor Feedback:</strong>
-              <p style={{ marginTop: "4px", whiteSpace: "pre-wrap" }}>
-                {submission.feedback}
-              </p>
+              <p className={styles.feedbackText}>{submission.feedback}</p>
             </div>
           )}
         </div>
       )}
 
       {isSubmitted && (
-        <div style={{ marginBottom: "12px" }}>
+        <div className={styles.submittedBlock}>
           <span className="assessment-badge">Submitted — Awaiting Review</span>
         </div>
       )}
@@ -174,30 +163,17 @@ export function SubmissionPanel({ lessonId }: SubmissionPanelProps) {
         placeholder="Write your response here..."
         aria-label="Submission response"
         rows={8}
-        style={{
-          width: "100%",
-          padding: "12px",
-          borderRadius: "6px",
-          border: "1px solid var(--border)",
-          fontFamily: "inherit",
-          fontSize: "14px",
-          resize: "vertical",
-          background:
-            isSubmitted || isReviewed ? "var(--surface, #f5f5f5)" : undefined,
-        }}
+        className={`${styles.textarea} ${isSubmitted || isReviewed ? styles.textareaDisabled : ""}`}
       />
 
       {error && (
-        <p
-          role="alert"
-          style={{ color: "var(--error, #ef4444)", marginTop: "8px" }}
-        >
+        <p role="alert" className={styles.error}>
           {error}
         </p>
       )}
 
       {isDraft && (
-        <div style={{ display: "flex", gap: "8px", marginTop: "12px" }}>
+        <div className={styles.actions}>
           {!submission ? (
             <button
               className="btn"

@@ -1,0 +1,29 @@
+.panelBlock {
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.metaGrid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 16px;
+  margin-bottom: 16px;
+}
+
+.sectionTitle {
+  margin-bottom: 12px;
+}
+
+.mutedNote {
+  margin-top: 8px;
+  color: var(--muted);
+}
+
+.responseBody {
+  padding: 16px;
+  background: var(--surface, #f5f5f5);
+  border-radius: 6px;
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 14px;
+}

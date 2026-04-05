@@ -170,9 +170,7 @@ export function AchievementPanel({
               className={`${styles.badge} ${badge.earned ? styles.badgeEarned : ""}`}
             >
               <BadgeIcon earned={badge.earned} />
-              <span className={styles.badgeLevel}>
-                {badge.phaseLevel}
-              </span>
+              <span className={styles.badgeLevel}>{badge.phaseLevel}</span>
               <span className={styles.badgeLabel}>
                 {badge.earned ? "Cleared" : "Locked"}
               </span>

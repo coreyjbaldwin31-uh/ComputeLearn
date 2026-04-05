@@ -1,8 +1,8 @@
 "use client";
 
 import type { Lesson } from "@/data/curriculum";
-import { RichText } from "./rich-text";
 import styles from "./guided-notes.module.css";
+import { RichText } from "./rich-text";
 
 type GuidedNotesProps = {
   lesson: Lesson;
@@ -64,7 +64,8 @@ export function GuidedNotes({
                   onChange={(e) => onUnderstoodChange(i, e.target.checked)}
                   className={styles.checkbox}
                 />
-                <span className={styles.checkboxVisual} />I understand this concept
+                <span className={styles.checkboxVisual} />I understand this
+                concept
               </label>
             </div>
           </div>

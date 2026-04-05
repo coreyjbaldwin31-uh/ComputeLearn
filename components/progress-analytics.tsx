@@ -72,7 +72,9 @@ export function ProgressAnalytics() {
         <h2 className={styles.sectionTitle}>Outcomes Dashboard</h2>
         <div className={styles.overall}>
           <span className={styles.overallLabel}>Overall Score</span>
-          <span className={`${styles.overallValue} ${statusClass(outcomes.status)}`}>
+          <span
+            className={`${styles.overallValue} ${statusClass(outcomes.status)}`}
+          >
             {outcomes.overallScore}%
           </span>
         </div>
@@ -80,7 +82,9 @@ export function ProgressAnalytics() {
           {outcomes.snapshots.map((snap) => (
             <div key={snap.id} className={styles.metricCard}>
               <span className={styles.metricLabel}>{snap.label}</span>
-              <span className={`${styles.metricValue} ${statusClass(snap.status)}`}>
+              <span
+                className={`${styles.metricValue} ${statusClass(snap.status)}`}
+              >
                 {snap.value}%
               </span>
             </div>
@@ -113,17 +117,19 @@ export function ProgressAnalytics() {
               <div key={phase.phaseId} className={styles.phaseCard}>
                 <div className={styles.phaseHeader}>
                   <span className={styles.phaseName}>{phase.title}</span>
-                  <span className={`${styles.phaseBadge} ${phaseBadgeClass(phase.statusLabel)}`}>
+                  <span
+                    className={`${styles.phaseBadge} ${phaseBadgeClass(phase.statusLabel)}`}
+                  >
                     {phase.statusLabel.replace("-", " ")}
                   </span>
                 </div>
                 <div className={styles.phaseBarWrap}>
-                  <div className={styles.phaseBar}>
-                    <div
-                      className={styles.phaseFill}
-                      style={{ width: `${pct}%` }}
-                    />
-                  </div>
+                  <progress
+                    className={styles.phaseProgress}
+                    max={100}
+                    value={pct}
+                    aria-label={`${phase.title} progress`}
+                  />
                   <span className={styles.phasePct}>{pct}%</span>
                 </div>
                 <span className={styles.phaseDetail}>
@@ -173,12 +179,12 @@ export function ProgressAnalytics() {
               </span>
             </div>
             <div className={styles.phaseBarWrap}>
-              <div className={styles.phaseBar}>
-                <div
-                  className={styles.phaseFill}
-                  style={{ width: `${readiness.readinessPercent}%` }}
-                />
-              </div>
+              <progress
+                className={styles.phaseProgress}
+                max={100}
+                value={readiness.readinessPercent}
+                aria-label="Portfolio readiness"
+              />
             </div>
             <div className={styles.readinessStats}>
               <span>

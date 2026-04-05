@@ -100,8 +100,18 @@ describe("ReadinessWizard", () => {
       totalLessons: 6,
       phaseTitle: "Phase 4",
       checks: [
-        { id: "c1", label: "Core lessons complete", detail: "3 of 6", passed: true },
-        { id: "c2", label: "Transfer tasks done", detail: "1 of 4", passed: false },
+        {
+          id: "c1",
+          label: "Core lessons complete",
+          detail: "3 of 6",
+          passed: true,
+        },
+        {
+          id: "c2",
+          label: "Transfer tasks done",
+          detail: "1 of 4",
+          passed: false,
+        },
       ],
       unmetChecks: ["Complete remaining transfer tasks"],
     });

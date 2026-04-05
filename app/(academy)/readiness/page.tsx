@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import { ReadinessWizard } from "@/components/readiness-wizard";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Independent Readiness | ComputeLearn",

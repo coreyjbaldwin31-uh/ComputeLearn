@@ -28,7 +28,9 @@ export function LessonNavigation({
           </span>
           <span className={styles.lessonNavLabel}>
             <span className={styles.lessonNavKicker}>Previous lesson</span>
-            <span className={styles.lessonNavTitle}>{prevEntry.lesson.title}</span>
+            <span className={styles.lessonNavTitle}>
+              {prevEntry.lesson.title}
+            </span>
           </span>
         </button>
       ) : (
@@ -43,7 +45,9 @@ export function LessonNavigation({
         >
           <span className={`${styles.lessonNavLabel} ${styles.right}`}>
             <span className={styles.lessonNavKicker}>Next lesson</span>
-            <span className={styles.lessonNavTitle}>{nextEntry.lesson.title}</span>
+            <span className={styles.lessonNavTitle}>
+              {nextEntry.lesson.title}
+            </span>
           </span>
           <span className={styles.lessonNavArrow} aria-hidden="true">
             →

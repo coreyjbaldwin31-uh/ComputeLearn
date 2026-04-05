@@ -423,7 +423,7 @@ CSS design system in `globals.css` using `--ac-*` custom properties:
 | --- | --------------------------------------------------------------------------------- | ------ |
 | T7  | Content quality pass — Phase 1 lessons (explanation, demo, retention depth)       | ✅     |
 | T8  | Content quality pass — Phase 2–4 lessons                                          | ✅     |
-| T9  | CSS modularization — extract component class-system namespaces from globals.css   | 🔧      |
+| T9  | CSS modularization — extract component class-system namespaces from globals.css   | 🔧     |
 | T10 | Independent readiness UI route — `/readiness` page with assessment wizard         | ✅     |
 | T11 | Export/backup dialog for localStorage — JSON download/import for data portability | ✅     |
 
@@ -549,7 +549,7 @@ Gaps are tiered by deployment impact. **Tier 1** items are blockers — the plat
 
 ### 11.5 Dependency Graph
 
-```
+```text
 T16 (Auth) ──────────┬──→ T19 (API routes) ──→ T20 (Migration) ──→ T29 (Export)
                       │          │
 T17 (Postgres) → T18 (Models) ──┘──→ T21 (Roles) ──→ T22 (Dashboard) ──→ T23 (Roster)

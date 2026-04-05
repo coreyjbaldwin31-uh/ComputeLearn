@@ -44,11 +44,7 @@ export function SaveToast({
         </svg>
         <span>{message}</span>
         {actionLabel && onAction ? (
-          <button
-            type="button"
-            className={styles.action}
-            onClick={onAction}
-          >
+          <button type="button" className={styles.action} onClick={onAction}>
             {actionLabel}
           </button>
         ) : null}

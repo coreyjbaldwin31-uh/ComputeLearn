@@ -1,0 +1,76 @@
+.stats {
+  margin-bottom: 24px;
+}
+
+.panelBlock {
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.emptyState {
+  color: var(--muted);
+  text-align: center;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.headRow {
+  border-bottom: 2px solid var(--border);
+  text-align: left;
+}
+
+.row {
+  border-bottom: 1px solid var(--border);
+}
+
+.classAverageRow {
+  border-top: 2px solid var(--border);
+  font-weight: 600;
+}
+
+.cell {
+  padding: 8px 12px;
+}
+
+.stickyCell {
+  position: sticky;
+  left: 0;
+  background: var(--bg, #fff);
+}
+
+.lessonHeaderCell {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.centerCell {
+  text-align: center;
+}
+
+.strongCell {
+  font-weight: 700;
+}
+
+.averageCell {
+  font-weight: 600;
+}
+
+.normalWeight {
+  font-weight: normal;
+}

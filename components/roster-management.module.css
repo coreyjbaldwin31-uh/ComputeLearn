@@ -1,0 +1,111 @@
+.message {
+  padding: 8px 12px;
+  margin-bottom: 16px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.formRow {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.fieldLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fieldLabelText {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.fieldInput {
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface-strong);
+  color: var(--text);
+}
+
+.buttonDisabled {
+  cursor: not-allowed;
+}
+
+.primaryButton {
+  padding: 8px 20px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.secondaryButton {
+  padding: 8px 20px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface-strong);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.importRow {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.fileInput {
+  font-size: 0.9rem;
+}
+
+.tableScroll {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableHeadRow {
+  border-bottom: 2px solid var(--border);
+  text-align: left;
+}
+
+.tableRow {
+  border-bottom: 1px solid var(--border);
+}
+
+.cell {
+  padding: 8px 12px;
+}
+
+.mutedCell {
+  color: var(--muted);
+}
+
+.removeButton {
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--error);
+  background: transparent;
+  color: var(--error);
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.emptyCell {
+  padding: 24px 12px;
+  text-align: center;
+  color: var(--muted);
+}

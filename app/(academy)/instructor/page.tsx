@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { RosterManagement } from "@/components/roster-management";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
+import styles from "./page.module.css";
 
 export const metadata = {
   title: "Instructor Dashboard",
@@ -119,7 +120,7 @@ export default async function InstructorPage() {
     <div>
       <h1 className="page-title">Instructor Dashboard</h1>
 
-      <div className="stats" style={{ marginBottom: "24px" }}>
+      <div className={`stats ${styles.statsSpacing}`}>
         <div className="stat-card">
           <span>Total Students</span>
           <p className="stat-value">{totalStudents}</p>
@@ -134,67 +135,57 @@ export default async function InstructorPage() {
         </div>
       </div>
 
-      <div className="panel" style={{ padding: "24px", marginBottom: "24px" }}>
-        <h2 style={{ marginBottom: "16px" }}>Student Roster</h2>
-        <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+      <div className={`panel ${styles.panelSection} ${styles.panelSpacing}`}>
+        <h2 className={styles.sectionHeading}>Student Roster</h2>
+        <div className={styles.tableScroll}>
+          <table className={styles.table}>
             <caption className="sr-only">
               Student roster with enrollment and progress details
             </caption>
             <thead>
-              <tr
-                style={{
-                  borderBottom: "2px solid var(--border)",
-                  textAlign: "left",
-                }}
-              >
-                <th scope="col" style={{ padding: "8px 12px" }}>
+              <tr className={styles.tableHeadRow}>
+                <th scope="col" className={styles.cell}>
                   Name
                 </th>
-                <th scope="col" style={{ padding: "8px 12px" }}>
+                <th scope="col" className={styles.cell}>
                   Email
                 </th>
-                <th scope="col" style={{ padding: "8px 12px" }}>
+                <th scope="col" className={styles.cell}>
                   Enrolled Courses
                 </th>
-                <th scope="col" style={{ padding: "8px 12px" }}>
+                <th scope="col" className={styles.cell}>
                   Lessons Completed
                 </th>
-                <th scope="col" style={{ padding: "8px 12px" }}>
+                <th scope="col" className={styles.cell}>
                   Avg Competency
                 </th>
-                <th scope="col" style={{ padding: "8px 12px" }}>
+                <th scope="col" className={styles.cell}>
                   Last Active
                 </th>
               </tr>
             </thead>
             <tbody>
               {students.map((student) => (
-                <tr
-                  key={student.id}
-                  style={{ borderBottom: "1px solid var(--border)" }}
-                >
-                  <td style={{ padding: "8px 12px" }}>
+                <tr key={student.id} className={styles.tableRow}>
+                  <td className={styles.cell}>
                     <a
                       href={`/instructor/students/${student.id}`}
-                      style={{ color: "var(--accent)" }}
+                      className={styles.studentLink}
                     >
                       {student.name ?? "Unknown"}
                     </a>
                   </td>
-                  <td style={{ padding: "8px 12px", color: "var(--muted)" }}>
+                  <td className={`${styles.cell} ${styles.mutedCell}`}>
                     {student.email ?? "—"}
                   </td>
-                  <td style={{ padding: "8px 12px" }}>
-                    {student.courses.length}
-                  </td>
-                  <td style={{ padding: "8px 12px" }}>
+                  <td className={styles.cell}>{student.courses.length}</td>
+                  <td className={styles.cell}>
                     {student.lessonsCompleted}/{totalLessons}
                   </td>
-                  <td style={{ padding: "8px 12px" }}>
+                  <td className={styles.cell}>
                     {student.avgCompetency.toFixed(1)}
                   </td>
-                  <td style={{ padding: "8px 12px", color: "var(--muted)" }}>
+                  <td className={`${styles.cell} ${styles.mutedCell}`}>
                     {student.lastActive
                       ? student.lastActive.toLocaleDateString()
                       : "Never"}
@@ -203,14 +194,7 @@ export default async function InstructorPage() {
               ))}
               {students.length === 0 && (
                 <tr>
-                  <td
-                    colSpan={6}
-                    style={{
-                      padding: "24px 12px",
-                      textAlign: "center",
-                      color: "var(--muted)",
-                    }}
-                  >
+                  <td colSpan={6} className={styles.emptyCell}>
                     No students enrolled yet.
                   </td>
                 </tr>
@@ -220,8 +204,8 @@ export default async function InstructorPage() {
         </div>
       </div>
 
-      <div className="panel" style={{ padding: "24px" }}>
-        <h2 style={{ marginBottom: "16px" }}>Roster Management</h2>
+      <div className={`panel ${styles.panelSection}`}>
+        <h2 className={styles.sectionHeading}>Roster Management</h2>
         <RosterManagement
           initialEnrollments={enrollments.map((e) => ({
             id: e.id,

@@ -119,7 +119,9 @@ export function GlobalSearch({
   // Scroll selected result into view
   useEffect(() => {
     if (clampedSelectedIndex >= 0 && listRef.current) {
-      const items = listRef.current.querySelectorAll('[data-global-search-result="true"]');
+      const items = listRef.current.querySelectorAll(
+        '[data-global-search-result="true"]',
+      );
       const selectedItem = items[clampedSelectedIndex];
       if (
         selectedItem &&

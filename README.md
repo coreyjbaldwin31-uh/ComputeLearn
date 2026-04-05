@@ -40,13 +40,13 @@ The current app goes beyond a curriculum shell. It now includes:
 
 ## Keyboard shortcuts
 
-| Key | Action |
-| --- | --- |
-| `j` | Next lesson |
-| `k` | Previous lesson |
-| `?` | Toggle keyboard shortcut overlay |
-| `Ctrl+Shift+D` | Toggle dark mode |
-| `Escape` | Close any open dialog or overlay |
+| Key            | Action                           |
+| -------------- | -------------------------------- |
+| `j`            | Next lesson                      |
+| `k`            | Previous lesson                  |
+| `?`            | Toggle keyboard shortcut overlay |
+| `Ctrl+Shift+D` | Toggle dark mode                 |
+| `Escape`       | Close any open dialog or overlay |
 
 ## Still open platform work
 
@@ -149,12 +149,12 @@ npm run api:test
 
 Pushes and pull requests to `main` run four jobs via GitHub Actions (`.github/workflows/ci.yml`):
 
-| Job | Steps | Purpose |
-| --- | --- | --- |
-| **Quality gate** | `npm run lint`, `npm run type-check` | Fast feedback on code hygiene |
-| **Test** | `npm run test` | Verify correctness (309 unit/integration tests) |
-| **Build** | `npm run build` + bundle budget | Verify production build succeeds and client bundle stays under 2 MB |
-| **Docker build & health** | `docker build` + health probe | Verify container image builds and passes health check |
+| Job                       | Steps                                | Purpose                                                             |
+| ------------------------- | ------------------------------------ | ------------------------------------------------------------------- |
+| **Quality gate**          | `npm run lint`, `npm run type-check` | Fast feedback on code hygiene                                       |
+| **Test**                  | `npm run test`                       | Verify correctness (309 unit/integration tests)                     |
+| **Build**                 | `npm run build` + bundle budget      | Verify production build succeeds and client bundle stays under 2 MB |
+| **Docker build & health** | `docker build` + health probe        | Verify container image builds and passes health check               |
 
 Test, Build, and Docker run in parallel after the Quality gate passes.
 
@@ -188,7 +188,7 @@ The app will still run without them. When the DSN is absent, Sentry stays disabl
 
 Hit the test route to send a smoke event without opening a browser console:
 
-```
+```bash
 curl http://localhost:3000/api/sentry-test
 ```
 
@@ -198,7 +198,7 @@ Returns `{ "ok": true, "eventId": "…" }` when the DSN is configured, or a 503 
 
 A lightweight readiness probe is available for Docker healthchecks and load balancers:
 
-```
+```bash
 curl http://localhost:3000/api/health
 ```
 
@@ -208,9 +208,9 @@ Returns `{ "status": "ok", "uptime": …, "timestamp": "…" }`.
 
 The CI build job reads `SENTRY_DSN` and `NEXT_PUBLIC_SENTRY_DSN` from GitHub Actions secrets so production bundles include Sentry wiring. Add these two secrets in the repository settings if hosted environments should report errors:
 
-| Secret | Purpose |
-| --- | --- |
-| `SENTRY_DSN` | Server-side error reporting |
+| Secret                   | Purpose                                             |
+| ------------------------ | --------------------------------------------------- |
+| `SENTRY_DSN`             | Server-side error reporting                         |
 | `NEXT_PUBLIC_SENTRY_DSN` | Client-side error reporting (embedded in JS bundle) |
 
 For local development, `.env` is the source of truth (gitignored). Copy `.env.example` and fill in the DSN values. For deployed/hosted environments, set the DSN through the platform's secret management (Vercel Environment Variables, AWS Secrets Manager, etc.) rather than committing credentials.
@@ -219,14 +219,14 @@ For local development, `.env` is the source of truth (gitignored). Copy `.env.ex
 
 See [docs/repository-map.md](docs/repository-map.md) for a detailed layout. Key areas:
 
-| Path | Purpose |
-| --- | --- |
-| `app/` | Next.js App Router — single-page entry at `/` |
-| `components/` | React components and hooks |
-| `data/` | Curriculum definition (phases, courses, lessons) |
-| `lib/` | Stateless engines for validation, progression, analytics |
-| `docs/` | Contributor and process documentation |
-| `.github/` | CI workflows, agent definitions, skills |
+| Path          | Purpose                                                  |
+| ------------- | -------------------------------------------------------- |
+| `app/`        | Next.js App Router — single-page entry at `/`            |
+| `components/` | React components and hooks                               |
+| `data/`       | Curriculum definition (phases, courses, lessons)         |
+| `lib/`        | Stateless engines for validation, progression, analytics |
+| `docs/`       | Contributor and process documentation                    |
+| `.github/`    | CI workflows, agent definitions, skills                  |
 
 ## Contributing
 

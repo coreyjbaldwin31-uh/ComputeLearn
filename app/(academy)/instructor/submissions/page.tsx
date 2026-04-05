@@ -4,6 +4,7 @@ import { getLessonRecords } from "@/lib/learning-catalog";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import styles from "./submissions-page.module.css";
 
 export const metadata = {
   title: "Submissions — Instructor",
@@ -37,63 +38,53 @@ export default async function InstructorSubmissionsPage() {
     <div>
       <h1 className="page-title">Pending Submissions</h1>
 
-      <div className="panel" style={{ padding: "24px" }}>
+      <div className={`panel ${styles.panel}`}>
         {submissions.length === 0 ? (
-          <p style={{ color: "var(--muted)", textAlign: "center" }}>
-            No submissions awaiting review.
-          </p>
+          <p className={styles.emptyState}>No submissions awaiting review.</p>
         ) : (
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <div className={styles.tableWrap}>
+            <table className={styles.table}>
               <caption className="sr-only">
                 Pending student submissions awaiting review
               </caption>
               <thead>
-                <tr
-                  style={{
-                    borderBottom: "2px solid var(--border)",
-                    textAlign: "left",
-                  }}
-                >
-                  <th scope="col" style={{ padding: "8px 12px" }}>
+                <tr className={styles.headRow}>
+                  <th scope="col" className={styles.cell}>
                     Student
                   </th>
-                  <th scope="col" style={{ padding: "8px 12px" }}>
+                  <th scope="col" className={styles.cell}>
                     Lesson
                   </th>
-                  <th scope="col" style={{ padding: "8px 12px" }}>
+                  <th scope="col" className={styles.cell}>
                     Submitted
                   </th>
-                  <th scope="col" style={{ padding: "8px 12px" }}>
+                  <th scope="col" className={styles.cell}>
                     Status
                   </th>
-                  <th scope="col" style={{ padding: "8px 12px" }}>
+                  <th scope="col" className={styles.cell}>
                     Action
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {submissions.map((sub) => (
-                  <tr
-                    key={sub.id}
-                    style={{ borderBottom: "1px solid var(--border)" }}
-                  >
-                    <td style={{ padding: "8px 12px" }}>
+                  <tr key={sub.id} className={styles.row}>
+                    <td className={styles.cell}>
                       {sub.user.name ?? sub.user.email ?? "Unknown"}
                     </td>
-                    <td style={{ padding: "8px 12px" }}>
+                    <td className={styles.cell}>
                       {lessonMap.get(sub.lessonId) ?? sub.lessonId}
                     </td>
-                    <td style={{ padding: "8px 12px", color: "var(--muted)" }}>
+                    <td className={`${styles.cell} ${styles.muted}`}>
                       {sub.updatedAt.toLocaleDateString()}
                     </td>
-                    <td style={{ padding: "8px 12px" }}>
+                    <td className={styles.cell}>
                       <span className="assessment-badge">{sub.status}</span>
                     </td>
-                    <td style={{ padding: "8px 12px" }}>
+                    <td className={styles.cell}>
                       <Link
                         href={`/instructor/submissions/${sub.id}`}
-                        style={{ color: "var(--accent)" }}
+                        className={styles.reviewLink}
                       >
                         Review
                       </Link>

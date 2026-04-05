@@ -893,12 +893,12 @@ export function LessonFlow({ lesson }: { lesson: Lesson }) {
               </div>
             )}
 
-            <button
-              className={`lf-complete-btn ${progress[lesson.id] ? "lf-complete-btn--done" : ""}`}
-              onClick={handleMarkComplete}
-              aria-pressed={Boolean(progress[lesson.id])}
-            >
-              {progress[lesson.id] ? (
+            {progress[lesson.id] ? (
+              <button
+                className="lf-complete-btn lf-complete-btn--done"
+                onClick={handleMarkComplete}
+                aria-pressed="true"
+              >
                 <>
                   <svg
                     width="16"
@@ -917,10 +917,16 @@ export function LessonFlow({ lesson }: { lesson: Lesson }) {
                   </svg>
                   Lesson Complete
                 </>
-              ) : (
-                "Mark Lesson Complete"
-              )}
-            </button>
+              </button>
+            ) : (
+              <button
+                className="lf-complete-btn"
+                onClick={handleMarkComplete}
+                aria-pressed="false"
+              >
+                Mark Lesson Complete
+              </button>
+            )}
 
             {progress[lesson.id] && (
               <button className="lf-review-btn" onClick={handleMarkReviewed}>

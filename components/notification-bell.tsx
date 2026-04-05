@@ -68,38 +68,73 @@ export function NotificationBell({
 
   return (
     <div className="notif-bell-wrap" ref={panelRef}>
-      <button
-        type="button"
-        className="notif-bell-button"
-        onClick={() => setIsOpen((v) => !v)}
-        aria-label={`Notifications${notifications.length > 0 ? ` (${notifications.length} unread)` : ""}`}
-        aria-expanded={isOpen}
-      >
-        <svg
-          width="18"
-          height="18"
-          viewBox="0 0 18 18"
-          fill="none"
-          aria-hidden="true"
+      {isOpen ? (
+        <button
+          type="button"
+          className="notif-bell-button"
+          onClick={() => setIsOpen((v) => !v)}
+          aria-label={`Notifications${notifications.length > 0 ? ` (${notifications.length} unread)` : ""}`}
+          aria-expanded="true"
         >
-          <path
-            d="M9 1.5a4.5 4.5 0 00-4.5 4.5c0 5-2 6.5-2 6.5h13s-2-1.5-2-6.5A4.5 4.5 0 009 1.5z"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M7.5 14.5a1.5 1.5 0 003 0"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
-        </svg>
-        {notifications.length > 0 && (
-          <span className="notif-bell-badge">{notifications.length}</span>
-        )}
-      </button>
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 18 18"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M9 1.5a4.5 4.5 0 00-4.5 4.5c0 5-2 6.5-2 6.5h13s-2-1.5-2-6.5A4.5 4.5 0 009 1.5z"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M7.5 14.5a1.5 1.5 0 003 0"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+          </svg>
+          {notifications.length > 0 && (
+            <span className="notif-bell-badge">{notifications.length}</span>
+          )}
+        </button>
+      ) : (
+        <button
+          type="button"
+          className="notif-bell-button"
+          onClick={() => setIsOpen((v) => !v)}
+          aria-label={`Notifications${notifications.length > 0 ? ` (${notifications.length} unread)` : ""}`}
+          aria-expanded="false"
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 18 18"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M9 1.5a4.5 4.5 0 00-4.5 4.5c0 5-2 6.5-2 6.5h13s-2-1.5-2-6.5A4.5 4.5 0 009 1.5z"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M7.5 14.5a1.5 1.5 0 003 0"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+          </svg>
+          {notifications.length > 0 && (
+            <span className="notif-bell-badge">{notifications.length}</span>
+          )}
+        </button>
+      )}
 
       {isOpen && (
         <div

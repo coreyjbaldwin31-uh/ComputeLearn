@@ -2,6 +2,7 @@
 
 import { curriculum } from "@/data/curriculum";
 import { useRef, useState } from "react";
+import styles from "./roster-management.module.css";
 
 type EnrollmentRow = {
   id: string;
@@ -148,64 +149,29 @@ export function RosterManagement({
   return (
     <div>
       {message && (
-        <p
-          role="status"
-          aria-live="polite"
-          style={{
-            padding: "8px 12px",
-            marginBottom: "16px",
-            borderRadius: "var(--radius-sm)",
-            background: "var(--accent-soft)",
-            color: "var(--accent-strong)",
-          }}
-        >
+        <p role="status" aria-live="polite" className={styles.message}>
           {message}
         </p>
       )}
 
-      <form
-        onSubmit={handleAdd}
-        style={{
-          display: "flex",
-          gap: "12px",
-          alignItems: "flex-end",
-          flexWrap: "wrap",
-          marginBottom: "16px",
-        }}
-      >
-        <label style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-          <span style={{ fontSize: "0.85rem", color: "var(--muted)" }}>
-            Student Email
-          </span>
+      <form onSubmit={handleAdd} className={styles.formRow}>
+        <label className={styles.fieldLabel}>
+          <span className={styles.fieldLabelText}>Student Email</span>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="student@example.com"
             required
-            style={{
-              padding: "8px 12px",
-              borderRadius: "var(--radius-sm)",
-              border: "1px solid var(--border)",
-              background: "var(--surface-strong)",
-              color: "var(--text)",
-            }}
+            className={styles.fieldInput}
           />
         </label>
-        <label style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-          <span style={{ fontSize: "0.85rem", color: "var(--muted)" }}>
-            Course
-          </span>
+        <label className={styles.fieldLabel}>
+          <span className={styles.fieldLabelText}>Course</span>
           <select
             value={courseId}
             onChange={(e) => setCourseId(e.target.value)}
-            style={{
-              padding: "8px 12px",
-              borderRadius: "var(--radius-sm)",
-              border: "1px solid var(--border)",
-              background: "var(--surface-strong)",
-              color: "var(--text)",
-            }}
+            className={styles.fieldInput}
           >
             {allCourses.map((c) => (
               <option key={c.id} value={c.id}>
@@ -217,114 +183,73 @@ export function RosterManagement({
         <button
           type="submit"
           disabled={loading}
-          style={{
-            padding: "8px 20px",
-            borderRadius: "var(--radius-sm)",
-            border: "none",
-            background: "var(--accent)",
-            color: "#fff",
-            cursor: loading ? "not-allowed" : "pointer",
-            fontWeight: 600,
-          }}
+          className={`${styles.primaryButton} ${loading ? styles.buttonDisabled : ""}`}
         >
           Add Student
         </button>
       </form>
 
-      <div
-        style={{
-          display: "flex",
-          gap: "12px",
-          alignItems: "center",
-          marginBottom: "20px",
-        }}
-      >
+      <div className={styles.importRow}>
         <input
           ref={fileInputRef}
           type="file"
           accept=".csv,text/csv"
           aria-label="Select CSV file to import enrollments"
-          style={{ fontSize: "0.9rem" }}
+          className={styles.fileInput}
         />
         <button
           type="button"
           onClick={handleCSVImport}
           disabled={loading}
-          style={{
-            padding: "8px 20px",
-            borderRadius: "var(--radius-sm)",
-            border: "1px solid var(--border)",
-            background: "var(--surface-strong)",
-            color: "var(--text)",
-            cursor: loading ? "not-allowed" : "pointer",
-            fontWeight: 600,
-          }}
+          className={`${styles.secondaryButton} ${loading ? styles.buttonDisabled : ""}`}
         >
           Import CSV
         </button>
       </div>
 
-      <div style={{ overflowX: "auto" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+      <div className={styles.tableScroll}>
+        <table className={styles.table}>
           <caption className="sr-only">Student enrollment roster</caption>
           <thead>
-            <tr
-              style={{
-                borderBottom: "2px solid var(--border)",
-                textAlign: "left",
-              }}
-            >
-              <th scope="col" style={{ padding: "8px 12px" }}>
+            <tr className={styles.tableHeadRow}>
+              <th scope="col" className={styles.cell}>
                 Name
               </th>
-              <th scope="col" style={{ padding: "8px 12px" }}>
+              <th scope="col" className={styles.cell}>
                 Email
               </th>
-              <th scope="col" style={{ padding: "8px 12px" }}>
+              <th scope="col" className={styles.cell}>
                 Course
               </th>
-              <th scope="col" style={{ padding: "8px 12px" }}>
+              <th scope="col" className={styles.cell}>
                 Enrolled
               </th>
-              <th scope="col" style={{ padding: "8px 12px" }}>
+              <th scope="col" className={styles.cell}>
                 Actions
               </th>
             </tr>
           </thead>
           <tbody>
             {enrollments.map((enrollment) => (
-              <tr
-                key={enrollment.id}
-                style={{ borderBottom: "1px solid var(--border)" }}
-              >
-                <td style={{ padding: "8px 12px" }}>
-                  {enrollment.userName ?? "—"}
-                </td>
-                <td style={{ padding: "8px 12px", color: "var(--muted)" }}>
+              <tr key={enrollment.id} className={styles.tableRow}>
+                <td className={styles.cell}>{enrollment.userName ?? "—"}</td>
+                <td className={`${styles.cell} ${styles.mutedCell}`}>
                   {enrollment.userEmail ?? "—"}
                 </td>
-                <td style={{ padding: "8px 12px" }}>
+                <td className={styles.cell}>
                   {allCourses.find((c) => c.id === enrollment.courseId)
                     ?.title ?? enrollment.courseId}
                 </td>
-                <td style={{ padding: "8px 12px", color: "var(--muted)" }}>
+                <td className={`${styles.cell} ${styles.mutedCell}`}>
                   {new Date(enrollment.createdAt).toLocaleDateString()}
                 </td>
-                <td style={{ padding: "8px 12px" }}>
+                <td className={styles.cell}>
                   <button
                     type="button"
                     onClick={() => handleRemove(enrollment.id)}
                     disabled={loading}
                     aria-label={`Remove ${enrollment.userName ?? enrollment.userEmail ?? "student"} from roster`}
-                    style={{
-                      padding: "4px 12px",
-                      borderRadius: "var(--radius-sm)",
-                      border: "1px solid var(--error)",
-                      background: "transparent",
-                      color: "var(--error)",
-                      cursor: loading ? "not-allowed" : "pointer",
-                      fontSize: "0.85rem",
-                    }}
+                    className={`${styles.removeButton} ${loading ? styles.buttonDisabled : ""}`}
                   >
                     Remove
                   </button>
@@ -333,14 +258,7 @@ export function RosterManagement({
             ))}
             {enrollments.length === 0 && (
               <tr>
-                <td
-                  colSpan={5}
-                  style={{
-                    padding: "24px 12px",
-                    textAlign: "center",
-                    color: "var(--muted)",
-                  }}
-                >
+                <td colSpan={5} className={styles.emptyCell}>
                   No enrollments yet.
                 </td>
               </tr>

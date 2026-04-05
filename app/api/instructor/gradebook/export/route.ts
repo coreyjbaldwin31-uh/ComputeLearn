@@ -64,13 +64,15 @@ export async function GET(request: NextRequest) {
   }
 
   // CSV header
-  const lessonHeaders = lessons.map((l) => `"${sanitizeCell(l.title).replace(/"/g, '""')}"`);
+  const lessonHeaders = lessons.map(
+    (l) => `"${sanitizeCell(l.title).replace(/"/g, '""')}"`,
+  );
   const header = ["Student Name", "Email", ...lessonHeaders].join(",");
 
   // CSV rows
   const rows = students.map((student) => {
-    const name = sanitizeCell((student.name ?? "Unknown")).replace(/"/g, '""');
-    const email = sanitizeCell((student.email ?? "")).replace(/"/g, '""');
+    const name = sanitizeCell(student.name ?? "Unknown").replace(/"/g, '""');
+    const email = sanitizeCell(student.email ?? "").replace(/"/g, '""');
     const grades = lessons.map((l) => {
       const grade = gradeMap.get(student.id)?.get(l.id);
       return grade != null ? grade.toString() : "";

@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useId, useRef, useState } from "react";
-import { useFocusTrap } from "./hooks/use-focus-trap";
 import styles from "./data-portability-dialog.module.css";
+import { useFocusTrap } from "./hooks/use-focus-trap";
 
 type DataPortabilityDialogProps = {
   isOpen: boolean;

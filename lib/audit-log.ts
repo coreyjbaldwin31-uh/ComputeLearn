@@ -23,6 +23,27 @@ export interface AuditEvent {
   ip?: string | null;
 }
 
+type AuditLogDelegate = {
+  create: (args: {
+    data: {
+      userId: string | null;
+      action: AuditAction;
+      resource: string;
+      details?: Prisma.InputJsonValue;
+      ip: string | null;
+    };
+  }) => Promise<unknown>;
+};
+
+type PrismaWithAuditLog = {
+  auditLog?: AuditLogDelegate;
+};
+
+function getAuditLogDelegate(): AuditLogDelegate | null {
+  const candidate = (prisma as unknown as PrismaWithAuditLog).auditLog;
+  return candidate?.create ? candidate : null;
+}
+
 /**
  * Write an audit log entry.
  *
@@ -30,7 +51,12 @@ export interface AuditEvent {
  * are logged to stderr rather than propagated to request handlers.
  */
 export function auditLog(event: AuditEvent): void {
-  prisma.auditLog
+  const delegate = getAuditLogDelegate();
+  if (!delegate) {
+    return;
+  }
+
+  delegate
     .create({
       data: {
         userId: event.userId ?? null,

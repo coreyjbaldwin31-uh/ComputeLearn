@@ -4,6 +4,7 @@ import { findLessonRecord } from "@/lib/learning-catalog";
 import { prisma } from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
 import { SubmissionReviewForm } from "./review-form";
+import styles from "./submission-review-page.module.css";
 
 export const metadata = {
   title: "Review Submission — Instructor",
@@ -43,15 +44,8 @@ export default async function SubmissionReviewPage({
     <div>
       <h1 className="page-title">Review Submission</h1>
 
-      <div className="panel" style={{ padding: "24px", marginBottom: "24px" }}>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "auto 1fr",
-            gap: "4px 16px",
-            marginBottom: "16px",
-          }}
-        >
+      <div className={`panel ${styles.panelBlock}`}>
+        <div className={styles.metaGrid}>
           <strong>Student:</strong>
           <span>
             {submission.user.name ?? submission.user.email ?? "Unknown"}
@@ -66,41 +60,27 @@ export default async function SubmissionReviewPage({
       </div>
 
       {transferTask && (
-        <div
-          className="panel"
-          style={{ padding: "24px", marginBottom: "24px" }}
-        >
-          <h2 style={{ marginBottom: "12px" }}>Transfer Task Reference</h2>
+        <div className={`panel ${styles.panelBlock}`}>
+          <h2 className={styles.sectionTitle}>Transfer Task Reference</h2>
           <p>
             <strong>Prompt:</strong> {transferTask.prompt}
           </p>
           {transferTask.placeholder && (
-            <p style={{ marginTop: "8px", color: "var(--muted)" }}>
+            <p className={styles.mutedNote}>
               <strong>Expected format:</strong> {transferTask.placeholder}
             </p>
           )}
           {transferTask.hint && (
-            <p style={{ marginTop: "8px", color: "var(--muted)" }}>
+            <p className={styles.mutedNote}>
               <strong>Hint:</strong> {transferTask.hint}
             </p>
           )}
         </div>
       )}
 
-      <div className="panel" style={{ padding: "24px", marginBottom: "24px" }}>
-        <h2 style={{ marginBottom: "12px" }}>Student Response</h2>
-        <div
-          style={{
-            padding: "16px",
-            background: "var(--surface, #f5f5f5)",
-            borderRadius: "6px",
-            whiteSpace: "pre-wrap",
-            fontFamily: "inherit",
-            fontSize: "14px",
-          }}
-        >
-          {submission.content}
-        </div>
+      <div className={`panel ${styles.panelBlock}`}>
+        <h2 className={styles.sectionTitle}>Student Response</h2>
+        <div className={styles.responseBody}>{submission.content}</div>
       </div>
 
       <SubmissionReviewForm

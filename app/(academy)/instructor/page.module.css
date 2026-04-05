@@ -1,0 +1,51 @@
+.statsSpacing {
+  margin-bottom: 24px;
+}
+
+.panelSection {
+  padding: 24px;
+}
+
+.panelSpacing {
+  margin-bottom: 24px;
+}
+
+.sectionHeading {
+  margin-bottom: 16px;
+}
+
+.tableScroll {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableHeadRow {
+  border-bottom: 2px solid var(--border);
+  text-align: left;
+}
+
+.tableRow {
+  border-bottom: 1px solid var(--border);
+}
+
+.cell {
+  padding: 8px 12px;
+}
+
+.studentLink {
+  color: var(--accent);
+}
+
+.mutedCell {
+  color: var(--muted);
+}
+
+.emptyCell {
+  padding: 24px 12px;
+  text-align: center;
+  color: var(--muted);
+}

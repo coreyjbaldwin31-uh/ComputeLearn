@@ -50,7 +50,7 @@ Operational procedures for responding to ComputeLearn platform incidents.
 
 **Steps:**
 
-1. Check Google Cloud status at https://status.cloud.google.com/.
+1. Check Google Cloud status at <https://status.cloud.google.com/>.
 2. Verify `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET` are valid.
 3. Check that `NEXTAUTH_URL` matches the deployed domain.
 4. If Google is down, communicate to users that login is temporarily unavailable. Existing sessions continue to work.

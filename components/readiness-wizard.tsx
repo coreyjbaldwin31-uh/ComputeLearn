@@ -23,13 +23,14 @@ const STATUS_LABELS: Record<string, string> = {
   "portfolio-ready": "Portfolio Ready",
 };
 
-function ReadinessRing({
-  percent,
-  color,
-}: {
-  percent: number;
-  color: string;
-}) {
+function statusClass(statusLabel: string) {
+  if (statusLabel === "not-started") return styles.statusNotStarted;
+  if (statusLabel === "building") return styles.statusBuilding;
+  if (statusLabel === "capstone-ready") return styles.statusCapstoneReady;
+  return styles.statusPortfolioReady;
+}
+
+function ReadinessRing({ percent, color }: { percent: number; color: string }) {
   const radius = 54;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (percent / 100) * circumference;
@@ -114,9 +115,7 @@ export function ReadinessWizard() {
   if (!readiness) {
     return (
       <div className={styles.empty} role="status">
-        <p>
-          Complete Phases 1–3 to unlock independent readiness tracking.
-        </p>
+        <p>Complete Phases 1–3 to unlock independent readiness tracking.</p>
       </div>
     );
   }
@@ -128,14 +127,16 @@ export function ReadinessWizard() {
       {/* Status Hero */}
       <section className={styles.statusHero} aria-label="Readiness overview">
         <div className={styles.ringWrap}>
-          <ReadinessRing percent={readiness.readinessPercent} color={statusColor} />
+          <ReadinessRing
+            percent={readiness.readinessPercent}
+            color={statusColor}
+          />
           <span className={styles.ringText} aria-live="polite">
             {readiness.readinessPercent}%
           </span>
         </div>
         <span
-          className={styles.statusLabel}
-          style={{ backgroundColor: statusColor }}
+          className={`${styles.statusLabel} ${statusClass(readiness.statusLabel)}`}
         >
           {STATUS_LABELS[readiness.statusLabel] ?? readiness.statusLabel}
         </span>
@@ -187,7 +188,9 @@ export function ReadinessWizard() {
             <span className={styles.statLabel}>First Pass</span>
           </div>
           <div className={styles.statCard}>
-            <span className={styles.statValue}>{labSummary.completionRate}%</span>
+            <span className={styles.statValue}>
+              {labSummary.completionRate}%
+            </span>
             <span className={styles.statLabel}>Completion Rate</span>
           </div>
         </div>
@@ -203,14 +206,12 @@ export function ReadinessWizard() {
               .map((phase) => (
                 <div key={phase.phaseId} className={styles.phaseCard}>
                   <h3 className={styles.phaseTitle}>{phase.phaseTitle}</h3>
-                  <div className={styles.phaseBarTrack}>
-                    <div
-                      className={styles.phaseBarFill}
-                      style={{
-                        width: `${phase.completionRate}%`,
-                      }}
-                    />
-                  </div>
+                  <progress
+                    className={styles.phaseProgress}
+                    max={100}
+                    value={phase.completionRate}
+                    aria-label={`${phase.phaseTitle} completion`}
+                  />
                   <div className={styles.phaseStats}>
                     <span>
                       {phase.completedLabs}/{phase.totalLabs} complete

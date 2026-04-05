@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import styles from "./review-form.module.css";
 
 type SubmissionReviewFormProps = {
   submissionId: string;
@@ -62,36 +63,29 @@ export function SubmissionReviewForm({
   }
 
   return (
-    <div className="panel" style={{ padding: "24px" }}>
-      <h2 style={{ marginBottom: "12px" }}>
+    <div className={`panel ${styles.panel}`}>
+      <h2 className={styles.title}>
         {isReviewed ? "Review (Completed)" : "Review"}
       </h2>
 
-      <label style={{ display: "block", marginBottom: "8px", fontWeight: 600 }}>
+      <label htmlFor="submission-review-feedback" className={styles.label}>
         Feedback
       </label>
       <textarea
+        id="submission-review-feedback"
         value={feedback}
         onChange={(e) => setFeedback(e.target.value)}
         disabled={isReviewed}
         placeholder="Provide feedback for the student..."
         rows={6}
-        style={{
-          width: "100%",
-          padding: "12px",
-          borderRadius: "6px",
-          border: "1px solid var(--border)",
-          fontFamily: "inherit",
-          fontSize: "14px",
-          resize: "vertical",
-          marginBottom: "16px",
-        }}
+        className={styles.feedbackInput}
       />
 
-      <label style={{ display: "block", marginBottom: "8px", fontWeight: 600 }}>
+      <label htmlFor="submission-review-grade" className={styles.label}>
         Grade (0–100)
       </label>
       <input
+        id="submission-review-grade"
         type="number"
         min={0}
         max={100}
@@ -99,22 +93,11 @@ export function SubmissionReviewForm({
         value={grade}
         onChange={(e) => setGrade(e.target.value)}
         disabled={isReviewed}
-        style={{
-          width: "120px",
-          padding: "8px 12px",
-          borderRadius: "6px",
-          border: "1px solid var(--border)",
-          fontFamily: "inherit",
-          fontSize: "14px",
-          marginBottom: "16px",
-        }}
+        className={styles.gradeInput}
       />
 
       {error && (
-        <p
-          role="alert"
-          style={{ color: "var(--error, #ef4444)", marginBottom: "12px" }}
-        >
+        <p role="alert" className={styles.error}>
           {error}
         </p>
       )}
