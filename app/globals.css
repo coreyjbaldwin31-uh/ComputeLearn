@@ -6681,49 +6681,6 @@ button[disabled] {
   max-width: 960px;
 }
 
-/* ---- BREADCRUMBS ---- */
-
-.academy-breadcrumbs {
-  margin-bottom: 28px;
-}
-
-.academy-breadcrumbs ol {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.academy-breadcrumbs li {
-  display: inline-flex;
-  align-items: center;
-  font-size: 0.8rem;
-  color: var(--ac-muted);
-}
-
-.academy-breadcrumbs li + li::before {
-  content: "/";
-  margin: 0 8px;
-  color: var(--ac-border-strong);
-}
-
-.academy-breadcrumbs a {
-  color: var(--ac-muted);
-  text-decoration: none;
-  transition: color 80ms;
-}
-
-.academy-breadcrumbs a:hover {
-  color: var(--ac-accent);
-}
-
-.academy-breadcrumbs li:last-child {
-  color: var(--ac-text);
-  font-weight: 600;
-}
-
 /* ---- PAGE STRUCTURE ---- */
 
 .academy-page {

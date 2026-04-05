@@ -1,4 +1,5 @@
 import Link from "next/link";
+import styles from "./academy-breadcrumbs.module.css";
 
 type Crumb = {
   href?: string;
@@ -7,12 +8,17 @@ type Crumb = {
 
 export function AcademyBreadcrumbs({ items }: { items: Crumb[] }) {
   return (
-    <nav className="academy-breadcrumbs" aria-label="Breadcrumb">
-      <ol>
+    <nav className={styles.breadcrumbs} aria-label="Breadcrumb">
+      <ol className={styles.list}>
         {items.map((item, index) => (
-          <li key={`${item.label}-${index}`}>
+          <li
+            key={`${item.label}-${index}`}
+            className={index === items.length - 1 ? styles.current : styles.item}
+          >
             {item.href ? (
-              <Link href={item.href}>{item.label}</Link>
+              <Link href={item.href} className={styles.link}>
+                {item.label}
+              </Link>
             ) : (
               <span>{item.label}</span>
             )}
