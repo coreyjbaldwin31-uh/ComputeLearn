@@ -10,8 +10,7 @@ describe("SaveToast", () => {
     render(<SaveToast message="Note saved" />);
 
     const toast = screen.getByRole("status");
-    expect(toast).toHaveClass("save-toast");
-    expect(toast).not.toHaveClass("save-toast--error");
+    expect(toast).toHaveAttribute("aria-live", "polite");
     expect(toast).toHaveTextContent("Note saved");
   });
 
@@ -19,8 +18,7 @@ describe("SaveToast", () => {
     render(<SaveToast message="Storage unavailable" variant="error" />);
 
     const toast = screen.getByRole("alert");
-    expect(toast).toHaveClass("save-toast");
-    expect(toast).toHaveClass("save-toast--error");
+    expect(toast).toHaveAttribute("aria-live", "assertive");
     expect(toast).toHaveTextContent("Storage unavailable");
   });
 

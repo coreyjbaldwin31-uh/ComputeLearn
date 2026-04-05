@@ -1,5 +1,7 @@
 "use client";
 
+import styles from "./save-toast.module.css";
+
 type SaveToastProps = {
   message: string | null;
   variant?: "success" | "error";
@@ -20,13 +22,13 @@ export function SaveToast({
   if (isError) {
     return (
       <div
-        className="save-toast save-toast--error"
+        className={`${styles.toast} ${styles.error}`}
         role="alert"
         aria-live="assertive"
         aria-atomic="true"
       >
         <svg
-          className="save-toast-icon"
+          className={styles.icon}
           width="18"
           height="18"
           viewBox="0 0 24 24"
@@ -44,7 +46,7 @@ export function SaveToast({
         {actionLabel && onAction ? (
           <button
             type="button"
-            className="save-toast-action"
+            className={styles.action}
             onClick={onAction}
           >
             {actionLabel}
@@ -56,13 +58,13 @@ export function SaveToast({
 
   return (
     <div
-      className="save-toast"
+      className={styles.toast}
       role="status"
       aria-live="polite"
       aria-atomic="true"
     >
       <svg
-        className="save-toast-icon"
+        className={styles.icon}
         width="18"
         height="18"
         viewBox="0 0 24 24"
