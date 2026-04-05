@@ -1,0 +1,119 @@
+@keyframes revealUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.lessonNav {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 22px;
+  animation: revealUp 0.5s ease both;
+}
+
+.lessonNavButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition:
+    transform 120ms ease,
+    border-color 120ms ease,
+    background 120ms ease;
+}
+
+.lessonNavButton:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: 0 4px 16px rgba(13, 107, 87, 0.1);
+}
+
+.lessonNavButton:disabled {
+  opacity: 0.35;
+  cursor: default;
+  transform: none;
+}
+
+.lessonNavLabel {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.right {
+  text-align: right;
+}
+
+.lessonNavKicker {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.6;
+}
+
+.lessonNavTitle {
+  font-weight: 700;
+}
+
+.navSpacer {
+  flex: 1;
+}
+
+.lessonNavArrow {
+  font-size: 1.25rem;
+  line-height: 1;
+  opacity: 0.5;
+  transition:
+    opacity 150ms ease,
+    transform 150ms ease;
+}
+
+.lessonNavButton:hover .lessonNavArrow {
+  opacity: 1;
+}
+
+.lessonNavPrev:hover .lessonNavArrow {
+  transform: translateX(-3px);
+}
+
+.lessonNavNext:hover .lessonNavArrow {
+  transform: translateX(3px);
+}
+
+.lessonNavNext {
+  margin-left: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lessonNav {
+    animation: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .lessonNav {
+    flex-direction: column;
+  }
+
+  .lessonNavButton {
+    width: 100%;
+  }
+
+  .lessonNavNext {
+    margin-left: 0;
+  }
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import type { LessonEntry } from "@/lib/progression-engine";
+import styles from "./lesson-navigation.module.css";
 
 type LessonNavigationProps = {
   prevEntry: LessonEntry | null;
@@ -14,42 +15,42 @@ export function LessonNavigation({
   onNavigateToEntry,
 }: LessonNavigationProps) {
   return (
-    <nav className="lesson-nav">
+    <nav className={styles.lessonNav}>
       {prevEntry ? (
         <button
           type="button"
-          className="lesson-nav-button lesson-nav-prev"
+          className={`${styles.lessonNavButton} ${styles.lessonNavPrev}`}
           onClick={() => onNavigateToEntry(prevEntry)}
           aria-label={`Previous lesson: ${prevEntry.lesson.title} (k)`}
         >
-          <span className="lesson-nav-arrow" aria-hidden="true">
+          <span className={styles.lessonNavArrow} aria-hidden="true">
             ←
           </span>
-          <span className="lesson-nav-label">
-            <span className="lesson-nav-kicker">Previous lesson</span>
-            <span className="lesson-nav-title">{prevEntry.lesson.title}</span>
+          <span className={styles.lessonNavLabel}>
+            <span className={styles.lessonNavKicker}>Previous lesson</span>
+            <span className={styles.lessonNavTitle}>{prevEntry.lesson.title}</span>
           </span>
         </button>
       ) : (
-        <span className="nav-spacer" />
+        <span className={styles.navSpacer} />
       )}
       {nextEntry ? (
         <button
           type="button"
-          className="lesson-nav-button lesson-nav-next"
+          className={`${styles.lessonNavButton} ${styles.lessonNavNext}`}
           onClick={() => onNavigateToEntry(nextEntry)}
           aria-label={`Next lesson: ${nextEntry.lesson.title} (j)`}
         >
-          <span className="lesson-nav-label right">
-            <span className="lesson-nav-kicker">Next lesson</span>
-            <span className="lesson-nav-title">{nextEntry.lesson.title}</span>
+          <span className={`${styles.lessonNavLabel} ${styles.right}`}>
+            <span className={styles.lessonNavKicker}>Next lesson</span>
+            <span className={styles.lessonNavTitle}>{nextEntry.lesson.title}</span>
           </span>
-          <span className="lesson-nav-arrow" aria-hidden="true">
+          <span className={styles.lessonNavArrow} aria-hidden="true">
             →
           </span>
         </button>
       ) : (
-        <span className="nav-spacer" />
+        <span className={styles.navSpacer} />
       )}
     </nav>
   );
