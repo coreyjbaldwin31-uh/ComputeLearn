@@ -40,17 +40,41 @@ export function AcademyNav() {
           );
         })}
         {showInstructor && (
-          <li>
-            <Link
-              href="/instructor"
-              className={`academy-nav-item${pathname.startsWith("/instructor") ? " academy-nav-item--active" : ""}`}
-              aria-current={
-                pathname.startsWith("/instructor") ? "page" : undefined
-              }
-            >
-              Instructor
-            </Link>
-          </li>
+          <>
+            <li>
+              <Link
+                href="/instructor"
+                className={`academy-nav-item${pathname === "/instructor" ? " academy-nav-item--active" : ""}`}
+                aria-current={
+                  pathname === "/instructor" ? "page" : undefined
+                }
+              >
+                Instructor
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/instructor/submissions"
+                className={`academy-nav-item${pathname.startsWith("/instructor/submissions") ? " academy-nav-item--active" : ""}`}
+                aria-current={
+                  pathname.startsWith("/instructor/submissions") ? "page" : undefined
+                }
+              >
+                Submissions
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/instructor/gradebook"
+                className={`academy-nav-item${pathname.startsWith("/instructor/gradebook") ? " academy-nav-item--active" : ""}`}
+                aria-current={
+                  pathname.startsWith("/instructor/gradebook") ? "page" : undefined
+                }
+              >
+                Gradebook
+              </Link>
+            </li>
+          </>
         )}
       </ul>
     </nav>

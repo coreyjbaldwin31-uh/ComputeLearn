@@ -23,14 +23,7 @@ export async function PUT(
     );
   }
 
-  const { content, status } = body as Record<string, unknown>;
-
-  if (status !== undefined && status !== "DRAFT" && status !== "SUBMITTED") {
-    return NextResponse.json(
-      { error: "status must be DRAFT or SUBMITTED" },
-      { status: 400 },
-    );
-  }
+  const { content, status, feedback, grade } = body as Record<string, unknown>;
 
   try {
     const existing = await prisma.submission.findUnique({ where: { id } });
@@ -42,6 +35,43 @@ export async function PUT(
       );
     }
 
+    const userRole = (session.user.role ?? "STUDENT") as string;
+    const isInstructor = userRole === "INSTRUCTOR" || userRole === "TA";
+
+    // Instructor review path: can set feedback, grade, and mark REVIEWED
+    if (isInstructor && status === "REVIEWED") {
+      if (existing.status !== "SUBMITTED") {
+        return NextResponse.json(
+          { error: "Only SUBMITTED submissions can be reviewed" },
+          { status: 409 },
+        );
+      }
+
+      const gradeNum =
+        typeof grade === "number"
+          ? grade
+          : typeof grade === "string"
+            ? parseFloat(grade)
+            : undefined;
+      if (gradeNum !== undefined && (isNaN(gradeNum) || gradeNum < 0 || gradeNum > 100)) {
+        return NextResponse.json(
+          { error: "Grade must be between 0 and 100" },
+          { status: 400 },
+        );
+      }
+
+      const submission = await prisma.submission.update({
+        where: { id },
+        data: {
+          status: "REVIEWED",
+          ...(typeof feedback === "string" && { feedback }),
+          ...(gradeNum !== undefined && { grade: gradeNum }),
+        },
+      });
+      return NextResponse.json({ submission });
+    }
+
+    // Student path: must own the submission
     if (existing.userId !== session.user.id) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
@@ -50,6 +80,17 @@ export async function PUT(
       return NextResponse.json(
         { error: "Only DRAFT submissions can be edited" },
         { status: 409 },
+      );
+    }
+
+    if (
+      status !== undefined &&
+      status !== "DRAFT" &&
+      status !== "SUBMITTED"
+    ) {
+      return NextResponse.json(
+        { error: "status must be DRAFT or SUBMITTED" },
+        { status: 400 },
       );
     }
 

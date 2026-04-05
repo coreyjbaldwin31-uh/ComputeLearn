@@ -171,3 +171,40 @@ export async function createSubmission(data: {
     return null;
   }
 }
+
+export async function updateSubmission(
+  id: string,
+  data: {
+    content?: string;
+    status?: string;
+    feedback?: string;
+    grade?: number;
+  },
+): Promise<boolean> {
+  try {
+    const res = await fetch(`/api/submissions/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+export async function fetchInstructorSubmissions(
+  status?: string,
+): Promise<SubmissionRecord[] | null> {
+  try {
+    const url = status
+      ? `/api/instructor/submissions?status=${encodeURIComponent(status)}`
+      : "/api/instructor/submissions";
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const data = (await res.json()) as { submissions: SubmissionRecord[] };
+    return data.submissions;
+  } catch {
+    return null;
+  }
+}
