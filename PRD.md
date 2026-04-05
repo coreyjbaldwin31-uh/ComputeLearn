@@ -318,7 +318,7 @@ CSS design system in `globals.css` using `--ac-*` custom properties:
 17. ✅ Content quality pass — enrich lesson explanations, demonstrations, retention cues, and exercise prompts for pedagogical depth
 18. ⬚ AI review loop — bounded support for explanation, critique, and next-step guidance (scoped to reflection step)
 19. ⬚ Durable persistence — server-backed or IndexedDB persistence with backup/restore and cross-device sync
-20. 🔧 CSS modularization — extract globals.css class-system namespaces into CSS modules or co-located files (four namespaces migrated)
+20. 🔧 CSS modularization — extract globals.css class-system namespaces into CSS modules or co-located files (five namespaces migrated)
 21. ✅ Independent readiness UI — dedicated route and wizard for the independent-readiness-engine assessment
 22. ⬚ Advanced lab templates — realistic bug sets, seeded project scaffolds, saved transcripts
 23. ⬚ Real workspace runtime — move from in-memory lab-engine to sandboxed runtime with real file I/O

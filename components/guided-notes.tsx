@@ -2,6 +2,7 @@
 
 import type { Lesson } from "@/data/curriculum";
 import { RichText } from "./rich-text";
+import styles from "./guided-notes.module.css";
 
 type GuidedNotesProps = {
   lesson: Lesson;
@@ -19,33 +20,35 @@ export function GuidedNotes({
   onUnderstoodChange,
 }: GuidedNotesProps) {
   return (
-    <div className="gn">
-      <h3 className="gn-title">Key Concepts</h3>
-      <p className="gn-intro">
+    <div className={styles.root}>
+      <h3 className={styles.title}>Key Concepts</h3>
+      <p className={styles.intro}>
         Read each concept carefully. Write down what it means in your own words,
         then mark it understood when you are confident.
       </p>
 
-      <div className="gn-cards">
+      <div className={styles.cards}>
         {lesson.explanation.map((concept, i) => (
           <div
             key={i}
-            className={`gn-card${understood[i] ? " gn-card--understood" : ""}`}
+            className={`${styles.card}${understood[i] ? ` ${styles.cardUnderstood}` : ""}`}
+            data-testid="guided-note-card"
+            data-understood={understood[i] ? "true" : "false"}
           >
-            <div className="gn-card-header">
-              <span className="gn-concept-number">{i + 1}</span>
-              <div className="gn-concept-text">
+            <div className={styles.cardHeader}>
+              <span className={styles.conceptNumber}>{i + 1}</span>
+              <div className={styles.conceptText}>
                 <RichText content={concept} />
               </div>
             </div>
 
-            <div className="gn-card-body">
-              <label className="gn-note-label" htmlFor={`gn-note-${i}`}>
+            <div className={styles.cardBody}>
+              <label className={styles.noteLabel} htmlFor={`gn-note-${i}`}>
                 Your notes on this concept:
               </label>
               <textarea
                 id={`gn-note-${i}`}
-                className="gn-textarea"
+                className={styles.textarea}
                 rows={3}
                 value={conceptNotes[i] ?? ""}
                 onChange={(e) => onNoteChange(i, e.target.value)}
@@ -53,15 +56,15 @@ export function GuidedNotes({
               />
             </div>
 
-            <div className="gn-card-footer">
-              <label className="gn-understood-label">
+            <div className={styles.cardFooter}>
+              <label className={styles.understoodLabel}>
                 <input
                   type="checkbox"
                   checked={!!understood[i]}
                   onChange={(e) => onUnderstoodChange(i, e.target.checked)}
-                  className="gn-checkbox"
+                  className={styles.checkbox}
                 />
-                <span className="gn-checkbox-visual" />I understand this concept
+                <span className={styles.checkboxVisual} />I understand this concept
               </label>
             </div>
           </div>
@@ -69,17 +72,17 @@ export function GuidedNotes({
       </div>
 
       {/* Progress summary */}
-      <div className="gn-progress" role="status" aria-live="polite">
-        <div className="gn-progress-bar" aria-hidden="true">
+      <div className={styles.progress} role="status" aria-live="polite">
+        <div className={styles.progressBar} aria-hidden="true">
           <div
-            className="gn-progress-fill"
+            className={styles.progressFill}
             ref={(el) => {
               if (el)
                 el.style.width = `${(Object.values(understood).filter(Boolean).length / Math.max(lesson.explanation.length, 1)) * 100}%`;
             }}
           />
         </div>
-        <span className="gn-progress-text">
+        <span className={styles.progressText}>
           {Object.values(understood).filter(Boolean).length} of{" "}
           {lesson.explanation.length} concepts understood
         </span>

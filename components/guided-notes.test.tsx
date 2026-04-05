@@ -127,7 +127,7 @@ describe("GuidedNotes", () => {
   });
 
   it("applies understood class to completed concept cards", () => {
-    const { container } = render(
+    render(
       <GuidedNotes
         lesson={lesson}
         conceptNotes={{}}
@@ -137,9 +137,9 @@ describe("GuidedNotes", () => {
       />,
     );
 
-    const cards = container.querySelectorAll(".gn-card");
-    expect(cards[0]).not.toHaveClass("gn-card--understood");
-    expect(cards[1]).toHaveClass("gn-card--understood");
-    expect(cards[2]).not.toHaveClass("gn-card--understood");
+    const cards = screen.getAllByTestId("guided-note-card");
+    expect(cards[0]).toHaveAttribute("data-understood", "false");
+    expect(cards[1]).toHaveAttribute("data-understood", "true");
+    expect(cards[2]).toHaveAttribute("data-understood", "false");
   });
 });
