@@ -18,6 +18,19 @@ export default auth((req) => {
     signInUrl.searchParams.set("callbackUrl", req.url);
     return Response.redirect(signInUrl);
   }
+
+  // Instructor routes require INSTRUCTOR or TA role
+  if (
+    pathname.startsWith("/instructor") ||
+    pathname.startsWith("/api/instructor")
+  ) {
+    const role = req.auth.user?.role ?? "STUDENT";
+    if (role !== "INSTRUCTOR" && role !== "TA") {
+      const dashboardUrl = new URL("/dashboard", req.nextUrl.origin);
+      dashboardUrl.searchParams.set("error", "unauthorized");
+      return Response.redirect(dashboardUrl);
+    }
+  }
 });
 
 export const config = {

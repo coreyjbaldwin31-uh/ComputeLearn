@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const items = [
   { href: "/dashboard", label: "Dashboard" },
@@ -13,6 +14,10 @@ const items = [
 
 export function AcademyNav() {
   const pathname = usePathname();
+  const { data: session } = useSession();
+
+  const role = session?.user?.role;
+  const showInstructor = role === "INSTRUCTOR" || role === "TA";
 
   return (
     <nav className="academy-nav-section" aria-label="Primary">
@@ -34,6 +39,19 @@ export function AcademyNav() {
             </li>
           );
         })}
+        {showInstructor && (
+          <li>
+            <Link
+              href="/instructor"
+              className={`academy-nav-item${pathname.startsWith("/instructor") ? " academy-nav-item--active" : ""}`}
+              aria-current={
+                pathname.startsWith("/instructor") ? "page" : undefined
+              }
+            >
+              Instructor
+            </Link>
+          </li>
+        )}
       </ul>
     </nav>
   );
