@@ -10,6 +10,7 @@ const items = [
   { href: "/lessons", label: "Lessons" },
   { href: "/assignments", label: "Assignments" },
   { href: "/progress", label: "Progress" },
+  { href: "/readiness", label: "Readiness" },
 ];
 
 export function AcademyNav() {

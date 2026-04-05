@@ -9932,3 +9932,228 @@ button[disabled] {
   font-size: 0.78rem;
   color: var(--ac-danger, #ef4444);
 }
+
+/* ========================================================================== */
+/* READINESS WIZARD (rw-*)                                                    */
+/* ========================================================================== */
+
+.rw-container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.rw-empty {
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--ac-muted);
+  font-size: 0.92rem;
+}
+
+/* ---- Status Hero ---- */
+
+.rw-status-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 32px 0;
+}
+
+.rw-ring-wrap {
+  position: relative;
+  width: 140px;
+  height: 140px;
+}
+
+.rw-ring-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.rw-ring-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--ac-heading);
+}
+
+.rw-status-label {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #fff;
+}
+
+.rw-hero-detail {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--ac-muted);
+}
+
+/* ---- Section Headings ---- */
+
+.rw-section-heading {
+  margin: 0 0 16px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ac-heading);
+}
+
+/* ---- Readiness Checks ---- */
+
+.rw-checks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rw-check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid var(--ac-border);
+  border-radius: var(--ac-radius);
+  background: var(--ac-surface);
+}
+
+.rw-check-item--passed {
+  border-color: #bbf7d0;
+  background: color-mix(in srgb, #16a34a 4%, var(--ac-surface));
+}
+
+.rw-check-icon {
+  flex-shrink: 0;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.rw-check-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rw-check-label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--ac-heading);
+}
+
+.rw-check-detail {
+  font-size: 0.78rem;
+  color: var(--ac-muted);
+}
+
+/* ---- Lab Stats ---- */
+
+.rw-lab-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.rw-stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 12px;
+  border: 1px solid var(--ac-border);
+  border-radius: var(--ac-radius);
+  background: var(--ac-surface);
+  gap: 4px;
+}
+
+.rw-stat-value {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--ac-heading);
+}
+
+.rw-stat-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ac-muted);
+}
+
+/* ---- Phase Breakdown ---- */
+
+.rw-phase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.rw-phase-card {
+  padding: 16px;
+  border: 1px solid var(--ac-border);
+  border-radius: var(--ac-radius);
+  background: var(--ac-surface);
+}
+
+.rw-phase-title {
+  margin: 0 0 10px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--ac-heading);
+}
+
+.rw-phase-bar-track {
+  height: 6px;
+  background: var(--ac-border);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.rw-phase-bar-fill {
+  height: 100%;
+  background: var(--ac-accent);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.rw-phase-stats {
+  display: flex;
+  gap: 12px;
+  font-size: 0.72rem;
+  color: var(--ac-muted);
+}
+
+/* ---- Next Steps ---- */
+
+.rw-next-steps {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--ac-muted);
+}
+
+/* ---- Responsive ---- */
+
+@media (max-width: 600px) {
+  .rw-lab-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .rw-phase-grid {
+    grid-template-columns: 1fr;
+  }
+}
