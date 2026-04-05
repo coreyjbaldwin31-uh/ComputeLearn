@@ -511,11 +511,11 @@ Gaps are tiered by deployment impact. **Tier 1** items are blockers — the plat
 
 | ID  | Task                                | Description                                                                                                                               | Status |
 | --- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| T21 | Add instructor role and route guard | Extend User model with role enum (`student`, `instructor`, `ta`). Add middleware guard for `/instructor` routes.                          | ⬚      |
-| T22 | Build instructor dashboard page     | Create `(academy)/instructor/page.tsx` with class roster, per-student completion %, and competency-level summary.                         | ⬚      |
-| T23 | Class roster management             | Add manual student add/remove, CSV import for bulk enrollment.                                                                            | ⬚      |
-| T24 | Assignment submission workflow      | Add Submission model lifecycle: `draft` → `submitted` → `reviewed`. Student submits transfer task output. Instructor views and annotates. | ⬚      |
-| T25 | Gradebook with CSV export           | Aggregate submission grades and competency levels into gradebook view. Export to CSV.                                                     | ⬚      |
+| T21 | Add instructor role and route guard | Extend User model with role enum (`student`, `instructor`, `ta`). Add middleware guard for `/instructor` routes.                          | ✅      |
+| T22 | Build instructor dashboard page     | Create `(academy)/instructor/page.tsx` with class roster, per-student completion %, and competency-level summary.                         | ✅      |
+| T23 | Class roster management             | Add manual student add/remove, CSV import for bulk enrollment.                                                                            | ✅      |
+| T24 | Assignment submission workflow      | Add Submission model lifecycle: `draft` → `submitted` → `reviewed`. Student submits transfer task output. Instructor views and annotates. | ✅      |
+| T25 | Gradebook with CSV export           | Aggregate submission grades and competency levels into gradebook view. Export to CSV.                                                     | ✅      |
 
 #### Phase C — Integration (Weeks 9–12): LMS + Runtime
 
@@ -571,11 +571,11 @@ T34 (Monitoring) ── depends on T33
 
 | Phase                     | Tasks                   | Completed  | Status            |
 | ------------------------- | ----------------------- | ---------- | ----------------- |
-| A — Foundation            | T16, T17, T18, T19, T20 | 5 / 5      | ✅ Complete        |
-| B — Instructor Experience | T21, T22, T23, T24, T25 | 0 / 5      | ⬚ Not started     |
-| C — Integration           | T26, T27, T28, T29      | 0 / 4      | ⬚ Not started     |
-| D — Scale and Compliance  | T30, T31, T32, T33, T34 | 0 / 5      | ⬚ Not started     |
-| **Total**                 | **T16–T34**             | **5 / 19** | **🔧 In progress** |
+| A — Foundation            | T16, T17, T18, T19, T20 | 5 / 5       | ✅ Complete        |
+| B — Instructor Experience | T21, T22, T23, T24, T25 | 5 / 5       | ✅ Complete        |
+| C — Integration           | T26, T27, T28, T29      | 0 / 4       | ⬚ Not started     |
+| D — Scale and Compliance  | T30, T31, T32, T33, T34 | 0 / 5       | ⬚ Not started     |
+| **Total**                 | **T16–T34**             | **10 / 19** | **🔧 In progress** |
 
 ---
 
