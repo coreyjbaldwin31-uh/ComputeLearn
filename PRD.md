@@ -319,7 +319,7 @@ CSS design system in `globals.css` using `--ac-*` custom properties:
 18. ⬚ AI review loop — bounded support for explanation, critique, and next-step guidance (scoped to reflection step)
 19. ⬚ Durable persistence — server-backed or IndexedDB persistence with backup/restore and cross-device sync
 20. ⬚ CSS modularization — extract globals.css class-system namespaces into CSS modules or co-located files
-21. ⬚ Independent readiness UI — dedicated route and wizard for the independent-readiness-engine assessment
+21. ✅ Independent readiness UI — dedicated route and wizard for the independent-readiness-engine assessment
 22. ⬚ Advanced lab templates — realistic bug sets, seeded project scaffolds, saved transcripts
 23. ⬚ Real workspace runtime — move from in-memory lab-engine to sandboxed runtime with real file I/O
 
@@ -408,11 +408,11 @@ CSS design system in `globals.css` using `--ac-*` custom properties:
 
 #### Recommended decomposition order
 
-1. **Storage health provider** — extract storage event listeners, health mode, surface failures, recovery log into a React context. Mount in `(academy)/layout.tsx`. This unblocks removing the largest state block from the SPA shell.
-2. **Global UX migration** — add PlatformNavbar (or equivalent), GlobalSearch, KeyboardShortcuts, Theme toggle to `academy-shell.tsx`. This gives the academy full navigational parity.
-3. **Completion gating + review** — integrate `evaluateLessonEvidenceGate` and review marking into `lesson-flow.tsx` step 4.
+1. ✅ **Storage health provider** — extract storage event listeners, health mode, surface failures, recovery log into a React context. Mount in `(academy)/layout.tsx`. This unblocks removing the largest state block from the SPA shell.
+2. ✅ **Global UX migration** — add PlatformNavbar (or equivalent), GlobalSearch, KeyboardShortcuts, Theme toggle to `academy-shell.tsx`. This gives the academy full navigational parity.
+3. ✅ **Completion gating + review** — integrate `evaluateLessonEvidenceGate` and review marking into `lesson-flow.tsx` step 4.
 4. **Home / marketing page** — create an academy-native landing with hero, roadmap, dashboard, achievements either at `/` or `/dashboard`.
-5. **Analytics dashboards** — wire `useAnalyticsDashboards` into `(academy)/progress/page.tsx`.
+5. ✅ **Analytics dashboards** — wire `useAnalyticsDashboards` into `(academy)/progress/page.tsx`.
 6. **Retire `training-platform.tsx`** — once all features have academy equivalents, delete the file and update `docs/repository-map.md` and `lab-integration.test.ts` comments.
 
 > **Key constraint:** Do not delete `training-platform.tsx` until every feature above has a working academy equivalent with tests. The file is safe to leave in-tree as dead code during the migration since it has no runtime import path.
@@ -424,8 +424,8 @@ CSS design system in `globals.css` using `--ac-*` custom properties:
 | T7  | Content quality pass — Phase 1 lessons (explanation, demo, retention depth)       | ✅     |
 | T8  | Content quality pass — Phase 2–4 lessons                                          | ✅     |
 | T9  | CSS modularization — extract component class-system namespaces from globals.css   | ⬚      |
-| T10 | Independent readiness UI route — `/readiness` page with assessment wizard         | ⬚      |
-| T11 | Export/backup dialog for localStorage — JSON download/import for data portability | ⬚      |
+| T10 | Independent readiness UI route — `/readiness` page with assessment wizard         | ✅     |
+| T11 | Export/backup dialog for localStorage — JSON download/import for data portability | ✅     |
 
 ### Medium-Term
 
