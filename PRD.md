@@ -440,7 +440,142 @@ CSS design system in `globals.css` using `--ac-*` custom properties:
 
 ## Final Recommendation
 
-> Treat ComputeLearn as a training platform for engineering execution. The structural foundation is strong — academy shell, lesson flow, 15 engines, 471 tests. The next value multiplier is content quality, followed by persistence durability and the AI review loop.
+> Treat ComputeLearn as a training platform for engineering execution. The structural foundation is strong — academy shell, lesson flow, 15 engines, 491 tests. The next value multiplier is classroom-grade infrastructure (authentication, persistence, instructor tooling), followed by LMS integration and the AI review loop.
+
+---
+
+## 11. MIT Classroom Readiness — Gap Analysis and Execution Plan
+
+ComputeLearn's structural foundation is strong: academy shell, 4-step lesson flow, 38 lessons, 124 exercises, lab engine, terminal simulator, competency tracking, 491 tests, Docker build, and observability. However, deploying for use in an MIT classroom requires capabilities that do not yet exist. This section defines the gaps, prioritizes them, and lays out the execution path.
+
+### 11.1 What Exists (Verified)
+
+| Capability | Evidence |
+| --- | --- |
+| Next.js 16 App Router with academy shell, sidebar nav, breadcrumbs | `app/(academy)/`, `academy-shell.tsx`, `academy-nav.tsx`, `academy-breadcrumbs.tsx` |
+| 38 lessons across 4 phases, 124 exercises, 64 code exercises | `data/curriculum.ts` |
+| Lab engine with templates, validation, hints, reset/replay, artifacts | `useLabLifecycle`, `lesson-validation.tsx`, `lab-panel.tsx` |
+| Terminal simulator with 45+ commands | `terminal-simulator.tsx` |
+| 4-step lesson flow: Learn → Practice → Apply → Reflect | `lesson-flow.tsx` |
+| Competency tracking across 15 domains | `competency-tracker.tsx`, `lib/competency-engine.ts` |
+| 491 passing tests, CI pipeline (quality → test → build → docker) | `.github/workflows/ci.yml`, `vitest.config.ts` |
+| Docker multi-stage build with health checks | `Dockerfile`, `docker-compose.yml` |
+| Sentry + OpenTelemetry instrumentation | `sentry.*.config.ts`, `instrumentation.ts` |
+| WCAG-conscious accessibility patterns | Skip links, ARIA attributes, keyboard handling |
+
+### 11.2 Gap Inventory
+
+Gaps are tiered by deployment impact. **Tier 1** items are blockers — the platform cannot be used in a classroom without them. **Tier 2** items allow a degraded deployment but must follow quickly. **Tier 3** items improve quality and compliance for a durable deployment.
+
+#### Tier 1 — Blockers
+
+| ID | Gap | Current State | MIT Requirement |
+| --- | --- | --- | --- |
+| G1 | **No authentication / user identity** | No login, no student accounts, no enrollment. All data is anonymous localStorage. | SSO/OAuth (MIT Touchstone/SAML or Google OAuth), student identity, role-based access. |
+| G2 | **No persistent backend / database** | 9 localStorage keys hold all progress — lost on cache clear or device switch. | PostgreSQL or equivalent with user-scoped data, backup, export. Migration path from localStorage. |
+| G3 | **No instructor dashboard** | No class-level visibility. Teachers cannot see progress, identify struggles, or review submissions. | Class roster view, per-student progress, aggregate analytics, CSV/LMS export. |
+| G4 | **No assignment submission / grading** | Transfer tasks have input fields but no submission workflow. No grading, no feedback, no deadlines. | Submit → Review → Feedback cycle, deadline support, rubrics. |
+
+#### Tier 2 — High Priority
+
+| ID | Gap | Current State | MIT Requirement |
+| --- | --- | --- | --- |
+| G5 | **Real terminal runtime** | Mock terminal with hardcoded filesystem and simulated commands. | Real file I/O and command execution via container sandbox — or explicitly scoped as simulation with curriculum designed around that constraint. |
+| G6 | **LMS integration** | None. | LTI 1.3 integration for Canvas: grade passback, assignment sync, SSO, deep linking. |
+| G7 | **Data export / reporting** | None. | Instructor CSV export (grades, progress, completion). Student transcript and portfolio export. |
+| G8 | **Multi-tenancy / class management** | Single implicit user, no concept of sections or roles. | Multiple sections, TA access, semester-based enrollment and archival. |
+
+#### Tier 3 — Quality and Compliance
+
+| ID | Gap | Current State | MIT Requirement |
+| --- | --- | --- | --- |
+| G9 | **Content review by CS faculty** | Curriculum authored without faculty review. | Accuracy pass by MIT instructors; course-specific customization (6.0001 vs 6.100A). |
+| G10 | **Accessibility audit (WCAG 2.1 AA)** | Accessibility-conscious patterns exist but no formal audit. | Automated + manual WCAG 2.1 AA audit and remediation. MIT policy compliance. |
+| G11 | **Performance at scale** | Single-user client-side rendering. | 200–400 concurrent students. Load testing, CDN, SSR optimization. |
+| G12 | **Privacy / FERPA compliance** | No data handling policy, no access controls, no audit logging. | FERPA-compliant data handling, access controls, audit trail, data retention policy. |
+| G13 | **AI review loop** | Not implemented (existing T12). | Bounded LLM feedback during reflection step. Enhances outcomes but not required for V1. |
+
+### 11.3 Execution Plan
+
+#### Phase A — Foundation (Weeks 1–4): Authentication + Database
+
+| ID | Task | Description | Status |
+| --- | --- | --- | --- |
+| T16 | Add NextAuth.js with OAuth provider | Configure NextAuth.js with Google OAuth (and optionally MIT Touchstone/SAML). Add sign-in/sign-out UI. Protect academy routes. | ⬚ |
+| T17 | Add PostgreSQL with Prisma ORM | Add Prisma schema, configure connection, add Docker Compose service for local Postgres, create migration scripts. | ⬚ |
+| T18 | Define core data models | Create Prisma models: `User`, `Enrollment`, `Progress`, `Submission`, `LabAttempt`, `CompetencySnapshot`. | ⬚ |
+| T19 | Create API routes for progress persistence | Build authenticated CRUD routes under `app/api/` for progress, submissions, and lab attempts. | ⬚ |
+| T20 | Migrate localStorage reads to API with offline fallback | Replace direct localStorage access with API calls. Keep localStorage as offline cache, sync on reconnect. | ⬚ |
+
+#### Phase B — Instructor Experience (Weeks 5–8): Dashboard + Grading
+
+| ID | Task | Description | Status |
+| --- | --- | --- | --- |
+| T21 | Add instructor role and route guard | Extend User model with role enum (`student`, `instructor`, `ta`). Add middleware guard for `/instructor` routes. | ⬚ |
+| T22 | Build instructor dashboard page | Create `(academy)/instructor/page.tsx` with class roster, per-student completion %, and competency-level summary. | ⬚ |
+| T23 | Class roster management | Add manual student add/remove, CSV import for bulk enrollment. | ⬚ |
+| T24 | Assignment submission workflow | Add Submission model lifecycle: `draft` → `submitted` → `reviewed`. Student submits transfer task output. Instructor views and annotates. | ⬚ |
+| T25 | Gradebook with CSV export | Aggregate submission grades and competency levels into gradebook view. Export to CSV. | ⬚ |
+
+#### Phase C — Integration (Weeks 9–12): LMS + Runtime
+
+| ID | Task | Description | Status |
+| --- | --- | --- | --- |
+| T26 | LTI 1.3 integration for Canvas | Implement LTI 1.3 launch, deep linking, and grade passback endpoints. | ⬚ |
+| T27 | Terminal runtime decision and implementation | Evaluate: (a) WebSocket container sandbox or (b) scoped simulation. Implement chosen path. | ⬚ |
+| T28 | Accessibility audit and remediation | Run axe-core automated audit. Manual keyboard/screen-reader audit. Fix all WCAG 2.1 AA violations. | ⬚ |
+| T29 | Student transcript and portfolio export | Students can export progress, completed labs, and artifact history as JSON or PDF. | ⬚ |
+
+#### Phase D — Scale and Compliance (Weeks 13–16): Production Readiness
+
+| ID | Task | Description | Status |
+| --- | --- | --- | --- |
+| T30 | Load testing for 400 concurrent users | Set up k6 load test scripts targeting lesson flow, API routes, and dashboard. P95 < 500ms target. | ⬚ |
+| T31 | FERPA compliance review | Document data handling policy, implement access controls and audit logging, define retention/deletion procedures. | ⬚ |
+| T32 | Faculty content review | Coordinate with MIT instructors to review Phase 1–4 curriculum for accuracy, depth, and course alignment. | ⬚ |
+| T33 | Production deployment | Deploy to production infrastructure. Configure DNS, TLS, CDN, and environment variables. | ⬚ |
+| T34 | Monitoring, alerting, and incident response | Configure Sentry alerting thresholds. Document incident response runbook. Set up uptime monitoring. | ⬚ |
+
+### 11.4 Risk Register
+
+| Risk | Impact | Mitigation |
+| --- | --- | --- |
+| MIT Touchstone/SAML integration requires institutional coordination and may delay auth timeline. | High | Start with Google OAuth as primary. Add Touchstone as secondary provider once institutional access is granted. |
+| Real terminal sandbox introduces container security and resource isolation complexity. | High | Evaluate simulation-only path for V1. If sandbox is chosen, use established tooling (Firecracker, gVisor) and security review before deployment. |
+| FERPA compliance requires legal review beyond engineering scope. | Medium | Engage MIT legal/compliance office early in Phase D. Build technical controls in Phase A–B so the review is incremental. |
+| 400-student load may expose client-heavy architecture bottlenecks. | Medium | Introduce server-side rendering for critical paths. Load test early and continuously. |
+| LTI 1.3 specification is complex; Canvas-specific quirks require testing with real Canvas instance. | Medium | Request Canvas Developer Keys early. Test in Canvas sandbox throughout Phase C. |
+| Faculty content review may require significant curriculum rewrites. | Low–Medium | Share curriculum data file with reviewers during Phase B so feedback arrives before Phase D. |
+
+### 11.5 Dependency Graph
+
+```
+T16 (Auth) ──────────┬──→ T19 (API routes) ──→ T20 (Migration) ──→ T29 (Export)
+                      │          │
+T17 (Postgres) → T18 (Models) ──┘──→ T21 (Roles) ──→ T22 (Dashboard) ──→ T23 (Roster)
+                                          │                  │
+                                          │                  ├──→ T24 (Submissions) → T25 (Gradebook) → T26 (LTI)
+                                          │                  │
+                                          │                  ├──→ T28 (A11y)
+                                          │                  │
+                                          │                  └──→ T30 (Load test)
+                                          │
+                                          └──→ T31 (FERPA)
+T27 (Terminal decision) ── independent
+T32 (Faculty review) ── independent
+T33 (Deploy) ── depends on T30, T31
+T34 (Monitoring) ── depends on T33
+```
+
+### 11.6 Progress Tracker
+
+| Phase | Tasks | Completed | Status |
+| --- | --- | --- | --- |
+| A — Foundation | T16, T17, T18, T19, T20 | 0 / 5 | ⬚ Not started |
+| B — Instructor Experience | T21, T22, T23, T24, T25 | 0 / 5 | ⬚ Not started |
+| C — Integration | T26, T27, T28, T29 | 0 / 4 | ⬚ Not started |
+| D — Scale and Compliance | T30, T31, T32, T33, T34 | 0 / 5 | ⬚ Not started |
+| **Total** | **T16–T34** | **0 / 19** | **⬚ Not started** |
 
 ---
 
