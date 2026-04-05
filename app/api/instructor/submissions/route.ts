@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
 import { requireRole } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   const result = await requireRole(["INSTRUCTOR", "TA"]);
@@ -10,11 +10,7 @@ export async function GET(request: NextRequest) {
   const status = url.searchParams.get("status");
 
   const where: Record<string, unknown> = {};
-  if (
-    status === "DRAFT" ||
-    status === "SUBMITTED" ||
-    status === "REVIEWED"
-  ) {
+  if (status === "DRAFT" || status === "SUBMITTED" || status === "REVIEWED") {
     where.status = status;
   }
 

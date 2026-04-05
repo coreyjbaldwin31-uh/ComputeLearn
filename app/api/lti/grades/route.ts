@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import { isLtiConfigured } from "@/lib/lti-config";
 import { requireRole } from "@/lib/auth-helpers";
+import { isLtiConfigured } from "@/lib/lti-config";
 import { prisma } from "@/lib/prisma";
+import { NextRequest, NextResponse } from "next/server";
 
 /**
  * LTI Assignment and Grade Services (AGS) — grade passback to Canvas.
@@ -33,16 +33,10 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { userId, lessonId, grade, comment } = body as Record<
-    string,
-    unknown
-  >;
+  const { userId, lessonId, grade, comment } = body as Record<string, unknown>;
 
   if (!userId || typeof userId !== "string") {
-    return NextResponse.json(
-      { error: "userId is required" },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: "userId is required" }, { status: 400 });
   }
 
   if (!lessonId || typeof lessonId !== "string") {

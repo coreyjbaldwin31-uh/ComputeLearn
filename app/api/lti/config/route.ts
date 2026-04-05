@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
 import { ltiConfig } from "@/lib/lti-config";
+import { NextResponse } from "next/server";
 
 /**
  * LTI tool configuration JSON.
@@ -13,9 +13,7 @@ export async function GET() {
     description: "Mastery-based engineering learning platform",
     oidc_initiation_url: `${toolUrl}/api/lti/launch`,
     target_link_uri: `${toolUrl}/api/lti/callback`,
-    scopes: [
-      "https://purl.imsglobal.org/spec/lti-ags/scope/score",
-    ],
+    scopes: ["https://purl.imsglobal.org/spec/lti-ags/scope/score"],
     extensions: [
       {
         platform: "canvas.instructure.com",

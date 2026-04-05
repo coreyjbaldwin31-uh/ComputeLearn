@@ -4,18 +4,18 @@ This document describes how ComputeLearn collects, stores, accesses, retains, an
 
 ## 1. Data Collected
 
-| Data Category          | What Is Stored                                          | Source                  |
-| ---------------------- | ------------------------------------------------------- | ----------------------- |
-| Identity               | Name, email, profile image                              | Google OAuth            |
-| Authentication         | OAuth tokens, session tokens                            | Auth.js / NextAuth      |
-| Enrollment             | Course ID, role (student/instructor/TA)                 | Instructor action       |
-| Lesson Progress        | Current step, completion status, notes, reflection text | Student interaction     |
-| Submissions            | Submission content, status, feedback, grades            | Student + instructor    |
-| Lab Attempts           | Template ID, attempt number, files (JSON), pass/fail    | Student interaction     |
-| Competency Snapshots   | Domain, level (numeric)                                 | System computation      |
-| LTI Grade Syncs        | Lesson ID, grade, sync status                           | LTI integration         |
-| Audit Logs             | Action, resource, IP, timestamp, details                | System-generated        |
-| Local Cache            | Progress mirror in localStorage (browser only)          | Client-side persistence |
+| Data Category        | What Is Stored                                          | Source                  |
+| -------------------- | ------------------------------------------------------- | ----------------------- |
+| Identity             | Name, email, profile image                              | Google OAuth            |
+| Authentication       | OAuth tokens, session tokens                            | Auth.js / NextAuth      |
+| Enrollment           | Course ID, role (student/instructor/TA)                 | Instructor action       |
+| Lesson Progress      | Current step, completion status, notes, reflection text | Student interaction     |
+| Submissions          | Submission content, status, feedback, grades            | Student + instructor    |
+| Lab Attempts         | Template ID, attempt number, files (JSON), pass/fail    | Student interaction     |
+| Competency Snapshots | Domain, level (numeric)                                 | System computation      |
+| LTI Grade Syncs      | Lesson ID, grade, sync status                           | LTI integration         |
+| Audit Logs           | Action, resource, IP, timestamp, details                | System-generated        |
+| Local Cache          | Progress mirror in localStorage (browser only)          | Client-side persistence |
 
 ## 2. Data Storage
 
@@ -26,22 +26,22 @@ This document describes how ComputeLearn collects, stores, accesses, retains, an
 
 ## 3. Access Controls
 
-| Role       | Access Scope                                                                 |
-| ---------- | ---------------------------------------------------------------------------- |
-| Student    | Own progress, own submissions, own lab attempts, own competency snapshots    |
-| Instructor | All enrolled student data within their courses, gradebook export, reviews    |
-| TA         | Same as Instructor                                                           |
-| Admin      | All data (requires direct database access; no admin UI in V1)               |
+| Role       | Access Scope                                                              |
+| ---------- | ------------------------------------------------------------------------- |
+| Student    | Own progress, own submissions, own lab attempts, own competency snapshots |
+| Instructor | All enrolled student data within their courses, gradebook export, reviews |
+| TA         | Same as Instructor                                                        |
+| Admin      | All data (requires direct database access; no admin UI in V1)             |
 
 Access is enforced at the API route level. Every authenticated request checks `session.user.id` and `session.user.role` before returning data. See `lib/auth-helpers.ts` for the `requireAuth()` and `requireRole()` utilities.
 
 ## 4. Data Retention
 
-| State     | Retention Period                               |
-| --------- | ---------------------------------------------- |
-| Active    | Indefinite while the account is active         |
-| Archived  | 7 years after the user's last authenticated session |
-| Deleted   | Removed within 30 days of a deletion request   |
+| State    | Retention Period                                    |
+| -------- | --------------------------------------------------- |
+| Active   | Indefinite while the account is active              |
+| Archived | 7 years after the user's last authenticated session |
+| Deleted  | Removed within 30 days of a deletion request        |
 
 Audit logs are retained for 7 years regardless of account state to satisfy compliance record-keeping.
 
@@ -72,10 +72,10 @@ An administrator with database access can execute the same deletion sequence man
 
 ## 6. Third-Party Data Sharing
 
-| Third Party    | Data Shared              | Purpose              |
-| -------------- | ------------------------ | -------------------- |
+| Third Party    | Data Shared              | Purpose               |
+| -------------- | ------------------------ | --------------------- |
 | Google (OAuth) | Email for authentication | Identity verification |
-| Sentry         | Error traces, no PII    | Error monitoring     |
+| Sentry         | Error traces, no PII     | Error monitoring      |
 
 **No learner data is sold or shared with third parties for marketing or advertising.**
 

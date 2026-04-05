@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
-import { requireRole } from "@/lib/auth-helpers";
-import { prisma } from "@/lib/prisma";
 import { curriculum } from "@/data/curriculum";
-import { getLessonRecords } from "@/lib/learning-catalog";
 import { auditLog } from "@/lib/audit-log";
+import { requireRole } from "@/lib/auth-helpers";
+import { getLessonRecords } from "@/lib/learning-catalog";
+import { prisma } from "@/lib/prisma";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   const result = await requireRole(["INSTRUCTOR", "TA"]);

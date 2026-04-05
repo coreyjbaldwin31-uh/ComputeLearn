@@ -1,8 +1,8 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useSession } from "next-auth/react";
 
 const items = [
   { href: "/dashboard", label: "Dashboard" },
@@ -45,9 +45,7 @@ export function AcademyNav() {
               <Link
                 href="/instructor"
                 className={`academy-nav-item${pathname === "/instructor" ? " academy-nav-item--active" : ""}`}
-                aria-current={
-                  pathname === "/instructor" ? "page" : undefined
-                }
+                aria-current={pathname === "/instructor" ? "page" : undefined}
               >
                 Instructor
               </Link>
@@ -57,7 +55,9 @@ export function AcademyNav() {
                 href="/instructor/submissions"
                 className={`academy-nav-item${pathname.startsWith("/instructor/submissions") ? " academy-nav-item--active" : ""}`}
                 aria-current={
-                  pathname.startsWith("/instructor/submissions") ? "page" : undefined
+                  pathname.startsWith("/instructor/submissions")
+                    ? "page"
+                    : undefined
                 }
               >
                 Submissions
@@ -68,7 +68,9 @@ export function AcademyNav() {
                 href="/instructor/gradebook"
                 className={`academy-nav-item${pathname.startsWith("/instructor/gradebook") ? " academy-nav-item--active" : ""}`}
                 aria-current={
-                  pathname.startsWith("/instructor/gradebook") ? "page" : undefined
+                  pathname.startsWith("/instructor/gradebook")
+                    ? "page"
+                    : undefined
                 }
               >
                 Gradebook

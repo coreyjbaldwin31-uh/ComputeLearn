@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
-import { ltiConfig, isLtiConfigured } from "@/lib/lti-config";
+import { isLtiConfigured, ltiConfig } from "@/lib/lti-config";
 import { prisma } from "@/lib/prisma";
+import { NextRequest, NextResponse } from "next/server";
 
 interface LtiClaims {
   sub?: string;

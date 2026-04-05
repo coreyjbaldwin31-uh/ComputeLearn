@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 type SubmissionReviewFormProps = {
   submissionId: string;
@@ -111,7 +111,10 @@ export function SubmissionReviewForm({
       />
 
       {error && (
-        <p role="alert" style={{ color: "var(--error, #ef4444)", marginBottom: "12px" }}>
+        <p
+          role="alert"
+          style={{ color: "var(--error, #ef4444)", marginBottom: "12px" }}
+        >
           {error}
         </p>
       )}

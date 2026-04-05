@@ -1,8 +1,8 @@
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
-import { redirect, notFound } from "next/navigation";
 import { curriculum } from "@/data/curriculum";
 import { findLessonRecord } from "@/lib/learning-catalog";
+import { prisma } from "@/lib/prisma";
+import { notFound, redirect } from "next/navigation";
 import { SubmissionReviewForm } from "./review-form";
 
 export const metadata = {

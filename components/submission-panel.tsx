@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type Submission = {
   id: string;
@@ -188,7 +188,10 @@ export function SubmissionPanel({ lessonId }: SubmissionPanelProps) {
       />
 
       {error && (
-        <p role="alert" style={{ color: "var(--error, #ef4444)", marginTop: "8px" }}>
+        <p
+          role="alert"
+          style={{ color: "var(--error, #ef4444)", marginTop: "8px" }}
+        >
           {error}
         </p>
       )}

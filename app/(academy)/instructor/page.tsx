@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
+import { RosterManagement } from "@/components/roster-management";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
-import { RosterManagement } from "@/components/roster-management";
 
 export const metadata = {
   title: "Instructor Dashboard",
@@ -138,7 +138,9 @@ export default async function InstructorPage() {
         <h2 style={{ marginBottom: "16px" }}>Student Roster</h2>
         <div style={{ overflowX: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <caption className="sr-only">Student roster with enrollment and progress details</caption>
+            <caption className="sr-only">
+              Student roster with enrollment and progress details
+            </caption>
             <thead>
               <tr
                 style={{
@@ -146,12 +148,24 @@ export default async function InstructorPage() {
                   textAlign: "left",
                 }}
               >
-                <th scope="col" style={{ padding: "8px 12px" }}>Name</th>
-                <th scope="col" style={{ padding: "8px 12px" }}>Email</th>
-                <th scope="col" style={{ padding: "8px 12px" }}>Enrolled Courses</th>
-                <th scope="col" style={{ padding: "8px 12px" }}>Lessons Completed</th>
-                <th scope="col" style={{ padding: "8px 12px" }}>Avg Competency</th>
-                <th scope="col" style={{ padding: "8px 12px" }}>Last Active</th>
+                <th scope="col" style={{ padding: "8px 12px" }}>
+                  Name
+                </th>
+                <th scope="col" style={{ padding: "8px 12px" }}>
+                  Email
+                </th>
+                <th scope="col" style={{ padding: "8px 12px" }}>
+                  Enrolled Courses
+                </th>
+                <th scope="col" style={{ padding: "8px 12px" }}>
+                  Lessons Completed
+                </th>
+                <th scope="col" style={{ padding: "8px 12px" }}>
+                  Avg Competency
+                </th>
+                <th scope="col" style={{ padding: "8px 12px" }}>
+                  Last Active
+                </th>
               </tr>
             </thead>
             <tbody>

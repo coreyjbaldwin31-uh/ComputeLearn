@@ -1,6 +1,9 @@
 import * as Sentry from "@sentry/nextjs";
 
-export function captureAppError(error: unknown, extra?: Record<string, unknown>) {
+export function captureAppError(
+  error: unknown,
+  extra?: Record<string, unknown>,
+) {
   Sentry.captureException(normalizeError(error), { extra });
 }
 

@@ -94,6 +94,12 @@ vi.mock("@/lib/learning-catalog", () => ({
   getLessonRecords: () => [],
 }));
 
+const mockEvaluateLessonEvidenceGate = vi.fn();
+vi.mock("@/lib/validation-engine", () => ({
+  evaluateLessonEvidenceGate: (...args: unknown[]) =>
+    mockEvaluateLessonEvidenceGate(...args),
+}));
+
 /* stub child components to simplify rendering */
 vi.mock("./lesson-validation", () => ({
   LessonValidation: () => <div data-testid="lesson-validation" />,
@@ -287,5 +293,89 @@ describe("LessonFlow", () => {
       screen.getByRole("button", { name: "← Back to Learn" }),
     );
     expect(screen.getByText("Understand the Concept")).toBeInTheDocument();
+  });
+});
+
+describe("LessonFlow completion gating", () => {
+  it("renders 'Mark Lesson Complete' button on Reflect step", async () => {
+    setupMockStorage();
+    render(<LessonFlow lesson={baseLesson} />);
+
+    await userEvent.click(
+      screen.getByText("Reflect & Download").closest("button")!,
+    );
+
+    expect(
+      screen.getByRole("button", { name: "Mark Lesson Complete" }),
+    ).toBeInTheDocument();
+  });
+
+  it("calls evidence gate check when clicking Mark Lesson Complete", async () => {
+    setupMockStorage();
+    mockEvaluateLessonEvidenceGate.mockReturnValue({
+      passed: false,
+      failedCriteria: [
+        { description: "Exercise complete", hint: "Complete the exercise" },
+      ],
+    });
+
+    render(<LessonFlow lesson={baseLesson} />);
+
+    await userEvent.click(
+      screen.getByText("Reflect & Download").closest("button")!,
+    );
+    await userEvent.click(
+      screen.getByRole("button", { name: "Mark Lesson Complete" }),
+    );
+
+    expect(mockEvaluateLessonEvidenceGate).toHaveBeenCalled();
+    // Gate feedback should appear
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+    expect(screen.getByText(/Complete the exercise/)).toBeInTheDocument();
+  });
+
+  it("shows completed state with aria-pressed when lesson is complete", async () => {
+    const stores = setupMockStorage();
+    stores.set("computelearn-progress", [
+      { "test-lesson": true as const },
+      vi.fn(),
+    ]);
+    mockEvaluateLessonEvidenceGate.mockReturnValue({
+      passed: true,
+      failedCriteria: [],
+    });
+
+    render(<LessonFlow lesson={baseLesson} />);
+
+    await userEvent.click(
+      screen.getByText("Reflect & Download").closest("button")!,
+    );
+
+    const completeBtn = screen.getByRole("button", {
+      name: /Lesson Complete/,
+    });
+    expect(completeBtn).toHaveAttribute("aria-pressed", "true");
+  });
+
+  it("shows 'Mark Reviewed' button when lesson is complete", async () => {
+    const stores = setupMockStorage();
+    stores.set("computelearn-progress", [
+      { "test-lesson": true as const },
+      vi.fn(),
+    ]);
+    mockEvaluateLessonEvidenceGate.mockReturnValue({
+      passed: true,
+      failedCriteria: [],
+    });
+
+    render(<LessonFlow lesson={baseLesson} />);
+
+    await userEvent.click(
+      screen.getByText("Reflect & Download").closest("button")!,
+    );
+
+    expect(
+      screen.getByRole("button", { name: "Mark Reviewed" }),
+    ).toBeInTheDocument();
   });
 });

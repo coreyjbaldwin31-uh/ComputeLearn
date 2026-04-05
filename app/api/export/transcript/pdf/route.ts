@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
 function escapeHtml(text: string): string {
   return text

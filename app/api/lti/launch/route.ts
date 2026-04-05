@@ -1,5 +1,5 @@
+import { isLtiConfigured, ltiConfig } from "@/lib/lti-config";
 import { NextRequest, NextResponse } from "next/server";
-import { ltiConfig, isLtiConfigured } from "@/lib/lti-config";
 
 /**
  * LTI 1.3 OIDC third-party initiated login.
@@ -40,10 +40,7 @@ export async function POST(request: NextRequest) {
   }
 
   if (iss !== ltiConfig.platformUrl) {
-    return NextResponse.json(
-      { error: "Issuer mismatch" },
-      { status: 403 },
-    );
+    return NextResponse.json({ error: "Issuer mismatch" }, { status: 403 });
   }
 
   // Generate nonce and state for OIDC auth request

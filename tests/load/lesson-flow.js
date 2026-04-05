@@ -1,5 +1,5 @@
-import http from "k6/http";
 import { check, sleep } from "k6";
+import http from "k6/http";
 import { Rate, Trend } from "k6/metrics";
 
 /**
@@ -24,7 +24,7 @@ export const options = {
   stages: [
     { duration: "2m", target: 400 }, // ramp up to 400 VUs
     { duration: "5m", target: 400 }, // sustain 400 VUs
-    { duration: "1m", target: 0 },   // ramp down
+    { duration: "1m", target: 0 }, // ramp down
   ],
   thresholds: {
     http_req_duration: ["p(95)<500"],

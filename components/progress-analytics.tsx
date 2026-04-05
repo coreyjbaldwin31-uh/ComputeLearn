@@ -1,12 +1,12 @@
 "use client";
 
-import { useMemo } from "react";
+import { useAnalyticsDashboards } from "@/components/hooks/use-analytics-dashboards";
+import { useLocalStorageState } from "@/components/hooks/use-local-storage-state";
 import { curriculum } from "@/data/curriculum";
 import type { ArtifactRecord, AttemptRecord } from "@/lib/artifact-engine";
-import { calculateCompetencyLevels } from "@/lib/progression-engine";
 import type { ReviewRecord } from "@/lib/progression-engine";
-import { useLocalStorageState } from "@/components/hooks/use-local-storage-state";
-import { useAnalyticsDashboards } from "@/components/hooks/use-analytics-dashboards";
+import { calculateCompetencyLevels } from "@/lib/progression-engine";
+import { useMemo } from "react";
 
 export function ProgressAnalytics() {
   const [progress] = useLocalStorageState<Record<string, true>>(

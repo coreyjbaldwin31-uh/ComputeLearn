@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
 import { curriculum } from "@/data/curriculum";
+import { useRef, useState } from "react";
 
 type EnrollmentRow = {
   id: string;
@@ -274,11 +274,21 @@ export function RosterManagement({
                 textAlign: "left",
               }}
             >
-              <th scope="col" style={{ padding: "8px 12px" }}>Name</th>
-              <th scope="col" style={{ padding: "8px 12px" }}>Email</th>
-              <th scope="col" style={{ padding: "8px 12px" }}>Course</th>
-              <th scope="col" style={{ padding: "8px 12px" }}>Enrolled</th>
-              <th scope="col" style={{ padding: "8px 12px" }}>Actions</th>
+              <th scope="col" style={{ padding: "8px 12px" }}>
+                Name
+              </th>
+              <th scope="col" style={{ padding: "8px 12px" }}>
+                Email
+              </th>
+              <th scope="col" style={{ padding: "8px 12px" }}>
+                Course
+              </th>
+              <th scope="col" style={{ padding: "8px 12px" }}>
+                Enrolled
+              </th>
+              <th scope="col" style={{ padding: "8px 12px" }}>
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>

@@ -15,11 +15,11 @@ Verify: `k6 version`
 
 ## Scripts
 
-| Script                     | VUs | Duration | Scenario                                  |
-| -------------------------- | --- | -------- | ----------------------------------------- |
-| `lesson-flow.js`           | 400 | 8 min    | Student lesson navigation + progress CRUD |
-| `api-routes.js`            | 200 | 3 min    | Core API endpoint throughput              |
-| `instructor-dashboard.js`  | 50  | 2 min    | Instructor dashboard + gradebook export   |
+| Script                    | VUs | Duration | Scenario                                  |
+| ------------------------- | --- | -------- | ----------------------------------------- |
+| `lesson-flow.js`          | 400 | 8 min    | Student lesson navigation + progress CRUD |
+| `api-routes.js`           | 200 | 3 min    | Core API endpoint throughput              |
+| `instructor-dashboard.js` | 50  | 2 min    | Instructor dashboard + gradebook export   |
 
 ## Running
 
@@ -42,10 +42,10 @@ k6 run -e BASE_URL=https://staging.example.com tests/load/lesson-flow.js
 
 All scripts share these performance targets:
 
-| Metric             | Target   |
-| ------------------ | -------- |
-| HTTP P95 latency   | < 500 ms |
-| HTTP failure rate  | < 1%     |
+| Metric            | Target   |
+| ----------------- | -------- |
+| HTTP P95 latency  | < 500 ms |
+| HTTP failure rate | < 1%     |
 
 k6 exits with a non-zero code if any threshold is breached.
 
@@ -60,6 +60,7 @@ After each run, k6 prints a summary including:
 - **errors** (custom) — Application-level check failures.
 
 If thresholds fail, investigate:
+
 1. Check server logs for errors or timeouts.
 2. Look at database query performance (slow queries show up in P95 spikes).
 3. Consider connection pool exhaustion if errors spike at high VU counts.

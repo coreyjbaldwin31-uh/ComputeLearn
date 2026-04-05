@@ -421,8 +421,8 @@ CSS design system in `globals.css` using `--ac-*` custom properties:
 
 | ID  | Task                                                                              | Status |
 | --- | --------------------------------------------------------------------------------- | ------ |
-| T7  | Content quality pass — Phase 1 lessons (explanation, demo, retention depth)       | ✅      |
-| T8  | Content quality pass — Phase 2–4 lessons                                          | ✅      |
+| T7  | Content quality pass — Phase 1 lessons (explanation, demo, retention depth)       | ✅     |
+| T8  | Content quality pass — Phase 2–4 lessons                                          | ✅     |
 | T9  | CSS modularization — extract component class-system namespaces from globals.css   | ⬚      |
 | T10 | Independent readiness UI route — `/readiness` page with assessment wizard         | ⬚      |
 | T11 | Export/backup dialog for localStorage — JSON download/import for data portability | ⬚      |
@@ -501,40 +501,40 @@ Gaps are tiered by deployment impact. **Tier 1** items are blockers — the plat
 
 | ID  | Task                                                    | Description                                                                                                                    | Status |
 | --- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ------ |
-| T16 | Add NextAuth.js with OAuth provider                     | Configure NextAuth.js with Google OAuth (and optionally MIT Touchstone/SAML). Add sign-in/sign-out UI. Protect academy routes. | ✅      |
-| T17 | Add PostgreSQL with Prisma ORM                          | Add Prisma schema, configure connection, add Docker Compose service for local Postgres, create migration scripts.              | ✅      |
-| T18 | Define core data models                                 | Create Prisma models: `User`, `Enrollment`, `Progress`, `Submission`, `LabAttempt`, `CompetencySnapshot`.                      | ✅      |
-| T19 | Create API routes for progress persistence              | Build authenticated CRUD routes under `app/api/` for progress, submissions, and lab attempts.                                  | ✅      |
-| T20 | Migrate localStorage reads to API with offline fallback | Replace direct localStorage access with API calls. Keep localStorage as offline cache, sync on reconnect.                      | ✅      |
+| T16 | Add NextAuth.js with OAuth provider                     | Configure NextAuth.js with Google OAuth (and optionally MIT Touchstone/SAML). Add sign-in/sign-out UI. Protect academy routes. | ✅     |
+| T17 | Add PostgreSQL with Prisma ORM                          | Add Prisma schema, configure connection, add Docker Compose service for local Postgres, create migration scripts.              | ✅     |
+| T18 | Define core data models                                 | Create Prisma models: `User`, `Enrollment`, `Progress`, `Submission`, `LabAttempt`, `CompetencySnapshot`.                      | ✅     |
+| T19 | Create API routes for progress persistence              | Build authenticated CRUD routes under `app/api/` for progress, submissions, and lab attempts.                                  | ✅     |
+| T20 | Migrate localStorage reads to API with offline fallback | Replace direct localStorage access with API calls. Keep localStorage as offline cache, sync on reconnect.                      | ✅     |
 
 #### Phase B — Instructor Experience (Weeks 5–8): Dashboard + Grading
 
 | ID  | Task                                | Description                                                                                                                               | Status |
 | --- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| T21 | Add instructor role and route guard | Extend User model with role enum (`student`, `instructor`, `ta`). Add middleware guard for `/instructor` routes.                          | ✅      |
-| T22 | Build instructor dashboard page     | Create `(academy)/instructor/page.tsx` with class roster, per-student completion %, and competency-level summary.                         | ✅      |
-| T23 | Class roster management             | Add manual student add/remove, CSV import for bulk enrollment.                                                                            | ✅      |
-| T24 | Assignment submission workflow      | Add Submission model lifecycle: `draft` → `submitted` → `reviewed`. Student submits transfer task output. Instructor views and annotates. | ✅      |
-| T25 | Gradebook with CSV export           | Aggregate submission grades and competency levels into gradebook view. Export to CSV.                                                     | ✅      |
+| T21 | Add instructor role and route guard | Extend User model with role enum (`student`, `instructor`, `ta`). Add middleware guard for `/instructor` routes.                          | ✅     |
+| T22 | Build instructor dashboard page     | Create `(academy)/instructor/page.tsx` with class roster, per-student completion %, and competency-level summary.                         | ✅     |
+| T23 | Class roster management             | Add manual student add/remove, CSV import for bulk enrollment.                                                                            | ✅     |
+| T24 | Assignment submission workflow      | Add Submission model lifecycle: `draft` → `submitted` → `reviewed`. Student submits transfer task output. Instructor views and annotates. | ✅     |
+| T25 | Gradebook with CSV export           | Aggregate submission grades and competency levels into gradebook view. Export to CSV.                                                     | ✅     |
 
 #### Phase C — Integration (Weeks 9–12): LMS + Runtime
 
 | ID  | Task                                         | Description                                                                                        | Status |
 | --- | -------------------------------------------- | -------------------------------------------------------------------------------------------------- | ------ |
-| T26 | LTI 1.3 integration for Canvas               | Implement LTI 1.3 launch, deep linking, and grade passback endpoints.                              | ✅      |
-| T27 | Terminal runtime decision and implementation | Evaluate: (a) WebSocket container sandbox or (b) scoped simulation. Implement chosen path.         | ✅      |
-| T28 | Accessibility audit and remediation          | Run axe-core automated audit. Manual keyboard/screen-reader audit. Fix all WCAG 2.1 AA violations. | ✅      |
-| T29 | Student transcript and portfolio export      | Students can export progress, completed labs, and artifact history as JSON or PDF.                 | ✅      |
+| T26 | LTI 1.3 integration for Canvas               | Implement LTI 1.3 launch, deep linking, and grade passback endpoints.                              | ✅     |
+| T27 | Terminal runtime decision and implementation | Evaluate: (a) WebSocket container sandbox or (b) scoped simulation. Implement chosen path.         | ✅     |
+| T28 | Accessibility audit and remediation          | Run axe-core automated audit. Manual keyboard/screen-reader audit. Fix all WCAG 2.1 AA violations. | ✅     |
+| T29 | Student transcript and portfolio export      | Students can export progress, completed labs, and artifact history as JSON or PDF.                 | ✅     |
 
 #### Phase D — Scale and Compliance (Weeks 13–16): Production Readiness
 
 | ID  | Task                                        | Description                                                                                                       | Status |
 | --- | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ------ |
-| T30 | Load testing for 400 concurrent users       | Set up k6 load test scripts targeting lesson flow, API routes, and dashboard. P95 < 500ms target.                 | ✅      |
-| T31 | FERPA compliance review                     | Document data handling policy, implement access controls and audit logging, define retention/deletion procedures. | ✅      |
+| T30 | Load testing for 400 concurrent users       | Set up k6 load test scripts targeting lesson flow, API routes, and dashboard. P95 < 500ms target.                 | ✅     |
+| T31 | FERPA compliance review                     | Document data handling policy, implement access controls and audit logging, define retention/deletion procedures. | ✅     |
 | T32 | Faculty content review                      | Coordinate with MIT instructors to review Phase 1–4 curriculum for accuracy, depth, and course alignment.         | ⬚      |
-| T33 | Production deployment                       | Deploy to production infrastructure. Configure DNS, TLS, CDN, and environment variables.                          | ✅      |
-| T34 | Monitoring, alerting, and incident response | Configure Sentry alerting thresholds. Document incident response runbook. Set up uptime monitoring.               | ✅      |
+| T33 | Production deployment                       | Deploy to production infrastructure. Configure DNS, TLS, CDN, and environment variables.                          | ✅     |
+| T34 | Monitoring, alerting, and incident response | Configure Sentry alerting thresholds. Document incident response runbook. Set up uptime monitoring.               | ✅     |
 
 ### 11.4 Risk Register
 
@@ -569,12 +569,12 @@ T34 (Monitoring) ── depends on T33
 
 ### 11.6 Progress Tracker
 
-| Phase                     | Tasks                   | Completed  | Status            |
-| ------------------------- | ----------------------- | ---------- | ----------------- |
+| Phase                     | Tasks                   | Completed   | Status             |
+| ------------------------- | ----------------------- | ----------- | ------------------ |
 | A — Foundation            | T16, T17, T18, T19, T20 | 5 / 5       | ✅ Complete        |
 | B — Instructor Experience | T21, T22, T23, T24, T25 | 5 / 5       | ✅ Complete        |
 | C — Integration           | T26, T27, T28, T29      | 4 / 4       | ✅ Complete        |
-| D — Scale and Compliance  | T30, T31, T32, T33, T34 | 4 / 5       | 🔧 In progress    |
+| D — Scale and Compliance  | T30, T31, T32, T33, T34 | 4 / 5       | 🔧 In progress     |
 | **Total**                 | **T16–T34**             | **18 / 19** | **🔧 In progress** |
 
 ---

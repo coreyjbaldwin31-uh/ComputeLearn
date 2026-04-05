@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { createContext, useContext } from 'react';
+import { createContext, useContext } from "react";
 import {
   useStorageHealth,
-  type StorageHealthState,
   type StorageHealthActions,
-} from './hooks/use-storage-health';
+  type StorageHealthState,
+} from "./hooks/use-storage-health";
 
 interface StorageHealthContextValue {
   health: StorageHealthState;
@@ -33,7 +33,7 @@ export function useStorageHealthContext() {
   const ctx = useContext(StorageHealthContext);
   if (!ctx)
     throw new Error(
-      'useStorageHealthContext must be used within StorageHealthProvider',
+      "useStorageHealthContext must be used within StorageHealthProvider",
     );
   return ctx;
 }

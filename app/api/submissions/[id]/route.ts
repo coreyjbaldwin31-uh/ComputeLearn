@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
 import { auditLog } from "@/lib/audit-log";
+import { prisma } from "@/lib/prisma";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(
   request: NextRequest,
@@ -54,7 +54,10 @@ export async function PUT(
           : typeof grade === "string"
             ? parseFloat(grade)
             : undefined;
-      if (gradeNum !== undefined && (isNaN(gradeNum) || gradeNum < 0 || gradeNum > 100)) {
+      if (
+        gradeNum !== undefined &&
+        (isNaN(gradeNum) || gradeNum < 0 || gradeNum > 100)
+      ) {
         return NextResponse.json(
           { error: "Grade must be between 0 and 100" },
           { status: 400 },
@@ -91,11 +94,7 @@ export async function PUT(
       );
     }
 
-    if (
-      status !== undefined &&
-      status !== "DRAFT" &&
-      status !== "SUBMITTED"
-    ) {
+    if (status !== undefined && status !== "DRAFT" && status !== "SUBMITTED") {
       return NextResponse.json(
         { error: "status must be DRAFT or SUBMITTED" },
         { status: 400 },

@@ -4,21 +4,21 @@ Operational procedures for responding to ComputeLearn platform incidents.
 
 ## Severity Levels
 
-| Level | Name      | Definition                                      | Response Time | Examples                                   |
-| ----- | --------- | ----------------------------------------------- | ------------- | ------------------------------------------ |
-| P1    | Critical  | Service completely unavailable                  | 15 minutes    | App crash loop, database down, DNS failure |
-| P2    | Degraded  | Service partially available or significantly slow | 1 hour       | Auth provider outage, high error rate      |
-| P3    | Minor     | Non-critical feature broken                     | 4 hours       | Export fails, one API route errors          |
-| P4    | Cosmetic  | Visual or non-functional issue                  | Next sprint   | Styling bug, typo in UI                    |
+| Level | Name     | Definition                                        | Response Time | Examples                                   |
+| ----- | -------- | ------------------------------------------------- | ------------- | ------------------------------------------ |
+| P1    | Critical | Service completely unavailable                    | 15 minutes    | App crash loop, database down, DNS failure |
+| P2    | Degraded | Service partially available or significantly slow | 1 hour        | Auth provider outage, high error rate      |
+| P3    | Minor    | Non-critical feature broken                       | 4 hours       | Export fails, one API route errors         |
+| P4    | Cosmetic | Visual or non-functional issue                    | Next sprint   | Styling bug, typo in UI                    |
 
 ## Contact Information
 
-| Role               | Contact              | Escalation                            |
-| ------------------ | -------------------- | ------------------------------------- |
-| On-call engineer   | *(fill in)*          | Slack: #computelearn-oncall           |
-| Engineering lead   | *(fill in)*          | Phone escalation after 30 min         |
-| Product owner      | *(fill in)*          | Email for P1/P2 incidents             |
-| Infrastructure     | *(fill in)*          | For hosting/DNS/database issues       |
+| Role             | Contact     | Escalation                      |
+| ---------------- | ----------- | ------------------------------- |
+| On-call engineer | _(fill in)_ | Slack: #computelearn-oncall     |
+| Engineering lead | _(fill in)_ | Phone escalation after 30 min   |
+| Product owner    | _(fill in)_ | Email for P1/P2 incidents       |
+| Infrastructure   | _(fill in)_ | For hosting/DNS/database issues |
 
 ## Escalation Path
 
@@ -36,6 +36,7 @@ Operational procedures for responding to ComputeLearn platform incidents.
 **Symptoms:** Health check returns `{ status: "unhealthy", checks: { database: false } }`. API routes return 500 errors.
 
 **Steps:**
+
 1. Check database container/service status: `docker compose ps` or check cloud provider dashboard.
 2. Verify `DATABASE_URL` is correct in the environment.
 3. Check PostgreSQL logs for connection limit exhaustion or disk space.
@@ -48,6 +49,7 @@ Operational procedures for responding to ComputeLearn platform incidents.
 **Symptoms:** Users cannot log in. Google OAuth returns errors.
 
 **Steps:**
+
 1. Check Google Cloud status at https://status.cloud.google.com/.
 2. Verify `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET` are valid.
 3. Check that `NEXTAUTH_URL` matches the deployed domain.
@@ -59,6 +61,7 @@ Operational procedures for responding to ComputeLearn platform incidents.
 **Symptoms:** Sentry alert for elevated error count. Users report failures.
 
 **Steps:**
+
 1. Open Sentry and identify the error(s) driving the spike.
 2. Check recent deployments — if the error started after a deploy, roll back immediately.
 3. Check server resource usage (memory, CPU) — if a resource is exhausted, scale or restart.
@@ -70,6 +73,7 @@ Operational procedures for responding to ComputeLearn platform incidents.
 **Symptoms:** Slow responses, container restarts, OOM kills in Docker logs.
 
 **Steps:**
+
 1. Check container resource usage: `docker stats`.
 2. Identify the container consuming excessive resources.
 3. For the app container: check for memory leaks (growing heap), large response payloads, or N+1 queries.
@@ -89,19 +93,24 @@ Use this template for P1 and P2 incidents:
 **Impact:** [Number of affected users, features unavailable]
 
 ### Timeline
+
 - HH:MM — [Event, detection, or action]
 - HH:MM — [Next event]
 
 ### Root Cause
+
 [What specifically caused the incident]
 
 ### Resolution
+
 [What was done to fix it]
 
 ### Action Items
+
 - [ ] [Preventive measure 1]
 - [ ] [Preventive measure 2]
 
 ### Lessons Learned
+
 [What went well, what could improve]
 ```

@@ -1,5 +1,5 @@
-import http from "k6/http";
 import { check, sleep } from "k6";
+import http from "k6/http";
 import { Rate } from "k6/metrics";
 
 /**
@@ -46,9 +46,7 @@ export default function () {
   sleep(0.5);
 
   // Gradebook export
-  const exportRes = http.get(
-    `${BASE_URL}/api/instructor/gradebook/export`,
-  );
+  const exportRes = http.get(`${BASE_URL}/api/instructor/gradebook/export`);
   const exportOk = check(exportRes, {
     "GET /api/instructor/gradebook/export ok": (r) =>
       r.status === 200 || r.status === 401 || r.status === 403,

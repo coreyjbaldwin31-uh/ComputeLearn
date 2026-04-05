@@ -18,19 +18,19 @@ Copy `.env.production.template` and fill in required values:
 cp .env.production.template .env.production
 ```
 
-| Variable                            | Required | Description                                    |
-| ----------------------------------- | -------- | ---------------------------------------------- |
-| `NODE_ENV`                          | Yes      | Must be `production`                           |
-| `DATABASE_URL`                      | Yes      | PostgreSQL connection string                   |
-| `AUTH_SECRET`                       | Yes      | Random secret — generate with `npx auth secret`|
-| `AUTH_GOOGLE_ID`                    | Yes      | Google OAuth client ID                         |
-| `AUTH_GOOGLE_SECRET`                | Yes      | Google OAuth client secret                     |
-| `NEXTAUTH_URL`                      | Yes      | Canonical URL (e.g. `https://app.example.com`) |
-| `SENTRY_DSN`                        | No       | Sentry project DSN for error monitoring        |
-| `SENTRY_ENVIRONMENT`               | No       | Defaults to `production`                       |
-| `SENTRY_TRACES_SAMPLE_RATE`        | No       | Trace sampling rate (default: `0.1`)           |
-| `OTEL_SERVICE_NAME`                | No       | OpenTelemetry service name                     |
-| `PORT`                              | No       | Defaults to `3000`                             |
+| Variable                    | Required | Description                                     |
+| --------------------------- | -------- | ----------------------------------------------- |
+| `NODE_ENV`                  | Yes      | Must be `production`                            |
+| `DATABASE_URL`              | Yes      | PostgreSQL connection string                    |
+| `AUTH_SECRET`               | Yes      | Random secret — generate with `npx auth secret` |
+| `AUTH_GOOGLE_ID`            | Yes      | Google OAuth client ID                          |
+| `AUTH_GOOGLE_SECRET`        | Yes      | Google OAuth client secret                      |
+| `NEXTAUTH_URL`              | Yes      | Canonical URL (e.g. `https://app.example.com`)  |
+| `SENTRY_DSN`                | No       | Sentry project DSN for error monitoring         |
+| `SENTRY_ENVIRONMENT`        | No       | Defaults to `production`                        |
+| `SENTRY_TRACES_SAMPLE_RATE` | No       | Trace sampling rate (default: `0.1`)            |
+| `OTEL_SERVICE_NAME`         | No       | OpenTelemetry service name                      |
+| `PORT`                      | No       | Defaults to `3000`                              |
 
 ## Docker Deployment
 

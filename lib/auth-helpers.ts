@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import type { Session } from "next-auth";
+import { NextResponse } from "next/server";
 
 type Role = "STUDENT" | "INSTRUCTOR" | "TA";
 
@@ -24,7 +24,9 @@ export async function requireAuth(): Promise<
  * Require an authenticated session with one of the specified roles.
  * Returns the session or a 401/403 response.
  */
-export async function requireRole(roles: Role[]): Promise<
+export async function requireRole(
+  roles: Role[],
+): Promise<
   | { session: Session & { user: { id: string; role: Role } }; error?: never }
   | { session?: never; error: NextResponse }
 > {

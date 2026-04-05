@@ -8720,18 +8720,29 @@ button[disabled] {
   font-weight: 600;
   font-size: 0.9375rem;
   cursor: pointer;
-  transition: background var(--transition-fast, 120ms), border-color var(--transition-fast, 120ms);
+  transition:
+    background var(--transition-fast, 120ms),
+    border-color var(--transition-fast, 120ms);
 }
 
-.lf-complete-btn:hover { background: #1d4ed8; border-color: #1d4ed8; }
-.lf-complete-btn:focus-visible { outline: 2px solid var(--accent, #2563eb); outline-offset: 2px; }
+.lf-complete-btn:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+.lf-complete-btn:focus-visible {
+  outline: 2px solid var(--accent, #2563eb);
+  outline-offset: 2px;
+}
 
 .lf-complete-btn--done {
   background: var(--success, #16a34a);
   border-color: var(--success, #16a34a);
 }
 
-.lf-complete-btn--done:hover { background: #15803d; border-color: #15803d; }
+.lf-complete-btn--done:hover {
+  background: #15803d;
+  border-color: #15803d;
+}
 
 .lf-review-btn {
   display: inline-flex;
@@ -8747,8 +8758,13 @@ button[disabled] {
   transition: border-color var(--transition-fast, 120ms);
 }
 
-.lf-review-btn:hover { border-color: var(--accent, #2563eb); }
-.lf-review-btn:focus-visible { outline: 2px solid var(--accent, #2563eb); outline-offset: 2px; }
+.lf-review-btn:hover {
+  border-color: var(--accent, #2563eb);
+}
+.lf-review-btn:focus-visible {
+  outline: 2px solid var(--accent, #2563eb);
+  outline-offset: 2px;
+}
 
 /* Scaffolding badge */
 .lf-scaffolding {

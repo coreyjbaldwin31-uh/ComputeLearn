@@ -1,35 +1,35 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
-import Link from "next/link";
-import type { Lesson, Exercise } from "@/data/curriculum";
-import type { ArtifactRecord, AttemptRecord } from "@/lib/artifact-engine";
-import type { LabInstance } from "@/lib/lab-engine";
-import type { ReviewRecord } from "@/lib/progression-engine";
+import type { Exercise, Lesson } from "@/data/curriculum";
 import { curriculum } from "@/data/curriculum";
-import { evaluateLessonEvidenceGate } from "@/lib/validation-engine";
-import { useLocalStorageState } from "./hooks/use-local-storage-state";
-import { useExerciseValidation } from "./hooks/use-exercise-validation";
-import { useArtifactManager } from "./hooks/use-artifact-manager";
-import { useLabLifecycle } from "./hooks/use-lab-lifecycle";
-import { LessonValidation } from "./lesson-validation";
-import { LessonTransfer } from "./lesson-transfer";
-import { LessonCodeExercises } from "./lesson-code-exercises";
-import { LessonTerminal } from "./lesson-terminal";
-import { LabPanel } from "./lab-panel";
-import { GuidedNotes } from "./guided-notes";
-import { LessonReviewPanel } from "./lesson-review-panel";
-import { RichText } from "./rich-text";
-import { buildReflectionPrompts } from "@/lib/reflection-engine";
+import type { ArtifactRecord, AttemptRecord } from "@/lib/artifact-engine";
 import { getWeakCompetencyTracks } from "@/lib/competency-engine";
-import { getWeakTrackHits } from "@/lib/reinforcement-engine";
+import type { LabInstance } from "@/lib/lab-engine";
+import { getLessonRecords } from "@/lib/learning-catalog";
+import type { ReviewRecord } from "@/lib/progression-engine";
 import {
   calculateCompetencyLevels,
   flattenLessonEntries,
   getMasteryLevel,
   isDueForReview,
 } from "@/lib/progression-engine";
-import { getLessonRecords } from "@/lib/learning-catalog";
+import { buildReflectionPrompts } from "@/lib/reflection-engine";
+import { getWeakTrackHits } from "@/lib/reinforcement-engine";
+import { evaluateLessonEvidenceGate } from "@/lib/validation-engine";
+import Link from "next/link";
+import { useCallback, useMemo, useState } from "react";
+import { GuidedNotes } from "./guided-notes";
+import { useArtifactManager } from "./hooks/use-artifact-manager";
+import { useExerciseValidation } from "./hooks/use-exercise-validation";
+import { useLabLifecycle } from "./hooks/use-lab-lifecycle";
+import { useLocalStorageState } from "./hooks/use-local-storage-state";
+import { LabPanel } from "./lab-panel";
+import { LessonCodeExercises } from "./lesson-code-exercises";
+import { LessonReviewPanel } from "./lesson-review-panel";
+import { LessonTerminal } from "./lesson-terminal";
+import { LessonTransfer } from "./lesson-transfer";
+import { LessonValidation } from "./lesson-validation";
+import { RichText } from "./rich-text";
 
 /* ---- Flow steps ---- */
 type FlowStep = "learn" | "practice" | "apply" | "reflect";
@@ -92,10 +92,9 @@ export function LessonFlow({ lesson }: { lesson: Lesson }) {
   const [labInstances, setLabInstances] = useLocalStorageState<
     Record<string, LabInstance>
   >("computelearn-lab-instances", {});
-  const [reviews, setReviews] = useLocalStorageState<Record<string, ReviewRecord>>(
-    "computelearn-reviews",
-    {},
-  );
+  const [reviews, setReviews] = useLocalStorageState<
+    Record<string, ReviewRecord>
+  >("computelearn-reviews", {});
   const [guidedNotesState, setGuidedNotesState] =
     useLocalStorageState<GuidedNotesState>("computelearn-guided-notes", {});
 
@@ -862,13 +861,33 @@ export function LessonFlow({ lesson }: { lesson: Lesson }) {
           </div>
 
           {/* ─── Completion ─── */}
-          <section className="lf-completion-section" aria-label="Lesson completion">
+          <section
+            className="lf-completion-section"
+            aria-label="Lesson completion"
+          >
             {gateFeedback && (
               <div className="lf-gate-feedback" role="alert">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5"/>
-                  <path d="M8 4.5V9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                  <circle cx="8" cy="11.5" r="0.75" fill="currentColor"/>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <circle
+                    cx="8"
+                    cy="8"
+                    r="7"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                  />
+                  <path
+                    d="M8 4.5V9"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                  />
+                  <circle cx="8" cy="11.5" r="0.75" fill="currentColor" />
                 </svg>
                 {gateFeedback}
               </div>
@@ -881,8 +900,20 @@ export function LessonFlow({ lesson }: { lesson: Lesson }) {
             >
               {progress[lesson.id] ? (
                 <>
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <path d="M3 8.5L6.5 12L13 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M3 8.5L6.5 12L13 4"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                   Lesson Complete
                 </>

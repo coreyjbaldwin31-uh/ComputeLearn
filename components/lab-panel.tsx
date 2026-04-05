@@ -353,7 +353,12 @@ function LabFileCard({
     <div className="lab-file-card">
       <div className="lab-file-header">
         <code className="lab-file-path">{file.path}</code>
-        <button type="button" className="ghost-button" onClick={onEdit} aria-label={`${isEditing ? "Collapse" : "Edit"} ${file.path}`}>
+        <button
+          type="button"
+          className="ghost-button"
+          onClick={onEdit}
+          aria-label={`${isEditing ? "Collapse" : "Edit"} ${file.path}`}
+        >
           {isEditing ? "Collapse" : "Edit"}
         </button>
       </div>

@@ -16,8 +16,8 @@ export const ltiConfig = {
 export function isLtiConfigured(): boolean {
   return Boolean(
     ltiConfig.platformUrl &&
-      ltiConfig.clientId &&
-      ltiConfig.authEndpoint &&
-      ltiConfig.tokenEndpoint,
+    ltiConfig.clientId &&
+    ltiConfig.authEndpoint &&
+    ltiConfig.tokenEndpoint,
   );
 }

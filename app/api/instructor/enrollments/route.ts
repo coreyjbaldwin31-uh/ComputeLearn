@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { NextRequest, NextResponse } from "next/server";
 
 function isInstructorOrTA(role: string | undefined): boolean {
   return role === "INSTRUCTOR" || role === "TA";
@@ -55,10 +55,7 @@ export async function POST(request: NextRequest) {
   const { email, courseId } = body as Record<string, unknown>;
 
   if (!email || typeof email !== "string") {
-    return NextResponse.json(
-      { error: "email is required" },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: "email is required" }, { status: 400 });
   }
   if (!courseId || typeof courseId !== "string") {
     return NextResponse.json(

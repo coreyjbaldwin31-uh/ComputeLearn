@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { curriculum } from "@/data/curriculum";
+import Link from "next/link";
 import { AcademyNav } from "./academy-nav";
 import { SkipLink } from "./skip-link";
 
@@ -37,7 +37,9 @@ export function AcademyShell({ children }: { children: React.ReactNode }) {
       </aside>
 
       <div className="academy-content">
-        <main id="main-content" className="academy-main">{children}</main>
+        <main id="main-content" className="academy-main">
+          {children}
+        </main>
       </div>
     </div>
   );

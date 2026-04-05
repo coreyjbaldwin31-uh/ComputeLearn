@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { NextRequest, NextResponse } from "next/server";
 
 function isInstructorOrTA(role: string | undefined): boolean {
   return role === "INSTRUCTOR" || role === "TA";
@@ -26,10 +26,7 @@ export async function POST(request: NextRequest) {
   }
 
   if (!text.trim()) {
-    return NextResponse.json(
-      { error: "Empty CSV body" },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: "Empty CSV body" }, { status: 400 });
   }
 
   const lines = text
@@ -42,7 +39,10 @@ export async function POST(request: NextRequest) {
   const startIndex =
     firstLine.includes("email") && firstLine.includes("course") ? 1 : 0;
 
-  const results: { success: number; errors: { row: number; email: string; courseId: string; reason: string }[] } = {
+  const results: {
+    success: number;
+    errors: { row: number; email: string; courseId: string; reason: string }[];
+  } = {
     success: 0,
     errors: [],
   };
