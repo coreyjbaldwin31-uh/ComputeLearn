@@ -5,12 +5,21 @@ type PhaseBadge = {
   earned: boolean;
 };
 
+import styles from "./achievement-panel.module.css";
+
 type AchievementPanelProps = {
   phaseBadges: PhaseBadge[];
   activityStreak: number;
   totalCompleted: number;
   totalLessons: number;
 };
+
+function streakTierClass(tier: string) {
+  if (tier === "starting") return styles.streakStarting;
+  if (tier === "building") return styles.streakBuilding;
+  if (tier === "strong") return styles.streakStrong;
+  return styles.streakLegendary;
+}
 
 function BadgeIcon({ earned }: { earned: boolean }) {
   if (earned) {
@@ -88,9 +97,7 @@ function StreakBadge({ streak }: { streak: number }) {
           : "3-day streak";
 
   return (
-    <div
-      className={`achievement-streak-badge achievement-streak-badge--${tier}`}
-    >
+    <div className={`${styles.streakBadge} ${streakTierClass(tier)}`}>
       <svg
         width="20"
         height="20"
@@ -118,8 +125,8 @@ export function AchievementPanel({
     totalLessons > 0 ? Math.round((totalCompleted / totalLessons) * 100) : 0;
 
   return (
-    <section className="achievement-panel">
-      <h3 className="achievement-title">
+    <section className={styles.panel}>
+      <h3 className={styles.title}>
         <svg
           width="18"
           height="18"
@@ -135,38 +142,38 @@ export function AchievementPanel({
         Achievements
       </h3>
 
-      <div className="achievement-stats-row">
-        <div className="achievement-stat-card">
-          <span className="achievement-stat-value">{totalCompleted}</span>
-          <span className="achievement-stat-label">Lessons done</span>
+      <div className={styles.statsRow}>
+        <div className={styles.statCard}>
+          <span className={styles.statValue}>{totalCompleted}</span>
+          <span className={styles.statLabel}>Lessons done</span>
         </div>
-        <div className="achievement-stat-card">
-          <span className="achievement-stat-value">
+        <div className={styles.statCard}>
+          <span className={styles.statValue}>
             {phaseBadges.filter((b) => b.earned).length}/{phaseBadges.length}
           </span>
-          <span className="achievement-stat-label">Phases cleared</span>
+          <span className={styles.statLabel}>Phases cleared</span>
         </div>
-        <div className="achievement-stat-card achievement-stat-card--accent">
-          <span className="achievement-stat-value">{overallPct}%</span>
-          <span className="achievement-stat-label">Overall</span>
+        <div className={`${styles.statCard} ${styles.statCardAccent}`}>
+          <span className={styles.statValue}>{overallPct}%</span>
+          <span className={styles.statLabel}>Overall</span>
         </div>
       </div>
 
       <StreakBadge streak={activityStreak} />
 
-      <div className="achievement-badges">
-        <h4 className="achievement-badges-title">Phase badges</h4>
-        <div className="achievement-badges-grid">
+      <div>
+        <h4 className={styles.badgesTitle}>Phase badges</h4>
+        <div className={styles.badgesGrid}>
           {phaseBadges.map((badge) => (
             <div
               key={badge.phaseId}
-              className={`achievement-badge ${badge.earned ? "achievement-badge--earned" : ""}`}
+              className={`${styles.badge} ${badge.earned ? styles.badgeEarned : ""}`}
             >
               <BadgeIcon earned={badge.earned} />
-              <span className="achievement-badge-level">
+              <span className={styles.badgeLevel}>
                 {badge.phaseLevel}
               </span>
-              <span className="achievement-badge-label">
+              <span className={styles.badgeLabel}>
                 {badge.earned ? "Cleared" : "Locked"}
               </span>
             </div>

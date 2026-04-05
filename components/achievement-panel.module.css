@@ -1,0 +1,142 @@
+.panel {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 20px 24px;
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin: 0 0 16px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statsRow {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.statCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 14px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  flex: 1;
+}
+
+.statCardAccent {
+  background: rgba(13, 107, 87, 0.04);
+  border-color: rgba(13, 107, 87, 0.12);
+}
+
+:global([data-theme="dark"]) .statCardAccent {
+  background: rgba(45, 212, 168, 0.06);
+  border-color: rgba(45, 212, 168, 0.12);
+}
+
+.statValue {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--accent-strong);
+}
+
+.statLabel {
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+.streakBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.streakStarting {
+  background: rgba(198, 139, 44, 0.1);
+  color: var(--gold);
+}
+
+.streakBuilding {
+  background: rgba(198, 139, 44, 0.15);
+  color: var(--gold);
+}
+
+.streakStrong {
+  background: rgba(198, 139, 44, 0.2);
+  color: #8a6118;
+}
+
+.streakLegendary {
+  background: linear-gradient(
+    135deg,
+    rgba(198, 139, 44, 0.25),
+    rgba(13, 107, 87, 0.15)
+  );
+  color: var(--accent-strong);
+}
+
+:global([data-theme="dark"]) .streakStrong {
+  color: var(--gold);
+}
+
+.badgesTitle {
+  font-size: 0.82rem;
+  font-weight: 700;
+  margin: 0 0 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.badgesGrid {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 18px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  min-width: 90px;
+  opacity: 0.5;
+  transition:
+    opacity 200ms ease,
+    border-color 200ms ease;
+}
+
+.badgeEarned {
+  opacity: 1;
+  border-color: var(--accent);
+}
+
+.badgeLevel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text);
+}
+
+.badgeLabel {
+  font-size: 0.7rem;
+  color: var(--muted);
+}
