@@ -45,6 +45,7 @@ export default async function InstructorSubmissionsPage() {
         ) : (
           <div style={{ overflowX: "auto" }}>
             <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <caption className="sr-only">Pending student submissions awaiting review</caption>
               <thead>
                 <tr
                   style={{
@@ -52,11 +53,11 @@ export default async function InstructorSubmissionsPage() {
                     textAlign: "left",
                   }}
                 >
-                  <th style={{ padding: "8px 12px" }}>Student</th>
-                  <th style={{ padding: "8px 12px" }}>Lesson</th>
-                  <th style={{ padding: "8px 12px" }}>Submitted</th>
-                  <th style={{ padding: "8px 12px" }}>Status</th>
-                  <th style={{ padding: "8px 12px" }}>Action</th>
+                  <th scope="col" style={{ padding: "8px 12px" }}>Student</th>
+                  <th scope="col" style={{ padding: "8px 12px" }}>Lesson</th>
+                  <th scope="col" style={{ padding: "8px 12px" }}>Submitted</th>
+                  <th scope="col" style={{ padding: "8px 12px" }}>Status</th>
+                  <th scope="col" style={{ padding: "8px 12px" }}>Action</th>
                 </tr>
               </thead>
               <tbody>

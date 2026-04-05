@@ -7679,6 +7679,13 @@ button[disabled] {
   border: 1px solid var(--ac-border);
   border-radius: var(--ac-radius);
   overflow: hidden;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.academy-progress-grid thead,
+.academy-progress-grid tbody {
+  display: contents;
 }
 
 .academy-progress-row {
@@ -7689,6 +7696,12 @@ button[disabled] {
   border-bottom: 1px solid var(--ac-border);
   font-size: 0.86rem;
   color: var(--ac-text);
+}
+
+.academy-progress-row th,
+.academy-progress-row td {
+  text-align: left;
+  font-weight: inherit;
 }
 
 .academy-progress-row:last-child {

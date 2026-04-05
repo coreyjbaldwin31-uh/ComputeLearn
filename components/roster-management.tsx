@@ -149,6 +149,8 @@ export function RosterManagement({
     <div>
       {message && (
         <p
+          role="status"
+          aria-live="polite"
           style={{
             padding: "8px 12px",
             marginBottom: "16px",
@@ -241,6 +243,7 @@ export function RosterManagement({
           ref={fileInputRef}
           type="file"
           accept=".csv,text/csv"
+          aria-label="Select CSV file to import enrollments"
           style={{ fontSize: "0.9rem" }}
         />
         <button
@@ -263,6 +266,7 @@ export function RosterManagement({
 
       <div style={{ overflowX: "auto" }}>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <caption className="sr-only">Student enrollment roster</caption>
           <thead>
             <tr
               style={{
@@ -270,11 +274,11 @@ export function RosterManagement({
                 textAlign: "left",
               }}
             >
-              <th style={{ padding: "8px 12px" }}>Name</th>
-              <th style={{ padding: "8px 12px" }}>Email</th>
-              <th style={{ padding: "8px 12px" }}>Course</th>
-              <th style={{ padding: "8px 12px" }}>Enrolled</th>
-              <th style={{ padding: "8px 12px" }}>Actions</th>
+              <th scope="col" style={{ padding: "8px 12px" }}>Name</th>
+              <th scope="col" style={{ padding: "8px 12px" }}>Email</th>
+              <th scope="col" style={{ padding: "8px 12px" }}>Course</th>
+              <th scope="col" style={{ padding: "8px 12px" }}>Enrolled</th>
+              <th scope="col" style={{ padding: "8px 12px" }}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -301,6 +305,7 @@ export function RosterManagement({
                     type="button"
                     onClick={() => handleRemove(enrollment.id)}
                     disabled={loading}
+                    aria-label={`Remove ${enrollment.userName ?? enrollment.userEmail ?? "student"} from roster`}
                     style={{
                       padding: "4px 12px",
                       borderRadius: "var(--radius-sm)",

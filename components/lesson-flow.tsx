@@ -479,6 +479,7 @@ export function LessonFlow({ lesson }: { lesson: Lesson }) {
                 setNotes((prev) => ({ ...prev, [lesson.id]: e.target.value }))
               }
               placeholder="Write what you understand so far..."
+              aria-label="Lesson notes"
             />
           </div>
 
@@ -722,6 +723,7 @@ export function LessonFlow({ lesson }: { lesson: Lesson }) {
                 }))
               }
               placeholder="What failed? What fixed it? What signal mattered?"
+              aria-label="Lesson reflection"
             />
             <button
               type="button"

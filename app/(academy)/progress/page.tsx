@@ -17,22 +17,26 @@ export default function ProgressPage() {
       {/* Interactive competency tracker */}
       <CompetencyTracker />
 
-      <div className="academy-progress-grid">
-        <div className="academy-progress-row academy-progress-head">
-          <span>Phase</span>
-          <span>Level</span>
-          <span>Duration</span>
-          <span>Milestones</span>
-        </div>
-        {curriculum.phases.map((phase) => (
-          <div key={phase.id} className="academy-progress-row">
-            <span>{phase.title}</span>
-            <span>{phase.level}</span>
-            <span>{phase.duration}</span>
-            <span>{phase.milestones.length}</span>
-          </div>
-        ))}
-      </div>
+      <table className="academy-progress-grid" role="table" aria-label="Phase overview">
+        <thead>
+          <tr className="academy-progress-row academy-progress-head">
+            <th scope="col">Phase</th>
+            <th scope="col">Level</th>
+            <th scope="col">Duration</th>
+            <th scope="col">Milestones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {curriculum.phases.map((phase) => (
+            <tr key={phase.id} className="academy-progress-row">
+              <td>{phase.title}</td>
+              <td>{phase.level}</td>
+              <td>{phase.duration}</td>
+              <td>{phase.milestones.length}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
       {/* Transcript / portfolio export */}
       <TranscriptExport />

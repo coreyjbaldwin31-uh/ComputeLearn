@@ -523,7 +523,7 @@ Gaps are tiered by deployment impact. **Tier 1** items are blockers — the plat
 | --- | -------------------------------------------- | -------------------------------------------------------------------------------------------------- | ------ |
 | T26 | LTI 1.3 integration for Canvas               | Implement LTI 1.3 launch, deep linking, and grade passback endpoints.                              | ⬚      |
 | T27 | Terminal runtime decision and implementation | Evaluate: (a) WebSocket container sandbox or (b) scoped simulation. Implement chosen path.         | ⬚      |
-| T28 | Accessibility audit and remediation          | Run axe-core automated audit. Manual keyboard/screen-reader audit. Fix all WCAG 2.1 AA violations. | ⬚      |
+| T28 | Accessibility audit and remediation          | Run axe-core automated audit. Manual keyboard/screen-reader audit. Fix all WCAG 2.1 AA violations. | ✔      |
 | T29 | Student transcript and portfolio export      | Students can export progress, completed labs, and artifact history as JSON or PDF.                 | ⬚      |
 
 #### Phase D — Scale and Compliance (Weeks 13–16): Production Readiness

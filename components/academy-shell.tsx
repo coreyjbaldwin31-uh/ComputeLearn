@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { curriculum } from "@/data/curriculum";
 import { AcademyNav } from "./academy-nav";
+import { SkipLink } from "./skip-link";
 
 export function AcademyShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="academy-app">
+      <SkipLink href="#main-content">Skip to main content</SkipLink>
       <aside className="academy-sidebar">
         <Link href="/dashboard" className="academy-sidebar-brand">
           <span className="academy-brand-mark">CL</span>
@@ -16,7 +18,7 @@ export function AcademyShell({ children }: { children: React.ReactNode }) {
 
         <AcademyNav />
 
-        <div className="academy-sidebar-phases">
+        <nav className="academy-sidebar-phases" aria-label="Program phases">
           <p className="academy-nav-label">Program</p>
           <ol className="academy-phase-list">
             {curriculum.phases.map((phase, index) => (
@@ -31,11 +33,11 @@ export function AcademyShell({ children }: { children: React.ReactNode }) {
               </li>
             ))}
           </ol>
-        </div>
+        </nav>
       </aside>
 
       <div className="academy-content">
-        <main className="academy-main">{children}</main>
+        <main id="main-content" className="academy-main">{children}</main>
       </div>
     </div>
   );

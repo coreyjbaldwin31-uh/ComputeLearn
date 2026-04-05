@@ -69,8 +69,8 @@ export function GuidedNotes({
       </div>
 
       {/* Progress summary */}
-      <div className="gn-progress">
-        <div className="gn-progress-bar">
+      <div className="gn-progress" role="status" aria-live="polite">
+        <div className="gn-progress-bar" aria-hidden="true">
           <div
             className="gn-progress-fill"
             ref={(el) => {

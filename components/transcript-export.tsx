@@ -47,6 +47,7 @@ export function TranscriptExport() {
           className="btn btn-secondary"
           onClick={handleExportJson}
           disabled={downloading}
+          aria-label="Export transcript as JSON file"
         >
           {downloading ? "Exporting…" : "Export JSON"}
         </button>
@@ -54,6 +55,7 @@ export function TranscriptExport() {
           type="button"
           className="btn btn-secondary"
           onClick={handlePrintTranscript}
+          aria-label="Print transcript as PDF"
         >
           Print Transcript
         </button>

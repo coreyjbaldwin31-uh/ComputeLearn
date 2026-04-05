@@ -146,7 +146,11 @@ export function CodeExercise({
       </div>
 
       {result ? (
-        <div className={`feedback ${result.passed ? "success" : "warning"}`}>
+        <div
+          className={`feedback ${result.passed ? "success" : "warning"}`}
+          role="status"
+          aria-live="polite"
+        >
           {result.passed ? "✓ " : "✗ "}
           {result.message}
         </div>

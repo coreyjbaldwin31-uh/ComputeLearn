@@ -111,7 +111,7 @@ export function SubmissionReviewForm({
       />
 
       {error && (
-        <p style={{ color: "var(--error, #ef4444)", marginBottom: "12px" }}>
+        <p role="alert" style={{ color: "var(--error, #ef4444)", marginBottom: "12px" }}>
           {error}
         </p>
       )}

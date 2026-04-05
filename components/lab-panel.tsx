@@ -310,6 +310,8 @@ export function LabPanel({
       {validationResult ? (
         <div
           className={`lab-validation-results${validationResult.passed ? " all-passed" : ""}`}
+          role="status"
+          aria-live="polite"
         >
           <h5>
             {validationResult.passed
@@ -351,7 +353,7 @@ function LabFileCard({
     <div className="lab-file-card">
       <div className="lab-file-header">
         <code className="lab-file-path">{file.path}</code>
-        <button type="button" className="ghost-button" onClick={onEdit}>
+        <button type="button" className="ghost-button" onClick={onEdit} aria-label={`${isEditing ? "Collapse" : "Edit"} ${file.path}`}>
           {isEditing ? "Collapse" : "Edit"}
         </button>
       </div>

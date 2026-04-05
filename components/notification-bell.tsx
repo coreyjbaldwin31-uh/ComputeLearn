@@ -73,6 +73,7 @@ export function NotificationBell({
         className="notif-bell-button"
         onClick={() => setIsOpen((v) => !v)}
         aria-label={`Notifications${notifications.length > 0 ? ` (${notifications.length} unread)` : ""}`}
+        aria-expanded={isOpen}
       >
         <svg
           width="18"

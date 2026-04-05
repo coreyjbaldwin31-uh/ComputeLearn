@@ -122,6 +122,14 @@ export function SubmissionPanel({ lessonId }: SubmissionPanelProps) {
     <div className="panel" style={{ padding: "16px", marginTop: "16px" }}>
       <h4 style={{ marginBottom: "8px" }}>Submission</h4>
 
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        {isReviewed
+          ? `Submission reviewed${submission?.grade != null ? `. Grade: ${submission.grade} out of 100` : ""}`
+          : isSubmitted
+            ? "Submission submitted — awaiting review"
+            : ""}
+      </div>
+
       {isReviewed && (
         <div style={{ marginBottom: "12px" }}>
           <span
@@ -164,6 +172,7 @@ export function SubmissionPanel({ lessonId }: SubmissionPanelProps) {
         onChange={(e) => setContent(e.target.value)}
         disabled={isSubmitted || isReviewed}
         placeholder="Write your response here..."
+        aria-label="Submission response"
         rows={8}
         style={{
           width: "100%",
@@ -179,7 +188,7 @@ export function SubmissionPanel({ lessonId }: SubmissionPanelProps) {
       />
 
       {error && (
-        <p style={{ color: "var(--error, #ef4444)", marginTop: "8px" }}>
+        <p role="alert" style={{ color: "var(--error, #ef4444)", marginTop: "8px" }}>
           {error}
         </p>
       )}

@@ -145,6 +145,7 @@ export default async function GradebookPage() {
         ) : (
           <div style={{ overflowX: "auto" }}>
             <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <caption className="sr-only">Student grades by lesson</caption>
               <thead>
                 <tr
                   style={{
@@ -152,12 +153,13 @@ export default async function GradebookPage() {
                     textAlign: "left",
                   }}
                 >
-                  <th style={{ padding: "8px 12px", position: "sticky", left: 0, background: "var(--bg, #fff)" }}>
+                  <th scope="col" style={{ padding: "8px 12px", position: "sticky", left: 0, background: "var(--bg, #fff)" }}>
                     Student
                   </th>
                   {gradedLessons.map((l) => (
                     <th
                       key={l.id}
+                      scope="col"
                       style={{
                         padding: "8px 12px",
                         maxWidth: "120px",
@@ -170,7 +172,7 @@ export default async function GradebookPage() {
                       {l.title}
                     </th>
                   ))}
-                  <th style={{ padding: "8px 12px", fontWeight: 700 }}>
+                  <th scope="col" style={{ padding: "8px 12px", fontWeight: 700 }}>
                     Average
                   </th>
                 </tr>
@@ -183,16 +185,18 @@ export default async function GradebookPage() {
                       key={student.id}
                       style={{ borderBottom: "1px solid var(--border)" }}
                     >
-                      <td
+                      <th
+                        scope="row"
                         style={{
                           padding: "8px 12px",
                           position: "sticky",
                           left: 0,
                           background: "var(--bg, #fff)",
+                          fontWeight: "normal",
                         }}
                       >
                         {student.name ?? student.email ?? "Unknown"}
-                      </td>
+                      </th>
                       {gradedLessons.map((l) => {
                         const grade = gradeMap
                           .get(student.id)
@@ -228,7 +232,8 @@ export default async function GradebookPage() {
                     fontWeight: 600,
                   }}
                 >
-                  <td
+                  <th
+                    scope="row"
                     style={{
                       padding: "8px 12px",
                       position: "sticky",
@@ -237,7 +242,7 @@ export default async function GradebookPage() {
                     }}
                   >
                     Class Average
-                  </td>
+                  </th>
                   {gradedLessons.map((l) => {
                     const avg = lessonAvgs.get(l.id);
                     return (
