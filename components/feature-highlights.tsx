@@ -1,3 +1,5 @@
+import styles from "./feature-highlights.module.css";
+
 const features = [
   {
     icon: (
@@ -171,21 +173,21 @@ const features = [
 
 export function FeatureHighlights() {
   return (
-    <section className="feature-highlights" aria-label="Platform features">
-      <div className="feature-highlights-header">
+    <section className={styles.featureHighlights} aria-label="Platform features">
+      <div className={styles.featureHighlightsHeader}>
         <span className="eyebrow">Everything you need</span>
-        <h2 className="feature-highlights-title">
+        <h2 className={styles.featureHighlightsTitle}>
           Built for real engineering competence
         </h2>
-        <p className="feature-highlights-subtitle">
+        <p className={styles.featureHighlightsSubtitle}>
           Every feature is designed to build lasting operational skill, not just
           check a box.
         </p>
       </div>
-      <div className="feature-grid">
+      <div className={styles.featureGrid}>
         {features.map((feature) => (
-          <article key={feature.title} className="feature-card">
-            <span className="feature-icon" aria-hidden="true">
+          <article key={feature.title} className={styles.featureCard}>
+            <span className={styles.featureIcon} aria-hidden="true">
               {feature.icon}
             </span>
             <h3>{feature.title}</h3>
