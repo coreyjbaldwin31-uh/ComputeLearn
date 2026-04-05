@@ -530,11 +530,11 @@ Gaps are tiered by deployment impact. **Tier 1** items are blockers — the plat
 
 | ID  | Task                                        | Description                                                                                                       | Status |
 | --- | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ------ |
-| T30 | Load testing for 400 concurrent users       | Set up k6 load test scripts targeting lesson flow, API routes, and dashboard. P95 < 500ms target.                 | ⬚      |
-| T31 | FERPA compliance review                     | Document data handling policy, implement access controls and audit logging, define retention/deletion procedures. | ⬚      |
+| T30 | Load testing for 400 concurrent users       | Set up k6 load test scripts targeting lesson flow, API routes, and dashboard. P95 < 500ms target.                 | ✅      |
+| T31 | FERPA compliance review                     | Document data handling policy, implement access controls and audit logging, define retention/deletion procedures. | ✅      |
 | T32 | Faculty content review                      | Coordinate with MIT instructors to review Phase 1–4 curriculum for accuracy, depth, and course alignment.         | ⬚      |
-| T33 | Production deployment                       | Deploy to production infrastructure. Configure DNS, TLS, CDN, and environment variables.                          | ⬚      |
-| T34 | Monitoring, alerting, and incident response | Configure Sentry alerting thresholds. Document incident response runbook. Set up uptime monitoring.               | ⬚      |
+| T33 | Production deployment                       | Deploy to production infrastructure. Configure DNS, TLS, CDN, and environment variables.                          | ✅      |
+| T34 | Monitoring, alerting, and incident response | Configure Sentry alerting thresholds. Document incident response runbook. Set up uptime monitoring.               | ✅      |
 
 ### 11.4 Risk Register
 
@@ -574,8 +574,8 @@ T34 (Monitoring) ── depends on T33
 | A — Foundation            | T16, T17, T18, T19, T20 | 5 / 5       | ✅ Complete        |
 | B — Instructor Experience | T21, T22, T23, T24, T25 | 5 / 5       | ✅ Complete        |
 | C — Integration           | T26, T27, T28, T29      | 4 / 4       | ✅ Complete        |
-| D — Scale and Compliance  | T30, T31, T32, T33, T34 | 0 / 5       | ⬚ Not started     |
-| **Total**                 | **T16–T34**             | **14 / 19** | **🔧 In progress** |
+| D — Scale and Compliance  | T30, T31, T32, T33, T34 | 4 / 5       | 🔧 In progress    |
+| **Total**                 | **T16–T34**             | **18 / 19** | **🔧 In progress** |
 
 ---
 

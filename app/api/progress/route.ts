@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { auditLog } from "@/lib/audit-log";
 
 export async function GET() {
   const session = await auth();
@@ -71,6 +72,13 @@ export async function PUT(request: NextRequest) {
         ...(typeof notes === "string" && { notes }),
         ...(typeof reflection === "string" && { reflection }),
       },
+    });
+    auditLog({
+      userId: session.user.id,
+      action: "PROGRESS_UPDATE",
+      resource: `/progress/${lessonId}`,
+      details: { lessonId, step, completed },
+      ip: request.headers.get("x-forwarded-for") ?? null,
     });
     return NextResponse.json({ progress });
   } catch {

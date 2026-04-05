@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { auditLog } from "@/lib/audit-log";
 
 export async function PUT(
   request: NextRequest,
@@ -67,6 +68,13 @@ export async function PUT(
           ...(typeof feedback === "string" && { feedback }),
           ...(gradeNum !== undefined && { grade: gradeNum }),
         },
+      });
+      auditLog({
+        userId: session.user.id,
+        action: "SUBMISSION_REVIEW",
+        resource: `/submissions/${id}`,
+        details: { grade: gradeNum },
+        ip: request.headers.get("x-forwarded-for") ?? null,
       });
       return NextResponse.json({ submission });
     }

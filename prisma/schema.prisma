@@ -147,6 +147,22 @@ model LtiGradeSync {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+// ── Audit ──────────────────────────────────────────────────────────
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String
+  resource  String
+  details   Json?
+  ip        String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+}
+
 // ── Enums ──────────────────────────────────────────────────────────
 
 enum Role {

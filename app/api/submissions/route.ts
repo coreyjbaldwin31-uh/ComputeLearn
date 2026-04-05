@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { auditLog } from "@/lib/audit-log";
 
 export async function GET() {
   const session = await auth();
@@ -58,6 +59,13 @@ export async function POST(request: NextRequest) {
         content,
         status: "DRAFT",
       },
+    });
+    auditLog({
+      userId: session.user.id,
+      action: "SUBMISSION_CREATE",
+      resource: `/submissions/${submission.id}`,
+      details: { lessonId },
+      ip: request.headers.get("x-forwarded-for") ?? null,
     });
     return NextResponse.json({ submission }, { status: 201 });
   } catch {

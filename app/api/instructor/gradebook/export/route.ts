@@ -1,10 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireRole } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
 import { curriculum } from "@/data/curriculum";
 import { getLessonRecords } from "@/lib/learning-catalog";
+import { auditLog } from "@/lib/audit-log";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const result = await requireRole(["INSTRUCTOR", "TA"]);
   if (result.error) return result.error;
 
@@ -69,6 +70,14 @@ export async function GET() {
   });
 
   const csv = [header, ...rows].join("\n");
+
+  auditLog({
+    userId: result.session.user.id,
+    action: "GRADE_EXPORT",
+    resource: "/instructor/gradebook/export",
+    details: { studentCount: students.length, lessonCount: lessons.length },
+    ip: request.headers.get("x-forwarded-for") ?? null,
+  });
 
   return new NextResponse(csv, {
     status: 200,

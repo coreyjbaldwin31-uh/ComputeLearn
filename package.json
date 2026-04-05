@@ -18,7 +18,8 @@
     "docker:build": "docker build -t computelearn-platform .",
     "docker:up": "docker compose up --build",
     "docker:down": "docker compose down",
-    "api:test": "newman run tests/api/smoke.postman_collection.json"
+    "api:test": "newman run tests/api/smoke.postman_collection.json",
+    "load-test": "k6 run tests/load/lesson-flow.js"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
