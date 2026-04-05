@@ -50,6 +50,20 @@ export async function PUT(request: NextRequest) {
     );
   }
 
+  const MAX_TEXT = 10_000;
+  if (typeof notes === "string" && notes.length > MAX_TEXT) {
+    return NextResponse.json(
+      { error: `notes must be ${MAX_TEXT} characters or fewer` },
+      { status: 400 },
+    );
+  }
+  if (typeof reflection === "string" && reflection.length > MAX_TEXT) {
+    return NextResponse.json(
+      { error: `reflection must be ${MAX_TEXT} characters or fewer` },
+      { status: 400 },
+    );
+  }
+
   try {
     const progress = await prisma.progress.upsert({
       where: {

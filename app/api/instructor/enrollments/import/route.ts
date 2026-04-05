@@ -29,6 +29,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Empty CSV body" }, { status: 400 });
   }
 
+  const MAX_CSV_BYTES = 1_048_576; // 1 MB
+  if (new TextEncoder().encode(text).length > MAX_CSV_BYTES) {
+    return NextResponse.json(
+      { error: "CSV body exceeds 1 MB limit" },
+      { status: 413 },
+    );
+  }
+
   const lines = text
     .split(/\r?\n/)
     .map((line) => line.trim())

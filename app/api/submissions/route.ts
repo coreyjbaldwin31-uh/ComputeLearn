@@ -51,6 +51,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "content is required" }, { status: 400 });
   }
 
+  const MAX_CONTENT = 100_000;
+  if (content.length > MAX_CONTENT) {
+    return NextResponse.json(
+      { error: `content must be ${MAX_CONTENT} characters or fewer` },
+      { status: 400 },
+    );
+  }
+
   try {
     const submission = await prisma.submission.create({
       data: {

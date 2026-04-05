@@ -54,14 +54,23 @@ export async function GET(request: NextRequest) {
     gradeMap.get(sub.userId)!.set(sub.lessonId, sub.grade);
   }
 
+  // Sanitise a cell value to prevent CSV injection (formula injection)
+  // when the export is opened in Excel or Google Sheets.
+  function sanitizeCell(value: string): string {
+    if (/^[=+\-@\t\r]/.test(value)) {
+      return "'" + value;
+    }
+    return value;
+  }
+
   // CSV header
-  const lessonHeaders = lessons.map((l) => `"${l.title.replace(/"/g, '""')}"`);
+  const lessonHeaders = lessons.map((l) => `"${sanitizeCell(l.title).replace(/"/g, '""')}"`);
   const header = ["Student Name", "Email", ...lessonHeaders].join(",");
 
   // CSV rows
   const rows = students.map((student) => {
-    const name = (student.name ?? "Unknown").replace(/"/g, '""');
-    const email = (student.email ?? "").replace(/"/g, '""');
+    const name = sanitizeCell((student.name ?? "Unknown")).replace(/"/g, '""');
+    const email = sanitizeCell((student.email ?? "")).replace(/"/g, '""');
     const grades = lessons.map((l) => {
       const grade = gradeMap.get(student.id)?.get(l.id);
       return grade != null ? grade.toString() : "";

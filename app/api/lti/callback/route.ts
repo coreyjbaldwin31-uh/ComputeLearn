@@ -26,7 +26,12 @@ function base64UrlDecode(input: string): string {
 
 /**
  * Decode a JWT and return its payload without cryptographic verification.
- * Full JWKS verification will be added when Canvas keys are available.
+ *
+ * ⚠️  SECURITY: This does NOT verify the JWT signature.
+ * The isLtiConfigured() gate now requires LTI_JWKS_URL to be set,
+ * which prevents this endpoint from being reachable until JWKS
+ * verification is implemented. Before enabling LTI in production,
+ * replace this function with proper JWKS-based signature verification.
  */
 function decodeJwtPayload(token: string): LtiClaims {
   const parts = token.split(".");

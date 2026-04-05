@@ -26,6 +26,20 @@ export async function PUT(
 
   const { content, status, feedback, grade } = body as Record<string, unknown>;
 
+  const MAX_CONTENT = 100_000;
+  if (typeof content === "string" && content.length > MAX_CONTENT) {
+    return NextResponse.json(
+      { error: `content must be ${MAX_CONTENT} characters or fewer` },
+      { status: 400 },
+    );
+  }
+  if (typeof feedback === "string" && feedback.length > MAX_CONTENT) {
+    return NextResponse.json(
+      { error: `feedback must be ${MAX_CONTENT} characters or fewer` },
+      { status: 400 },
+    );
+  }
+
   try {
     const existing = await prisma.submission.findUnique({ where: { id } });
 

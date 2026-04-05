@@ -10,7 +10,7 @@ export const ltiConfig = {
   authEndpoint: process.env.LTI_AUTH_ENDPOINT || "",
   tokenEndpoint: process.env.LTI_TOKEN_ENDPOINT || "",
   jwksUrl: process.env.LTI_JWKS_URL || "",
-  toolUrl: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+  toolUrl: process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
 };
 
 export function isLtiConfigured(): boolean {
@@ -18,6 +18,7 @@ export function isLtiConfigured(): boolean {
     ltiConfig.platformUrl &&
     ltiConfig.clientId &&
     ltiConfig.authEndpoint &&
-    ltiConfig.tokenEndpoint,
+    ltiConfig.tokenEndpoint &&
+    ltiConfig.jwksUrl,
   );
 }
