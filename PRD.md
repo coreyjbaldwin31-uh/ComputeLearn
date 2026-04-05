@@ -521,10 +521,10 @@ Gaps are tiered by deployment impact. **Tier 1** items are blockers — the plat
 
 | ID  | Task                                         | Description                                                                                        | Status |
 | --- | -------------------------------------------- | -------------------------------------------------------------------------------------------------- | ------ |
-| T26 | LTI 1.3 integration for Canvas               | Implement LTI 1.3 launch, deep linking, and grade passback endpoints.                              | ⬚      |
-| T27 | Terminal runtime decision and implementation | Evaluate: (a) WebSocket container sandbox or (b) scoped simulation. Implement chosen path.         | ⬚      |
-| T28 | Accessibility audit and remediation          | Run axe-core automated audit. Manual keyboard/screen-reader audit. Fix all WCAG 2.1 AA violations. | ✔      |
-| T29 | Student transcript and portfolio export      | Students can export progress, completed labs, and artifact history as JSON or PDF.                 | ⬚      |
+| T26 | LTI 1.3 integration for Canvas               | Implement LTI 1.3 launch, deep linking, and grade passback endpoints.                              | ✅      |
+| T27 | Terminal runtime decision and implementation | Evaluate: (a) WebSocket container sandbox or (b) scoped simulation. Implement chosen path.         | ✅      |
+| T28 | Accessibility audit and remediation          | Run axe-core automated audit. Manual keyboard/screen-reader audit. Fix all WCAG 2.1 AA violations. | ✅      |
+| T29 | Student transcript and portfolio export      | Students can export progress, completed labs, and artifact history as JSON or PDF.                 | ✅      |
 
 #### Phase D — Scale and Compliance (Weeks 13–16): Production Readiness
 
@@ -573,9 +573,9 @@ T34 (Monitoring) ── depends on T33
 | ------------------------- | ----------------------- | ---------- | ----------------- |
 | A — Foundation            | T16, T17, T18, T19, T20 | 5 / 5       | ✅ Complete        |
 | B — Instructor Experience | T21, T22, T23, T24, T25 | 5 / 5       | ✅ Complete        |
-| C — Integration           | T26, T27, T28, T29      | 0 / 4       | ⬚ Not started     |
+| C — Integration           | T26, T27, T28, T29      | 4 / 4       | ✅ Complete        |
 | D — Scale and Compliance  | T30, T31, T32, T33, T34 | 0 / 5       | ⬚ Not started     |
-| **Total**                 | **T16–T34**             | **10 / 19** | **🔧 In progress** |
+| **Total**                 | **T16–T34**             | **14 / 19** | **🔧 In progress** |
 
 ---
 
