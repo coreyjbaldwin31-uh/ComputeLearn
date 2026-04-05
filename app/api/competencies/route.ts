@@ -40,10 +40,7 @@ export async function PUT(request: NextRequest) {
   const { domain, level } = body as Record<string, unknown>;
 
   if (!domain || typeof domain !== "string") {
-    return NextResponse.json(
-      { error: "domain is required" },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: "domain is required" }, { status: 400 });
   }
 
   if (typeof level !== "number") {

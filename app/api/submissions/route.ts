@@ -47,10 +47,7 @@ export async function POST(request: NextRequest) {
   }
 
   if (!content || typeof content !== "string") {
-    return NextResponse.json(
-      { error: "content is required" },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: "content is required" }, { status: 400 });
   }
 
   try {

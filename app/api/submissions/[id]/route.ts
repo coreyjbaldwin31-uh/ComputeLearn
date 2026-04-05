@@ -25,11 +25,7 @@ export async function PUT(
 
   const { content, status } = body as Record<string, unknown>;
 
-  if (
-    status !== undefined &&
-    status !== "DRAFT" &&
-    status !== "SUBMITTED"
-  ) {
+  if (status !== undefined && status !== "DRAFT" && status !== "SUBMITTED") {
     return NextResponse.json(
       { error: "status must be DRAFT or SUBMITTED" },
       { status: 400 },
@@ -61,7 +57,9 @@ export async function PUT(
       where: { id },
       data: {
         ...(typeof content === "string" && { content }),
-        ...(typeof status === "string" && { status: status as "DRAFT" | "SUBMITTED" }),
+        ...(typeof status === "string" && {
+          status: status as "DRAFT" | "SUBMITTED",
+        }),
       },
     });
     return NextResponse.json({ submission });

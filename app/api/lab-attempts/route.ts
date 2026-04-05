@@ -61,7 +61,11 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  if (typeof attempt !== "number" || !Number.isInteger(attempt) || attempt < 1) {
+  if (
+    typeof attempt !== "number" ||
+    !Number.isInteger(attempt) ||
+    attempt < 1
+  ) {
     return NextResponse.json(
       { error: "attempt must be a positive integer" },
       { status: 400 },
