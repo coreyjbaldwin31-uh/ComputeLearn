@@ -26,7 +26,7 @@ Version 1.0 | Prepared for product planning and implementation alignment
 | **Product**          | Mastery-based learning platform for turning everyday computer users into technically fluent builders.                                                                                                                                              |
 | **Core promise**     | Learners progress by operating real tools inside safe, reversible labs instead of consuming passive lessons.                                                                                                                                       |
 | **Primary outcome**  | Practical entry-level software engineering competence across system use, coding, debugging, Git, testing, and delivery workflow.                                                                                                                   |
-| **Current baseline** | Next.js 16 App Router, React 19, TypeScript 5, multi-page academy shell with 14 routes, 4-step lesson flow, 15 domain engines, 38 lab templates, 55 test files (471 tests), Docker build, Sentry + OTel instrumentation, localStorage persistence. |
+| **Current baseline** | Next.js 16 App Router, React 19, TypeScript 5, multi-page academy shell with 15 routes, 4-step lesson flow, 15 domain engines, 38 lab templates, 59 test files (505 tests), Docker build, Sentry + OTel instrumentation, localStorage persistence. |
 
 > **Executive framing:** The current concept is strong, but it becomes significantly more investable and buildable once the end state, competency gates, lab engine, and capstone path are made explicit. This document reframes ComputeLearn as a training system for engineering behavior, not only a content platform.
 
@@ -307,7 +307,7 @@ CSS design system in `globals.css` using `--ac-*` custom properties:
 6. ✅ Introduce guided debugging labs and inspect mode — inspection-engine, layered hints, diff-style output
 7. ✅ Smoke-test full lab flow end to end — 4 end-to-end smoke tests added covering file-edit→validate round-trip, multi-attempt progression, full lifecycle, and file-edit isolation
 8. ✅ Expand into Phase 2–4 once Phase 1 outcomes are visibly strong — Phase 2–4 curriculum authored; 38 lab templates across all 4 phases; all 15 engines wired
-9. ✅ Build academy platform architecture — multi-page App Router with `(academy)` route group, sidebar shell, breadcrumbs, academy nav with active state, 14 routes compiling
+9. ✅ Build academy platform architecture — multi-page App Router with `(academy)` route group, sidebar shell, breadcrumbs, academy nav with active state, 15 routes compiling
 10. ✅ Redesign lesson flow with pedagogical progression — 4-step stepper (Learn → Practice → Apply → Reflect & Download), guided notes with concept gating, cumulative review panel, download/export
 11. ✅ Remove phase locking in favor of open learning model — "locked" state replaced with "upcoming" preview; all phases browsable
 12. ✅ Accessibility hardening pass — aria-pressed, aria-current="step", aria-label on interactive controls, role="group" on filter rows, prefers-reduced-motion hook with scroll behavior

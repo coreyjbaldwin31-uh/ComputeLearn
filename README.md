@@ -19,7 +19,7 @@ The current app goes beyond a curriculum shell. It now includes:
 - **37 lessons across 4 phases** — computer mastery, programming foundations, engineering workflow, independent build
 - **38 lab templates** across all phases with terminal simulation, file editing, and validation
 - **22 inline code exercises** across 13 lessons with pattern-based validation
-- **348+ automated tests** (unit + component) with Vitest across 30+ test files
+- **505 automated tests** (unit + component) with Vitest across 59 test files
 - phased learning progression with milestone gating
 - learner profile, local progress persistence, notes, reflections, and review scheduling
 - guided exercises, transfer tasks, and evidence-gated lesson completion
