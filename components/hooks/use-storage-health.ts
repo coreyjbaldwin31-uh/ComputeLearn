@@ -4,6 +4,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { StorageRecoveryLogEntry } from "../storage-recovery-log";
 import { learnerProfileStorageKey } from "./use-learner-profile";
 
+export type { StorageRecoveryLogEntry } from "../storage-recovery-log";
+
 /* ---- Well-known storage keys (must match useLocalStorageState consumers) ---- */
 
 const notesStorageKey = "computelearn-notes";
@@ -90,15 +92,16 @@ const HEALTH_RECOVERY_DURATION_MS = 7_000;
 
 type UseStorageHealthOptions = {
   /** Called when the user requests an artifact backup export. */
-  onExportArtifacts: () => void;
+  onExportArtifacts?: () => void;
   /** Called when the user requests a full local-data reset. */
-  onResetAllProgress: () => void;
+  onResetAllProgress?: () => void;
 };
 
-export function useStorageHealth({
-  onExportArtifacts,
-  onResetAllProgress,
-}: UseStorageHealthOptions): [StorageHealthState, StorageHealthActions] {
+export function useStorageHealth(
+  options?: UseStorageHealthOptions,
+): [StorageHealthState, StorageHealthActions] {
+  const onExportArtifacts = options?.onExportArtifacts ?? (() => {});
+  const onResetAllProgress = options?.onResetAllProgress ?? (() => {});
   /* ---- Stable callback refs (avoids stale closures) ---- */
   const exportRef = useRef(onExportArtifacts);
   const resetRef = useRef(onResetAllProgress);
