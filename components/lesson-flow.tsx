@@ -7,6 +7,7 @@ import type { ArtifactRecord, AttemptRecord } from "@/lib/artifact-engine";
 import type { LabInstance } from "@/lib/lab-engine";
 import type { ReviewRecord } from "@/lib/progression-engine";
 import { curriculum } from "@/data/curriculum";
+import { evaluateLessonEvidenceGate } from "@/lib/validation-engine";
 import { useLocalStorageState } from "./hooks/use-local-storage-state";
 import { useExerciseValidation } from "./hooks/use-exercise-validation";
 import { useArtifactManager } from "./hooks/use-artifact-manager";
@@ -66,7 +67,7 @@ type GuidedNotesState = Record<
 
 export function LessonFlow({ lesson }: { lesson: Lesson }) {
   /* ---- localStorage state ---- */
-  const [progress] = useLocalStorageState<Record<string, true>>(
+  const [progress, setProgress] = useLocalStorageState<Record<string, true>>(
     "computelearn-progress",
     {},
   );
@@ -91,7 +92,7 @@ export function LessonFlow({ lesson }: { lesson: Lesson }) {
   const [labInstances, setLabInstances] = useLocalStorageState<
     Record<string, LabInstance>
   >("computelearn-lab-instances", {});
-  const [reviews] = useLocalStorageState<Record<string, ReviewRecord>>(
+  const [reviews, setReviews] = useLocalStorageState<Record<string, ReviewRecord>>(
     "computelearn-reviews",
     {},
   );
@@ -177,6 +178,7 @@ export function LessonFlow({ lesson }: { lesson: Lesson }) {
   });
 
   const [, setLessonGateFeedback] = useState<string | null>(null);
+  const [gateFeedback, setGateFeedback] = useState<string | null>(null);
 
   const {
     validateExercise,
@@ -388,6 +390,60 @@ export function LessonFlow({ lesson }: { lesson: Lesson }) {
   const handleDownloadLabWork = useCallback(() => {
     exportArtifacts(lesson.id);
   }, [lesson.id, exportArtifacts]);
+
+  /* ---- completion gating ---- */
+  function handleMarkComplete() {
+    if (progress[lesson.id]) {
+      // Already complete — uncomplete
+      setProgress((current) => {
+        const next = { ...current };
+        delete next[lesson.id];
+        return next;
+      });
+      setGateFeedback(null);
+      return;
+    }
+
+    const gate = evaluateLessonEvidenceGate(
+      lesson,
+      answers,
+      Boolean(transferProgress[lesson.id]),
+    );
+
+    if (!gate.passed) {
+      const actionItems = gate.failedCriteria.map(
+        (c) => c.hint ?? c.description,
+      );
+      setGateFeedback(`To complete this lesson: ${actionItems.join(" • ")}`);
+      return;
+    }
+
+    setProgress((current) => ({ ...current, [lesson.id]: true as const }));
+    setGateFeedback(null);
+
+    if (!reviews[lesson.id]) {
+      setReviews((current) => ({
+        ...current,
+        [lesson.id]: {
+          completedAt: new Date().toISOString(),
+          lastReviewedAt: null,
+          reviewCount: 0,
+        },
+      }));
+    }
+  }
+
+  function handleMarkReviewed() {
+    setReviews((current) => ({
+      ...current,
+      [lesson.id]: {
+        completedAt:
+          current[lesson.id]?.completedAt ?? new Date().toISOString(),
+        lastReviewedAt: new Date().toISOString(),
+        reviewCount: (current[lesson.id]?.reviewCount ?? 0) + 1,
+      },
+    }));
+  }
 
   /* ---- render helpers ---- */
   const hasLab = !!currentLabTemplate;
@@ -804,6 +860,43 @@ export function LessonFlow({ lesson }: { lesson: Lesson }) {
               </button>
             </div>
           </div>
+
+          {/* ─── Completion ─── */}
+          <section className="lf-completion-section" aria-label="Lesson completion">
+            {gateFeedback && (
+              <div className="lf-gate-feedback" role="alert">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5"/>
+                  <path d="M8 4.5V9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                  <circle cx="8" cy="11.5" r="0.75" fill="currentColor"/>
+                </svg>
+                {gateFeedback}
+              </div>
+            )}
+
+            <button
+              className={`lf-complete-btn ${progress[lesson.id] ? "lf-complete-btn--done" : ""}`}
+              onClick={handleMarkComplete}
+              aria-pressed={Boolean(progress[lesson.id])}
+            >
+              {progress[lesson.id] ? (
+                <>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M3 8.5L6.5 12L13 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  Lesson Complete
+                </>
+              ) : (
+                "Mark Lesson Complete"
+              )}
+            </button>
+
+            {progress[lesson.id] && (
+              <button className="lf-review-btn" onClick={handleMarkReviewed}>
+                Mark Reviewed
+              </button>
+            )}
+          </section>
 
           {/* Competency tags */}
           {lesson.competencies && lesson.competencies.length > 0 && (
