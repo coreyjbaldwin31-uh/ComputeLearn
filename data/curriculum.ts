@@ -1255,7 +1255,7 @@ export const curriculum: Curriculum = {
               competencies: [
                 { track: "Automation", targetLevel: "Functional" },
               ],
-              scaffoldingLevel: "goal-driven",
+              scaffoldingLevel: "step-by-step",
             },
           ],
         },
