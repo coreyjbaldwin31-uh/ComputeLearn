@@ -279,8 +279,6 @@ export const curriculum: Curriculum = {
                   "dir",
                   "ls",
                   "cd",
-                  "find",
-                  "where",
                   "inspect",
                 ],
                 successMessage:
@@ -388,22 +386,22 @@ export const curriculum: Curriculum = {
               explanation: [
                 "A computer is not a black box — it is a system with measurable state. Engineers check what is running, what is consuming resources, and what is filling storage **before** guessing at problems. When a machine feels slow, you do not restart and hope — you investigate. This lesson gives you the tools to do exactly that.",
                 "The GUI starting point is **Task Manager**, which you can open instantly with `Ctrl+Shift+Esc`. It shows every running process, sorted by CPU, memory, disk, or network usage. Click the column headers to sort — the process consuming the most CPU floats to the top. Task Manager is your first stop whenever something feels wrong.",
-                "From the terminal, `Get-Process` (alias: `ps`) lists all running processes with their CPU and memory consumption. You can pipe it into `Sort-Object` and `Select-Object` to find the top consumers — for example, `Get-Process | Sort-Object CPU -Descending | Select-Object -First 5` shows the five most CPU-hungry processes. This is faster and more scriptable than clicking through Task Manager.",
+                "From the terminal, `Get-Process` (alias: `ps`) lists all running processes with their CPU and memory consumption. The output is a table with columns like Handles, NPM (non-paged memory), PM (paged memory), WS (working set), CPU (seconds of processor time), and Id (process identifier). Scan the **CPU** column to spot the heaviest consumers — this is faster than clicking through Task Manager and the output can be used in scripts. In a later lesson, you will learn to sort and filter this output using pipes.",
                 "For disk space, `Get-Volume` shows every drive letter with its total size, used space, and **free space remaining**. The output looks like a table with columns for DriveLetter, SizeRemaining, and Size. When your build fails with a disk space error, `Get-Volume` tells you instantly whether storage is the bottleneck.",
               ],
               demonstration: [
                 "Open Task Manager with `Ctrl+Shift+Esc`. Click the **CPU** column header to sort by CPU usage. The top entry is the process consuming the most processing power. Note the process name — you will see the same information from the terminal next.",
-                "Now open the terminal and run `Get-Process`. You will see a table of processes with columns like Handles, NPM, PM, WS, CPU, and Id. Run `Get-Process | Sort-Object CPU -Descending | Select-Object -First 5` to narrow it to the top five CPU consumers. Compare this output to what Task Manager showed — the data matches, but the terminal version is scriptable and pipeable.",
+                "Now open the terminal and run `Get-Process`. You will see a table of processes with columns like Handles, NPM, PM, WS, CPU, and Id. Scroll through the output and find the process with the highest CPU value — it should match the top entry you saw in Task Manager. The terminal version of this information is recorded as text, which means you can save it, search it, and script it — advantages you do not get from the GUI.",
                 "Run `Get-Volume` to check disk space. You will see output with columns for DriveLetter, FriendlyName, FileSystemType, and SizeRemaining. If your C: drive shows less than 10 GB remaining, that is a potential problem worth addressing before it causes build failures or application crashes.",
               ],
               exerciseSteps: [
                 "Open the training terminal and run `Get-Process` (or `ps`) to list all running processes.",
-                "Pipe the process list through `Sort-Object` to identify which process is using the most memory.",
+                "Scan the `Get-Process` output to identify which process is using the most memory by reading the WS (working set) column.",
                 "Run `Get-Volume` to check how much free disk space is available on each drive.",
               ],
               validationChecks: [
                 "User runs `Get-Process` or `ps` to list processes from the terminal.",
-                "User demonstrates sorting or filtering processes by resource usage using `Sort-Object`.",
+                "User reads the WS (memory) and CPU columns in the `Get-Process` output and identifies the most resource-intensive process.",
                 "User runs `Get-Volume` to check available disk space and can read the output.",
               ],
               retention: [
@@ -612,22 +610,22 @@ export const curriculum: Curriculum = {
                 "Engineers lose enormous time digging through folders in a file manager. The terminal can find files by name pattern, filter by extension or date, and search **inside** files for specific text — all in seconds. Once you learn terminal search, you will never go back to clicking through folders.",
                 "To search for files by name, use `Get-ChildItem` with the `-Recurse` and `-Filter` flags. `-Recurse` tells PowerShell to search **all subdirectories**, not just the current folder. `-Filter` narrows results by name pattern. For example: `Get-ChildItem -Recurse -Filter *.log` finds every `.log` file in the current directory and all directories beneath it.",
                 'To search **inside** files for specific text, use `Select-String` (alias: `sls`). It works like `grep` on Linux — it reads file contents and returns lines that match your search term. For example: `Select-String -Path *.txt -Pattern "error"` searches all `.txt` files in the current directory for lines containing the word "error". Combine it with `Get-ChildItem` using a pipe for recursive content search: `Get-ChildItem -Recurse -Filter *.log | Select-String "timeout"`.',
-                "You can also filter files by properties like modification date. Pipe `Get-ChildItem` into `Where-Object` to find recently changed files — for example: `Get-ChildItem -Recurse | Where-Object { $_.LastWriteTime -gt (Get-Date).AddDays(-1) }` finds files modified in the last 24 hours. These techniques compose: find files by name, filter by date, then search inside them — all in one pipeline.",
+                "PowerShell lets you chain commands together using the **pipe operator** (`|`). The pipe takes the output of one command and sends it as input to the next command. For example: `Get-ChildItem -Recurse -Filter *.log | Select-String \"timeout\"` first finds all `.log` files, then searches inside them for the word 'timeout'. You will explore piping in depth in a later lesson — for now, just remember that `|` connects one command's output to another command's input.",
               ],
               demonstration: [
                 "Run `Get-ChildItem -Recurse -Filter *.txt` in the sandbox. You will see a list of every `.txt` file in the entire directory tree, with full paths. Notice that `-Recurse` descended into every subfolder automatically — no need to navigate into each one manually.",
                 'Now search inside those files: run `Get-ChildItem -Recurse -Filter *.txt | Select-String "TODO"`. The output shows matching lines with the filename, line number, and the matched text highlighted. This is how you answer questions like "which file contains the database port?" in seconds instead of minutes.',
-                "To narrow by date, try `Get-ChildItem -Recurse | Where-Object { $_.LastWriteTime -gt (Get-Date).AddDays(-1) }` to see only files modified in the last 24 hours. This is invaluable when debugging — if something broke recently, the recently changed files are your primary suspects.",
+                "To narrow results by file extension, use the `-Filter` flag directly: `Get-ChildItem -Recurse -Filter *.txt` shows only text files. You can also search a specific path: `Select-String -Path C:\\Projects\\*.log -Pattern \"error\"` searches all `.log` files in a specific folder. These building blocks are invaluable when debugging — the recently changed files are your primary suspects when something breaks.",
               ],
               exerciseSteps: [
                 "Run `Get-ChildItem -Recurse -Filter *.txt` to search the sandbox for all `.txt` files recursively.",
                 "Pipe the results into `Select-String` to search inside those files for a specific keyword.",
-                "Add a `Where-Object` filter to show only files modified in the last 24 hours.",
+                "Use the pipe operator to chain `Get-ChildItem` into `Select-String` for recursive content search.",
               ],
               validationChecks: [
                 "User uses `Get-ChildItem` with `-Recurse` to search nested directories.",
                 "User pipes file output into `Select-String` for content search.",
-                "User applies at least one filter (extension via `-Filter`, or date via `Where-Object`).",
+                "User applies a filter using `-Filter` to narrow results by file extension.",
               ],
               retention: [
                 "Get-ChildItem -Recurse -Filter is the terminal equivalent of system search.",
@@ -1999,7 +1997,7 @@ export const curriculum: Curriculum = {
                 "Secrets must **never** be committed to version control. Add `.env` to `.gitignore` so Git ignores it. Create a `.env.example` file (with placeholder values like `DATABASE_URL=your_url_here`) and commit that instead — it documents which variables the project needs without exposing real credentials.",
               ],
               demonstration: [
-                'Open the practice project\'s `config.json` file. It contains a syntax error — a trailing comma after the last property:\n```json\n{\n  "appName": "my-app",\n  "port": 3000,\n  "debug": true,\n}\n```\nRunning the app produces: `SyntaxError: Unexpected token }`. Remove the trailing comma after `true` and the file parses correctly.',
+                'Open the practice project\'s `config.json` file. It contains a syntax error — a trailing comma after the last property:\n```json\n{\n  "appName": "my-app",\n  "port": 3000,\n  "debug": true,\n}\n```\nRunning the app produces: `SyntaxError: Unexpected token }`. Remove the trailing comma after `true` and the file parses correctly. Two other frequent JSON errors: **unquoted keys** (`{ port: 3000 }` is invalid — must be `{ "port": 3000 }`) and **single-quoted strings** (`{ \'name\': \'app\' }` is invalid — JSON requires double quotes exclusively).',
                 "Now open the `.env` file. It contains `DATABASE_URL=postgres://localhost:5432/mydb`. In the application code, find where the URL is read: `const dbUrl = process.env.DATABASE_URL;`. This is how secrets stay out of source files — the code references the variable name, not the value.",
                 "Check `.gitignore` to confirm `.env` is listed. If it is not, add it immediately:\n```bash\necho .env >> .gitignore\ngit status\n# .gitignore modified, .env is now untracked\n```\nThen verify that `.env.example` exists in the repo with placeholder values so other developers know which variables to set up.",
               ],
@@ -2654,7 +2652,7 @@ export const curriculum: Curriculum = {
               explanation: [
                 "A **merge conflict** occurs when two branches both modify the same lines of a file. Git cannot decide automatically which version is correct, so it marks the file with **conflict markers** and stops the merge for the human to resolve. Conflicts are not errors — they are Git asking for a decision.",
                 "Conflict markers divide the file into three sections. `<<<<<<< HEAD` marks the start of the current branch's version. `=======` is the separator. `>>>>>>> feature-branch` marks the end of the incoming branch's version:\n```\n<<<<<<< HEAD\nconst greeting = 'Hello';\n=======\nconst greeting = 'Hi there';\n>>>>>>> feature/update-greeting\n```\nYour job is to produce the correct final version by editing the file, choosing one side (or combining both), and **removing all three markers**.",
-                "After resolving every conflict in a file, you must **stage** the resolved file with `git add <file>` and then **complete the merge** with `git commit`. Git will not let you commit until all conflict markers are removed from all files. The complete sequence is:\n```bash\n# 1. Resolve conflicts by editing the file\n# 2. Stage the resolved file\ngit add src/greeting.ts\n# 3. Complete the merge\ngit commit\n# (Git auto-generates a merge commit message)\n```",
+                "After resolving every conflict in a file, you must **stage** the resolved file with `git add <file>` and then **complete the merge** with `git commit`. Git will not let you commit until all conflict markers are removed from all files. The complete sequence is:\n```bash\n# 1. Resolve conflicts by editing the file\n# 2. Stage the resolved file\ngit add src/greeting.ts\n# 3. Complete the merge\ngit commit\n# (Git auto-generates a merge commit message)\n```\nIf you get overwhelmed or realize the merge was premature, you can **abort the entire merge** with `git merge --abort`. This resets your working directory to the state before the merge started \u2014 no changes lost, no damage done. It is always safe to abort and try again after investigating further.",
                 "VS Code provides a **merge editor** that shows both sides and lets you click to accept one or both. But understanding the raw markers is essential — you will encounter them in terminals, CI logs, and code reviews where no visual editor is available. Read both sides, understand the intent of each change, then produce the correct final state.",
               ],
               demonstration: [
@@ -3247,13 +3245,12 @@ export const curriculum: Curriculum = {
                 acceptedAnswers: [
                   "docker ps",
                   "docker logs",
-                  "inspect",
-                  "port",
-                  "exec",
+                  "docker stop",
+                  "docker run",
                 ],
                 successMessage:
                   "Transfer evidence accepted. You demonstrated a systematic container debugging approach.",
-                hint: "Start with what is running, then check logs, then look at port mappings or exec into the container.",
+                hint: "Start with what is running, then check logs for errors, then verify the container is still running and was started correctly.",
                 assessmentType: "transfer",
               },
               codeExercises: [
@@ -3292,7 +3289,7 @@ export const curriculum: Curriculum = {
               duration: "50 min",
               difficulty: "Core",
               objective:
-                "Write a multi-stage Dockerfile with proper layering, caching, and security considerations.",
+                "Write a Dockerfile with proper layering, caching, and security considerations.",
               explanation: [
                 "A **Dockerfile** is a text file that contains the exact recipe for building a Docker image. Each line is an instruction, and each instruction creates a **layer** in the final image. Docker caches these layers — so when you rebuild after a small change, only the layers affected by the change need to rebuild. This is why **instruction order matters for build speed**.",
                 "The five core instructions you will use in nearly every Dockerfile: `FROM` sets the base image (every Dockerfile starts with this), `COPY` copies files from your project into the image, `RUN` executes a command inside the image during build (like `npm install`), `EXPOSE` documents which port the application listens on, and `CMD` defines the default command that runs when a container starts.",
@@ -3578,7 +3575,7 @@ export const curriculum: Curriculum = {
               ],
               demonstration: [
                 "Watch the verification loop in action. First, an AI generates a utility function from a well-structured prompt. The code looks clean and compiles — but before committing, run the automated checks:\n\n```bash\nnpx tsc --noEmit      # Does it type-check?\nnpm run lint          # Does it follow project conventions?\nnpm test              # Do existing tests still pass?\n```\n\nAll three must pass. If any fails, the AI output needs correction before proceeding.",
-                "Now the manual inspection layer. Read the generated code and check: Does it import from packages that are actually in your `package.json`? Does it handle the error cases you specified? Does it follow your project's naming conventions? In this example, the AI used `axios` but the project uses `fetch` — a subtle mismatch that automated checks would not catch but a code review would.",
+                "Now the manual inspection layer. Read the generated code and check: Does it import from packages that are actually in your `package.json`? Does it handle the error cases you specified? Does it follow your project's naming conventions? In this example, the AI used `axios` but the project uses `fetch` — a subtle mismatch that automated checks would not catch but a code review would. Another common trap is **hallucinated APIs**: the AI might write `users.findFirst(u => u.active)` — a method that sounds reasonable but does not exist on JavaScript arrays. The correct method is `users.find(u => u.active)`. These plausible-looking errors are the most dangerous because they compile without warning and fail silently at runtime.",
                 "Finally, write a targeted test for the AI-generated function — not just the happy path, but the edge cases the AI might have overlooked. Run `npm test` again with the new test included. If it passes, the function is verified. If it fails, you have found a gap the AI missed. This **prompt → generate → verify → test → accept** loop is the professional workflow for AI-assisted engineering.",
               ],
               exerciseSteps: [
