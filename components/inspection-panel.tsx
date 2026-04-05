@@ -1,4 +1,5 @@
 import type { ExerciseInspection } from "@/lib/inspection-engine";
+import styles from "./inspection-panel.module.css";
 
 type InspectionPanelProps = {
   inspection: ExerciseInspection;
@@ -11,18 +12,18 @@ export function InspectionPanel({
 }: InspectionPanelProps) {
   return (
     <aside
-      className="inspection-panel"
+      className={styles.panel}
       role="region"
       aria-label="Response inspection"
     >
-      <div className="inspection-skill-gap">
+      <div className={styles.skillGap}>
         <svg
           width="16"
           height="16"
           viewBox="0 0 16 16"
           fill="none"
           aria-hidden="true"
-          className="inspection-gap-icon"
+          className={styles.gapIcon}
         >
           <circle
             cx="8"
@@ -40,15 +41,15 @@ export function InspectionPanel({
           />
         </svg>
         <div>
-          <span className="inspection-gap-label">Skill gap</span>
-          <span className="inspection-gap-value">
+          <span className={styles.gapLabel}>Skill gap</span>
+          <span className={styles.gapValue}>
             {inspection.probableSkillGap}
           </span>
         </div>
       </div>
-      <div className="inspection-grid">
+      <div className={styles.grid}>
         <div>
-          <h5 className="inspection-matched">
+          <h5 className={styles.matchedHeading}>
             <svg
               width="14"
               height="14"
@@ -66,7 +67,7 @@ export function InspectionPanel({
             </svg>
             Matched signals
           </h5>
-          <ul className="inspection-list inspection-list--matched">
+          <ul className={`${styles.list} ${styles.listMatched}`}>
             {(inspection.matchedSignals.length > 0
               ? inspection.matchedSignals
               : ["No expected signals matched yet."]
@@ -76,7 +77,7 @@ export function InspectionPanel({
           </ul>
         </div>
         <div>
-          <h5 className="inspection-missing">
+          <h5 className={styles.missingHeading}>
             <svg
               width="14"
               height="14"
@@ -93,7 +94,7 @@ export function InspectionPanel({
             </svg>
             Missing signals
           </h5>
-          <ul className="inspection-list inspection-list--missing">
+          <ul className={`${styles.list} ${styles.listMissing}`}>
             {(inspection.missingSignals.length > 0
               ? inspection.missingSignals
               : ["No missing signals."]
@@ -104,8 +105,8 @@ export function InspectionPanel({
         </div>
       </div>
       <div>
-        <h5 className="inspection-prompts">Inspection prompts</h5>
-        <ul className="inspection-list">
+        <h5 className={styles.promptsHeading}>Inspection prompts</h5>
+        <ul className={styles.list}>
           {inspection.inspectionPrompts.map((prompt) => (
             <li key={prompt}>{prompt}</li>
           ))}
@@ -113,7 +114,7 @@ export function InspectionPanel({
       </div>
       <div>
         <h5>Signal diff</h5>
-        <pre className="inspection-diff">
+        <pre className={styles.diff}>
           {inspection.signalDiff.length > 0
             ? inspection.signalDiff.join("\n")
             : "No signal diff available yet."}
