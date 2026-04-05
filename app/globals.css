@@ -10157,3 +10157,107 @@ button[disabled] {
     grid-template-columns: 1fr;
   }
 }
+
+/* ---- Data Portability Dialog ---- */
+
+.dp-dialog {
+  max-width: 480px;
+  text-align: left;
+}
+
+.dp-section {
+  margin: 0 0 1.25rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-soft);
+}
+
+.dp-section-heading {
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.dp-section-desc {
+  margin: 0 0 0.6rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.dp-meta {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.dp-download-btn {
+  width: 100%;
+}
+
+.dp-warning {
+  margin: 0 0 0.6rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 8px;
+  background: rgba(var(--warning-rgb, 201, 161, 46), 0.12);
+  color: var(--text);
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.dp-file-input {
+  display: block;
+  width: 100%;
+  margin-bottom: 0.6rem;
+  font-size: 0.88rem;
+  color: var(--text);
+}
+
+.dp-error {
+  margin: 0.4rem 0;
+  padding: 0.45rem 0.75rem;
+  border-radius: 8px;
+  background: rgba(var(--error-rgb, 193, 57, 43), 0.12);
+  color: var(--error);
+  font-size: 0.84rem;
+}
+
+.dp-preview {
+  margin-top: 0.5rem;
+}
+
+.dp-preview-heading {
+  margin: 0 0 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.dp-preview-list {
+  margin: 0 0 0.75rem;
+  padding-left: 1.2rem;
+  font-size: 0.84rem;
+  color: var(--muted);
+  display: grid;
+  gap: 0.2rem;
+}
+
+.dp-preview-key {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.dp-import-btn {
+  width: 100%;
+}
+
+.dp-success {
+  margin: 0.4rem 0;
+  padding: 0.45rem 0.75rem;
+  border-radius: 8px;
+  background: rgba(var(--success-rgb, 39, 174, 96), 0.12);
+  color: var(--success, #27ae60);
+  font-size: 0.84rem;
+}

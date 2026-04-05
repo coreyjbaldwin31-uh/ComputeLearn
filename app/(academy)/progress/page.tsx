@@ -1,4 +1,5 @@
 import { CompetencyTracker } from "@/components/competency-tracker";
+import { DataPortabilityButton } from "@/components/data-portability-button";
 import { ProgressAnalytics } from "@/components/progress-analytics";
 import { TranscriptExport } from "@/components/transcript-export";
 import { curriculum } from "@/data/curriculum";
@@ -13,6 +14,7 @@ export default function ProgressPage() {
           Track competency levels, phase exit gates, and mastery progression
           across the full program.
         </p>
+        <DataPortabilityButton />
       </header>
 
       {/* Interactive competency tracker */}
