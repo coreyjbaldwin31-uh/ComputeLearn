@@ -9682,3 +9682,237 @@ button[disabled] {
     padding: 1rem;
   }
 }
+
+/* ── Progress Analytics (pa-*) ── */
+
+.pa-root {
+  margin-top: 2rem;
+}
+
+.pa-section {
+  margin-bottom: 2rem;
+}
+
+.pa-section-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ac-fg);
+  margin: 0 0 1rem;
+}
+
+.pa-overall {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.pa-overall-label {
+  font-size: 0.85rem;
+  color: var(--ac-muted);
+}
+
+.pa-overall-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.pa-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.pa-metric-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem 1rem;
+  background: var(--ac-surface);
+  border: 1px solid var(--ac-border);
+  border-radius: 6px;
+}
+
+.pa-metric-label {
+  font-size: 0.75rem;
+  color: var(--ac-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.pa-metric-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.pa-metric-sub {
+  font-size: 0.72rem;
+  color: var(--ac-muted);
+}
+
+.pa-status--strong {
+  color: var(--ac-success, #22c55e);
+}
+
+.pa-status--watch {
+  color: var(--ac-warning, #eab308);
+}
+
+.pa-status--critical {
+  color: var(--ac-danger, #ef4444);
+}
+
+.pa-actions {
+  margin-top: 0.75rem;
+}
+
+.pa-actions-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ac-fg);
+  margin: 0 0 0.5rem;
+}
+
+.pa-actions-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.82rem;
+  color: var(--ac-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.pa-phase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 0.75rem;
+}
+
+.pa-phase-card {
+  padding: 0.75rem 1rem;
+  background: var(--ac-surface);
+  border: 1px solid var(--ac-border);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pa-phase-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pa-phase-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ac-fg);
+}
+
+.pa-phase-badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  text-transform: capitalize;
+}
+
+.pa-phase-badge--not-started {
+  background: var(--ac-border);
+  color: var(--ac-muted);
+}
+
+.pa-phase-badge--in-progress {
+  background: color-mix(in srgb, var(--ac-accent) 15%, transparent);
+  color: var(--ac-accent);
+}
+
+.pa-phase-badge--review-needed {
+  background: color-mix(in srgb, var(--ac-warning, #eab308) 15%, transparent);
+  color: var(--ac-warning, #eab308);
+}
+
+.pa-phase-badge--ready {
+  background: color-mix(in srgb, var(--ac-success, #22c55e) 15%, transparent);
+  color: var(--ac-success, #22c55e);
+}
+
+.pa-phase-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pa-phase-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--ac-border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.pa-phase-fill {
+  height: 100%;
+  background: var(--ac-accent);
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+.pa-phase-pct {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--ac-fg);
+  min-width: 2.5rem;
+  text-align: right;
+}
+
+.pa-phase-detail {
+  font-size: 0.72rem;
+  color: var(--ac-muted);
+}
+
+.pa-readiness {
+  padding: 0.75rem 1rem;
+  background: var(--ac-surface);
+  border: 1px solid var(--ac-border);
+  border-radius: 6px;
+}
+
+.pa-readiness-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.5rem;
+}
+
+.pa-readiness-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ac-fg);
+}
+
+.pa-readiness-pct {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--ac-accent);
+}
+
+.pa-readiness-stats {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.75rem;
+  color: var(--ac-muted);
+  margin-top: 0.5rem;
+}
+
+.pa-readiness-unmet {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+  font-size: 0.78rem;
+  color: var(--ac-danger, #ef4444);
+}

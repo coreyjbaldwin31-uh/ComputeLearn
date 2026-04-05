@@ -1,5 +1,6 @@
 import { curriculum } from "@/data/curriculum";
 import { CompetencyTracker } from "@/components/competency-tracker";
+import { ProgressAnalytics } from "@/components/progress-analytics";
 import { TranscriptExport } from "@/components/transcript-export";
 
 export default function ProgressPage() {
@@ -16,6 +17,9 @@ export default function ProgressPage() {
 
       {/* Interactive competency tracker */}
       <CompetencyTracker />
+
+      {/* Rich analytics panels */}
+      <ProgressAnalytics />
 
       <table className="academy-progress-grid" role="table" aria-label="Phase overview">
         <thead>
