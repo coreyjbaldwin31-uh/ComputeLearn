@@ -27,6 +27,7 @@ model User {
   submissions        Submission[]
   labAttempts        LabAttempt[]
   competencySnapshots CompetencySnapshot[]
+  ltiGradeSyncs       LtiGradeSync[]
 }
 
 model Account {
@@ -131,6 +132,19 @@ model CompetencySnapshot {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, domain])
+}
+
+model LtiGradeSync {
+  id        String   @id @default(cuid())
+  userId    String
+  lessonId  String
+  grade     Float
+  comment   String?  @db.Text
+  synced    Boolean  @default(false)
+  syncError String?  @db.Text
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 // ── Enums ──────────────────────────────────────────────────────────
