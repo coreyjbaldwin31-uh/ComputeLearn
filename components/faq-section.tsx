@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import styles from "./faq-section.module.css";
 
 const FAQ_ITEMS = [
   {
@@ -49,30 +50,33 @@ export function FaqSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className="faq-section">
-      <h2 className="faq-heading">Frequently asked questions</h2>
-      <p className="faq-subheading">
+    <section className={styles.faqSection}>
+      <h2 className={styles.faqHeading}>Frequently asked questions</h2>
+      <p className={styles.faqSubheading}>
         Everything you need to know before getting started.
       </p>
-      <div className="faq-list">
+      <div className={styles.faqList}>
         {FAQ_ITEMS.map((item, index) => {
           const isOpen = openIndex === index;
           return (
-            <div key={index} className={`faq-item ${isOpen ? "open" : ""}`}>
-              <h3 className="faq-question-heading">
+            <div
+              key={index}
+              className={`${styles.faqItem} ${isOpen ? styles.open : ""}`}
+            >
+              <h3 className={styles.faqQuestionHeading}>
                 <button
                   type="button"
-                  className="faq-question"
+                  className={styles.faqQuestion}
                   onClick={() => setOpenIndex(isOpen ? null : index)}
                 >
                   <span>{item.question}</span>
-                  <span className="faq-icon" aria-hidden="true">
+                  <span className={styles.faqIcon} aria-hidden="true">
                     {isOpen ? "−" : "+"}
                   </span>
                 </button>
               </h3>
-              <div className="faq-answer" data-open={isOpen} role="region">
-                <div className="faq-answer-inner">
+              <div className={styles.faqAnswer} data-open={isOpen} role="region">
+                <div className={styles.faqAnswerInner}>
                   <p>{item.answer}</p>
                 </div>
               </div>

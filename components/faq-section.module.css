@@ -1,0 +1,154 @@
+.faqSection {
+  max-width: 800px;
+  margin: 48px auto 0;
+  padding: 0 16px;
+  animation: faqRevealUp 0.5s ease both;
+}
+
+.faqHeading {
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin: 0 0 8px;
+}
+
+.faqSubheading {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.94rem;
+  margin: 0 0 28px;
+}
+
+.faqList {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.faqItem {
+  border-bottom: 1px solid var(--border);
+}
+
+.open {
+}
+
+.faqItem:first-child {
+  border-top: 1px solid var(--border);
+}
+
+.faqQuestionHeading {
+  margin: 0;
+}
+
+.faqQuestion {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 4px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: color 150ms ease;
+}
+
+.faqQuestion:hover {
+  color: var(--accent-strong);
+}
+
+.faqIcon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-size: 1.1rem;
+  font-weight: 700;
+  transition:
+    background 150ms ease,
+    transform 200ms ease;
+}
+
+.faqItem.open .faqIcon {
+  background: var(--accent);
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+.faqAnswer {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 250ms ease;
+  margin: 0;
+  padding: 0;
+}
+
+.faqAnswer[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+
+.faqAnswerInner {
+  overflow: hidden;
+}
+
+.faqAnswerInner p {
+  padding: 0 4px 18px;
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+[data-theme="dark"] .faqIcon {
+  background: rgba(13, 107, 87, 0.18);
+}
+
+[data-theme="dark"] .faqItem.open .faqIcon {
+  background: var(--accent);
+}
+
+@keyframes faqRevealUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faqSection {
+    animation: none;
+  }
+}
+
+@media (max-width: 1180px) {
+  .faqSection {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 760px) {
+  .faqHeading {
+    font-size: 1.3rem;
+  }
+
+  .faqQuestion {
+    font-size: 0.92rem;
+    padding: 14px 2px;
+  }
+}
