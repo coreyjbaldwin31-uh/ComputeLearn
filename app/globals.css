@@ -1257,6 +1257,18 @@ select {
   text-transform: uppercase;
 }
 
+.terminal-sim-label {
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(122, 162, 247, 0.1);
+  color: rgba(122, 162, 247, 0.6);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
 .terminal-toolbar {
   display: flex;
   align-items: center;
@@ -7690,6 +7702,33 @@ button[disabled] {
   letter-spacing: 0.12em;
   color: var(--ac-muted);
   background: var(--ac-surface-alt);
+}
+
+/* ---- TRANSCRIPT EXPORT ---- */
+
+.transcript-export {
+  margin-top: 32px;
+  padding: 20px 24px;
+  border-radius: var(--ac-radius);
+  background: var(--ac-surface);
+  border: 1px solid var(--ac-border);
+}
+
+.transcript-export-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.transcript-export-desc {
+  font-size: 0.82rem;
+  color: var(--ac-muted);
+  margin-bottom: 14px;
+}
+
+.transcript-export-actions {
+  display: flex;
+  gap: 10px;
 }
 
 /* ---- ASSIGNMENT LIST ---- */

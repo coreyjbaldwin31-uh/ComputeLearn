@@ -56,6 +56,10 @@ const CANONICAL_COMMANDS: Record<string, string> = {
   where: "Where-Object",
   "select-object": "Select-Object",
   select: "Select-Object",
+  "test-connection": "Test-Connection",
+  ping: "Test-Connection",
+  "get-service": "Get-Service",
+  "get-command": "Get-Command",
 };
 
 const defaultFilesystem: Record<string, string[]> = {
@@ -259,6 +263,13 @@ export function TerminalSimulator({
                 "Where-Object { <condition> }\n  Filter pipeline input by a condition.\n  Alias: where\n  Example: Get-Process | Where-Object { $_.CPU -gt 10 }",
               "select-object":
                 "Select-Object [-Property <names>] [-First <n>]\n  Choose specific properties or limit results.\n  Alias: select\n  Example: Get-Process | Select-Object Name, CPU",
+              "test-connection":
+                "Test-Connection <destination>\n  Test network connectivity to a host (simulated).\n  Alias: ping\n  Example: Test-Connection example.com",
+              ping: "ping / Test-Connection <destination>\n  Test network connectivity. Alias for Test-Connection.\n  Example: ping example.com",
+              "get-service":
+                "Get-Service\n  List Windows services and their status (simulated).\n  Example: Get-Service",
+              "get-command":
+                "Get-Command\n  List all available commands in the terminal.\n  Example: Get-Command",
             };
             const detail = helpTopics[topic];
             if (detail) {
@@ -304,6 +315,11 @@ export function TerminalSimulator({
               "  history               Show command history",
               "  clear / cls           Clear terminal  (Ctrl+L)",
               "  $env:PATH             Show PATH variable",
+              "",
+              "┌─ Network & Services ───────────────────────────┐",
+              "  test-connection / ping Test network connectivity",
+              "  get-service           List Windows services",
+              "  get-command           List all available commands",
               "",
               "┌─ Developer Tools ──────────────────────────────┐",
               "  git <cmd>             Git (status, log, branch, init)",
@@ -638,6 +654,85 @@ export function TerminalSimulator({
           return;
         }
 
+        case "test-connection":
+        case "ping": {
+          const dest = args[0] || "example.com";
+          addEntry(
+            "output",
+            [
+              "",
+              "Source        Destination     IPV4Address      Latency(ms)",
+              "------        -----------     -----------      -----------",
+              `LEARNER-PC    ${dest.padEnd(16)}93.184.216.34    24`,
+              "",
+            ].join("\n"),
+          );
+          return;
+        }
+
+        case "get-service": {
+          addEntry(
+            "output",
+            [
+              "",
+              "Status   Name            DisplayName",
+              "------   ----            -----------",
+              "Running  wuauserv        Windows Update",
+              "Running  Spooler         Print Spooler",
+              "Running  W32Time         Windows Time",
+              "Stopped  WSearch         Windows Search",
+              "Running  EventLog        Windows Event Log",
+              "",
+            ].join("\n"),
+          );
+          return;
+        }
+
+        case "get-command": {
+          const allCommands = [
+            "Get-ChildItem (ls, dir)",
+            "Get-Command",
+            "Get-Content (cat)",
+            "Get-Date (date)",
+            "Get-Location (pwd)",
+            "Get-Process (ps)",
+            "Get-Service",
+            "Get-Volume",
+            "Copy-Item (cp)",
+            "Move-Item (mv)",
+            "New-Item (mkdir)",
+            "Remove-Item (rm, del)",
+            "Rename-Item (ren)",
+            "Select-Object (select)",
+            "Select-String (sls)",
+            "Set-Location (cd)",
+            "Sort-Object",
+            "Test-Connection (ping)",
+            "Where-Object (where)",
+            "Write-Output (echo)",
+            "clear / cls",
+            "docker",
+            "git",
+            "history",
+            "hostname",
+            "npm / node",
+            "tree",
+            "whoami",
+          ];
+          addEntry(
+            "output",
+            [
+              "",
+              "CommandType  Name",
+              "-----------  ----",
+              ...allCommands.map((c) => `Cmdlet       ${c}`),
+              "",
+              `${allCommands.length} commands available.`,
+            ].join("\n"),
+          );
+          return;
+        }
+
         default: {
           // Variable assignment: $name = "value"
           const assignMatch = trimmed.match(/^\$(\w+)\s*=\s*(.+)$/);
@@ -801,6 +896,7 @@ export function TerminalSimulator({
         <span className="terminal-title">
           ComputeLearn Terminal — PowerShell
         </span>
+        <span className="terminal-sim-label">Simulated Environment</span>
         <div className="terminal-toolbar">
           <button
             type="button"

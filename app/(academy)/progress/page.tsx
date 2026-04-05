@@ -1,5 +1,6 @@
 import { curriculum } from "@/data/curriculum";
 import { CompetencyTracker } from "@/components/competency-tracker";
+import { TranscriptExport } from "@/components/transcript-export";
 
 export default function ProgressPage() {
   return (
@@ -32,6 +33,9 @@ export default function ProgressPage() {
           </div>
         ))}
       </div>
+
+      {/* Transcript / portfolio export */}
+      <TranscriptExport />
     </div>
   );
 }
