@@ -112,3 +112,46 @@ Operational log for autonomous workflow runs. Entries are concise.
 ### Next Action
 
 Route to **Implementer** or **Planner** for Phase 2 lab templates and code-behavior validation UI wiring.
+
+---
+
+## 2025-07-18 — MIT Classroom Readiness Analysis (Workflow Conductor)
+
+**Branch:** `main`
+
+### Startup State
+
+| Check | Result |
+| ----- | ------ |
+| Verify suite | 491 tests passing, lint clean, type-check clean, build green |
+| Uncommitted | 3 files (curriculum.ts, lab-templates.ts, lab-templates.test.ts) — curriculum strengthening from prior session |
+| Git | Local HEAD at `661317e`, origin/main at `0abb1a1` (3 commits ahead) |
+| PRD | 10 sections, tasks T1–T15 (T1–T6 done, T7–T15 not started) |
+
+### Routing Decisions
+
+1. **Explore subagent** — Full UX audit of all pages, routes, components, and infrastructure.
+   - Outcome: Identified 13 critical gaps for classroom deployment (no auth, no database, no instructor features, no grading, mock terminal, no LMS integration, no FERPA compliance).
+
+2. **Planner subagent** — Generate MIT Classroom Readiness execution plan.
+   - Outcome: Produced Section 11 for PRD.md with gap inventory (G1–G13), 19-task execution plan (T16–T34), dependency graph, risk register, and progress tracker.
+
+3. **Direct** — Committed curriculum strengthening (3 files, `d06f10e`).
+4. **Direct** — Appended Section 11 to PRD.md and committed (`b0b3011`).
+
+### Commits
+
+- `d06f10e` — content: strengthen exercises across all phases (124 exercises, 64 code exercises, 38 lessons)
+- `b0b3011` — plan: add MIT Classroom Readiness section (Section 11) to PRD
+
+### Key Findings
+
+- **Strong foundation**: 38 lessons, 124 exercises, 64 code exercises, lab engine, terminal simulator, competency tracking, 491 tests, Docker build, CI pipeline, Sentry + OTel.
+- **4 Tier 1 blockers** for classroom use: no auth (G1), no database (G2), no instructor dashboard (G3), no grading workflow (G4).
+- **4 Tier 2 high-priority gaps**: real terminal (G5), LMS/Canvas integration (G6), data export (G7), multi-tenancy (G8).
+- **5 Tier 3 quality items**: faculty review (G9), WCAG audit (G10), load testing (G11), FERPA (G12), AI review loop (G13).
+- **Dead code**: `training-platform.tsx` (~2000 lines) is unused legacy SPA — should be removed.
+
+### Next Action
+
+Begin **Phase A (T16–T20)**: Authentication + Database. Route to **Implementer** for T16 (NextAuth.js with OAuth) as the first task since all other work depends on it.
