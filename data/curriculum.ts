@@ -3096,7 +3096,7 @@ export const curriculum: Curriculum = {
               ],
               retention: [
                 "What single Git command creates a new branch and switches to it? Write it from memory.",
-                "Can you explain the difference between `git merge` and `git rebase`? Which one rewrites history?",
+                "Can you explain what `git merge feature-branch` does when run from `main`? What happens to the commit history?",
                 "Without looking, what does `git branch -d feature-x` do? What flag forces deletion of an unmerged branch?",
                 "Draw a mental diagram: you're on `main`, you create `feature`, make 3 commits, then merge back — what does the history look like?",
               ],
